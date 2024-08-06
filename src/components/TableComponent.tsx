@@ -48,10 +48,25 @@ export function TableComponent() {
         return `${hours}h ${minutes}m`;
     };
 
+    // Determine status based on the end time and current time
+    const determineStatus = (endTime: string) => {
+        const currentTime = new Date();
+        const [endHour, endMinute, endPeriod] = endTime.split(/[: ]/);
+        let endHours = parseInt(endHour);
+
+        if (endPeriod === 'PM' && endHours !== 12) endHours += 12;
+        if (endPeriod === 'AM' && endHours === 12) endHours = 0;
+
+        const endTimeInMinutes = endHours * 60 + parseInt(endMinute);
+        const currentTimeInMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
+
+        return currentTimeInMinutes > endTimeInMinutes ? "Done" : "Ongoing";
+    };
+
     const data = [
-        { name: "John Doe", type: "Fixed", date: "2023-08-01", startTime: "09:00 AM", endTime: "05:00 PM", status: "Present" },
-        { name: "Jane Smith", type: "Flexible", date: "2023-08-01", startTime: "10:00 AM", endTime: "06:30 PM", status: "Absent" },
-        { name: "Alice Johnson", type: "Open", date: "2023-08-01", startTime: "08:30 AM", endTime: "04:30 PM", status: "Present" },
+        { name: "John Doe", type: "Fixed", date: "2023-08-01", startTime: "09:00 AM", endTime: "05:00 PM", status: "On Job" },
+        { name: "Jane Smith", type: "Flexible", date: "2023-08-01", startTime: "10:00 AM", endTime: "06:30 PM", status: "Lunch" },
+        { name: "Alice Johnson", type: "Open", date: "2023-08-01", startTime: "08:30 AM", endTime: "04:30 PM", status: "On Job" },
     ];
 
     return (
@@ -65,6 +80,7 @@ export function TableComponent() {
                     <TableHead>Start Time</TableHead>
                     <TableHead>End Time</TableHead>
                     <TableHead>Total Hours</TableHead>
+                    <TableHead>Situation</TableHead>
                     <TableHead className="text-right">Status</TableHead>
                 </TableRow>
             </TableHeader>
@@ -77,7 +93,12 @@ export function TableComponent() {
                         <TableCell>{record.startTime}</TableCell>
                         <TableCell>{record.endTime}</TableCell>
                         <TableCell>{calculateTotalHours(record.startTime, record.endTime)}</TableCell>
-                        <TableCell className="text-right">{record.status}</TableCell>
+                        <TableCell>{record.status}</TableCell>
+                        <TableCell className="text-right">
+                            <span className={`status ${determineStatus(record.endTime).toLowerCase()}`}>
+                                {determineStatus(record.endTime)}
+                            </span>
+                        </TableCell>
                     </TableRow>
                 ))}
             </TableBody>
