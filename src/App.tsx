@@ -7,34 +7,20 @@ import { Button } from '@/components/ui/button';
 import './App.css';
 
 function App() {
-    const [isCalendarVisible, setIsCalendarVisible] = useState(true);
-
-    const toggleCalendar = () => {
-        setIsCalendarVisible(!isCalendarVisible);
-    };
-
     return (
         <div className="dashboard-container">
             <header className="header">
                 <h1>Admin Dashboard</h1>
-                <p className="header-subtitle">Manage attendance records and more</p>
+                <p className="header-subtitle">Manage your records efficiently</p>
             </header>
             <main className="main-content">
-                <section className="toggle-section">
-                    <Button className="toggle-button" onClick={toggleCalendar}>
-                        {isCalendarVisible ? 'Hide Calendar' : 'Show Calendar'}
-                    </Button>
-                </section>
                 <section className="calendar-section">
-                    {isCalendarVisible && <CalendarComponent />}
+                    <CalendarComponent />
                 </section>
                 <section className="table-section">
                     <TableComponent />
                 </section>
-                <section className="actions-section">
-                    <Button className="primary-button">Add New Record</Button>
-                    <Button className="secondary-button">View Reports</Button>
-                </section>
+ 
             </main>
         </div>
     );
