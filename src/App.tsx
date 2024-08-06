@@ -1,40 +1,27 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
-import { Button } from '@/components/ui/button';
-function App() {
-	const [count, setCount] = useState(0);
+// src/App.tsx
 
-	return (
-		<>
-		
-			<div>
-				<a href="https://vitejs.dev" target="_blank">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://react.dev" target="_blank">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
-			</div>
-			<h1>Vite + React</h1>
-			<div className="card">
-				<button onClick={() => setCount((count) => count + 1)}>
-					count is {count}
-				</button>
-				<p className="read-the-docs">
-				hello my name is jazz
-			</p>
-				<p>
-					Edit <code>src/App.tsx</code> and save to test HMR
-				</p>
-			</div>
-			<p className="read-the-docs">
-				Click on the Vite and React logos to learn more
-			</p>
-			<Button>This is a button</Button>
-		</>
-	);
+import './App.css';
+import { TableComponent } from '@/components/TableComponent';
+import { Button } from '@/components/ui/button';
+
+function App() {
+    return (
+        <div className="admin-dashboard">
+            <header className="header">
+                <h1>Welcome to the Admin Dashboard</h1>
+                <p className="subheader">Manage your attendance records efficiently</p>
+            </header>
+            <main className="main-content">
+                <section className="table-section">
+                    <TableComponent />
+                </section>
+                <section className="actions-section">
+                    <Button className="primary-button">Add New Record</Button>
+                    <Button className="secondary-button">View Reports</Button>
+                </section>
+            </main>
+        </div>
+    );
 }
 
 export default App;
