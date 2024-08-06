@@ -1,55 +1,54 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: Arial, sans-serif;
+/* General Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
   background-color: #f4f4f4;
 }
 
-.admin-dashboard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.header {
-  background-color: #333;
-  color: white;
+/* Container */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 2rem;
-  width: 100%;
-}
-
-.header h1 {
-  margin: 0;
-  font-size: 2.5rem;
-}
-
-.subheader {
-  margin-top: 0.5rem;
-  font-size: 1.25rem;
-  color: #ddd;
-}
-
-.main-content {
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  width: 100%;
-  max-width: 800px;
-  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.table-section {
+/* Header */
+.header {
+  text-align: center;
   margin-bottom: 2rem;
 }
 
-.actions-section {
-  display: flex;
-  justify-content: space-around;
+.header h1 {
+  font-size: 2.5rem;
+  color: #333;
 }
 
+.header-subtitle {
+  font-size: 1.25rem;
+  color: #666;
+}
+
+/* Main Content */
+.main-content {
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* Toggle Section */
+.toggle-section {
+  text-align: center;
+}
+
+/* Buttons */
+.toggle-button,
 .primary-button,
 .secondary-button {
   padding: 0.75rem 1.5rem;
@@ -57,11 +56,25 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.toggle-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.toggle-button:hover {
+  background-color: #0056b3;
 }
 
 .primary-button {
-  background-color: #007bff;
+  background-color: #28a745;
   color: white;
+}
+
+.primary-button:hover {
+  background-color: #218838;
 }
 
 .secondary-button {
@@ -69,14 +82,22 @@
   color: white;
 }
 
-.primary-button:hover {
-  background-color: #0056b3;
-}
-
 .secondary-button:hover {
   background-color: #5a6268;
 }
 
+/* Calendar Section */
+.calendar-section {
+  display: flex;
+  justify-content: center;
+}
+
+/* Table Section */
+.table-section {
+  overflow-x: auto;
+}
+
+/* Table Styles */
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -85,20 +106,21 @@
 .table th,
 .table td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 12px;
   text-align: left;
 }
 
 .table th {
-  background-color: #f2f2f2;
+  background-color: #f8f9fa;
   font-weight: bold;
-}
-
-.table th,
-.table td {
-  padding: 1em;
 }
 
 .table td.text-right {
   text-align: right;
+}
+
+.table-caption {
+  font-size: 1.125rem;
+  margin-bottom: 0.75rem;
+  color: #333;
 }
