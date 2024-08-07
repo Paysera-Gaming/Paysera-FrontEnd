@@ -107,6 +107,9 @@ export function TableComponent() {
   const [data, setData] = useState(initialData);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "" });
+  const [filterType, setFilterType] = useState("");
+  const [filterSituation, setFilterSituation] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -135,42 +138,90 @@ export function TableComponent() {
     setData(sortedData);
   };
 
-  const filteredData = data.filter((record) =>
-    record.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleFilterType = (e) => {
+    setFilterType(e.target.value);
+  };
+
+  const handleFilterSituation = (e) => {
+    setFilterSituation(e.target.value);
+  };
+
+  const handleFilterStatus = (e) => {
+    setFilterStatus(e.target.value);
+  };
+
+  const filteredData = data
+    .filter((record) =>
+      record.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter((record) => {
+      if (!filterType) return true;
+      return record.type === filterType;
+    })
+    .filter((record) => {
+      if (!filterSituation) return true;
+      return record.status === filterSituation;
+    })
+    .filter((record) => {
+      if (!filterStatus) return true;
+      return determineStatus(record.endTime) === filterStatus;
+    });
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Search by name"
-        value={searchQuery}
-        onChange={handleSearch}
-        className="mb-4 p-2 border border-gray-300 rounded"
-      />
+      <div className="mb-4 flex space-x-4">
+        <input
+          type="text"
+          placeholder="Search by name"
+          value={searchQuery}
+          onChange={handleSearch}
+          className="p-2 border border-gray-300 rounded"
+        />
+        <select value={filterType} onChange={handleFilterType} className="p-2 border border-gray-300 rounded">
+          <option value="">All Types</option>
+          <option value="Fixed">Fixed</option>
+          <option value="Flexible">Flexible</option>
+          <option value="Open">Open</option>
+        </select>
+        <select value={filterSituation} onChange={handleFilterSituation} className="p-2 border border-gray-300 rounded">
+          <option value="">All Situations</option>
+          <option value="On Job">On Job</option>
+          <option value="Lunch">Lunch</option>
+        </select>
+        <select value={filterStatus} onChange={handleFilterStatus} className="p-2 border border-gray-300 rounded">
+          <option value="">All Statuses</option>
+          <option value="Ongoing">Ongoing</option>
+          <option value="Done">Done</option>
+        </select>
+      </div>
       <Table className="table">
         <TableCaption>Attendance Records</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[150px]" onClick={() => handleSort("name")}>
               Name
-              {sortConfig.key === "name" && (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+              {sortConfig.key === "name" &&
+                (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
             </TableHead>
             <TableHead onClick={() => handleSort("type")}>
               Type of Attendance
-              {sortConfig.key === "type" && (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+              {sortConfig.key === "type" &&
+                (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
             </TableHead>
             <TableHead onClick={() => handleSort("date")}>
               Date
-              {sortConfig.key === "date" && (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+              {sortConfig.key === "date" &&
+                (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
             </TableHead>
             <TableHead onClick={() => handleSort("startTime")}>
               Start Time
-              {sortConfig.key === "startTime" && (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+              {sortConfig.key === "startTime" &&
+                (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
             </TableHead>
             <TableHead onClick={() => handleSort("endTime")}>
               End Time
-              {sortConfig.key === "endTime" && (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+              {sortConfig.key === "endTime" &&
+                (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
             </TableHead>
             <TableHead>Total Hours</TableHead>
             <TableHead>Situation</TableHead>
