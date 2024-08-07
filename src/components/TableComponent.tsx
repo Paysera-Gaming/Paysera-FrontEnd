@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -33,19 +33,27 @@ const calculateTotalHours = (startTime, endTime) => {
 };
 
 // Determine status based on the end time and current time
-const determineStatus = (endTime) => {
-  const currentTime = new Date();
-  const [endHour, endMinute, endPeriod] = endTime.split(/[: ]/);
-  let endHours = parseInt(endHour);
+const determineStatus = (startTime, endTime) => {
+  const totalHours = calculateTotalHours(startTime, endTime);
+  const [hours, minutes] = totalHours.split("h ");
+  if (parseInt(hours) >= 8) {
+    return "Done";
+  } else {
+    return "Ongoing";
+  }
+};
 
-  if (endPeriod === "PM" && endHours !== 12) endHours += 12;
-  if (endPeriod === "AM" && endHours === 12) endHours = 0;
-
-  const endTimeInMinutes = endHours * 60 + parseInt(endMinute);
-  const currentTimeInMinutes =
-    currentTime.getHours() * 60 + currentTime.getMinutes();
-
-  return currentTimeInMinutes > endTimeInMinutes ? "Done" : "Ongoing";
+// Determine situation based on the total hours worked
+const determineSituation = (startTime, endTime, status) => {
+  const totalHours = calculateTotalHours(startTime, endTime);
+  const [hours, minutes] = totalHours.split("h ");
+  if (parseInt(hours) >= 8 && status === "Done") {
+    return "Leave";
+  } else if (status === "Lunch") {
+    return "Lunch";
+  } else {
+    return "On Job";
+  }
 };
 
 const compareDates = (a, b, direction) => {
@@ -84,23 +92,79 @@ export function TableComponent() {
       date: "2023-08-01",
       startTime: "09:00 AM",
       endTime: "05:00 PM",
-      status: "On Job",
+      status: "Done",
     },
     {
       name: "Jane Smith",
       type: "Flexible",
       date: "2023-08-02",
       startTime: "10:00 AM",
-      endTime: "06:30 PM",
-      status: "Lunch",
+      endTime: "03:00 PM",
+      status: "Done",
     },
     {
       name: "Alice Johnson",
       type: "Open",
       date: "2023-08-01",
       startTime: "08:30 AM",
-      endTime: "04:30 PM",
-      status: "On Job",
+      endTime: "09:30 AM",
+      status: "Ongoing",
+    },
+    {
+      name: "Bob Brown",
+      type: "Fixed",
+      date: "2023-08-01",
+      startTime: "08:00 AM",
+      endTime: "01:00 PM",
+      status: "Ongoing",
+    },
+    {
+      name: "Charlie Green",
+      type: "Flexible",
+      date: "2023-08-02",
+      startTime: "09:30 AM",
+      endTime: "02:30 PM",
+      status: "Ongoing",
+    },
+    {
+      name: "David Wilson",
+      type: "Fixed",
+      date: "2023-08-03",
+      startTime: "07:00 AM",
+      endTime: "12:00 PM",
+      status: "Done",
+    },
+    {
+      name: "Eve Taylor",
+      type: "Flexible",
+      date: "2023-08-03",
+      startTime: "11:00 AM",
+      endTime: "12:00 PM",
+      status: "Ongoing",
+    },
+    {
+      name: "Frank Harris",
+      type: "Open",
+      date: "2023-08-03",
+      startTime: "08:00 AM",
+      endTime: "09:00 AM",
+      status: "Lunch",
+    },
+    {
+      name: "Grace Lewis",
+      type: "Fixed",
+      date: "2023-08-04",
+      startTime: "07:30 AM",
+      endTime: "12:30 PM",
+      status: "Done",
+    },
+    {
+      name: "Hank Martin",
+      type: "Flexible",
+      date: "2023-08-04",
+      startTime: "10:00 AM",
+      endTime: "02:00 PM",
+      status: "Ongoing",
     },
   ];
 
@@ -164,7 +228,7 @@ export function TableComponent() {
     })
     .filter((record) => {
       if (!filterStatus) return true;
-      return determineStatus(record.endTime) === filterStatus;
+      return determineStatus(record.startTime, record.endTime) === filterStatus;
     });
 
   return (
@@ -187,6 +251,7 @@ export function TableComponent() {
           <option value="">All Situations</option>
           <option value="On Job">On Job</option>
           <option value="Lunch">Lunch</option>
+          <option value="Leave">Leave</option>
         </select>
         <select value={filterStatus} onChange={handleFilterStatus} className="p-2 border border-gray-300 rounded">
           <option value="">All Statuses</option>
@@ -239,12 +304,14 @@ export function TableComponent() {
               <TableCell>
                 {calculateTotalHours(record.startTime, record.endTime)}
               </TableCell>
-              <TableCell>{record.status}</TableCell>
+              <TableCell>
+                {determineSituation(record.startTime, record.endTime, record.status)}
+              </TableCell>
               <TableCell className="text-right">
                 <span
-                  className={`status ${determineStatus(record.endTime).toLowerCase()}`}
+                  className={`status ${determineStatus(record.startTime, record.endTime).toLowerCase()}`}
                 >
-                  {determineStatus(record.endTime)}
+                  {determineStatus(record.startTime, record.endTime)}
                 </span>
               </TableCell>
             </TableRow>
