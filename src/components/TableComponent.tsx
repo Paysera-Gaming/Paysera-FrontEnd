@@ -118,54 +118,8 @@ export function TableComponent() {
       endTime: "01:00 PM",
       status: "Ongoing",
     },
-    {
-      name: "Charlie Green",
-      type: "Flexible",
-      date: "2023-08-02",
-      startTime: "09:30 AM",
-      endTime: "02:30 PM",
-      status: "Ongoing",
-    },
-    {
-      name: "David Wilson",
-      type: "Fixed",
-      date: "2023-08-03",
-      startTime: "07:00 AM",
-      endTime: "12:00 PM",
-      status: "Done",
-    },
-    {
-      name: "Eve Taylor",
-      type: "Flexible",
-      date: "2023-08-03",
-      startTime: "11:00 AM",
-      endTime: "12:00 PM",
-      status: "Ongoing",
-    },
-    {
-      name: "Frank Harris",
-      type: "Open",
-      date: "2023-08-03",
-      startTime: "08:00 AM",
-      endTime: "09:00 AM",
-      status: "Lunch",
-    },
-    {
-      name: "Grace Lewis",
-      type: "Fixed",
-      date: "2023-08-04",
-      startTime: "07:30 AM",
-      endTime: "12:30 PM",
-      status: "Done",
-    },
-    {
-      name: "Hank Martin",
-      type: "Flexible",
-      date: "2023-08-04",
-      startTime: "10:00 AM",
-      endTime: "02:00 PM",
-      status: "Ongoing",
-    },
+
+
   ];
 
   const [data, setData] = useState(initialData);
