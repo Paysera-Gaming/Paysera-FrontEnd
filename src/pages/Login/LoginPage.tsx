@@ -1,3 +1,9 @@
 export default function LoginPage() {
-	return <>this is the loginpage</>;
+	return (
+		<>
+			<main className="">
+				<form action=""></form>
+			</main>
+		</>
+	);
 }
