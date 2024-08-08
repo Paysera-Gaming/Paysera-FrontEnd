@@ -23,9 +23,7 @@ function App() {
           <PaginationComponent />
         </section>
       </main>
-      <aside className="top-right-corner">
-        <SheetComponent />
-      </aside>
+      <SheetComponent />
     </div>
   );
 }
