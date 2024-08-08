@@ -1,10 +1,10 @@
 // src/App.tsx
 
-import { TableComponent } from '@/components/TableComponent';
-import { CalendarComponent } from '@/components/CalendarComponent';
-import { PaginationComponent } from '@/components/PaginationComponent';
+import { TableComponent } from '@/components/AdminDashboard/TableComponent';
+import { CalendarComponent } from '@/components/AdminDashboard/CalendarComponent';
+import { PaginationComponent } from '@/components/AdminDashboard/PaginationComponent';
 import './App.css';
-
+import './admindashboard.css'
 function App() {
   return (
     <div className="dashboard-container">
