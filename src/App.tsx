@@ -3,8 +3,10 @@
 import { TableComponent } from '@/components/AdminDashboard/TableComponent';
 import { CalendarComponent } from '@/components/AdminDashboard/CalendarComponent';
 import { PaginationComponent } from '@/components/AdminDashboard/PaginationComponent';
+import SheetComponent from '@/components/AdminDashboard/SheetComponent';
 import './App.css';
-import './admindashboard.css'
+import './admindashboard.css';
+
 function App() {
   return (
     <div className="dashboard-container">
@@ -21,6 +23,9 @@ function App() {
           <PaginationComponent />
         </section>
       </main>
+      <aside className="top-right-corner">
+        <SheetComponent />
+      </aside>
     </div>
   );
 }
