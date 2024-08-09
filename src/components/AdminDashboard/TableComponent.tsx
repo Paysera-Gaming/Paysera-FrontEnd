@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -35,7 +35,7 @@ const calculateTotalHours = (startTime, endTime) => {
 // Determine status based on the end time and current time
 const determineStatus = (part1EndTime, lunchStartTime, lunchEndTime, part2EndTime) => {
   const totalHours = calculateTotalHours("09:00 AM", part2EndTime);
-  const [hours, minutes] = totalHours.split("h ");
+  const [hours] = totalHours.split("h ");
   if (parseInt(hours) >= 8) {
     return "Done";
   } else {
@@ -46,7 +46,7 @@ const determineStatus = (part1EndTime, lunchStartTime, lunchEndTime, part2EndTim
 // Determine situation based on the total hours worked
 const determineSituation = (part1EndTime, lunchStartTime, lunchEndTime, part2EndTime, status) => {
   const totalHours = calculateTotalHours("09:00 AM", part2EndTime);
-  const [hours, minutes] = totalHours.split("h ");
+  const [hours] = totalHours.split("h ");
   if (parseInt(hours) >= 8 && status === "Done") {
     return "Leave";
   } else if (status === "Lunch") {
@@ -207,147 +207,105 @@ export function TableComponent() {
           onClick={() => setIsMinimized(!isMinimized)}
           className={`p-2 border rounded ${isMinimized ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-blue-500 text-white hover:bg-blue-700'}`}
         >
-          {isMinimized ? "Maximize" : "Minimize"}
+          {isMinimized ? 'Maximize' : 'Minimize'}
         </button>
         <input
           type="text"
-          placeholder="Search by name"
+          placeholder="Search by name..."
           value={searchQuery}
           onChange={handleSearch}
-          className="p-2 border border-gray-300 rounded"
+          className="p-2 border rounded"
         />
-        <select
-          value={filterType}
-          onChange={handleFilterType}
-          className="p-2 border border-gray-300 rounded"
-        >
+        <select value={filterType} onChange={handleFilterType} className="p-2 border rounded">
           <option value="">All Types</option>
           <option value="Fixed">Fixed</option>
           <option value="Flexible">Flexible</option>
           <option value="Open">Open</option>
         </select>
-        <select
-          value={filterSituation}
-          onChange={handleFilterSituation}
-          className="p-2 border border-gray-300 rounded"
-        >
+        <select value={filterSituation} onChange={handleFilterSituation} className="p-2 border rounded">
           <option value="">All Situations</option>
           <option value="On Job">On Job</option>
-          <option value="Lunch">Lunch</option>
           <option value="Leave">Leave</option>
+          <option value="Lunch">Lunch</option>
         </select>
-        <select
-          value={filterStatus}
-          onChange={handleFilterStatus}
-          className="p-2 border border-gray-300 rounded"
-        >
-          <option value="">All Statuses</option>
+        <select value={filterStatus} onChange={handleFilterStatus} className="p-2 border rounded">
+          <option value="">All Status</option>
           <option value="Ongoing">Ongoing</option>
           <option value="Done">Done</option>
         </select>
       </div>
-      <Table className="table">
-        <TableCaption>Attendance Records</TableCaption>
+      <Table>
+        <TableCaption>A list of employee time records.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[150px]" onClick={() => handleSort("name")}>
+            <TableHead onClick={() => handleSort("name")}>
               Name
-              {sortConfig.key === "name" &&
-                (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+              {sortConfig.key === "name" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
             </TableHead>
             <TableHead onClick={() => handleSort("type")}>
-              Type of Attendance
-              {sortConfig.key === "type" &&
-                (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+              Type
+              {sortConfig.key === "type" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
             </TableHead>
             <TableHead onClick={() => handleSort("date")}>
               Date
-              {sortConfig.key === "date" &&
-                (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+              {sortConfig.key === "date" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
+            </TableHead>
+            <TableHead onClick={() => handleSort("part1StartTime")}>
+              Part 1 Work Time In
+              {sortConfig.key === "part1StartTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
             </TableHead>
             {!isMinimized && (
               <>
-                <TableHead onClick={() => handleSort("part1StartTime")}>
-                  Part 1 Work Time In
-                  {sortConfig.key === "part1StartTime" &&
-                    (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
-                </TableHead>
                 <TableHead onClick={() => handleSort("part1EndTime")}>
                   Part 1 Work Time Out
-                  {sortConfig.key === "part1EndTime" &&
-                    (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+                  {sortConfig.key === "part1EndTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
                 </TableHead>
                 <TableHead onClick={() => handleSort("lunchStartTime")}>
                   Lunch Time In
-                  {sortConfig.key === "lunchStartTime" &&
-                    (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+                  {sortConfig.key === "lunchStartTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
                 </TableHead>
                 <TableHead onClick={() => handleSort("lunchEndTime")}>
                   Lunch Time Out
-                  {sortConfig.key === "lunchEndTime" &&
-                    (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+                  {sortConfig.key === "lunchEndTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
                 </TableHead>
                 <TableHead onClick={() => handleSort("part2StartTime")}>
                   Part 2 Work Time In
-                  {sortConfig.key === "part2StartTime" &&
-                    (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+                  {sortConfig.key === "part2StartTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
                 </TableHead>
               </>
             )}
             <TableHead onClick={() => handleSort("part2EndTime")}>
               Part 2 Work Time Out
-              {sortConfig.key === "part2EndTime" &&
-                (sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+              {sortConfig.key === "part2EndTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
             </TableHead>
-            <TableHead>Total Hours</TableHead>
-            <TableHead>Situation</TableHead>
-            <TableHead className="text-right">Status</TableHead>
+            <TableHead onClick={() => handleSort("status")}>
+              Status
+              {sortConfig.key === "status" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
+            </TableHead>
+            <TableHead>
+              Situation
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filteredData.map((record, index) => (
             <TableRow key={index}>
-              <TableCell className="font-medium">{record.name}</TableCell>
-              <TableCell>{record.type}</TableCell>
-              <TableCell>{record.date}</TableCell>
+              <TableCell className="border-l">{record.name}</TableCell>
+              <TableCell className="border-l">{record.type}</TableCell>
+              <TableCell className="border-l">{record.date}</TableCell>
+              <TableCell className="border-l">{record.part1StartTime}</TableCell>
               {!isMinimized && (
                 <>
-                  <TableCell>{record.part1StartTime}</TableCell>
-                  <TableCell>{record.part1EndTime}</TableCell>
-                  <TableCell>{record.lunchStartTime}</TableCell>
-                  <TableCell>{record.lunchEndTime}</TableCell>
-                  <TableCell>{record.part2StartTime}</TableCell>
+                  <TableCell className="border-l">{record.part1EndTime}</TableCell>
+                  <TableCell className="border-l">{record.lunchStartTime}</TableCell>
+                  <TableCell className="border-l">{record.lunchEndTime}</TableCell>
+                  <TableCell className="border-l">{record.part2StartTime}</TableCell>
                 </>
               )}
-              <TableCell>{record.part2EndTime}</TableCell>
-              <TableCell>
-                {calculateTotalHours("09:00 AM", record.part2EndTime)}
-              </TableCell>
-              <TableCell>
-                {determineSituation(
-                  record.part1EndTime,
-                  record.lunchStartTime,
-                  record.lunchEndTime,
-                  record.part2EndTime,
-                  record.status
-                )}
-              </TableCell>
-              <TableCell className="text-right">
-                <span
-                  className={`status ${determineStatus(
-                    record.part1EndTime,
-                    record.lunchStartTime,
-                    record.lunchEndTime,
-                    record.part2EndTime
-                  ).toLowerCase()}`}
-                >
-                  {determineStatus(
-                    record.part1EndTime,
-                    record.lunchStartTime,
-                    record.lunchEndTime,
-                    record.part2EndTime
-                  )}
-                </span>
+              <TableCell className="border-l">{record.part2EndTime}</TableCell>
+              <TableCell className="border-l">{record.status}</TableCell>
+              <TableCell className="border-l">
+                {determineSituation(record.part1EndTime, record.lunchStartTime, record.lunchEndTime, record.part2EndTime, record.status)}
               </TableCell>
             </TableRow>
           ))}

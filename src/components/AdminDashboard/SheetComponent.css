@@ -34,7 +34,7 @@
 .sheet-description {
   font-size: 1rem;
   color: #666;
-  margin-bottom: 20px;
+  margin-bottom: 30px; /* Increased margin for better spacing */
 }
 
 .profile-avatar {
@@ -47,8 +47,8 @@
 }
 
 .profile-settings li {
-  padding: 12px 20px;
-  margin-bottom: 10px;
+  padding: 16px 10px; /* Increased padding for better spacing */
+  margin-bottom: 20px; /* Increased margin for more spacing between buttons */
   cursor: pointer;
   border: 1px solid #ddd;
   border-radius: 4px;

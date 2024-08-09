@@ -174,69 +174,7 @@ button:hover {
   margin: 0 auto;
 }
 
-/* Dialog Styles */
-.dialog-content {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
 
-.dialog-header {
-  margin-bottom: 1rem;
-}
 
-.dialog-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-}
 
-.dialog-description {
-  font-size: 1rem;
-  color: #666;
-}
 
-/* Top Right Corner Styles */
-.top-right-corner {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  width: 80px;
-  height: auto;
-  background-color: #f8f9fa;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 5px;
-  border-radius: 3px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Profile Settings Styles */
-.profile-settings {
-  width: 100%;
-}
-
-.profile-settings ul {
-  list-style: none;
-  padding: 0;
-}
-
-.profile-settings li {
-  padding: 12px 20px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.profile-settings li:hover {
-  background-color: #f0f4f8;
-}
-
-.profile-settings li:last-child {
-  margin-bottom: 0;
-}
