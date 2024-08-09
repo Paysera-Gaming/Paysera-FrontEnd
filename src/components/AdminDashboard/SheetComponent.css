@@ -9,8 +9,8 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   position: absolute;
-  top: 20px;
-  right: 45px;
+  top: 50px;
+  right: 80px;
 }
 
 .sheet-trigger:hover {
