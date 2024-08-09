@@ -26,7 +26,7 @@ const SheetComponent = () => {
         </SheetHeader>
         <div className="profile-settings">
           <ul>
-            
+            {/* <li>Dashboard</li> */}
             <li>Your Team</li>
             <li>Projects</li>
             <li>Messages</li>
