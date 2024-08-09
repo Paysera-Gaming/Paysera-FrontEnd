@@ -1,3 +1,7 @@
+// react router
+import { useNavigate } from 'react-router-dom';
+
+// zod
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -30,6 +34,8 @@ const formSchema = z.object({
 });
 
 export default function LoginForm() {
+	const navigate = useNavigate();
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: { username: '' },
@@ -37,7 +43,11 @@ export default function LoginForm() {
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// submit your shit here
-		console.log(values);
+		if (values.username && values.password) {
+			return navigate('/employee');
+		} else {
+			alert('Wrong password');
+		}
 	}
 
 	return (
@@ -52,9 +62,7 @@ export default function LoginForm() {
 							<FormControl>
 								<Input placeholder="Employee" {...field} />
 							</FormControl>
-							<FormDescription>
-								This is your public display name.
-							</FormDescription>
+							<FormDescription>Insert your Employee ID here.</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -68,12 +76,12 @@ export default function LoginForm() {
 							<FormControl>
 								<Input placeholder="password" type="password" {...field} />
 							</FormControl>
-							<FormDescription>insert your password</FormDescription>
+							<FormDescription>Insert your password here.</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">Submit</Button>
+				<Button type="submit">Login</Button>
 			</form>
 		</Form>
 	);
