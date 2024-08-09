@@ -74,9 +74,9 @@ export default function LoginForm() {
 						<FormItem>
 							<FormLabel>Employee Password</FormLabel>
 							<FormControl>
-								<Input placeholder="password" type="password" {...field} />
+								<Input placeholder="Password" type="password" {...field} />
 							</FormControl>
-							<FormDescription>Insert your password here.</FormDescription>
+							<FormDescription>Insert your Password here.</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
