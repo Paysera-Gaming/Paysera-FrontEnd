@@ -7,7 +7,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import './SheetComponent.css';
+// import './SheetComponent.css';
 
 const SheetComponent = () => {
   return (
