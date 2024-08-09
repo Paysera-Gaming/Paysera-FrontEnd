@@ -6,6 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+// import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from '@/components/ui/sonner';
+import { toast } from 'sonner';
+
 // shad ui
 import { Button } from '@/components/ui/button';
 import {
@@ -38,15 +42,18 @@ export default function LoginForm() {
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
-		defaultValues: { username: '' },
+		defaultValues: { username: '', password: '' },
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// submit your shit here
 		if (values.username && values.password) {
-			return navigate('/employee');
+			toast.success('login succesful');
+			return setTimeout(() => {
+				return navigate('/employee');
+			}, 500);
 		} else {
-			alert('Wrong password');
+			toast.error('please try again');
 		}
 	}
 
@@ -83,6 +90,7 @@ export default function LoginForm() {
 				/>
 				<Button type="submit">Login</Button>
 			</form>
+			<Toaster></Toaster>
 		</Form>
 	);
 }
