@@ -164,6 +164,10 @@ export function TableComponent() {
         return compareDates(a, b, direction);
       } else if (key === "part1StartTime" || key === "part1EndTime" || key === "lunchStartTime" || key === "lunchEndTime" || key === "part2StartTime" || key === "part2EndTime") {
         return compareTimes(a, b, key, direction);
+      } else if (key === "totalHours") {
+        const totalHoursA = calculateTotalHours(a.part1StartTime, a.part2EndTime);
+        const totalHoursB = calculateTotalHours(b.part1StartTime, b.part2EndTime);
+        return direction === "ascending" ? totalHoursA.localeCompare(totalHoursB) : totalHoursB.localeCompare(totalHoursA);
       }
       return 0;
     });
@@ -207,35 +211,49 @@ export function TableComponent() {
           onClick={() => setIsMinimized(!isMinimized)}
           className={`p-2 border rounded ${isMinimized ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-blue-500 text-white hover:bg-blue-700'}`}
         >
-          {isMinimized ? 'Maximize' : 'Minimize'}
+          {isMinimized ? "Maximize Table" : "Minimize Table"}
         </button>
+
         <input
           type="text"
-          placeholder="Search by name..."
+          placeholder="Search by name"
           value={searchQuery}
           onChange={handleSearch}
           className="p-2 border rounded"
         />
-        <select value={filterType} onChange={handleFilterType} className="p-2 border rounded">
-          <option value="">All Types</option>
+        <select
+          value={filterType}
+          onChange={handleFilterType}
+          className="p-2 border rounded"
+        >
+          <option value="">Filter by Type</option>
           <option value="Fixed">Fixed</option>
           <option value="Flexible">Flexible</option>
           <option value="Open">Open</option>
         </select>
-        <select value={filterSituation} onChange={handleFilterSituation} className="p-2 border rounded">
-          <option value="">All Situations</option>
-          <option value="On Job">On Job</option>
-          <option value="Leave">Leave</option>
-          <option value="Lunch">Lunch</option>
-        </select>
-        <select value={filterStatus} onChange={handleFilterStatus} className="p-2 border rounded">
-          <option value="">All Status</option>
-          <option value="Ongoing">Ongoing</option>
+        <select
+          value={filterSituation}
+          onChange={handleFilterSituation}
+          className="p-2 border rounded"
+        >
+          <option value="">Filter by Situation</option>
           <option value="Done">Done</option>
+          <option value="Lunch">Lunch</option>
+          <option value="On Job">On Job</option>
+        </select>
+        <select
+          value={filterStatus}
+          onChange={handleFilterStatus}
+          className="p-2 border rounded"
+        >
+          <option value="">Filter by Status</option>
+          <option value="Done">Done</option>
+          <option value="Ongoing">Ongoing</option>
         </select>
       </div>
+
       <Table>
-        <TableCaption>A list of employee time records.</TableCaption>
+        <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead onClick={() => handleSort("name")}>
@@ -251,31 +269,31 @@ export function TableComponent() {
               {sortConfig.key === "date" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
             </TableHead>
             <TableHead onClick={() => handleSort("part1StartTime")}>
-              Time In
+              Start Time
               {sortConfig.key === "part1StartTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
             </TableHead>
             {!isMinimized && (
               <>
                 <TableHead onClick={() => handleSort("part1EndTime")}>
-                  Time Out
+                  End Time
                   {sortConfig.key === "part1EndTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
                 </TableHead>
                 <TableHead onClick={() => handleSort("lunchStartTime")}>
-                  Lunch Time In
+                  Lunch Start Time
                   {sortConfig.key === "lunchStartTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
                 </TableHead>
                 <TableHead onClick={() => handleSort("lunchEndTime")}>
-                  Lunch Time Out
+                  Lunch End Time
                   {sortConfig.key === "lunchEndTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
                 </TableHead>
                 <TableHead onClick={() => handleSort("part2StartTime")}>
-                  Time In
+                  Start Time
                   {sortConfig.key === "part2StartTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
                 </TableHead>
               </>
             )}
             <TableHead onClick={() => handleSort("part2EndTime")}>
-              Time Out
+              End Time
               {sortConfig.key === "part2EndTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
             </TableHead>
             <TableHead onClick={() => handleSort("status")}>
@@ -284,6 +302,10 @@ export function TableComponent() {
             </TableHead>
             <TableHead>
               Situation
+            </TableHead>
+            <TableHead onClick={() => handleSort("totalHours")}>
+              Total Hours
+              {sortConfig.key === "totalHours" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -306,6 +328,9 @@ export function TableComponent() {
               <TableCell className="border-l">{record.status}</TableCell>
               <TableCell className="border-l">
                 {determineSituation(record.part1EndTime, record.lunchStartTime, record.lunchEndTime, record.part2EndTime, record.status)}
+              </TableCell>
+              <TableCell className="border-l">
+                {calculateTotalHours(record.part1StartTime, record.part2EndTime)}
               </TableCell>
             </TableRow>
           ))}
