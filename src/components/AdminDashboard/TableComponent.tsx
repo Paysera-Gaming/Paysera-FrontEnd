@@ -251,13 +251,13 @@ export function TableComponent() {
               {sortConfig.key === "date" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
             </TableHead>
             <TableHead onClick={() => handleSort("part1StartTime")}>
-              Part 1 Work Time In
+              Time In
               {sortConfig.key === "part1StartTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
             </TableHead>
             {!isMinimized && (
               <>
                 <TableHead onClick={() => handleSort("part1EndTime")}>
-                  Part 1 Work Time Out
+                  Time Out
                   {sortConfig.key === "part1EndTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
                 </TableHead>
                 <TableHead onClick={() => handleSort("lunchStartTime")}>
@@ -269,13 +269,13 @@ export function TableComponent() {
                   {sortConfig.key === "lunchEndTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
                 </TableHead>
                 <TableHead onClick={() => handleSort("part2StartTime")}>
-                  Part 2 Work Time In
+                  Time In
                   {sortConfig.key === "part2StartTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
                 </TableHead>
               </>
             )}
             <TableHead onClick={() => handleSort("part2EndTime")}>
-              Part 2 Work Time Out
+              Time Out
               {sortConfig.key === "part2EndTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
             </TableHead>
             <TableHead onClick={() => handleSort("status")}>
