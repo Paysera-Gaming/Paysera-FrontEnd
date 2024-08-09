@@ -1,5 +1,3 @@
-// src/components/AdminDashboard/SheetComponent.tsx
-
 import {
   Sheet,
   SheetContent,
@@ -28,12 +26,13 @@ const SheetComponent = () => {
         </SheetHeader>
         <div className="profile-settings">
           <ul>
-            {/* <li>Dashboard</li> */}
-            {/* <li>Profile</li> */}
+            
             <li>Your Team</li>
             <li>Projects</li>
             <li>Messages</li>
             <li>Settings</li>
+          </ul>
+          <ul className="logout-section">
             <li>Log Out</li>
           </ul>
         </div>
