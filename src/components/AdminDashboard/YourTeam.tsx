@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import SheetComponent from 'C:/Users/Admin/Paysera-FrontEnd/src/components/AdminDashboard/SheetComponent.tsx';
 
-// Utility function to calculate total hours
 const calculateTotalHours = (startTime, endTime) => {
   const [startHour, startMinute, startPeriod] = startTime.split(/[: ]/);
   const [endHour, endMinute, endPeriod] = endTime.split(/[: ]/);
@@ -25,7 +24,6 @@ const calculateTotalHours = (startTime, endTime) => {
   return `${hours}h ${minutes}m`;
 };
 
-// YourTeam component
 const YourTeam = () => {
   const initialData = [
     { id: 1, name: 'Ken Smith', role: 'Project Manager', email: 'ken99@yahoo.com', part1StartTime: '09:00 AM', part1EndTime: '01:00 PM', lunchStartTime: '01:00 PM', lunchEndTime: '02:00 PM', part2StartTime: '02:00 PM', part2EndTime: '06:00 PM', status: 'Done' },
@@ -42,13 +40,34 @@ const YourTeam = () => {
     setSearchQuery(e.target.value);
   };
 
+  const handleAddMember = () => {
+    const newMember = {
+      id: data.length + 1,
+      name: 'New Member',
+      role: 'Role',
+      email: 'email@example.com',
+      part1StartTime: '09:00 AM',
+      part1EndTime: '01:00 PM',
+      lunchStartTime: '01:00 PM',
+      lunchEndTime: '02:00 PM',
+      part2StartTime: '02:00 PM',
+      part2EndTime: '06:00 PM',
+      status: 'Ongoing',
+    };
+    setData([...data, newMember]);
+  };
+
+  const handleDeleteMember = (id) => {
+    setData(data.filter(member => member.id !== id));
+  };
+
   const filteredData = data.filter((record) =>
     record.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <SheetComponent /> {/* Importing the SheetComponent */}
+      <SheetComponent />
       <h2 style={{ fontSize: '24px', marginBottom: '20px', textAlign: 'center' }}>Your Team</h2>
       <div className="mb-4 flex space-x-4">
         <button
@@ -65,12 +84,18 @@ const YourTeam = () => {
           onChange={handleSearch}
           className="p-2 border rounded"
         />
+
+        <button
+          onClick={handleAddMember}
+          className="p-2 border rounded bg-green-500 text-white hover:bg-green-700"
+        >
+          Add New Member
+        </button>
       </div>
       <Table className="border-collapse border border-gray-300">
         <TableCaption>Your team members' details.</TableCaption>
         <TableHeader>
           <TableRow className="border border-gray-300">
-            <TableHead className="border border-gray-300">ID</TableHead>
             <TableHead className="border border-gray-300">Name</TableHead>
             <TableHead className="border border-gray-300">Role</TableHead>
             <TableHead className="border border-gray-300">Email</TableHead>
@@ -86,12 +111,12 @@ const YourTeam = () => {
             <TableHead className="border border-gray-300">Second Half End Time</TableHead>
             <TableHead className="border border-gray-300">Status</TableHead>
             <TableHead className="border border-gray-300">Total Hours</TableHead>
+            <TableHead className="border border-gray-300">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filteredData.map((member) => (
             <TableRow key={member.id} className="border border-gray-300">
-              <TableCell className="border border-gray-300">{member.id}</TableCell>
               <TableCell className="border border-gray-300">{member.name}</TableCell>
               <TableCell className="border border-gray-300">{member.role}</TableCell>
               <TableCell className="border border-gray-300">{member.email}</TableCell>
@@ -109,6 +134,14 @@ const YourTeam = () => {
               <TableCell className="border border-gray-300">
                 {calculateTotalHours(member.part1StartTime, member.part2EndTime)}
               </TableCell>
+              <TableCell className="border border-gray-300">
+                <button
+                  onClick={() => handleDeleteMember(member.id)}
+                  className="p-2 border rounded bg-red-500 text-white hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -118,4 +151,3 @@ const YourTeam = () => {
 };
 
 export default YourTeam;
-    
