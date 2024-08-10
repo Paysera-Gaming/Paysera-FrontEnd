@@ -24,6 +24,9 @@ const SheetComponent = () => {
           <li>
             <Link to="/projects">Projects</Link>
           </li>
+          <li>
+            <Link to="/messages">Messages</Link>
+          </li>
         </>
       );
     } else if (currentPath === '/projects') {
@@ -35,6 +38,9 @@ const SheetComponent = () => {
           <li>
             <Link to="/yourteam">Your Team</Link>
           </li>
+          <li>
+            <Link to="/messages">Messages</Link>
+          </li>
         </>
       );
     } else if (currentPath === '/yourteam') {
@@ -42,6 +48,23 @@ const SheetComponent = () => {
         <>
           <li>
             <Link to="/">Dashboard</Link>
+          </li>
+          <li>
+            <Link to="/projects">Projects</Link>
+          </li>
+          <li>
+            <Link to="/messages">Messages</Link>
+          </li>
+        </>
+      );
+    } else if (currentPath === '/messages') {
+      return (
+        <>
+          <li>
+            <Link to="/">Dashboard</Link>
+          </li>
+          <li>
+            <Link to="/yourteam">Your Team</Link>
           </li>
           <li>
             <Link to="/projects">Projects</Link>
@@ -69,7 +92,6 @@ const SheetComponent = () => {
         <div className="profile-settings">
           <ul>
             {renderLinks()}
-            <li>Messages</li>
             <li>Settings</li>
           </ul>
           <ul className="logout-section">

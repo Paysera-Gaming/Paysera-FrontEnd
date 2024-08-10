@@ -1,8 +1,10 @@
+// src/main.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import YourTeam from './components/AdminDashboard/YourTeam';
-import Projects from './components/AdminDashboard/Projects'; // Import the Projects component
+import Projects from './components/AdminDashboard/Projects';
+import Messages from './components/AdminDashboard/Messages'; // Import the Messages component
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -13,11 +15,15 @@ const router = createBrowserRouter([
   },
   {
     path: '/yourteam',
-    element: <YourTeam />, // Route for YourTeam component
+    element: <YourTeam />,
   },
   {
     path: '/projects',
-    element: <Projects />, // Route for Projects component
+    element: <Projects />,
+  },
+  {
+    path: '/messages',
+    element: <Messages />, // Route for Messages component
   },
 ]);
 
