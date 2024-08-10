@@ -106,7 +106,9 @@ const YourTeam = () => {
               )}
               <TableCell className="border border-gray-300">{member.part2EndTime}</TableCell>
               <TableCell className="border border-gray-300">{member.status}</TableCell>
-              <TableCell className="border border-gray-300">{calculateTotalHours(member.part1StartTime, member.part2EndTime)}</TableCell>
+              <TableCell className="border border-gray-300">
+                {calculateTotalHours(member.part1StartTime, member.part2EndTime)}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -116,3 +118,4 @@ const YourTeam = () => {
 };
 
 export default YourTeam;
+    
