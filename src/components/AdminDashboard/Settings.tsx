@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SheetComponent from './SheetComponent';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -10,9 +10,15 @@ const Settings = () => {
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
   const [fontSize, setFontSize] = useState('16px');
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Update root class when dark mode changes
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode);
+  }, [darkMode]);
 
   return (
-    <div className="settings-container">
+    <div className={`settings-container ${darkMode ? 'dark' : ''}`}>
       <SheetComponent />
       <main className="settings-main" style={{ fontSize }}>
         <h2 className="settings-title">Settings</h2>
@@ -66,6 +72,14 @@ const Settings = () => {
                 <option value="18px">Large</option>
                 <option value="20px">Extra Large</option>
               </select>
+            </div>
+            <div className="form-group">
+              <span className="form-label">Dark Mode</span>
+              <Switch
+                checked={darkMode}
+                onCheckedChange={() => setDarkMode(!darkMode)}
+                className="form-switch"
+              />
             </div>
             <Button type="submit" className="save-button">
               Save Changes
