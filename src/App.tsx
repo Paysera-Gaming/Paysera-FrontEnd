@@ -13,6 +13,7 @@ function App() {
       <header className="header">
         <h1>Admin Dashboard</h1>
         <p className="header-subtitle">Manage your records efficiently</p>
+
       </header>
       <main className="main-content">
         <section className="calendar-section">

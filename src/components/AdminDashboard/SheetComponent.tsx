@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
   Sheet,
   SheetContent,
@@ -6,10 +7,14 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from '@/components/ui/sheet';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const SheetComponent = () => {
+  const location = useLocation();
+  const isHomePageActive = location.pathname === '/';
+  const isYourTeamActive = location.pathname === '/yourteam';
+
   return (
     <Sheet>
       <SheetTrigger className="sheet-trigger">Profile</SheetTrigger>
@@ -26,9 +31,16 @@ const SheetComponent = () => {
         </SheetHeader>
         <div className="profile-settings">
           <ul>
-            <li>
-              <Link to="/yourteam">Your Team</Link>
-            </li>
+            {!isYourTeamActive && (
+              <li>
+                <Link to="/yourteam">Your Team</Link>
+              </li>
+            )}
+            {!isHomePageActive && (
+              <li>
+                <Link to="/">Dashboard</Link>
+              </li>
+            )}
             <li>Projects</li>
             <li>Messages</li>
             <li>Settings</li>
