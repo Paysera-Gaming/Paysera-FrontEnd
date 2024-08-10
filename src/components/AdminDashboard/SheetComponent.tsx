@@ -15,64 +15,21 @@ const SheetComponent = () => {
   const currentPath = location.pathname;
 
   const renderLinks = () => {
-    if (currentPath === '/') {
-      return (
-        <>
-          <li>
-            <Link to="/yourteam">Your Team</Link>
-          </li>
-          <li>
-            <Link to="/projects">Projects</Link>
-          </li>
-          <li>
-            <Link to="/messages">Messages</Link>
-          </li>
-        </>
-      );
-    } else if (currentPath === '/projects') {
-      return (
-        <>
-          <li>
-            <Link to="/">Dashboard</Link>
-          </li>
-          <li>
-            <Link to="/yourteam">Your Team</Link>
-          </li>
-          <li>
-            <Link to="/messages">Messages</Link>
-          </li>
-        </>
-      );
-    } else if (currentPath === '/yourteam') {
-      return (
-        <>
-          <li>
-            <Link to="/">Dashboard</Link>
-          </li>
-          <li>
-            <Link to="/projects">Projects</Link>
-          </li>
-          <li>
-            <Link to="/messages">Messages</Link>
-          </li>
-        </>
-      );
-    } else if (currentPath === '/messages') {
-      return (
-        <>
-          <li>
-            <Link to="/">Dashboard</Link>
-          </li>
-          <li>
-            <Link to="/yourteam">Your Team</Link>
-          </li>
-          <li>
-            <Link to="/projects">Projects</Link>
-          </li>
-        </>
-      );
-    }
-    return null;
+    const links = [
+      { path: '/', label: 'Dashboard' },
+      { path: '/yourteam', label: 'Your Team' },
+      { path: '/projects', label: 'Projects' },
+      { path: '/messages', label: 'Messages' },
+      { path: '/settings', label: 'Settings' },
+    ];
+
+    return links
+      .filter(link => link.path !== currentPath)
+      .map(link => (
+        <li key={link.path}>
+          <Link to={link.path}>{link.label}</Link>
+        </li>
+      ));
   };
 
   return (
@@ -92,7 +49,6 @@ const SheetComponent = () => {
         <div className="profile-settings">
           <ul>
             {renderLinks()}
-            <li>Settings</li>
           </ul>
           <ul className="logout-section">
             <li>Log Out</li>

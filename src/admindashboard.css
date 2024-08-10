@@ -1,31 +1,128 @@
-/* src/admindashboard.css */
-
 /* General Styles */
-* {
-  box-sizing: border-box;
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
 }
 
-body {
-  background-color: #f4f6f8;
-  color: #333;
-  line-height: 1.6;
-  font-size: 16px;
+/* Container */
+.settings-container {
+  display: flex;
+  padding: 2rem;
+  background-color: #fff;
 }
 
-/* Dashboard Container */
-.dashboard-container {
-  max-width: 1280px;
+.settings-main {
+  flex: 1;
+  max-width: 600px;
   margin: 0 auto;
   padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Header */
+.settings-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #333;
+}
+
+/* Form */
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+.switch-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background-color: #f4f4f4;
+  border-radius: 4px;
+}
+
+/* Updated minimalist switch */
+.form-switch {
+  position: relative;
+  width: 40px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.form-switch::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-color: #fff;
+  border-radius: 50%;
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%);
+  transition: left 0.3s ease;
+}
+
+.form-switch[data-state='checked'] {
+  background-color: #007bff;
+}
+
+.form-switch[data-state='checked']::before {
+  left: 22px;
+}
+
+/* Input & Textarea */
+.form-input,
+.form-textarea {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Button */
+.save-button {
+  padding: 0.75rem;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.save-button:hover {
+  background-color: #0056b3;
+}
+
+
+
+/* Additional Styles */
 .header {
   text-align: center;
   margin-bottom: 2rem;
@@ -42,25 +139,21 @@ body {
   margin-top: 0.5rem;
 }
 
-/* Main Content */
 .main-content {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-/* Calendar Section */
 .calendar-section {
   display: flex;
   justify-content: center;
 }
 
-/* Table Section */
 .table-section {
   margin-top: 2rem;
 }
 
-/* Button */
 button {
   background-color: #007bff;
   color: #fff;
@@ -75,7 +168,6 @@ button:hover {
   background-color: #0056b3;
 }
 
-/* Table Styles */
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -108,7 +200,6 @@ button:hover {
   text-align: center;
 }
 
-/* Status Styles */
 .status {
   display: inline-block;
   padding: 0.25rem 0.5rem;
@@ -118,14 +209,13 @@ button:hover {
 }
 
 .status.ongoing {
-  background-color: #ff9900; /* Orange */
+  background-color: #ff9900;
 }
 
 .status.done {
-  background-color: #28a745; /* Green */
+  background-color: #28a745;
 }
 
-/* Situation Styles */
 .situation {
   display: inline-block;
   padding: 0.25rem 0.5rem;
@@ -134,21 +224,20 @@ button:hover {
 }
 
 .situation.on-job {
-  background-color: #007bff; /* Blue */
+  background-color: #007bff;
   color: #fff;
 }
 
 .situation.lunch {
-  background-color: #ff5722; /* Red-Orange */
+  background-color: #ff5722;
   color: #fff;
 }
 
 .situation.break {
-  background-color: #ffc107; /* Amber */
+  background-color: #ffc107;
   color: #fff;
 }
 
-/* Calendar Styles */
 .calendar-container {
   display: flex;
   justify-content: center;
@@ -174,7 +263,6 @@ button:hover {
   margin: 0 auto;
 }
 
-/* SheetComponent Styles */
 .sheet-trigger {
   background-color: #007bff;
   color: white;
@@ -224,7 +312,7 @@ button:hover {
 .profile-settings li {
   padding: 16px 10px;
   margin-top: 70px;
-  margin-bottom: -60px; /* Increase margin-bottom for more space between buttons */
+  margin-bottom: -60px;
   cursor: pointer;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -236,7 +324,7 @@ button:hover {
 }
 
 .logout-section {
-  margin-top: 130px; /* Add space between other items and the logout button */
+  margin-top: 130px;
   padding-top: 20px;
 }
 

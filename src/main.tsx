@@ -5,6 +5,7 @@ import App from './App';
 import YourTeam from './components/AdminDashboard/YourTeam';
 import Projects from './components/AdminDashboard/Projects';
 import Messages from './components/AdminDashboard/Messages'; // Import the Messages component
+import Settings from './components/AdminDashboard/Settings'; // Import the Settings component
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: '/messages',
     element: <Messages />, // Route for Messages component
+  },
+  {
+    path: '/settings',
+    element: <Settings />, // Route for Settings component
   },
 ]);
 
