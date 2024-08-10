@@ -12,8 +12,45 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const SheetComponent = () => {
   const location = useLocation();
-  const isHomePageActive = location.pathname === '/';
-  const isYourTeamActive = location.pathname === '/yourteam';
+  const currentPath = location.pathname;
+
+  const renderLinks = () => {
+    if (currentPath === '/') {
+      return (
+        <>
+          <li>
+            <Link to="/yourteam">Your Team</Link>
+          </li>
+          <li>
+            <Link to="/projects">Projects</Link>
+          </li>
+        </>
+      );
+    } else if (currentPath === '/projects') {
+      return (
+        <>
+          <li>
+            <Link to="/">Dashboard</Link>
+          </li>
+          <li>
+            <Link to="/yourteam">Your Team</Link>
+          </li>
+        </>
+      );
+    } else if (currentPath === '/yourteam') {
+      return (
+        <>
+          <li>
+            <Link to="/">Dashboard</Link>
+          </li>
+          <li>
+            <Link to="/projects">Projects</Link>
+          </li>
+        </>
+      );
+    }
+    return null;
+  };
 
   return (
     <Sheet>
@@ -31,17 +68,7 @@ const SheetComponent = () => {
         </SheetHeader>
         <div className="profile-settings">
           <ul>
-            {!isYourTeamActive && (
-              <li>
-                <Link to="/yourteam">Your Team</Link>
-              </li>
-            )}
-            {!isHomePageActive && (
-              <li>
-                <Link to="/">Dashboard</Link>
-              </li>
-            )}
-            <li>Projects</li>
+            {renderLinks()}
             <li>Messages</li>
             <li>Settings</li>
           </ul>
