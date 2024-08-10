@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -7,7 +8,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import './SheetComponent.css';
 
 const SheetComponent = () => {
   return (
@@ -26,8 +26,9 @@ const SheetComponent = () => {
         </SheetHeader>
         <div className="profile-settings">
           <ul>
-            {/* <li>Dashboard</li> */}
-            <li>Your Team</li>
+            <li>
+              <Link to="/yourteam">Your Team</Link>
+            </li>
             <li>Projects</li>
             <li>Messages</li>
             <li>Settings</li>
