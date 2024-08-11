@@ -1,11 +1,10 @@
-// src/main.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import YourTeam from './components/AdminDashboard/YourTeam';
+import ManageTeams from './components/AdminDashboard/ManageTeams';
 import Projects from './components/AdminDashboard/Projects';
-import Messages from './components/AdminDashboard/Messages'; // Import the Messages component
-import Settings from './components/AdminDashboard/Settings'; // Import the Settings component
+import Messages from './components/AdminDashboard/Messages';
+import Settings from './components/AdminDashboard/Settings';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -15,8 +14,8 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: '/yourteam',
-    element: <YourTeam />,
+    path: '/manageteams',
+    element: <ManageTeams />,
   },
   {
     path: '/projects',
@@ -24,11 +23,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/messages',
-    element: <Messages />, // Route for Messages component
+    element: <Messages />,
   },
   {
     path: '/settings',
-    element: <Settings />, // Route for Settings component
+    element: <Settings />,
   },
 ]);
 

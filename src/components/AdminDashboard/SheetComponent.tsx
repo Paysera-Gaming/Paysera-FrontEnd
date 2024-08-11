@@ -17,7 +17,7 @@ const SheetComponent = () => {
   const renderLinks = () => {
     const links = [
       { path: '/', label: 'Dashboard' },
-      { path: '/yourteam', label: 'Your Team' },
+      { path: '/manageteams', label: 'Manage Teams' },
       { path: '/projects', label: 'Projects' },
       { path: '/messages', label: 'Messages' },
       { path: '/settings', label: 'Settings' },
