@@ -1,27 +1,60 @@
-// src/components/AdminDashboard/ManageTeams.tsx
-
 import React, { useState } from 'react';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipProvider,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import SheetComponent from './SheetComponent'; // Ensure this path is correct
+
+const convertTo24HourFormat = (time: string) => {
+  const [timePart, period] = time.split(' ');
+  let [hours, minutes] = timePart.split(':').map(Number);
+
+  if (period === 'PM' && hours !== 12) hours += 12;
+  if (period === 'AM' && hours === 12) hours = 0;
+
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+};
+
+const convertTo12HourFormat = (time: string) => {
+  const [hours, minutes] = time.split(':').map(Number);
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const adjustedHours = hours % 12 || 12;
+
+  return `${adjustedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+};
 
 const calculateTotalHours = (startTime: string, endTime: string) => {
   if (!startTime || !endTime) return 'N/A';
 
-  const [startHour, startMinute, startPeriod] = startTime.split(/[: ]/);
-  const [endHour, endMinute, endPeriod] = endTime.split(/[: ]/);
-
-  let startHours = parseInt(startHour);
-  let endHours = parseInt(endHour);
-
-  if (startPeriod === 'PM' && startHours !== 12) startHours += 12;
-  if (endPeriod === 'PM' && endHours !== 12) endHours += 12;
-  if (startPeriod === 'AM' && startHours === 12) startHours = 0;
-  if (endPeriod === 'AM' && endHours === 12) endHours = 0;
-
-  const startTimeInMinutes = startHours * 60 + parseInt(startMinute);
-  const endTimeInMinutes = endHours * 60 + parseInt(endMinute);
+  const startTimeInMinutes = (parseInt(startTime.split(':')[0]) * 60) + parseInt(startTime.split(':')[1]);
+  const endTimeInMinutes = (parseInt(endTime.split(':')[0]) * 60) + parseInt(endTime.split(':')[1]);
 
   const totalMinutes = endTimeInMinutes - startTimeInMinutes;
   const hours = Math.floor(totalMinutes / 60);
@@ -32,30 +65,58 @@ const calculateTotalHours = (startTime: string, endTime: string) => {
 
 const ManageTeams = () => {
   const initialData = [
-    { id: 1, name: 'Ken Smith', company: 'Tech Company', teamLeaderEmail: 'ken99@yahoo.com', teamStartTime: '09:00 AM', teamEndTime: '06:00 PM', status: 'Done' },
-    { id: 2, name: 'Abe Johnson', company: 'Call Company', teamLeaderEmail: 'abe45@gmail.com', teamStartTime: '10:00 AM', teamEndTime: '07:00 PM', status: 'Done' },
-    { id: 3, name: 'Monserrat Lee', company: 'Tech Company', teamLeaderEmail: 'monserrat44@gmail.com', teamStartTime: '08:30 AM', teamEndTime: '05:30 PM', status: 'Ongoing' },
-    { id: 4, name: 'Silas Parker', company: 'Call Company', teamLeaderEmail: 'silas22@gmail.com', teamStartTime: '08:00 AM', teamEndTime: '05:00 PM', status: 'Ongoing' },
+    { id: 1, name: 'Ken Smith', company: 'Tech Company', teamLeaderEmail: 'ken99@yahoo.com', teamStartTime: '09:00', teamEndTime: '18:00', status: 'Done' },
+    { id: 2, name: 'Abe Johnson', company: 'Call Company', teamLeaderEmail: 'abe45@gmail.com', teamStartTime: '10:00', teamEndTime: '19:00', status: 'Done' },
+    { id: 3, name: 'Monserrat Lee', company: 'Tech Company', teamLeaderEmail: 'monserrat44@gmail.com', teamStartTime: '08:30', teamEndTime: '17:30', status: 'Ongoing' },
+    { id: 4, name: 'Silas Parker', company: 'Call Company', teamLeaderEmail: 'silas22@gmail.com', teamStartTime: '08:00', teamEndTime: '17:00', status: 'Ongoing' },
   ];
 
   const [data, setData] = useState(initialData);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState<any>(null);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
   const handleAddTeams = () => {
-    const newTeams = {
+    setSelectedTeam({
       id: data.length + 1,
-      name: 'New Team',
-      company: 'Company Name',
-      teamLeaderEmail: 'email@example.com',
-      teamStartTime: '09:00 AM',
-      teamEndTime: '06:00 PM',
+      name: '',
+      company: '',
+      teamLeaderEmail: '',
+      teamStartTime: '09:00',
+      teamEndTime: '18:00',
       status: 'Ongoing',
-    };
-    setData([...data, newTeams]);
+    });
+    setIsDialogOpen(true);
+  };
+
+  const handleEditTeam = (team: any) => {
+    setSelectedTeam({
+      ...team,
+      teamStartTime: team.teamStartTime,
+      teamEndTime: team.teamEndTime,
+    });
+    setIsDialogOpen(true);
+  };
+
+  const handleSaveTeam = () => {
+    if (selectedTeam.id <= data.length) {
+      setData(data.map((team) => (team.id === selectedTeam.id ? {
+        ...selectedTeam,
+        teamStartTime: selectedTeam.teamStartTime,
+        teamEndTime: selectedTeam.teamEndTime,
+      } : team)));
+    } else {
+      setData([...data, {
+        ...selectedTeam,
+        teamStartTime: selectedTeam.teamStartTime,
+        teamEndTime: selectedTeam.teamEndTime,
+      }]);
+    }
+    setIsDialogOpen(false);
   };
 
   const handleDeleteTeams = (id: number) => {
@@ -108,14 +169,14 @@ const ManageTeams = () => {
               <TableCell>{team.name}</TableCell>
               <TableCell>{team.company}</TableCell>
               <TableCell>{team.teamLeaderEmail}</TableCell>
-              <TableCell>{team.teamStartTime}</TableCell>
-              <TableCell>{team.teamEndTime}</TableCell>
+              <TableCell>{convertTo12HourFormat(team.teamStartTime)}</TableCell>
+              <TableCell>{convertTo12HourFormat(team.teamEndTime)}</TableCell>
               <TableCell>{team.status}</TableCell>
               <TableCell>{calculateTotalHours(team.teamStartTime, team.teamEndTime)}</TableCell>
               <TableCell className="flex space-x-2">
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger>
+                    <TooltipTrigger asChild>
                       <Button
                         onClick={() => handleDeleteTeams(team.id)}
                         className="bg-red-500 text-white hover:bg-red-600"
@@ -128,8 +189,11 @@ const ManageTeams = () => {
                     </TooltipContent>
                   </Tooltip>
                   <Tooltip>
-                    <TooltipTrigger>
-                      <Button className="bg-blue-500 text-white hover:bg-blue-600">
+                    <TooltipTrigger asChild>
+                      <Button
+                        onClick={() => handleEditTeam(team)}
+                        className="bg-blue-500 text-white hover:bg-blue-600"
+                      >
                         Edit
                       </Button>
                     </TooltipTrigger>
@@ -143,6 +207,87 @@ const ManageTeams = () => {
           ))}
         </TableBody>
       </Table>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{selectedTeam?.id ? 'Edit Team' : 'Add New Team'}</DialogTitle>
+            <DialogDescription>
+              {selectedTeam?.id ? 'Update the team details below.' : 'Fill in the details for the new team.'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="teamName" className="block text-sm font-medium text-gray-700">Team Name</label>
+              <Input
+                id="teamName"
+                value={selectedTeam?.name || ''}
+                onChange={(e) => setSelectedTeam({ ...selectedTeam, name: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="company" className="block text-sm font-medium text-gray-700">Company</label>
+              <Input
+                id="company"
+                value={selectedTeam?.company || ''}
+                onChange={(e) => setSelectedTeam({ ...selectedTeam, company: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="teamLeaderEmail" className="block text-sm font-medium text-gray-700">Team Leader Email</label>
+              <Input
+                id="teamLeaderEmail"
+                type="email"
+                value={selectedTeam?.teamLeaderEmail || ''}
+                onChange={(e) => setSelectedTeam({ ...selectedTeam, teamLeaderEmail: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="teamStartTime" className="block text-sm font-medium text-gray-700">Team Start Time</label>
+              <Input
+                id="teamStartTime"
+                type="time"
+                value={selectedTeam?.teamStartTime || ''}
+                onChange={(e) => setSelectedTeam({ ...selectedTeam, teamStartTime: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="teamEndTime" className="block text-sm font-medium text-gray-700">Team End Time</label>
+              <Input
+                id="teamEndTime"
+                type="time"
+                value={selectedTeam?.teamEndTime || ''}
+                onChange={(e) => setSelectedTeam({ ...selectedTeam, teamEndTime: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
+              <Select
+                value={selectedTeam?.status || 'Ongoing'}
+                onValueChange={(value) => setSelectedTeam({ ...selectedTeam, status: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Ongoing">Ongoing</SelectItem>
+                  <SelectItem value="Done">Done</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="mt-4">
+            <Button onClick={handleSaveTeam} className="bg-green-500 text-white hover:bg-green-600">
+              Save
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
