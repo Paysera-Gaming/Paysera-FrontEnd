@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/select";
 import SheetComponent from './SheetComponent'; // Ensure this path is correct
 
-const convertTo24HourFormat = (time: string) => {
+const convertTo24HourFormat = (time) => {
   const [timePart, period] = time.split(' ');
   let [hours, minutes] = timePart.split(':').map(Number);
 
@@ -42,7 +42,9 @@ const convertTo24HourFormat = (time: string) => {
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 };
 
-const convertTo12HourFormat = (time: string) => {
+const convertTo12HourFormat = (time) => {
+  if (!time) return '';  // Handle undefined or null time
+
   const [hours, minutes] = time.split(':').map(Number);
   const period = hours >= 12 ? 'PM' : 'AM';
   const adjustedHours = hours % 12 || 12;
@@ -50,7 +52,8 @@ const convertTo12HourFormat = (time: string) => {
   return `${adjustedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
 };
 
-const calculateTotalHours = (startTime: string, endTime: string) => {
+
+const calculateTotalHours = (startTime, endTime) => {
   if (!startTime || !endTime) return 'N/A';
 
   const startTimeInMinutes = (parseInt(startTime.split(':')[0]) * 60) + parseInt(startTime.split(':')[1]);
@@ -65,18 +68,19 @@ const calculateTotalHours = (startTime: string, endTime: string) => {
 
 const ManageTeams = () => {
   const initialData = [
-    { id: 1, name: 'Ken Smith', company: 'Tech Company', teamLeaderEmail: 'ken99@yahoo.com', teamStartTime: '09:00', teamEndTime: '18:00', status: 'Done' },
-    { id: 2, name: 'Abe Johnson', company: 'Call Company', teamLeaderEmail: 'abe45@gmail.com', teamStartTime: '10:00', teamEndTime: '19:00', status: 'Done' },
-    { id: 3, name: 'Monserrat Lee', company: 'Tech Company', teamLeaderEmail: 'monserrat44@gmail.com', teamStartTime: '08:30', teamEndTime: '17:30', status: 'Ongoing' },
-    { id: 4, name: 'Silas Parker', company: 'Call Company', teamLeaderEmail: 'silas22@gmail.com', teamStartTime: '08:00', teamEndTime: '17:00', status: 'Ongoing' },
+    { id: 1, name: 'Ken Smith', company: 'Tech Company', teamLeaderEmail: 'ken99@yahoo.com', teamStartTime: '09:00', teamEndTime: '18:00', status: 'Done', members: ['Alice', 'Bob'] },
+    { id: 2, name: 'Abe Johnson', company: 'Call Company', teamLeaderEmail: 'abe45@gmail.com', teamStartTime: '10:00', teamEndTime: '19:00', status: 'Done', members: ['Charlie'] },
+    { id: 3, name: 'Monserrat Lee', company: 'Tech Company', teamLeaderEmail: 'monserrat44@gmail.com', teamStartTime: '08:30', teamEndTime: '17:30', status: 'Ongoing', members: ['Dave', 'Eve'] },
+    { id: 4, name: 'Silas Parker', company: 'Call Company', teamLeaderEmail: 'silas22@gmail.com', teamStartTime: '08:00', teamEndTime: '17:00', status: 'Ongoing', members: ['Frank'] },
   ];
 
   const [data, setData] = useState(initialData);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState<any>(null);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [newMember, setNewMember] = useState("");
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
 
@@ -89,38 +93,43 @@ const ManageTeams = () => {
       teamStartTime: '09:00',
       teamEndTime: '18:00',
       status: 'Ongoing',
+      members: [],
     });
     setIsDialogOpen(true);
   };
 
-  const handleEditTeam = (team: any) => {
+  const handleEditTeam = (team) => {
     setSelectedTeam({
       ...team,
       teamStartTime: team.teamStartTime,
       teamEndTime: team.teamEndTime,
+      members: team.members,
     });
     setIsDialogOpen(true);
   };
 
   const handleSaveTeam = () => {
     if (selectedTeam.id <= data.length) {
-      setData(data.map((team) => (team.id === selectedTeam.id ? {
-        ...selectedTeam,
-        teamStartTime: selectedTeam.teamStartTime,
-        teamEndTime: selectedTeam.teamEndTime,
-      } : team)));
+      setData(data.map((team) => (team.id === selectedTeam.id ? selectedTeam : team)));
     } else {
-      setData([...data, {
-        ...selectedTeam,
-        teamStartTime: selectedTeam.teamStartTime,
-        teamEndTime: selectedTeam.teamEndTime,
-      }]);
+      setData([...data, selectedTeam]);
     }
     setIsDialogOpen(false);
   };
 
-  const handleDeleteTeams = (id: number) => {
+  const handleDeleteTeams = (id) => {
     setData(data.filter(team => team.id !== id));
+  };
+
+  const handleAddMember = () => {
+    if (newMember) {
+      setSelectedTeam({ ...selectedTeam, members: [...selectedTeam.members, newMember] });
+      setNewMember("");
+    }
+  };
+
+  const handleDeleteMember = (member) => {
+    setSelectedTeam({ ...selectedTeam, members: selectedTeam.members.filter((m) => m !== member) });
   };
 
   const filteredData = data.filter((record) =>
@@ -160,6 +169,7 @@ const ManageTeams = () => {
             <TableHead>Team End Time</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Total Hours</TableHead>
+            <TableHead>Members</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -173,6 +183,7 @@ const ManageTeams = () => {
               <TableCell>{convertTo12HourFormat(team.teamEndTime)}</TableCell>
               <TableCell>{team.status}</TableCell>
               <TableCell>{calculateTotalHours(team.teamStartTime, team.teamEndTime)}</TableCell>
+              <TableCell>{team.members.join(', ')}</TableCell>
               <TableCell className="flex space-x-2">
                 <TooltipProvider>
                   <Tooltip>
@@ -209,70 +220,64 @@ const ManageTeams = () => {
       </Table>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{selectedTeam?.id ? 'Edit Team' : 'Add New Team'}</DialogTitle>
             <DialogDescription>
-              {selectedTeam?.id ? 'Update the team details below.' : 'Fill in the details for the new team.'}
+              {selectedTeam?.id ? 'Update the team details below:' : 'Enter the new team details below:'}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label htmlFor="teamName" className="block text-sm font-medium text-gray-700">Team Name</label>
+              <label htmlFor="team-name">Team Name</label>
               <Input
-                id="teamName"
-                value={selectedTeam?.name || ''}
+                id="team-name"
+                value={selectedTeam?.name || ""}
                 onChange={(e) => setSelectedTeam({ ...selectedTeam, name: e.target.value })}
-                required
               />
             </div>
             <div>
-              <label htmlFor="company" className="block text-sm font-medium text-gray-700">Company</label>
+              <label htmlFor="company">Company</label>
               <Input
                 id="company"
-                value={selectedTeam?.company || ''}
+                value={selectedTeam?.company || ""}
                 onChange={(e) => setSelectedTeam({ ...selectedTeam, company: e.target.value })}
-                required
               />
             </div>
             <div>
-              <label htmlFor="teamLeaderEmail" className="block text-sm font-medium text-gray-700">Team Leader Email</label>
+              <label htmlFor="team-leader-email">Team Leader Email</label>
               <Input
-                id="teamLeaderEmail"
-                type="email"
-                value={selectedTeam?.teamLeaderEmail || ''}
+                id="team-leader-email"
+                value={selectedTeam?.teamLeaderEmail || ""}
                 onChange={(e) => setSelectedTeam({ ...selectedTeam, teamLeaderEmail: e.target.value })}
-                required
               />
             </div>
-            <div>
-              <label htmlFor="teamStartTime" className="block text-sm font-medium text-gray-700">Team Start Time</label>
-              <Input
-                id="teamStartTime"
-                type="time"
-                value={selectedTeam?.teamStartTime || ''}
-                onChange={(e) => setSelectedTeam({ ...selectedTeam, teamStartTime: e.target.value })}
-                required
-              />
+            <div className="flex space-x-4">
+              <div>
+                <label htmlFor="team-start-time">Team Start Time</label>
+                <Input
+                  id="team-start-time"
+                  value={convertTo12HourFormat(selectedTeam?.teamStartTime || "")}
+                  onChange={(e) => setSelectedTeam({ ...selectedTeam, teamStartTime: convertTo24HourFormat(e.target.value) })}
+                />
+              </div>
+              <div>
+                <label htmlFor="team-end-time">Team End Time</label>
+                <Input
+                  id="team-end-time"
+                  value={convertTo12HourFormat(selectedTeam?.teamEndTime || "")}
+                  onChange={(e) => setSelectedTeam({ ...selectedTeam, teamEndTime: convertTo24HourFormat(e.target.value) })}
+                />
+              </div>
             </div>
             <div>
-              <label htmlFor="teamEndTime" className="block text-sm font-medium text-gray-700">Team End Time</label>
-              <Input
-                id="teamEndTime"
-                type="time"
-                value={selectedTeam?.teamEndTime || ''}
-                onChange={(e) => setSelectedTeam({ ...selectedTeam, teamEndTime: e.target.value })}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
+              <label htmlFor="status">Status</label>
               <Select
-                value={selectedTeam?.status || 'Ongoing'}
+                value={selectedTeam?.status || "Ongoing"}
                 onValueChange={(value) => setSelectedTeam({ ...selectedTeam, status: value })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a status" />
+                  <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Ongoing">Ongoing</SelectItem>
@@ -280,11 +285,30 @@ const ManageTeams = () => {
                 </SelectContent>
               </Select>
             </div>
+            <div>
+              <label htmlFor="members">Add Members</label>
+              <div className="flex space-x-2">
+                <Input
+                  id="members"
+                  placeholder="Enter member name"
+                  value={newMember}
+                  onChange={(e) => setNewMember(e.target.value)}
+                />
+                <Button onClick={handleAddMember} className="bg-green-500 text-white hover:bg-green-600">Add</Button>
+              </div>
+              <div className="mt-2">
+                {selectedTeam?.members.map((member, index) => (
+                  <div key={index} className="flex justify-between items-center">
+                    <span>{member}</span>
+                    <Button onClick={() => handleDeleteMember(member)} className="bg-red-500 text-white hover:bg-red-600">Remove</Button>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <div className="mt-4">
-            <Button onClick={handleSaveTeam} className="bg-green-500 text-white hover:bg-green-600">
-              Save
-            </Button>
+          <div className="flex space-x-4 mt-6">
+            <Button onClick={handleSaveTeam} className="bg-blue-500 text-white hover:bg-blue-600">Save</Button>
+            <Button onClick={() => setIsDialogOpen(false)} className="bg-gray-500 text-white hover:bg-gray-600">Cancel</Button>
           </div>
         </DialogContent>
       </Dialog>
