@@ -2,10 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 // login
 import LoginPage from './pages/Login/LoginPage';
-// employee routes
+// employee pages
 import EmployeePage from './pages/Employee/EmployeePage';
-import FillUpPage from './pages/Employee/FillUpForm/FillUpPage';
-import ClockPage from './pages/Employee/ClockIn/ClockPage';
+import EmployeeDashboardPage from './pages/Employee/Dashboard/DashboardPage';
+import RequestPage from './pages/Employee/Request/RequestPage';
+// Teamlead pages
+import TeamLeadPage from './pages/TeamLead/TeamLeadPage';
+import TeamLeadDashboardPage from './pages/TeamLead/Dashboard/DashboardPage';
+import SchedulePage from './pages/TeamLead/Schedule/SchedulePage';
+import AttendancePage from './pages/TeamLead/Attendance/AttendancePage';
+import ManagePage from './pages/TeamLead/Manage/ManagePage';
 
 import './index.css';
 import {
@@ -17,7 +23,7 @@ import {
 const router = createBrowserRouter([
 	{
 		path: '/',
-		element: <>TESTING</>,
+		element: <></>,
 		children: [{ index: true, loader: () => redirect('/login') }],
 	},
 	{
@@ -30,10 +36,30 @@ const router = createBrowserRouter([
 		children: [
 			{
 				index: true,
-				loader: () => redirect('/employee/clock'),
+				loader: () => redirect('/employee/dashboard'),
 			},
-			{ path: 'request', element: <FillUpPage></FillUpPage> },
-			{ path: 'clock', element: <ClockPage></ClockPage> },
+			{
+				path: 'dashboard',
+				element: <EmployeeDashboardPage></EmployeeDashboardPage>,
+			},
+			{ path: 'request', element: <RequestPage></RequestPage> },
+		],
+	},
+	{
+		path: '/teamlead',
+		element: <TeamLeadPage></TeamLeadPage>,
+		children: [
+			{
+				index: true,
+				loader: () => redirect('/teamlead/dashboard'),
+			},
+			{
+				path: 'dashboard',
+				element: <TeamLeadDashboardPage></TeamLeadDashboardPage>,
+			},
+			{ path: 'manage', element: <ManagePage></ManagePage> },
+			{ path: 'schedule', element: <SchedulePage></SchedulePage> },
+			{ path: 'attendance', element: <AttendancePage></AttendancePage> },
 		],
 	},
 ]);

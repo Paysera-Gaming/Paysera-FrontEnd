@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom';
 
-export default function EmployeePage() {
+export default function TeamLeadPage() {
 	return (
-		<main>
-			<nav>HELLO</nav>
+		<>
+			this is thie Teamleadpage
 			<Outlet></Outlet>
-		</main>
+		</>
 	);
 }

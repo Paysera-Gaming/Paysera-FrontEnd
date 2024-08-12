@@ -1,3 +1,3 @@
 export default function AttendancePage() {
-	return <>This is the attendance page</>;
+	return <>this is the attendance page</>;
 }
