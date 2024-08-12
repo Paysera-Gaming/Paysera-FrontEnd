@@ -23,55 +23,14 @@ import {
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import SheetComponent from './SheetComponent'; // Ensure this path is correct
-
-const convertTo24HourFormat = (time) => {
-  const [timePart, period] = time.split(' ');
-  let [hours, minutes] = timePart.split(':').map(Number);
-
-  if (period === 'PM' && hours !== 12) hours += 12;
-  if (period === 'AM' && hours === 12) hours = 0;
-
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-};
-
-const convertTo12HourFormat = (time) => {
-  if (!time) return '';  // Handle undefined or null time
-
-  const [hours, minutes] = time.split(':').map(Number);
-  const period = hours >= 12 ? 'PM' : 'AM';
-  const adjustedHours = hours % 12 || 12;
-
-  return `${adjustedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
-};
-
-
-const calculateTotalHours = (startTime, endTime) => {
-  if (!startTime || !endTime) return 'N/A';
-
-  const startTimeInMinutes = (parseInt(startTime.split(':')[0]) * 60) + parseInt(startTime.split(':')[1]);
-  const endTimeInMinutes = (parseInt(endTime.split(':')[0]) * 60) + parseInt(endTime.split(':')[1]);
-
-  const totalMinutes = endTimeInMinutes - startTimeInMinutes;
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  return `${hours}h ${minutes}m`;
-};
+import SheetComponent from './SheetComponent';
 
 const ManageTeams = () => {
   const initialData = [
-    { id: 1, name: 'Ken Smith', company: 'Tech Company', teamLeaderEmail: 'ken99@yahoo.com', teamStartTime: '09:00', teamEndTime: '18:00', status: 'Done', members: ['Alice', 'Bob'] },
-    { id: 2, name: 'Abe Johnson', company: 'Call Company', teamLeaderEmail: 'abe45@gmail.com', teamStartTime: '10:00', teamEndTime: '19:00', status: 'Done', members: ['Charlie'] },
-    { id: 3, name: 'Monserrat Lee', company: 'Tech Company', teamLeaderEmail: 'monserrat44@gmail.com', teamStartTime: '08:30', teamEndTime: '17:30', status: 'Ongoing', members: ['Dave', 'Eve'] },
-    { id: 4, name: 'Silas Parker', company: 'Call Company', teamLeaderEmail: 'silas22@gmail.com', teamStartTime: '08:00', teamEndTime: '17:00', status: 'Ongoing', members: ['Frank'] },
+    { id: 1, name: 'Ken Smith', Department: 'Tech Department', teamLeaderEmail: 'ken99@yahoo.com', members: ['Alice', 'Bob', 'Charlie', 'David'] },
+    { id: 2, name: 'Abe Johnson', Department: 'Call Department', teamLeaderEmail: 'abe45@gmail.com', members: ['Charlie'] },
+    { id: 3, name: 'Monserrat Lee', Department: 'Tech Department', teamLeaderEmail: 'monserrat44@gmail.com', members: ['Dave', 'Eve'] },
+    { id: 4, name: 'Silas Parker', Department: 'Call Department', teamLeaderEmail: 'silas22@gmail.com', members: ['Frank'] },
   ];
 
   const [data, setData] = useState(initialData);
@@ -88,23 +47,15 @@ const ManageTeams = () => {
     setSelectedTeam({
       id: data.length + 1,
       name: '',
-      company: '',
+      Department: '',
       teamLeaderEmail: '',
-      teamStartTime: '09:00',
-      teamEndTime: '18:00',
-      status: 'Ongoing',
       members: [],
     });
     setIsDialogOpen(true);
   };
 
   const handleEditTeam = (team) => {
-    setSelectedTeam({
-      ...team,
-      teamStartTime: team.teamStartTime,
-      teamEndTime: team.teamEndTime,
-      members: team.members,
-    });
+    setSelectedTeam(team);
     setIsDialogOpen(true);
   };
 
@@ -134,7 +85,7 @@ const ManageTeams = () => {
 
   const filteredData = data.filter((record) =>
     record.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    record.company.toLowerCase().includes(searchQuery.toLowerCase())
+    record.Department.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -148,57 +99,44 @@ const ManageTeams = () => {
         >
           Add New Team
         </Button>
-        <div className="flex-grow flex items-center">
-          <input
+        <div className="flex-grow">
+          <Input
             type="text"
             placeholder="Search"
             value={searchQuery}
             onChange={handleSearch}
-            className="border rounded p-2 w-64" // Adjust width here
+            className="border rounded p-2 w-64 max-w-full"
           />
         </div>
       </div>
+
       <Table className="w-full border-collapse">
         <TableCaption>Details of teams and their statuses.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Team Name</TableHead>
-            <TableHead>Company</TableHead>
-            <TableHead>Team Leader Email</TableHead>
-            <TableHead>Team Start Time</TableHead>
-            <TableHead>Team End Time</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Total Hours</TableHead>
-            <TableHead>Members</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead className="text-center border-x">Team Name</TableHead>
+            <TableHead className="text-center border-x">Department</TableHead>
+            <TableHead className="text-center border-x">Team Leader Email</TableHead>
+            <TableHead className="text-center border-x">Members</TableHead>
+            <TableHead className="text-center border-x">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filteredData.map((team) => (
             <TableRow key={team.id}>
-              <TableCell>{team.name}</TableCell>
-              <TableCell>{team.company}</TableCell>
-              <TableCell>{team.teamLeaderEmail}</TableCell>
-              <TableCell>{convertTo12HourFormat(team.teamStartTime)}</TableCell>
-              <TableCell>{convertTo12HourFormat(team.teamEndTime)}</TableCell>
-              <TableCell>{team.status}</TableCell>
-              <TableCell>{calculateTotalHours(team.teamStartTime, team.teamEndTime)}</TableCell>
-              <TableCell>{team.members.join(', ')}</TableCell>
-              <TableCell className="flex space-x-2">
+              <TableCell className="text-center border-x">{team.name}</TableCell>
+              <TableCell className="text-center border-x">{team.Department}</TableCell>
+              <TableCell className="text-center border-x">{team.teamLeaderEmail}</TableCell>
+              <TableCell className="text-center border-x">
+                <ul className="list-disc ml-4">
+                  {team.members.slice(0, 2).map((member) => (
+                    <li key={member}>{member}</li>
+                  ))}
+                  {team.members.length > 2 && <li>and {team.members.length - 2} more...</li>}
+                </ul>
+              </TableCell>
+              <TableCell className="text-center border-x space-x-2">
                 <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        onClick={() => handleDeleteTeams(team.id)}
-                        className="bg-red-500 text-white hover:bg-red-600"
-                      >
-                        Delete
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Delete Team</p>
-                    </TooltipContent>
-                  </Tooltip>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
@@ -208,11 +146,15 @@ const ManageTeams = () => {
                         Edit
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Edit Team</p>
-                    </TooltipContent>
+                    <TooltipContent>Edit Team</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
+                <Button
+                  onClick={() => handleDeleteTeams(team.id)}
+                  className="bg-red-500 text-white hover:bg-red-600"
+                >
+                  Delete
+                </Button>
               </TableCell>
             </TableRow>
           ))}
@@ -220,95 +162,75 @@ const ManageTeams = () => {
       </Table>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{selectedTeam?.id ? 'Edit Team' : 'Add New Team'}</DialogTitle>
-            <DialogDescription>
-              {selectedTeam?.id ? 'Update the team details below:' : 'Enter the new team details below:'}
-            </DialogDescription>
+            <DialogDescription>Manage the team details here.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
+          <div className="space-y-6">
+            <div className="space-y-2">
               <label htmlFor="team-name">Team Name</label>
               <Input
                 id="team-name"
-                value={selectedTeam?.name || ""}
+                value={selectedTeam?.name || ''}
                 onChange={(e) => setSelectedTeam({ ...selectedTeam, name: e.target.value })}
+                className="border p-2 rounded w-full"
               />
             </div>
-            <div>
-              <label htmlFor="company">Company</label>
+            <div className="space-y-2">
+              <label htmlFor="Department">Department</label>
               <Input
-                id="company"
-                value={selectedTeam?.company || ""}
-                onChange={(e) => setSelectedTeam({ ...selectedTeam, company: e.target.value })}
+                id="Department"
+                value={selectedTeam?.Department || ''}
+                onChange={(e) => setSelectedTeam({ ...selectedTeam, Department: e.target.value })}
+                className="border p-2 rounded w-full"
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <label htmlFor="team-leader-email">Team Leader Email</label>
               <Input
                 id="team-leader-email"
-                value={selectedTeam?.teamLeaderEmail || ""}
+                value={selectedTeam?.teamLeaderEmail || ''}
                 onChange={(e) => setSelectedTeam({ ...selectedTeam, teamLeaderEmail: e.target.value })}
+                className="border p-2 rounded w-full"
               />
             </div>
-            <div className="flex space-x-4">
-              <div>
-                <label htmlFor="team-start-time">Team Start Time</label>
-                <Input
-                  id="team-start-time"
-                  value={convertTo12HourFormat(selectedTeam?.teamStartTime || "")}
-                  onChange={(e) => setSelectedTeam({ ...selectedTeam, teamStartTime: convertTo24HourFormat(e.target.value) })}
-                />
-              </div>
-              <div>
-                <label htmlFor="team-end-time">Team End Time</label>
-                <Input
-                  id="team-end-time"
-                  value={convertTo12HourFormat(selectedTeam?.teamEndTime || "")}
-                  onChange={(e) => setSelectedTeam({ ...selectedTeam, teamEndTime: convertTo24HourFormat(e.target.value) })}
-                />
-              </div>
-            </div>
-            <div>
-              <label htmlFor="status">Status</label>
-              <Select
-                value={selectedTeam?.status || "Ongoing"}
-                onValueChange={(value) => setSelectedTeam({ ...selectedTeam, status: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Ongoing">Ongoing</SelectItem>
-                  <SelectItem value="Done">Done</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label htmlFor="members">Add Members</label>
-              <div className="flex space-x-2">
-                <Input
-                  id="members"
-                  placeholder="Enter member name"
-                  value={newMember}
-                  onChange={(e) => setNewMember(e.target.value)}
-                />
-                <Button onClick={handleAddMember} className="bg-green-500 text-white hover:bg-green-600">Add</Button>
-              </div>
-              <div className="mt-2">
+            <div className="space-y-2">
+              <label htmlFor="members">Members</label>
+              <div className="grid grid-cols-2 gap-4">
                 {selectedTeam?.members.map((member, index) => (
-                  <div key={index} className="flex justify-between items-center">
+                  <div key={index} className="flex items-center space-x-4">
                     <span>{member}</span>
-                    <Button onClick={() => handleDeleteMember(member)} className="bg-red-500 text-white hover:bg-red-600">Remove</Button>
+                    <Button
+                      onClick={() => handleDeleteMember(member)}
+                      className="bg-red-500 text-white hover:bg-red-600"
+                    >
+                      Delete
+                    </Button>
                   </div>
                 ))}
               </div>
+              <div className="flex space-x-2 mt-2">
+                <Input
+                  value={newMember}
+                  onChange={(e) => setNewMember(e.target.value)}
+                  placeholder="Add new member"
+                  className="border p-2 rounded w-full"
+                />
+                <Button
+                  onClick={handleAddMember}
+                  className="bg-green-500 text-white hover:bg-green-600"
+                >
+                  Add
+                </Button>
+              </div>
             </div>
-          </div>
-          <div className="flex space-x-4 mt-6">
-            <Button onClick={handleSaveTeam} className="bg-blue-500 text-white hover:bg-blue-600">Save</Button>
-            <Button onClick={() => setIsDialogOpen(false)} className="bg-gray-500 text-white hover:bg-gray-600">Cancel</Button>
+            <Button
+              onClick={handleSaveTeam}
+              className="bg-blue-500 text-white hover:bg-blue-600 mt-4"
+            >
+              Save
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
