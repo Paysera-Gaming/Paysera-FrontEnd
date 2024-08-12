@@ -1,9 +1,11 @@
 import { Outlet } from 'react-router-dom';
 
+import TeamLeadNavigation from '@/components/TeamLeadComponents/TeamLeadNavigationBar';
+
 export default function TeamLeadPage() {
 	return (
 		<>
-			this is thie Teamleadpage
+			<TeamLeadNavigation></TeamLeadNavigation>
 			<Outlet></Outlet>
 		</>
 	);
