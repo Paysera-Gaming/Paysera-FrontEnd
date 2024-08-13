@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Tooltip } from "@chakra-ui/react";
 
 // Function to calculate total hours
 const calculateTotalHours = (startTime, endTime) => {
@@ -53,6 +54,40 @@ const determineSituation = (part1EndTime, lunchStartTime, lunchEndTime, part2End
     return "Lunch";
   } else {
     return "On Job";
+  }
+};
+
+// Function to determine the styling for status and situation
+const getStatusStyle = (status) => {
+  switch (status) {
+    case "Done":
+      return "bg-green-500 text-white";
+    case "Lunch":
+      return "bg-blue-500 text-white";
+    case "On Job":
+    case "Ongoing":
+      return "bg-orange-500 text-white";
+    case "Leave":
+      return "bg-red-500 text-white";
+    default:
+      return "bg-gray-300 text-black";
+  }
+};
+
+// Function to determine the tooltip text for status and situation
+const getStatusTooltip = (status) => {
+  switch (status) {
+    case "Done":
+      return "The work for the day is complete.";
+    case "Lunch":
+      return "Currently on lunch break.";
+    case "On Job":
+    case "Ongoing":
+      return "Work is ongoing.";
+    case "Leave":
+      return "The worker has left.";
+    default:
+      return "Unknown status.";
   }
 };
 
@@ -135,7 +170,6 @@ export function TableComponent() {
       status: "Ongoing",
     },
   ];
-  
 
   const [data, setData] = useState(initialData);
   const [searchQuery, setSearchQuery] = useState("");
@@ -189,68 +223,45 @@ export function TableComponent() {
   };
 
   const filteredData = data
-    .filter((record) =>
-      record.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
     .filter((record) => {
-      if (!filterType) return true;
-      return record.type === filterType;
-    })
-    .filter((record) => {
-      if (!filterSituation) return true;
-      return record.status === filterSituation;
-    })
-    .filter((record) => {
-      if (!filterStatus) return true;
-      return determineStatus(record.part1EndTime, record.lunchStartTime, record.lunchEndTime, record.part2EndTime) === filterStatus;
+      const matchesSearch = record.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesType = filterType ? record.type === filterType : true;
+      const matchesSituation = filterSituation ? determineSituation(record.part1EndTime, record.lunchStartTime, record.lunchEndTime, record.part2EndTime, record.status) === filterSituation : true;
+      const matchesStatus = filterStatus ? record.status === filterStatus : true;
+
+      return matchesSearch && matchesType && matchesSituation && matchesStatus;
     });
 
   return (
     <div>
       <div className="mb-4 flex space-x-4">
-        <button
-          onClick={() => setIsMinimized(!isMinimized)}
-          className={`p-2 border rounded ${isMinimized ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-blue-500 text-white hover:bg-blue-700'}`}
-        >
-          {isMinimized ? "Maximize Table" : "Minimize Table"}
-        </button>
-
         <input
           type="text"
-          placeholder="Search by name"
           value={searchQuery}
           onChange={handleSearch}
-          className="p-2 border rounded"
+          placeholder="Search by name"
+          className="border border-gray-300 p-2 rounded"
         />
-        <select
-          value={filterType}
-          onChange={handleFilterType}
-          className="p-2 border rounded"
-        >
-          <option value="">Filter by Type</option>
+        <select value={filterType} onChange={handleFilterType} className="border border-gray-300 p-2 rounded">
+          <option value="">All Types</option>
           <option value="Fixed">Fixed</option>
           <option value="Flexible">Flexible</option>
           <option value="Open">Open</option>
         </select>
-        <select
-          value={filterSituation}
-          onChange={handleFilterSituation}
-          className="p-2 border rounded"
-        >
-          <option value="">Filter by Situation</option>
-          <option value="Done">Done</option>
-          <option value="Lunch">Lunch</option>
+        <select value={filterSituation} onChange={handleFilterSituation} className="border border-gray-300 p-2 rounded">
+          <option value="">All Situations</option>
           <option value="On Job">On Job</option>
+          <option value="Leave">Leave</option>
+          <option value="Lunch">Lunch</option>
         </select>
-        <select
-          value={filterStatus}
-          onChange={handleFilterStatus}
-          className="p-2 border rounded"
-        >
-          <option value="">Filter by Status</option>
-          <option value="Done">Done</option>
+        <select value={filterStatus} onChange={handleFilterStatus} className="border border-gray-300 p-2 rounded">
+          <option value="">All Statuses</option>
           <option value="Ongoing">Ongoing</option>
+          <option value="Done">Done</option>
         </select>
+        <button onClick={() => setIsMinimized(!isMinimized)} className="bg-blue-500 text-white p-2 rounded">
+          {isMinimized ? "Expand" : "Minimize"}
+        </button>
       </div>
 
       <Table>
@@ -297,9 +308,8 @@ export function TableComponent() {
               End Time
               {sortConfig.key === "part2EndTime" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
             </TableHead>
-            <TableHead onClick={() => handleSort("status")}>
+            <TableHead>
               Status
-              {sortConfig.key === "status" && (sortConfig.direction === "ascending" ? " ▲" : " ▼")}
             </TableHead>
             <TableHead>
               Situation
@@ -326,9 +336,19 @@ export function TableComponent() {
                 </>
               )}
               <TableCell className="border-l">{record.part2EndTime}</TableCell>
-              <TableCell className="border-l">{record.status}</TableCell>
               <TableCell className="border-l">
-                {determineSituation(record.part1EndTime, record.lunchStartTime, record.lunchEndTime, record.part2EndTime, record.status)}
+                <Tooltip label={getStatusTooltip(record.status)} placement="top">
+                  <span className={`inline-block rounded-full h-6 w-6 ${getStatusStyle(record.status)} text-center leading-6`}>
+                    {record.status[0]}
+                  </span>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="border-l">
+                <Tooltip label={getStatusTooltip(determineSituation(record.part1EndTime, record.lunchStartTime, record.lunchEndTime, record.part2EndTime, record.status))} placement="top">
+                  <span className={`inline-block rounded-full h-6 w-6 ${getStatusStyle(determineSituation(record.part1EndTime, record.lunchStartTime, record.lunchEndTime, record.part2EndTime, record.status))} text-center leading-6`}>
+                    {determineSituation(record.part1EndTime, record.lunchStartTime, record.lunchEndTime, record.part2EndTime, record.status)[0]}
+                  </span>
+                </Tooltip>
               </TableCell>
               <TableCell className="border-l">
                 {calculateTotalHours(record.part1StartTime, record.part2EndTime)}

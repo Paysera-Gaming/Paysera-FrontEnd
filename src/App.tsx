@@ -1,7 +1,7 @@
 // src/App.tsx
 
 import { CalendarComponent } from '@/components/AdminDashboard/CalendarComponent';
-import { TableComponent } from '@/components/AdminDashboard/TableComponent';
+import { TableComponent } from '@/components/AdminDashboard/AttendanceComponent';
 import { PaginationComponent } from '@/components/AdminDashboard/PaginationComponent';
 import SheetComponent from '@/components/AdminDashboard/SheetComponent';
 import './App.css';
