@@ -27,17 +27,44 @@ import SheetComponent from './SheetComponent';
 
 const ManageTeams = () => {
   const initialData = [
-    { id: 1, name: 'Ken Smith', Department: 'Tech Department', teamLeaderEmail: 'ken99@yahoo.com', members: ['Alice', 'Bob', 'Charlie', 'David'] },
-    { id: 2, name: 'Abe Johnson', Department: 'Call Department', teamLeaderEmail: 'abe45@gmail.com', members: ['Charlie'] },
-    { id: 3, name: 'Monserrat Lee', Department: 'Tech Department', teamLeaderEmail: 'monserrat44@gmail.com', members: ['Dave', 'Eve'] },
-    { id: 4, name: 'Silas Parker', Department: 'Call Department', teamLeaderEmail: 'silas22@gmail.com', members: ['Frank'] },
+    { id: 1, name: 'Smith, Ken', Department: 'Tech Department', teamLeaderEmail: 'ken99@yahoo.com', members: ['Alice', 'Bob', 'Charlie', 'David'] },
+    { id: 2, name: 'Johnson, Abe', Department: 'Call Department', teamLeaderEmail: 'abe45@gmail.com', members: ['Charlie'] },
+    { id: 3, name: 'Lee, Monserrat', Department: 'Tech Department', teamLeaderEmail: 'monserrat44@gmail.com', members: ['Dave', 'Eve'] },
+    { id: 4, name: 'Parker, Silas', Department: 'Call Department', teamLeaderEmail: 'silas22@gmail.com', members: ['Frank'] },
   ];
 
   const [data, setData] = useState(initialData);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [selectedTeam, setSelectedTeam] = useState({
+    id: null,
+    name: '',
+    Department: '',
+    teamLeaderEmail: '',
+    members: [],
+  });
   const [newMember, setNewMember] = useState("");
+  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
+  const [errors, setErrors] = useState({ name: '', email: '' });
+
+  // Validation functions
+  const isValidName = (name) => {
+    const nameRegex = /^[A-Za-z]+(?: [A-Za-z]+)*(?:, [A-Za-z]+(?: [A-Za-z]+)*)?$/;
+    const [lastName, rest] = name.split(', ');
+    const [firstName, middleName] = rest ? rest.split(' ') : [];
+    return nameRegex.test(name) && lastName && firstName;
+  };
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const parseFullName = (fullName) => {
+    const [lastName, rest] = fullName.split(', ');
+    const [firstName, middleName] = rest ? rest.split(' ') : [];
+    return { lastName, firstName, middleName: middleName || '' };
+  };
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -60,6 +87,27 @@ const ManageTeams = () => {
   };
 
   const handleSaveTeam = () => {
+    let hasErrors = false;
+    let nameError = '';
+    let emailError = '';
+
+    // Validate name and email
+    if (!isValidName(selectedTeam.name)) {
+      nameError = 'Please enter the name in the format: Last Name, First Name Middle Name';
+      hasErrors = true;
+    }
+    if (!isValidEmail(selectedTeam.teamLeaderEmail)) {
+      emailError = 'Please enter a valid email address';
+      hasErrors = true;
+    }
+
+    if (hasErrors) {
+      setErrors({ name: nameError, email: emailError });
+      return;
+    }
+
+    setErrors({ name: '', email: '' });
+
     if (selectedTeam.id <= data.length) {
       setData(data.map((team) => (team.id === selectedTeam.id ? selectedTeam : team)));
     } else {
@@ -83,10 +131,33 @@ const ManageTeams = () => {
     setSelectedTeam({ ...selectedTeam, members: selectedTeam.members.filter((m) => m !== member) });
   };
 
+  const handleSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortData = (data, config) => {
+    const sortedData = [...data].sort((a, b) => {
+      if (a[config.key] < b[config.key]) {
+        return config.direction === 'ascending' ? -1 : 1;
+      }
+      if (a[config.key] > b[config.key]) {
+        return config.direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
+    return sortedData;
+  };
+
   const filteredData = data.filter((record) =>
     record.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     record.Department.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const sortedData = sortData(filteredData, sortConfig);
 
   return (
     <div className="container mx-auto p-6">
@@ -114,15 +185,30 @@ const ManageTeams = () => {
         <TableCaption>Details of teams and their statuses.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="text-center border-x">Team Leader Name</TableHead>
-            <TableHead className="text-center border-x">Department</TableHead>
-            <TableHead className="text-center border-x">Team Leader Email</TableHead>
+            <TableHead
+              className="text-center border-x cursor-pointer"
+              onClick={() => handleSort('name')}
+            >
+              Team Leader Name
+            </TableHead>
+            <TableHead
+              className="text-center border-x cursor-pointer"
+              onClick={() => handleSort('Department')}
+            >
+              Department
+            </TableHead>
+            <TableHead
+              className="text-center border-x cursor-pointer"
+              onClick={() => handleSort('teamLeaderEmail')}
+            >
+              Team Leader Email
+            </TableHead>
             <TableHead className="text-center border-x">Members</TableHead>
             <TableHead className="text-center border-x">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredData.map((team) => (
+          {sortedData.map((team) => (
             <TableRow key={team.id}>
               <TableCell className="text-center border-x">{team.name}</TableCell>
               <TableCell className="text-center border-x">{team.Department}</TableCell>
@@ -161,13 +247,13 @@ const ManageTeams = () => {
         </TableBody>
       </Table>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl h-[85vh] overflow-y-auto">
+      <Dialog open={isDialogOpen} onOpenChange={(open) => setIsDialogOpen(open)}>
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle>{selectedTeam?.id ? 'Edit Team' : 'Add New Team'}</DialogTitle>
-            <DialogDescription>Manage the team details here.</DialogDescription>
+            <DialogTitle>{selectedTeam.id ? 'Edit Team' : 'Add New Team'}</DialogTitle>
+            <DialogDescription>Fill in the details below.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="team-name">Team Leader Name</label>
               <Input
@@ -176,6 +262,7 @@ const ManageTeams = () => {
                 onChange={(e) => setSelectedTeam({ ...selectedTeam, name: e.target.value })}
                 className="border p-2 rounded w-full"
               />
+              {errors.name && <p className="text-red-500">{errors.name}</p>}
             </div>
             <div className="space-y-2">
               <label htmlFor="Department">Department</label>
@@ -194,6 +281,7 @@ const ManageTeams = () => {
                 onChange={(e) => setSelectedTeam({ ...selectedTeam, teamLeaderEmail: e.target.value })}
                 className="border p-2 rounded w-full"
               />
+              {errors.email && <p className="text-red-500">{errors.email}</p>}
             </div>
             <div className="space-y-2">
               <label htmlFor="members">Members</label>

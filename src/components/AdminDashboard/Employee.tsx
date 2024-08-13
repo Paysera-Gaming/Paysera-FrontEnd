@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import {
   Dialog,
   DialogContent,
@@ -39,6 +38,7 @@ const Employee = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [sortConfig, setSortConfig] = useState({ key: 'lastName', direction: 'ascending' });
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -58,11 +58,34 @@ const Employee = () => {
     setData(data.filter(emp => emp.id !== id));
   };
 
+  const handleSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortData = (data, config) => {
+    const sortedData = [...data].sort((a, b) => {
+      if (a[config.key] < b[config.key]) {
+        return config.direction === 'ascending' ? -1 : 1;
+      }
+      if (a[config.key] > b[config.key]) {
+        return config.direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
+    return sortedData;
+  };
+
   const filteredData = data.filter((record) =>
     record.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     record.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     record.team.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const sortedData = sortData(filteredData, sortConfig);
 
   return (
     <div className="container mx-auto p-6">
@@ -84,16 +107,26 @@ const Employee = () => {
         <TableCaption>Details of employees and their statuses.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="text-center border-x">Full Name</TableHead>
-            <TableHead className="text-center border-x">Status</TableHead>
-            <TableHead className="text-center border-x">Team & Role</TableHead>
-            <TableHead className="text-center border-x">Type</TableHead>
-            <TableHead className="text-center border-x">Email</TableHead>
+            <TableHead className="text-center border-x cursor-pointer" onClick={() => handleSort('lastName')}>
+              Full Name
+            </TableHead>
+            <TableHead className="text-center border-x cursor-pointer" onClick={() => handleSort('status')}>
+              Status
+            </TableHead>
+            <TableHead className="text-center border-x cursor-pointer" onClick={() => handleSort('team')}>
+              Team & Role
+            </TableHead>
+            <TableHead className="text-center border-x cursor-pointer" onClick={() => handleSort('type')}>
+              Type
+            </TableHead>
+            <TableHead className="text-center border-x cursor-pointer" onClick={() => handleSort('email')}>
+              Email
+            </TableHead>
             <TableHead className="text-center border-x">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredData.map((employee) => (
+          {sortedData.map((employee) => (
             <TableRow key={employee.id}>
               <TableCell className="text-center border-x">
                 {`${employee.lastName}, ${employee.firstName} ${employee.middleName}`}
