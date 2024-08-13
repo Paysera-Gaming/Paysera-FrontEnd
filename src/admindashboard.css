@@ -336,3 +336,38 @@ button:hover {
 .logout-section li:hover {
   background-color: #fceaea;
 }
+
+.link-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.link-content {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between icon and text */
+  color: #333;
+  text-decoration: none;
+}
+
+.link-content svg {
+  font-size: 1.2rem; /* Adjust the size of the icon */
+  color: #007bff; /* Icon color */
+}
+
+.link-content span {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.link-item:hover {
+  background-color: #f0f4f8;
+}
+
+
+

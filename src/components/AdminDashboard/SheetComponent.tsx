@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { FaHome, FaUsers, FaList, FaEnvelope, FaCog } from 'react-icons/fa';
 import {
   Sheet,
   SheetContent,
@@ -16,18 +17,21 @@ const SheetComponent = () => {
 
   const renderLinks = () => {
     const links = [
-      { path: '/', label: 'Attendance' },
-      { path: '/manageteams', label: 'Manage Teams' },
-      { path: '/employeelist', label: 'Employee List' }, // Added Employee List
-      { path: '/messages', label: 'Messages' },
-      { path: '/settings', label: 'Settings' },
+      { path: '/', label: 'Attendance', icon: <FaHome /> },
+      { path: '/manageteams', label: 'Manage Teams', icon: <FaUsers /> },
+      { path: '/employeelist', label: 'Employee List', icon: <FaList /> },
+      { path: '/messages', label: 'Messages', icon: <FaEnvelope /> },
+      { path: '/settings', label: 'Settings', icon: <FaCog /> },
     ];
 
     return links
       .filter(link => link.path !== currentPath)
       .map(link => (
-        <li key={link.path}>
-          <Link to={link.path}>{link.label}</Link>
+        <li key={link.path} className="link-item">
+          <Link to={link.path} className="link-content sheet-button">
+            {link.icon}
+            <span>{link.label}</span>
+          </Link>
         </li>
       ));
   };
