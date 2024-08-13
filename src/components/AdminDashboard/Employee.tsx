@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Dialog,
   DialogContent,
@@ -28,10 +29,10 @@ import SheetComponent from './SheetComponent';
 
 const Employee = () => {
   const initialData = [
-    { id: 1, lastName: 'Smith', firstName: 'Ken', middleName: 'A.', status: 'Active', team: 'Tech Department', email: 'ken99@yahoo.com', type: 'Fixed', latestDateIn: '2024-08-10', latestTimeOut: '17:00' },
-    { id: 2, lastName: 'Johnson', firstName: 'Abe', middleName: 'B.', status: 'Inactive', team: 'Call Department', email: 'abe45@gmail.com', type: 'Flexible', latestDateIn: '2024-08-09', latestTimeOut: '18:00' },
-    { id: 3, lastName: 'Lee', firstName: 'Monserrat', middleName: 'C.', status: 'Active', team: 'Tech Department', email: 'monserrat44@gmail.com', type: 'Super Flexible', latestDateIn: '2024-08-11', latestTimeOut: '19:00' },
-    { id: 4, lastName: 'Parker', firstName: 'Silas', middleName: 'D.', status: 'Active', team: 'Call Department', email: 'silas22@gmail.com', type: 'Fixed', latestDateIn: '2024-08-08', latestTimeOut: '16:30' },
+    { id: 1, lastName: 'Smith', firstName: 'Ken', middleName: 'A.', status: 'Active', team: 'Tech Department', role: 'Developer', email: 'ken99@yahoo.com', type: 'Fixed' },
+    { id: 2, lastName: 'Johnson', firstName: 'Abe', middleName: 'B.', status: 'Inactive', team: 'Call Department', role: 'Support', email: 'abe45@gmail.com', type: 'Flexible' },
+    { id: 3, lastName: 'Lee', firstName: 'Monserrat', middleName: 'C.', status: 'Active', team: 'Tech Department', role: 'Lead Developer', email: 'monserrat44@gmail.com', type: 'Super Flexible' },
+    { id: 4, lastName: 'Parker', firstName: 'Silas', middleName: 'D.', status: 'Active', team: 'Call Department', role: 'Manager', email: 'silas22@gmail.com', type: 'Fixed' },
   ];
 
   const [data, setData] = useState(initialData);
@@ -85,10 +86,8 @@ const Employee = () => {
           <TableRow>
             <TableHead className="text-center border-x">Full Name</TableHead>
             <TableHead className="text-center border-x">Status</TableHead>
-            <TableHead className="text-center border-x">Team</TableHead>
+            <TableHead className="text-center border-x">Team & Role</TableHead>
             <TableHead className="text-center border-x">Type</TableHead>
-            <TableHead className="text-center border-x">Latest Date In</TableHead>
-            <TableHead className="text-center border-x">Latest Time Out</TableHead>
             <TableHead className="text-center border-x">Email</TableHead>
             <TableHead className="text-center border-x">Actions</TableHead>
           </TableRow>
@@ -99,11 +98,14 @@ const Employee = () => {
               <TableCell className="text-center border-x">
                 {`${employee.lastName}, ${employee.firstName} ${employee.middleName}`}
               </TableCell>
-              <TableCell className="text-center border-x">{employee.status}</TableCell>
-              <TableCell className="text-center border-x">{employee.team}</TableCell>
+              <TableCell className="text-center border-x">
+                <span className={`inline-block w-3 h-3 mr-2 rounded-full ${employee.status === 'Active' ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                {employee.status}
+              </TableCell>
+              <TableCell className="text-center border-x">
+                {employee.team} - {employee.role}
+              </TableCell>
               <TableCell className="text-center border-x">{employee.type}</TableCell>
-              <TableCell className="text-center border-x">{employee.latestDateIn}</TableCell>
-              <TableCell className="text-center border-x">{employee.latestTimeOut}</TableCell>
               <TableCell className="text-center border-x">{employee.email}</TableCell>
               <TableCell className="text-center border-x space-x-2">
                 <TooltipProvider>
@@ -175,14 +177,23 @@ const Employee = () => {
               />
             </div>
             <div className="space-y-2">
+              <label htmlFor="role">Role</label>
+              <Input
+                id="role"
+                value={selectedEmployee?.role || ''}
+                onChange={(e) => setSelectedEmployee({ ...selectedEmployee, role: e.target.value })}
+                className="border p-2 rounded w-full"
+              />
+            </div>
+            <div className="space-y-2">
               <label htmlFor="type">Type</label>
               <Select
                 id="type"
                 value={selectedEmployee?.type || 'Fixed'}
                 onValueChange={(value) => setSelectedEmployee({ ...selectedEmployee, type: value })}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose Type" />
+                <SelectTrigger className="border p-2 rounded w-full">
+                  <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Fixed">Fixed</SelectItem>
@@ -191,7 +202,6 @@ const Employee = () => {
                 </SelectContent>
               </Select>
             </div>
-            
             <div className="space-y-2">
               <label htmlFor="email">Email</label>
               <Input
@@ -201,12 +211,10 @@ const Employee = () => {
                 className="border p-2 rounded w-full"
               />
             </div>
-            <Button
-              onClick={handleSaveEmployee}
-              className="bg-blue-500 text-white hover:bg-blue-600 mt-4"
-            >
-              Save
-            </Button>
+          </div>
+          <div className="flex justify-end mt-4 space-x-4">
+            <Button onClick={() => setIsDialogOpen(false)} className="bg-gray-500 text-white hover:bg-gray-600">Cancel</Button>
+            <Button onClick={handleSaveEmployee} className="bg-blue-500 text-white hover:bg-blue-600">Save</Button>
           </div>
         </DialogContent>
       </Dialog>

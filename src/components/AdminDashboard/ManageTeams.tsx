@@ -114,7 +114,7 @@ const ManageTeams = () => {
         <TableCaption>Details of teams and their statuses.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="text-center border-x">Team Name</TableHead>
+            <TableHead className="text-center border-x">Team Leader Name</TableHead>
             <TableHead className="text-center border-x">Department</TableHead>
             <TableHead className="text-center border-x">Team Leader Email</TableHead>
             <TableHead className="text-center border-x">Members</TableHead>
@@ -169,7 +169,7 @@ const ManageTeams = () => {
           </DialogHeader>
           <div className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="team-name">Team Name</label>
+              <label htmlFor="team-name">Team Leader Name</label>
               <Input
                 id="team-name"
                 value={selectedTeam?.name || ''}

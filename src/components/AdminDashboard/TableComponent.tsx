@@ -87,7 +87,7 @@ const compareTimes = (a, b, key, direction) => {
 export function TableComponent() {
   const initialData = [
     {
-      name: "John Doe",
+      name: "Doe, John",
       type: "Fixed",
       date: "2023-08-01",
       part1StartTime: "09:00 AM",
@@ -99,7 +99,7 @@ export function TableComponent() {
       status: "Done",
     },
     {
-      name: "Jane Smith",
+      name: "Smith, Jane",
       type: "Flexible",
       date: "2023-08-02",
       part1StartTime: "10:00 AM",
@@ -111,7 +111,7 @@ export function TableComponent() {
       status: "Done",
     },
     {
-      name: "Alice Johnson",
+      name: "Johnson, Alice",
       type: "Open",
       date: "2023-08-01",
       part1StartTime: "08:30 AM",
@@ -123,7 +123,7 @@ export function TableComponent() {
       status: "Ongoing",
     },
     {
-      name: "Bob Brown",
+      name: "Brown, Bob",
       type: "Fixed",
       date: "2023-08-01",
       part1StartTime: "08:00 AM",
@@ -135,6 +135,7 @@ export function TableComponent() {
       status: "Ongoing",
     },
   ];
+  
 
   const [data, setData] = useState(initialData);
   const [searchQuery, setSearchQuery] = useState("");
