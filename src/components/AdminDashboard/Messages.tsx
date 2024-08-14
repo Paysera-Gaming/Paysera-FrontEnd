@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import SheetComponent from 'C:/Users/Admin/Paysera-FrontEnd/src/components/AdminDashboard/SheetComponent.tsx';
+import { PaginationComponent } from './PaginationComponent'; // Adjust the path if needed
 
 const Messages = () => {
   const initialMessages = [
@@ -8,13 +9,17 @@ const Messages = () => {
     { id: 2, sender: 'Abe Johnson', subject: 'New Task Assigned', date: '2024-08-02', content: 'You have been assigned a new task.', status: 'Unread' },
     { id: 3, sender: 'Monserrat Lee', subject: 'Design Feedback', date: '2024-08-03', content: 'Please review the design changes.', status: 'Read' },
     { id: 4, sender: 'Silas Parker', subject: 'Bug Report', date: '2024-08-04', content: 'A bug was reported in the latest build.', status: 'Unread' },
+    // Add more messages for testing pagination
   ];
 
   const [messages, setMessages] = useState(initialMessages);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 2; // Adjust as needed
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to first page on search
   };
 
   const handleReply = (id) => {
@@ -29,6 +34,14 @@ const Messages = () => {
   const filteredMessages = messages.filter((message) =>
     message.subject.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredMessages.length / itemsPerPage);
+  const paginatedMessages = filteredMessages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
@@ -56,7 +69,7 @@ const Messages = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredMessages.map((message) => (
+          {paginatedMessages.map((message) => (
             <TableRow key={message.id} className="border border-gray-300">
               <TableCell className="border border-gray-300">{message.sender}</TableCell>
               <TableCell className="border border-gray-300">{message.subject}</TableCell>
@@ -81,6 +94,12 @@ const Messages = () => {
           ))}
         </TableBody>
       </Table>
+
+      <PaginationComponent
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

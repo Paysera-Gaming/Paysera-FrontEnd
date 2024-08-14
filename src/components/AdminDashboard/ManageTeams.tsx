@@ -24,6 +24,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SheetComponent from './SheetComponent';
+import { PaginationComponent } from './PaginationComponent'; // Adjust the path if needed
 
 const ManageTeams = () => {
   const initialData = [
@@ -46,6 +47,10 @@ const ManageTeams = () => {
   const [newMember, setNewMember] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
   const [errors, setErrors] = useState({ name: '', email: '' });
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Number of items per page
 
   // Validation functions
   const isValidName = (name) => {
@@ -68,6 +73,7 @@ const ManageTeams = () => {
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to first page on search
   };
 
   const handleAddTeams = () => {
@@ -159,6 +165,15 @@ const ManageTeams = () => {
 
   const sortedData = sortData(filteredData, sortConfig);
 
+  // Pagination logic
+  const totalItems = sortedData.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const paginatedData = sortedData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="container mx-auto p-6">
       <SheetComponent />
@@ -208,7 +223,7 @@ const ManageTeams = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedData.map((team) => (
+          {paginatedData.map((team) => (
             <TableRow key={team.id}>
               <TableCell className="text-center border-x">{team.name}</TableCell>
               <TableCell className="text-center border-x">{team.Department}</TableCell>
@@ -246,6 +261,12 @@ const ManageTeams = () => {
           ))}
         </TableBody>
       </Table>
+
+      <PaginationComponent
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
 
       <Dialog open={isDialogOpen} onOpenChange={(open) => setIsDialogOpen(open)}>
         <DialogContent>

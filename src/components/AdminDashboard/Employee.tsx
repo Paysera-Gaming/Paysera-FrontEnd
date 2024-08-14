@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import SheetComponent from './SheetComponent';
+import { PaginationComponent } from './PaginationComponent'; // Adjust the path if needed
 
 const Employee = () => {
   const initialData = [
@@ -32,6 +33,7 @@ const Employee = () => {
     { id: 2, lastName: 'Johnson', firstName: 'Abe', middleName: 'B.', status: 'Inactive', team: 'Call Department', role: 'Support', email: 'abe45@gmail.com', type: 'Flexible' },
     { id: 3, lastName: 'Lee', firstName: 'Monserrat', middleName: 'C.', status: 'Active', team: 'Tech Department', role: 'Lead Developer', email: 'monserrat44@gmail.com', type: 'Super Flexible' },
     { id: 4, lastName: 'Parker', firstName: 'Silas', middleName: 'D.', status: 'Active', team: 'Call Department', role: 'Manager', email: 'silas22@gmail.com', type: 'Fixed' },
+    // Add more data as needed
   ];
 
   const [data, setData] = useState(initialData);
@@ -40,8 +42,13 @@ const Employee = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'lastName', direction: 'ascending' });
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5; // Number of items per page
+
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to first page on search
   };
 
   const handleEditEmployee = (employee) => {
@@ -87,6 +94,10 @@ const Employee = () => {
 
   const sortedData = sortData(filteredData, sortConfig);
 
+  // Calculate pagination
+  const totalPages = Math.ceil(sortedData.length / pageSize);
+  const paginatedData = sortedData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
   return (
     <div className="container mx-auto p-6">
       <SheetComponent />
@@ -126,7 +137,7 @@ const Employee = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedData.map((employee) => (
+          {paginatedData.map((employee) => (
             <TableRow key={employee.id}>
               <TableCell className="text-center border-x">
                 {`${employee.lastName}, ${employee.firstName} ${employee.middleName}`}
@@ -165,6 +176,14 @@ const Employee = () => {
           ))}
         </TableBody>
       </Table>
+
+      <div className="flex justify-center mt-4">
+        <PaginationComponent
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl h-[85vh] overflow-y-auto">
