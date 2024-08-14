@@ -48,11 +48,13 @@ function ProfileHeader() {
 		<header>
 			<span className="flex items-center justify-start ">
 				<Icons.logo className="w-10 h-10"></Icons.logo>
-				<h3 className="scroll-m-20 text-2xl font-semibold  tracking-tight">
-					Paysera
-				</h3>
+				<span>
+					<h3 className="scroll-m-20 text-2xl font-semibold  tracking-tight">
+						Paysera
+					</h3>
+					<p className=" text-sm text-muted-foreground">Good morning John!</p>
+				</span>
 			</span>
-			<p className="ml-10 text-sm text-muted-foreground">Good morning Lue!</p>
 		</header>
 	);
 }
@@ -74,10 +76,6 @@ function LogOutButton() {
 	);
 }
 
-function Timer() {
-	return <section> this is the timer</section>;
-}
-
 export default function TeamLeadNavigation() {
 	const routeLinks: string[] = [
 		'dashboard',
@@ -90,7 +88,6 @@ export default function TeamLeadNavigation() {
 		<nav className="bg-card boder-solid border-border border rounded-md h-full p-2 gap-y-10 w-60 flex flex-col items-start justify-between">
 			{/* unahin header */}
 			<ProfileHeader></ProfileHeader>
-			<Timer></Timer>
 			{/* then eto */}
 			<ul className="flex-1 w-full">
 				<RouteItems links={routeLinks} />
