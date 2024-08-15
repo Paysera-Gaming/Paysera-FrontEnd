@@ -51,13 +51,13 @@ const determineSituation = (part1EndTime, lunchStartTime, lunchEndTime, part2End
 const getSituationStyle = (situation) => {
   switch (situation) {
     case "Leave":
-      return "bg-red-500 text-white"; // Change color to red
+      return "bg-red-100 text-red-600"; // Light red background
     case "On Job":
-      return "bg-green-500 text-white"; // Change color to green
+      return "bg-green-100 text-green-600"; // Light green background
     case "Lunch":
-      return "bg-blue-500 text-white"; // Add case for lunch with blue color
+      return "bg-blue-100 text-blue-600"; // Light blue background
     default:
-      return "bg-gray-300 text-black";
+      return "bg-gray-200 text-gray-600";
   }
 };
 
@@ -69,93 +69,50 @@ const getSituationTooltip = (situation) => {
     case "On Job":
       return "Work is ongoing.";
     case "Lunch":
-      return "Worker is on lunch break."; // Add tooltip for lunch
+      return "Worker is on lunch break.";
     default:
       return "Unknown situation.";
   }
 };
 
-export function TableComponent() {
-  const initialData = [
-    {
-      name: "Doe, John",
-      type: "Fixed",
-      date: "2023-08-01",
-      part1StartTime: "09:00 AM",
-      part1EndTime: "01:00 PM",
-      lunchStartTime: "01:00 PM",
-      lunchEndTime: "02:00 PM",
-      part2StartTime: "02:00 PM",
-      part2EndTime: "06:00 PM",
-    },
-    {
-      name: "Smith, Jane",
-      type: "Flexible",
-      date: "2023-08-02",
-      part1StartTime: "10:00 AM",
-      part1EndTime: "02:00 PM",
-      lunchStartTime: "02:00 PM",
-      lunchEndTime: "03:00 PM",
-      part2StartTime: "03:00 PM",
-      part2EndTime: "07:00 PM",
-    },
-    {
-      name: "Johnson, Alice",
-      type: "Open",
-      date: "2023-08-01",
-      part1StartTime: "08:30 AM",
-      part1EndTime: "12:30 PM",
-      lunchStartTime: "12:30 PM",
-      lunchEndTime: "01:30 PM",
-      part2StartTime: "01:30 PM",
-      part2EndTime: "05:30 PM",
-    },
-    {
-      name: "Brown, Bob",
-      type: "Fixed",
-      date: "2023-08-01",
-      part1StartTime: "08:00 AM",
-      part1EndTime: "12:00 PM",
-      lunchStartTime: "12:00 PM",
-      lunchEndTime: "01:00 PM",
-      part2StartTime: "01:00 PM",
-      part2EndTime: "05:00 PM",
-    },
-    {
-      name: "Davis, Carol",
-      type: "Fixed",
-      date: "2023-08-01",
-      part1StartTime: "09:30 AM",
-      part1EndTime: "01:30 PM",
-      lunchStartTime: "01:30 PM",
-      lunchEndTime: "02:30 PM",
-      part2StartTime: "02:30 PM",
-      part2EndTime: "06:30 PM",
-    },
-    {
-      name: "Miller, Frank",
-      type: "Flexible",
-      date: "2023-08-01",
-      part1StartTime: "07:00 AM",
-      part1EndTime: "11:00 AM",
-      lunchStartTime: "11:00 AM",
-      lunchEndTime: "12:00 PM",
-      part2StartTime: "12:00 PM",
-      part2EndTime: "04:00 PM",
-    },
-    {
-      name: "Wilson, Grace",
-      type: "Open",
-      date: "2023-08-01",
-      part1StartTime: "10:00 AM",
-      part1EndTime: "02:00 PM",
-      lunchStartTime: "02:00 PM",
-      lunchEndTime: "03:00 PM",
-      part2StartTime: "03:00 PM",
-      part2EndTime: "07:00 PM",
-    },
-  ];
+// Sample data
+const initialData = [
+  {
+    name: "Alice Smith",
+    type: "Fixed",
+    date: "2024-08-14",
+    part1StartTime: "09:00 AM",
+    part1EndTime: "12:00 PM",
+    lunchStartTime: "12:00 PM",
+    lunchEndTime: "12:30 PM",
+    part2StartTime: "12:30 PM",
+    part2EndTime: "06:00 PM",
+  },
+  {
+    name: "Bob Johnson",
+    type: "Flexible",
+    date: "2024-08-14",
+    part1StartTime: "10:00 AM",
+    part1EndTime: "01:00 PM",
+    lunchStartTime: "01:00 PM",
+    lunchEndTime: "01:30 PM",
+    part2StartTime: "01:30 PM",
+    part2EndTime: "05:00 PM",
+  },
+  {
+    name: "Carol Lee",
+    type: "Open",
+    date: "2024-08-14",
+    part1StartTime: "08:00 AM",
+    part1EndTime: "11:00 AM",
+    lunchStartTime: "11:00 AM",
+    lunchEndTime: "11:30 AM",
+    part2StartTime: "11:30 AM",
+    part2EndTime: "04:00 PM",
+  },
+];
 
+export function TableComponent() {
   const [data, setData] = useState(initialData);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "" });
@@ -209,6 +166,23 @@ export function TableComponent() {
     setData(sortedData);
   };
 
+  // Function to count employees by situation
+  const countSituations = () => {
+    const counts = { "On Job": 0, "Lunch": 0, "Leave": 0 };
+
+    data.forEach((row) => {
+      const situation = determineSituation(
+        row.part1EndTime,
+        row.lunchStartTime,
+        row.lunchEndTime,
+        row.part2EndTime
+      );
+      counts[situation]++;
+    });
+
+    return counts;
+  };
+
   const filteredData = data
     .filter((row) => {
       const searchMatch =
@@ -250,7 +224,7 @@ export function TableComponent() {
           <TableCell>{calculateTotalHours(row.part1StartTime, row.part2EndTime)}</TableCell>
           <TableCell>
             <Tooltip label={getSituationTooltip(situation)} placement="top">
-              <span className={`rounded-full px-3 py-1 text-xs font-medium ${getSituationStyle(situation)}`}>
+              <span className={`rounded-full px-2 py-1 text-sm ${getSituationStyle(situation)}`}>
                 {situation}
               </span>
             </Tooltip>
@@ -258,6 +232,8 @@ export function TableComponent() {
         </TableRow>
       );
     });
+
+  const situationCounts = countSituations();
 
   const handleFilterTypeChange = (e) => {
     setFilterType(e.target.value);
@@ -273,18 +249,19 @@ export function TableComponent() {
 
   return (
     <div className="p-4">
-      <div className="mb-4 flex items-center justify-between">
+      {/* Filters and Search */}
+      <div className="mb-4 flex items-center">
         <input
           type="text"
-          placeholder="Search by name or type"
           value={searchQuery}
           onChange={handleSearch}
-          className="mr-2 rounded-md border p-2"
+          placeholder="Search by Name or Type"
+          className="mr-2 rounded-md border p-2 text-sm"
         />
         <select
           value={filterType}
           onChange={handleFilterTypeChange}
-          className="mr-2 rounded-md border p-2"
+          className="mr-2 rounded-md border p-2 text-sm"
         >
           <option value="">Filter by Type</option>
           <option value="Fixed">Fixed</option>
@@ -294,7 +271,7 @@ export function TableComponent() {
         <select
           value={filterSituation}
           onChange={handleFilterSituationChange}
-          className="mr-2 rounded-md border p-2"
+          className="mr-2 rounded-md border p-2 text-sm"
         >
           <option value="">Filter by Situation</option>
           <option value="On Job">On Job</option>
@@ -303,10 +280,26 @@ export function TableComponent() {
         </select>
         <button
           onClick={handleMinimizeClick}
-          className="ml-2 rounded-md bg-blue-500 p-2 text-white"
+          className="ml-2 rounded-md bg-blue-500 p-2 text-white text-sm"
         >
           {isMinimized ? "Maximize" : "Minimize"}
         </button>
+      </div>
+
+      {/* Compact Summary Section */}
+      <div className="mb-4 flex justify-between">
+        <div className="flex-1 p-2 bg-green-100 border border-green-300 rounded shadow-sm text-center">
+          <p className="text-sm font-medium text-green-600">On Job</p>
+          <p className="text-lg font-bold">{situationCounts["On Job"]}</p>
+        </div>
+        <div className="flex-1 p-2 bg-blue-100 border border-blue-300 rounded shadow-sm text-center mx-2">
+          <p className="text-sm font-medium text-blue-600">Lunch</p>
+          <p className="text-lg font-bold">{situationCounts["Lunch"]}</p>
+        </div>
+        <div className="flex-1 p-2 bg-red-100 border border-red-300 rounded shadow-sm text-center">
+          <p className="text-sm font-medium text-red-600">Leave</p>
+          <p className="text-lg font-bold">{situationCounts["Leave"]}</p>
+        </div>
       </div>
 
       <Table className="min-w-full border">

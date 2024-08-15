@@ -30,9 +30,9 @@ import { PaginationComponent } from './PaginationComponent'; // Adjust the path 
 const Employee = () => {
   const initialData = [
     { id: 1, lastName: 'Smith', firstName: 'Ken', middleName: 'A.', status: 'Active', team: 'Tech Department', role: 'Developer', email: 'ken99@yahoo.com', type: 'Fixed' },
-    { id: 2, lastName: 'Johnson', firstName: 'Abe', middleName: 'B.', status: 'Inactive', team: 'Call Department', role: 'Support', email: 'abe45@gmail.com', type: 'Flexible' },
-    { id: 3, lastName: 'Lee', firstName: 'Monserrat', middleName: 'C.', status: 'Active', team: 'Tech Department', role: 'Lead Developer', email: 'monserrat44@gmail.com', type: 'Super Flexible' },
-    { id: 4, lastName: 'Parker', firstName: 'Silas', middleName: 'D.', status: 'Active', team: 'Call Department', role: 'Manager', email: 'silas22@gmail.com', type: 'Fixed' },
+    { id: 2, lastName: 'Johnson', firstName: 'Abe', middleName: 'B.', status: 'Leave', team: 'Call Department', role: 'Support', email: 'abe45@gmail.com', type: 'Flexible' },
+    { id: 3, lastName: 'Lee', firstName: 'Monserrat', middleName: 'C.', status: 'Lunch', team: 'Tech Department', role: 'Lead Developer', email: 'monserrat44@gmail.com', type: 'Super Flexible' },
+    { id: 4, lastName: 'Parker', firstName: 'Silas', middleName: 'D.', status: 'Offline', team: 'Call Department', role: 'Manager', email: 'silas22@gmail.com', type: 'Fixed' },
     // Add more data as needed
   ];
 
@@ -98,10 +98,39 @@ const Employee = () => {
   const totalPages = Math.ceil(sortedData.length / pageSize);
   const paginatedData = sortedData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
+  // Calculate counters
+  const totalActive = data.filter(emp => emp.status === 'Active').length;
+  const totalOnLunch = data.filter(emp => emp.status === 'Lunch').length;
+  const totalOnLeave = data.filter(emp => emp.status === 'Leave').length;
+  const totalOffline = data.filter(emp => emp.status === 'Offline').length;
+
   return (
     <div className="container mx-auto p-6">
       <SheetComponent />
       <h2 className="text-2xl font-semibold mb-6 text-center">Employee List</h2>
+
+{/* Employee Status Summary */}
+<div className="grid grid-cols-4 gap-4 mb-6">
+  <div className="bg-green-100 p-4 rounded border border-green-300 text-center shadow-sm">
+    <h3 className="text-lg font-semibold text-green-600">Active Employees</h3>
+    <p className="text-3xl font-bold text-black">{totalActive}</p>
+  </div>
+  <div className="bg-yellow-100 p-4 rounded border border-yellow-300 text-center shadow-sm">
+    <h3 className="text-lg font-semibold text-yellow-600">Employees on Lunch</h3>
+    <p className="text-3xl font-bold text-black">{totalOnLunch}</p>
+  </div>
+  <div className="bg-red-100 p-4 rounded border border-red-300 text-center shadow-sm">
+    <h3 className="text-lg font-semibold text-red-600">Employees on Leave</h3>
+    <p className="text-3xl font-bold text-black">{totalOnLeave}</p>
+  </div>
+  <div className="bg-gray-100 p-4 rounded border border-gray-300 text-center shadow-sm">
+    <h3 className="text-lg font-semibold text-gray-600">Employees Offline</h3>
+    <p className="text-3xl font-bold text-black">{totalOffline}</p>
+  </div>
+</div>
+
+
+
       <div className="flex items-center mb-6 space-x-4">
         <div className="flex-grow">
           <Input
@@ -143,7 +172,7 @@ const Employee = () => {
                 {`${employee.lastName}, ${employee.firstName} ${employee.middleName}`}
               </TableCell>
               <TableCell className="text-center border-x">
-                <span className={`inline-block w-3 h-3 mr-2 rounded-full ${employee.status === 'Active' ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                <span className={`inline-block w-3 h-3 mr-2 rounded-full ${employee.status === 'Active' ? 'bg-green-500' : employee.status === 'Lunch' ? 'bg-yellow-500' : employee.status === 'Leave' ? 'bg-red-500' : 'bg-gray-500'}`}></span>
                 {employee.status}
               </TableCell>
               <TableCell className="text-center border-x">
