@@ -369,6 +369,40 @@ button:hover {
   background-color: #f0f4f8;
 }
 
+/* Profile Info Container */
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* Space between avatar and text */
+  margin-bottom: 20px;
+}
+
+/* Profile Avatar */
+.profile-avatar {
+  flex-shrink: 0; /* Prevent avatar from shrinking */
+}
+
+/* Profile Info Text */
+.profile-info-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Username Style */
+.username {
+  font-size: 1.25rem; /* Larger text for prominence */
+  font-weight: 700; /* Bold text */
+  color: #333; /* Dark text color */
+}
+
+/* User Role Style */
+.user-role {
+  font-size: 1rem; /* Slightly smaller text */
+  color: #6b7280; /* Gray text color */
+}
+
+
 
 
 
