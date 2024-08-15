@@ -1,10 +1,7 @@
-// button
-import { Button } from '@/components/ui/button';
-
-import { Home, Calendar, FolderKanban, UserCheck, LogOut } from 'lucide-react';
+import { Home, Calendar, FolderKanban, UserCheck } from 'lucide-react';
 import { Icons } from '@/icons/Icon';
 // router
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { ReactNode } from 'react';
 
 // logout component
@@ -61,23 +58,6 @@ function ProfileHeader() {
 		</header>
 	);
 }
-
-// function LogOutButton() {
-// 	// TODO: add a modal for confirmation
-// 	const navigate = useNavigate();
-
-// 	function logOutUser() {
-// 		navigate('/login');
-// 	}
-
-// 	return (
-// 		// add modal here
-// 		<Button variant={'outline'} onClick={logOutUser} className="gap-2 w-full">
-// 			<LogOut></LogOut>
-// 			<p>Logout</p>
-// 		</Button>
-// 	);
-// }
 
 export default function TeamLeadNavigation() {
 	const routeLinks: string[] = [
