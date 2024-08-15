@@ -5,6 +5,22 @@ import { PaginationComponent } from 'C:/Users/Admin/Paysera-FrontEnd/src/compone
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { EnvelopeOpenIcon, InboxIcon } from '@heroicons/react/24/outline';
+
+const MessageCounts = ({ messageCounts }) => (
+  <div className="mb-6 flex justify-between text-center">
+    <div className="flex-1 bg-green-100 p-4 rounded-lg border border-green-300 shadow-sm">
+      <EnvelopeOpenIcon className="w-8 h-8 text-green-600 mb-2 mx-auto" />
+      <p className="text-lg font-semibold text-green-600">Read</p>
+      <p className="text-2xl font-bold text-black">{messageCounts.Read}</p>
+    </div>
+    <div className="flex-1 bg-yellow-100 p-4 rounded-lg border border-yellow-300 shadow-sm mx-4">
+      <InboxIcon className="w-8 h-8 text-yellow-600 mb-2 mx-auto" />
+      <p className="text-lg font-semibold text-yellow-600">Unread</p>
+      <p className="text-2xl font-bold text-black">{messageCounts.Unread}</p>
+    </div>
+  </div>
+);
 
 const Messages = () => {
   const initialMessages = [
@@ -133,19 +149,7 @@ const Messages = () => {
         />
       </div>
 
-{/* Message Counts */}
-<div className="mb-6 flex justify-between text-center">
-  <div className="flex-1 bg-green-100 p-4 rounded-lg border border-green-300 shadow-sm">
-    <p className="text-lg font-semibold text-green-600">Read</p>
-    <p className="text-2xl font-bold text-black">{messageCounts.Read}</p>
-  </div>
-  <div className="flex-1 bg-yellow-100 p-4 rounded-lg border border-yellow-300 shadow-sm mx-4">
-    <p className="text-lg font-semibold text-yellow-600">Unread</p>
-    <p className="text-2xl font-bold text-black">{messageCounts.Unread}</p>
-  </div>
-</div>
-
-
+      <MessageCounts messageCounts={messageCounts} />
 
       <Table className="w-full border-collapse border border-gray-300 rounded-lg overflow-hidden">
         <TableCaption>Details of your messages.</TableCaption>
@@ -170,7 +174,7 @@ const Messages = () => {
               <TableCell>
                 <button
                   onClick={() => handleReply(message)}
-                  className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                  className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
                 >
                   Reply
                 </button>

@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SheetComponent from './SheetComponent';
 import { PaginationComponent } from './PaginationComponent'; // Adjust the path if needed
+import { UsersIcon, BuildingOfficeIcon } from '@heroicons/react/24/solid';
 
 const ManageTeams = () => {
   const initialData = [
@@ -184,21 +185,19 @@ const ManageTeams = () => {
       <SheetComponent />
       <h2 className="text-2xl font-semibold mb-6 text-center">Manage Teams</h2>
       
-{/* Statistics Section */}
-<div className="flex justify-center mb-6 space-x-4">
-  <div className="flex-1 p-4 bg-blue-100 border border-blue-300 rounded-md text-center shadow-sm">
-    <h3 className="text-xl font-semibold text-blue-600">Total Teams</h3>
-    <p className="text-2xl font-bold text-black">{totalTeams}</p>
-  </div>
-  <div className="flex-1 p-4 bg-green-100 border border-green-300 rounded-md text-center shadow-sm">
-    <h3 className="text-xl font-semibold text-green-600">Total Departments</h3>
-    <p className="text-2xl font-bold text-black">{totalDepartments}</p>
-  </div>
-</div>
-
-
-
-
+      {/* Statistics Section */}
+      <div className="flex justify-center mb-6 space-x-4">
+        <div className="flex-1 p-4 bg-blue-100 border border-blue-300 rounded-md text-center shadow-sm">
+          <UsersIcon className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+          <h3 className="text-xl font-semibold text-blue-600">Total Teams</h3>
+          <p className="text-2xl font-bold text-black">{totalTeams}</p>
+        </div>
+        <div className="flex-1 p-4 bg-green-100 border border-green-300 rounded-md text-center shadow-sm">
+          <BuildingOfficeIcon className="w-6 h-6 text-green-600 mx-auto mb-2" />
+          <h3 className="text-xl font-semibold text-green-600">Total Departments</h3>
+          <p className="text-2xl font-bold text-black">{totalDepartments}</p>
+        </div>
+      </div>
 
       <div className="flex items-center mb-6 space-x-4">
         <Button
@@ -260,7 +259,7 @@ const ManageTeams = () => {
                   <div className="space-x-2">
                     <Button
                       onClick={() => handleEditTeam(team)}
-                      className="bg-yellow-500 text-white hover:bg-yellow-600"
+                      className="bg-blue-500 text-white hover:bg-blue-600"
                     >
                       Edit
                     </Button>

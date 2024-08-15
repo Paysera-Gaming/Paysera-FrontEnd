@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tooltip } from "@chakra-ui/react";
+import { UserIcon, ClockIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 
 // Function to calculate total hours from Part 1 Start to Part 2 End
 const calculateTotalHours = (startTime, endTime) => {
@@ -289,14 +290,17 @@ export function TableComponent() {
       {/* Compact Summary Section */}
       <div className="mb-4 flex justify-between">
         <div className="flex-1 p-2 bg-green-100 border border-green-300 rounded shadow-sm text-center">
+          <UserIcon className="w-6 h-6 text-green-600 mb-1 mx-auto" />
           <p className="text-sm font-medium text-green-600">On Job</p>
           <p className="text-lg font-bold">{situationCounts["On Job"]}</p>
         </div>
         <div className="flex-1 p-2 bg-blue-100 border border-blue-300 rounded shadow-sm text-center mx-2">
+          <ClockIcon className="w-6 h-6 text-blue-600 mb-1 mx-auto" />
           <p className="text-sm font-medium text-blue-600">Lunch</p>
           <p className="text-lg font-bold">{situationCounts["Lunch"]}</p>
         </div>
         <div className="flex-1 p-2 bg-red-100 border border-red-300 rounded shadow-sm text-center">
+          <ShieldCheckIcon className="w-6 h-6 text-red-600 mb-1 mx-auto" />
           <p className="text-sm font-medium text-red-600">Leave</p>
           <p className="text-lg font-bold">{situationCounts["Leave"]}</p>
         </div>
