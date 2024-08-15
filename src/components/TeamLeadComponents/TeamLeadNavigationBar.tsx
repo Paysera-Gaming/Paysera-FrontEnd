@@ -7,6 +7,9 @@ import { Icons } from '@/icons/Icon';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { ReactNode } from 'react';
 
+// logout component
+import LogOutButton from '../LogoutComponent/LogoutButton';
+
 interface RouteItemProps {
 	links: string[];
 }
@@ -59,22 +62,22 @@ function ProfileHeader() {
 	);
 }
 
-function LogOutButton() {
-	// TODO: add a modal for confirmation
-	const navigate = useNavigate();
+// function LogOutButton() {
+// 	// TODO: add a modal for confirmation
+// 	const navigate = useNavigate();
 
-	function logOutUser() {
-		navigate('/login');
-	}
+// 	function logOutUser() {
+// 		navigate('/login');
+// 	}
 
-	return (
-		// add modal here
-		<Button variant={'outline'} onClick={logOutUser} className="gap-2 w-full">
-			<LogOut></LogOut>
-			<p>Logout</p>
-		</Button>
-	);
-}
+// 	return (
+// 		// add modal here
+// 		<Button variant={'outline'} onClick={logOutUser} className="gap-2 w-full">
+// 			<LogOut></LogOut>
+// 			<p>Logout</p>
+// 		</Button>
+// 	);
+// }
 
 export default function TeamLeadNavigation() {
 	const routeLinks: string[] = [
