@@ -14,7 +14,14 @@ import {
 import { Button } from '@/components/ui/button';
 // logout
 import { LogOut } from 'lucide-react';
+
 import { useNavigate } from 'react-router-dom';
+
+// function TimeIn(){}
+
+// function TimeOut(){}
+
+// function lunchBreak(){}
 
 export default function LogOutButton() {
 	const navigate = useNavigate();
@@ -32,9 +39,7 @@ export default function LogOutButton() {
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>
-						Are you absolutely sure you want to logout?
-					</AlertDialogTitle>
+					<AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
 					<AlertDialogDescription>
 						After loging out you have to login again.
 					</AlertDialogDescription>
