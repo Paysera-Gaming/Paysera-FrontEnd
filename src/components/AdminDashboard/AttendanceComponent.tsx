@@ -12,7 +12,7 @@ import { Tooltip } from "@chakra-ui/react";
 import { UserIcon, ClockIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 import { CalendarComponent } from '@/components/AdminDashboard/CalendarComponent'; // Import Calendar Component
 
-// Function to calculate total hours from Part 1 Start to Part 2 End
+// Function to calculate total hours from Start to End
 const calculateTotalHours = (startTime, endTime) => {
   const [startHour, startMinute, startPeriod] = startTime.split(/[: ]/);
   const [endHour, endMinute, endPeriod] = endTime.split(/[: ]/);
@@ -330,12 +330,12 @@ export function TableComponent() {
             <TableHead onClick={() => handleSort("type")}>Type</TableHead>
             <TableHead onClick={() => handleSort("date")}>Date</TableHead>
             <TableHead onClick={() => handleSort("part1StartTime")}>
-              Part 1 Start Time
+              Start Time
             </TableHead>
             {isMinimized ? null : (
               <>
                 <TableHead onClick={() => handleSort("part1EndTime")}>
-                  Part 1 End Time
+                  End Time
                 </TableHead>
                 <TableHead onClick={() => handleSort("lunchStartTime")}>
                   Lunch Start Time
@@ -344,12 +344,12 @@ export function TableComponent() {
                   Lunch End Time
                 </TableHead>
                 <TableHead onClick={() => handleSort("part2StartTime")}>
-                  Part 2 Start Time
+                  Start Time
                 </TableHead>
               </>
             )}
             <TableHead onClick={() => handleSort("part2EndTime")}>
-              Part 2 End Time
+              End Time
             </TableHead>
             <TableHead>Total Hours</TableHead>
             <TableHead>Situation</TableHead>

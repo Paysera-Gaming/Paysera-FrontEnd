@@ -32,8 +32,8 @@ function App() {
           <p className="header-subtitle">Manage your records efficiently</p>
         </div>
         <div className="header-right">
-          <div className="current-time">{currentTime}</div>
           <SheetComponent /> {/* Profile component */}
+          <div className="current-time">{currentTime}</div>
         </div>
       </header>
       <main className="main-content">
@@ -44,6 +44,7 @@ function App() {
       </main>
     </div>
   );
+  
 }
 
 export default App;
