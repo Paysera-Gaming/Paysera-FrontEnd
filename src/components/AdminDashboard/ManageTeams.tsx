@@ -185,19 +185,33 @@ const ManageTeams = () => {
       <SheetComponent />
       <h2 className="text-2xl font-semibold mb-6 text-center">Manage Teams</h2>
       
-      {/* Statistics Section */}
-      <div className="flex justify-center mb-6 space-x-4">
-        <div className="flex-1 p-4 bg-blue-100 border border-blue-300 rounded-md text-center shadow-sm">
-          <UsersIcon className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-          <h3 className="text-xl font-semibold text-blue-600">Total Teams</h3>
-          <p className="text-2xl font-bold text-black">{totalTeams}</p>
-        </div>
-        <div className="flex-1 p-4 bg-green-100 border border-green-300 rounded-md text-center shadow-sm">
-          <BuildingOfficeIcon className="w-6 h-6 text-green-600 mx-auto mb-2" />
-          <h3 className="text-xl font-semibold text-green-600">Total Departments</h3>
-          <p className="text-2xl font-bold text-black">{totalDepartments}</p>
-        </div>
+{/* Statistics Section */}
+<div className="flex justify-center mb-6 space-x-4">
+  {/* Total Teams */}
+  <div className="flex-1 p-4 bg-blue-100 border border-blue-300 rounded-md text-center shadow-sm">
+    <div className="flex flex-col items-center">
+      <div className="flex items-center justify-center mb-2">
+        <UsersIcon className="w-8 h-8 text-blue-600" /> {/* Larger icon */}
+        <p className="text-4xl font-bold text-black ml-2">{totalTeams}</p> {/* Larger count */}
       </div>
+      <h3 className="text-lg font-semibold text-blue-600">Total Teams</h3> {/* Label below */}
+    </div>
+  </div>
+  
+  {/* Total Departments */}
+  <div className="flex-1 p-4 bg-green-100 border border-green-300 rounded-md text-center shadow-sm">
+    <div className="flex flex-col items-center">
+      <div className="flex items-center justify-center mb-2">
+        <BuildingOfficeIcon className="w-8 h-8 text-green-600" /> {/* Larger icon */}
+        <p className="text-4xl font-bold text-black ml-2">{totalDepartments}</p> {/* Larger count */}
+      </div>
+      <h3 className="text-lg font-semibold text-green-600">Total Departments</h3> {/* Label below */}
+    </div>
+  </div>
+</div>
+
+
+
 
       <div className="flex items-center mb-6 space-x-4">
         <Button

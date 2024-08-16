@@ -21,9 +21,10 @@ const SheetComponent = () => {
       { path: '/', label: 'Attendance', icon: <FaHome /> },
       { path: '/manageteams', label: 'Manage Teams', icon: <FaUsers /> },
       { path: '/employeelist', label: 'Employee List', icon: <FaList /> },
+      { path: '/announcement', label: 'Announcement', icon: <FaBullhorn /> }, // Add the Announcement link
+
       { path: '/messages', label: 'Messages', icon: <FaEnvelope /> },
       { path: '/settings', label: 'Settings', icon: <FaCog /> },
-      { path: '/announcement', label: 'Announcement', icon: <FaBullhorn /> }, // Add the Announcement link
     ];
 
     return links

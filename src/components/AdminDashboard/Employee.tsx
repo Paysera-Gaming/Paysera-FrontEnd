@@ -112,29 +112,53 @@ const Employee = () => {
       <SheetComponent />
       <h2 className="text-2xl font-semibold mb-6 text-center">Employee List</h2>
 
-      {/* Employee Status Summary */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        <div className="bg-green-100 p-4 rounded border border-green-300 text-center shadow-sm">
-          <UserIcon className="w-8 h-8 text-green-600 mx-auto mb-2" />
-          <h3 className="text-lg font-semibold text-green-600">Active Employees</h3>
-          <p className="text-3xl font-bold text-black">{totalActive}</p>
-        </div>
-        <div className="bg-yellow-100 p-4 rounded border border-yellow-300 text-center shadow-sm">
-          <ClockIcon className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-          <h3 className="text-lg font-semibold text-yellow-600">Employees on Lunch</h3>
-          <p className="text-3xl font-bold text-black">{totalOnLunch}</p>
-        </div>
-        <div className="bg-red-100 p-4 rounded border border-red-300 text-center shadow-sm">
-          <ShieldCheckIcon className="w-8 h-8 text-red-600 mx-auto mb-2" />
-          <h3 className="text-lg font-semibold text-red-600">Employees on Leave</h3>
-          <p className="text-3xl font-bold text-black">{totalOnLeave}</p>
-        </div>
-        <div className="bg-gray-100 p-4 rounded border border-gray-300 text-center shadow-sm">
-          <UsersIcon className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-          <h3 className="text-lg font-semibold text-gray-600">Employees Offline</h3>
-          <p className="text-3xl font-bold text-black">{totalOffline}</p>
-        </div>
+{/* Employee Status Summary */}
+<div className="grid grid-cols-4 gap-4 mb-6">
+  {/* Active Employees */}
+  <div className="bg-green-100 p-4 rounded border border-green-300 text-center shadow-sm">
+    <div className="flex flex-col items-center">
+      <div className="flex items-center justify-center mb-2">
+        <UserIcon className="w-8 h-8 text-green-600" /> {/* Larger icon */}
+        <p className="text-4xl font-bold text-black ml-2">{totalActive}</p> {/* Larger count */}
       </div>
+      <h3 className="text-lg font-semibold text-green-600">Active Employees</h3> {/* Label below */}
+    </div>
+  </div>
+
+  {/* Employees on Lunch */}
+  <div className="bg-yellow-100 p-4 rounded border border-yellow-300 text-center shadow-sm">
+    <div className="flex flex-col items-center">
+      <div className="flex items-center justify-center mb-2">
+        <ClockIcon className="w-8 h-8 text-yellow-600" /> {/* Larger icon */}
+        <p className="text-4xl font-bold text-black ml-2">{totalOnLunch}</p> {/* Larger count */}
+      </div>
+      <h3 className="text-lg font-semibold text-yellow-600">Employees on Lunch</h3> {/* Label below */}
+    </div>
+  </div>
+
+  {/* Employees on Leave */}
+  <div className="bg-red-100 p-4 rounded border border-red-300 text-center shadow-sm">
+    <div className="flex flex-col items-center">
+      <div className="flex items-center justify-center mb-2">
+        <ShieldCheckIcon className="w-8 h-8 text-red-600" /> {/* Larger icon */}
+        <p className="text-4xl font-bold text-black ml-2">{totalOnLeave}</p> {/* Larger count */}
+      </div>
+      <h3 className="text-lg font-semibold text-red-600">Employees on Leave</h3> {/* Label below */}
+    </div>
+  </div>
+
+  {/* Employees Offline */}
+  <div className="bg-gray-100 p-4 rounded border border-gray-300 text-center shadow-sm">
+    <div className="flex flex-col items-center">
+      <div className="flex items-center justify-center mb-2">
+        <UsersIcon className="w-8 h-8 text-gray-600" /> {/* Larger icon */}
+        <p className="text-4xl font-bold text-black ml-2">{totalOffline}</p> {/* Larger count */}
+      </div>
+      <h3 className="text-lg font-semibold text-gray-600">Employees Offline</h3> {/* Label below */}
+    </div>
+  </div>
+</div>
+
 
       <div className="flex items-center mb-6 space-x-4">
         <div className="flex-grow">
