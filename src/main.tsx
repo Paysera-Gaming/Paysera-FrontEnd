@@ -5,7 +5,8 @@ import ManageTeams from './components/AdminDashboard/ManageTeams';
 import Projects from './components/AdminDashboard/Projects';
 import Messages from './components/AdminDashboard/Messages';
 import Settings from './components/AdminDashboard/Settings';
-import Employee from './components/AdminDashboard/Employee'; // Import the Employee component
+import Employee from './components/AdminDashboard/Employee';
+import Announcement from './components/AdminDashboard/Announcement'; // Import Announcement component
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -32,7 +33,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/employeelist',
-    element: <Employee />, // Add the Employee route
+    element: <Employee />,
+  },
+  {
+    path: '/announcement',
+    element: <Announcement />, // Add the Announcement route
   },
 ]);
 

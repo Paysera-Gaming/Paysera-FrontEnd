@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaHome, FaUsers, FaList, FaEnvelope, FaCog } from 'react-icons/fa';
+import { FaHome, FaUsers, FaList, FaEnvelope, FaCog, FaBullhorn } from 'react-icons/fa';
 import {
   Sheet,
   SheetContent,
@@ -23,6 +23,7 @@ const SheetComponent = () => {
       { path: '/employeelist', label: 'Employee List', icon: <FaList /> },
       { path: '/messages', label: 'Messages', icon: <FaEnvelope /> },
       { path: '/settings', label: 'Settings', icon: <FaCog /> },
+      { path: '/announcement', label: 'Announcement', icon: <FaBullhorn /> }, // Add the Announcement link
     ];
 
     return links

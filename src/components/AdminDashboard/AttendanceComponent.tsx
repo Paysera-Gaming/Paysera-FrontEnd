@@ -102,7 +102,7 @@ const initialData = [
   },
   {
     name: "Carol Lee",
-    type: "Open",
+    type: "Super Flexible",
     date: "2024-08-14",
     part1StartTime: "08:00 AM",
     part1EndTime: "11:00 AM",
@@ -267,7 +267,10 @@ export function TableComponent() {
           <option value="">Filter by Type</option>
           <option value="Fixed">Fixed</option>
           <option value="Flexible">Flexible</option>
-          <option value="Open">Open</option>
+          <option value="Super Flexible
+    ">Super Flexible
+      
+          </option>
         </select>
         <select
           value={filterSituation}
