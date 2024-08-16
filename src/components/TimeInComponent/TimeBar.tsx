@@ -2,6 +2,7 @@
 import { TimerIcon } from 'lucide-react';
 import TimeForm from './TimeForm';
 export default function Timebar() {
+	//to do add useState to start time and pass a function that will run this shizz
 	return (
 		<header className="border-border border-solid border w-full rounded-md p-5 flex items-center justify-between">
 			<span className="flex gap-x-1 justify-center items-center">
