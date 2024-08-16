@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Tooltip } from "@chakra-ui/react";
 import { UserIcon, ClockIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { CalendarComponent } from '@/components/AdminDashboard/CalendarComponent'; // Import Calendar Component
 
 // Function to calculate total hours from Part 1 Start to Part 2 End
 const calculateTotalHours = (startTime, endTime) => {
@@ -267,10 +268,7 @@ export function TableComponent() {
           <option value="">Filter by Type</option>
           <option value="Fixed">Fixed</option>
           <option value="Flexible">Flexible</option>
-          <option value="Super Flexible
-    ">Super Flexible
-      
-          </option>
+          <option value="Super Flexible">Super Flexible</option>
         </select>
         <select
           value={filterSituation}
@@ -288,42 +286,41 @@ export function TableComponent() {
         >
           {isMinimized ? "Maximize" : "Minimize"}
         </button>
+        {/* Calendar Component */}
+        <div className="ml-2">
+          <CalendarComponent />
+        </div>
       </div>
 
-{/* Compact Summary Section */}
-<div className="mb-4 grid grid-cols-3 gap-2">
-  {/* On Job */}
-  <div className="p-2 bg-green-100 border border-green-300 rounded shadow-sm text-center">
-    <div className="flex items-center justify-center mb-1">
-      <UserIcon className="w-6 h-6 text-green-600" />
-      <p className="text-4xl font-bold ml-2">{situationCounts["On Job"]}</p>
-    </div>
-    <p className="text-lg font-medium text-green-600">On Job</p>
-  </div>
-  
-  {/* Lunch */}
-  <div className="p-2 bg-blue-100 border border-blue-300 rounded shadow-sm text-center">
-    <div className="flex items-center justify-center mb-1">
-      <ClockIcon className="w-6 h-6 text-blue-600" />
-      <p className="text-4xl font-bold ml-2">{situationCounts["Lunch"]}</p>
-    </div>
-    <p className="text-lg font-medium text-blue-600">Lunch</p>
-  </div>
-  
-  {/* Leave */}
-  <div className="p-2 bg-red-100 border border-red-300 rounded shadow-sm text-center">
-    <div className="flex items-center justify-center mb-1">
-      <ShieldCheckIcon className="w-6 h-6 text-red-600" />
-      <p className="text-4xl font-bold ml-2">{situationCounts["Leave"]}</p>
-    </div>
-    <p className="text-lg font-medium text-red-600">Leave</p>
-  </div>
-</div>
-
-
-
-
-
+      {/* Compact Summary Section */}
+      <div className="mb-4 grid grid-cols-3 gap-2">
+        {/* On Job */}
+        <div className="p-2 bg-green-100 border border-green-300 rounded shadow-sm text-center">
+          <div className="flex items-center justify-center mb-1">
+            <UserIcon className="w-6 h-6 text-green-600" />
+            <p className="text-4xl font-bold ml-2">{situationCounts["On Job"]}</p>
+          </div>
+          <p className="text-lg font-medium text-green-600">On Job</p>
+        </div>
+        
+        {/* Lunch */}
+        <div className="p-2 bg-blue-100 border border-blue-300 rounded shadow-sm text-center">
+          <div className="flex items-center justify-center mb-1">
+            <ClockIcon className="w-6 h-6 text-blue-600" />
+            <p className="text-4xl font-bold ml-2">{situationCounts["Lunch"]}</p>
+          </div>
+          <p className="text-lg font-medium text-blue-600">Lunch</p>
+        </div>
+        
+        {/* Leave */}
+        <div className="p-2 bg-red-100 border border-red-300 rounded shadow-sm text-center">
+          <div className="flex items-center justify-center mb-1">
+            <ShieldCheckIcon className="w-6 h-6 text-red-600" />
+            <p className="text-4xl font-bold ml-2">{situationCounts["Leave"]}</p>
+          </div>
+          <p className="text-lg font-medium text-red-600">Leave</p>
+        </div>
+      </div>
 
       <Table className="min-w-full border">
         <TableCaption>A list of your recent invoices.</TableCaption>
