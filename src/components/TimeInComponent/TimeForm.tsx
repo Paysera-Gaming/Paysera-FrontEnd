@@ -1,4 +1,12 @@
 import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
+} from '@/components/ui/form';
+
+import {
 	AlarmCheckIcon,
 	AlarmClockMinusIcon,
 	UtensilsIcon,
@@ -6,137 +14,102 @@ import {
 } from 'lucide-react';
 
 import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-
-import { Button } from '../ui/button';
-
-import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-	SelectLabel,
-	SelectGroup,
 } from '@/components/ui/select';
 
 import { z } from 'zod';
+
 import { useForm } from 'react-hook-form';
 
-interface TimeProps {
-	timeType: string;
-	timeName: string;
-	timeDescription: string;
-	timeDialogue: string;
-}
-
-interface TimeList {
-	selectionItems: string[];
-}
-
-function RenderIcon({ Icon }: { Icon: string }) {
-	switch (Icon) {
-		case 'Clock-In':
-			return <AlarmCheckIcon></AlarmCheckIcon>;
-			break;
-		case 'Lunch':
-			return <UtensilsIcon></UtensilsIcon>;
-			break;
-		case 'End-Lunch':
-			return <UtensilsCrossedIcon></UtensilsCrossedIcon>;
-			break;
-		case 'Clock-Out':
-			return <AlarmClockMinusIcon></AlarmClockMinusIcon>;
-	}
-}
-
-function ClockInModal({
-	timeDescription,
-	timeDialogue,
-}: {
-	timeDescription: string;
-	timeDialogue: string;
-}) {
-	return (
-		<AlertDialog>
-			<AlertDialogTrigger>
-				<Button>Start</Button>
-			</AlertDialogTrigger>
-			<AlertDialogContent>
-				<AlertDialogHeader>
-					<AlertDialogTitle>{timeDescription}</AlertDialogTitle>
-					<AlertDialogDescription>{timeDialogue}</AlertDialogDescription>
-				</AlertDialogHeader>
-				<AlertDialogFooter>
-					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction type="submit">Continue</AlertDialogAction>
-				</AlertDialogFooter>
-			</AlertDialogContent>
-		</AlertDialog>
-	);
-}
-
-function RenderSelectionItems({ selectionItems }: TimeList) {
-	const renderedList = selectionItems.map((time) => (
-		<SelectItem value={time}>
-			<div className="flex items-center justify-center gap-2">
-				<RenderIcon Icon={time}></RenderIcon>
-				<p>{time}</p>
-			</div>
-		</SelectItem>
-	));
-
-	return (
-		<SelectGroup>
-			<SelectLabel>Actions</SelectLabel>
-			{renderedList}
-		</SelectGroup>
-	);
-}
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '../ui/button';
 
 export default function TimeForm() {
-	const timeTypes: string[] = ['Clock-In', 'Lunch', 'End-Lunch', 'Clock-Out'];
+	const timeValues = [
+		'Time-In',
+		'Start-Lunch',
+		'End-Lunch',
+		'Time-Out',
+	] as const;
 
-	const form = useForm();
 	const formSchema = z.object({
-		timeType: z.enum(['Clock In', 'Lunch', 'End Lunch', 'Clock Out']),
+		TimeType: z.enum(timeValues),
 	});
 
+	const form = useForm<z.infer<typeof formSchema>>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {},
+	});
+
+	function onSubmit(values: z.infer<typeof formSchema>) {
+		alert(values.TimeType);
+	}
+
+	//this function will require a parent function
+	// said parent function will run as prop for this child component
+	// the child component will run the prop after submitting the form
+	// on the submit form, i will send a time stamp to the database
+	// all post and update request will be sent in this component only
+	// i need a parent function to start the time
+
 	return (
-		<div className="flex items-center justify-center gap-3">
-			<Select>
-				<SelectTrigger className="w-[150px]">
-					<SelectValue
-						placeholder={
-							// ugly ass
-							<div className="flex items-center justify-center gap-2">
-								<AlarmCheckIcon size={20}></AlarmCheckIcon>
-								<p>Clock In</p>
-							</div>
-						}
-					/>
-				</SelectTrigger>
-
-				<SelectContent>
-					<RenderSelectionItems
-						selectionItems={timeTypes}
-					></RenderSelectionItems>
-				</SelectContent>
-			</Select>
-
-			<ClockInModal
-				timeDescription="Joe"
-				timeDialogue="Are you joe?"
-			></ClockInModal>
-		</div>
+		<Form {...form}>
+			<form
+				className="flex items-start justify-center gap-x-3 "
+				onSubmit={form.handleSubmit(onSubmit)}
+			>
+				<FormField
+					control={form.control}
+					name="TimeType"
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Select
+									onValueChange={field.onChange}
+									defaultValue={field.value}
+								>
+									<FormControl>
+										<SelectTrigger className="w-[180px]">
+											<SelectValue placeholder="Select Your Action" />
+										</SelectTrigger>
+									</FormControl>
+									{/* Select items */}
+									<SelectContent>
+										<SelectItem value="Time-In">
+											<div className="flex items-center justify-center gap-x-3 ">
+												<AlarmCheckIcon></AlarmCheckIcon> <p>Time In</p>
+											</div>
+										</SelectItem>
+										<SelectItem value="Start-Lunch">
+											<div className="flex items-center justify-center gap-x-3 ">
+												<UtensilsIcon></UtensilsIcon> <p>Start Lunch</p>
+											</div>
+										</SelectItem>
+										<SelectItem value="End-Lunch">
+											<div className="flex items-center justify-center gap-x-3">
+												<UtensilsCrossedIcon></UtensilsCrossedIcon>
+												<p>End Lunch</p>
+											</div>
+										</SelectItem>
+										<SelectItem value="Time-Out">
+											<div className="flex items-center justify-center gap-x-3">
+												<AlarmClockMinusIcon></AlarmClockMinusIcon>
+												<p>Time Out</p>
+											</div>
+										</SelectItem>
+									</SelectContent>
+								</Select>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<Button type="submit">Start</Button>
+			</form>
+		</Form>
 	);
 }
