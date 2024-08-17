@@ -19,7 +19,6 @@ import '../../AdminDashboard/links-logout.css';
 import '../../AdminDashboard/profile.css';
 import '../../AdminDashboard/settings.css';
 
-
 const SheetComponent = () => {
   const location = useLocation();
   const currentPath = location.pathname;
@@ -27,6 +26,7 @@ const SheetComponent = () => {
   const renderLinks = () => {
     const links = [
       { path: '/', label: 'Attendance', icon: <FaHome /> },
+      // Update the path to reflect the `ManageTeams` folder
       { path: '/manageteams', label: 'Manage Teams', icon: <FaUsers /> },
       { path: '/employeelist', label: 'Employee List', icon: <FaList /> },
       { path: '/announcement', label: 'Announcement', icon: <FaBullhorn /> },
