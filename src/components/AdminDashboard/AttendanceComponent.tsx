@@ -1,252 +1,164 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
-  TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Tooltip } from "@chakra-ui/react";
-import { UserIcon, ClockIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
-import { CalendarComponent } from '@/components/AdminDashboard/CalendarComponent'; // Import Calendar Component
+import { UserIcon, ClockIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
+import { CalendarComponent } from "@/components/AdminDashboard/CalendarComponent";
 
-// Function to calculate total hours from Start to End
-const calculateTotalHours = (startTime, endTime) => {
-  const [startHour, startMinute, startPeriod] = startTime.split(/[: ]/);
-  const [endHour, endMinute, endPeriod] = endTime.split(/[: ]/);
-
-  let startHours = parseInt(startHour);
-  let endHours = parseInt(endHour);
-
-  if (startPeriod === "PM" && startHours !== 12) startHours += 12;
-  if (endPeriod === "PM" && endHours !== 12) endHours += 12;
-  if (startPeriod === "AM" && startHours === 12) startHours = 0;
-  if (endPeriod === "AM" && endHours === 12) endHours = 0;
-
-  const startTimeInMinutes = startHours * 60 + parseInt(startMinute);
-  const endTimeInMinutes = endHours * 60 + parseInt(endMinute);
-
-  const totalMinutes = endTimeInMinutes - startTimeInMinutes;
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  return `${hours}h ${minutes}m`;
+// Function to calculate total hours between two times
+const calculateTotalHours = (startTime: string, endTime: string): number => {
+  const start = new Date(`1970-01-01T${startTime}Z`);
+  const end = new Date(`1970-01-01T${endTime}Z`);
+  return (end.getTime() - start.getTime()) / (1000 * 60 * 60);
 };
 
-// Determine situation based on the total hours worked
-const determineSituation = (part1EndTime, lunchStartTime, lunchEndTime, part2EndTime) => {
-  const totalHours = calculateTotalHours("09:00 AM", part2EndTime);
-  const [hours] = totalHours.split("h ");
+// Function to determine the situation based on the timings
+const determineSituation = (
+  part1EndTime: string,
+  lunchStartTime: string,
+  lunchEndTime: string,
+  part2EndTime: string
+): string => {
+  const now = new Date().getHours();
+  const lunchStart = parseInt(lunchStartTime.split(":")[0]);
+  const lunchEnd = parseInt(lunchEndTime.split(":")[0]);
+  const part1End = parseInt(part1EndTime.split(":")[0]);
+  const part2End = parseInt(part2EndTime.split(":")[0]);
 
-  if (parseInt(hours) >= 9) {
-    return "Leave";
-  } else if (calculateTotalHours(part1EndTime, lunchEndTime).includes("h")) {
-    return "Lunch";
-  } else {
-    return "On Job";
-  }
+  if (now >= lunchStart && now < lunchEnd) return "Lunch";
+  if (now >= part1End && now < part2End) return "On Job";
+  return "Leave";
 };
 
-// Function to determine the styling for situation
-const getSituationStyle = (situation) => {
+// Function to get the style for the situation badge
+const getSituationStyle = (situation: string): string => {
   switch (situation) {
-    case "Leave":
-      return "bg-red-100 text-red-600"; // Light red background
     case "On Job":
-      return "bg-green-100 text-green-600"; // Light green background
+      return "bg-green-100 text-green-800";
     case "Lunch":
-      return "bg-blue-100 text-blue-600"; // Light blue background
+      return "bg-blue-100 text-blue-800";
+    case "Leave":
+      return "bg-red-100 text-red-800";
     default:
-      return "bg-gray-200 text-gray-600";
+      return "";
   }
 };
 
-// Function to determine the tooltip text for situation
-const getSituationTooltip = (situation) => {
+// Function to get the tooltip text for the situation badge
+const getSituationTooltip = (situation: string): string => {
   switch (situation) {
-    case "Leave":
-      return "The worker has left.";
     case "On Job":
-      return "Work is ongoing.";
+      return "Employee is currently working.";
     case "Lunch":
-      return "Worker is on lunch break.";
+      return "Employee is on lunch break.";
+    case "Leave":
+      return "Employee is on leave.";
     default:
-      return "Unknown situation.";
+      return "";
   }
 };
 
-// Sample data
+// Example initial data
 const initialData = [
   {
-    name: "Alice Smith",
+    name: "John Doe",
     type: "Fixed",
-    date: "2024-08-14",
-    part1StartTime: "09:00 AM",
-    part1EndTime: "12:00 PM",
-    lunchStartTime: "12:00 PM",
-    lunchEndTime: "12:30 PM",
-    part2StartTime: "12:30 PM",
-    part2EndTime: "06:00 PM",
+    date: "2024-08-17",
+    part1StartTime: "09:00",
+    part1EndTime: "12:00",
+    lunchStartTime: "12:00",
+    lunchEndTime: "13:00",
+    part2EndTime: "18:00",
   },
   {
-    name: "Bob Johnson",
+    name: "Jane Smith",
     type: "Flexible",
-    date: "2024-08-14",
-    part1StartTime: "10:00 AM",
-    part1EndTime: "01:00 PM",
-    lunchStartTime: "01:00 PM",
-    lunchEndTime: "01:30 PM",
-    part2StartTime: "01:30 PM",
-    part2EndTime: "05:00 PM",
+    date: "2024-08-17",
+    part1StartTime: "08:00",
+    part1EndTime: "11:00",
+    lunchStartTime: "11:00",
+    lunchEndTime: "12:00",
+    part2EndTime: "17:00",
   },
-  {
-    name: "Carol Lee",
-    type: "Super Flexible",
-    date: "2024-08-14",
-    part1StartTime: "08:00 AM",
-    part1EndTime: "11:00 AM",
-    lunchStartTime: "11:00 AM",
-    lunchEndTime: "11:30 AM",
-    part2StartTime: "11:30 AM",
-    part2EndTime: "04:00 PM",
-  },
+  // Add more data as needed
 ];
 
 export function TableComponent() {
   const [data, setData] = useState(initialData);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortConfig, setSortConfig] = useState({ key: "", direction: "" });
   const [filterType, setFilterType] = useState("");
   const [filterSituation, setFilterSituation] = useState("");
-  const [isMinimized, setIsMinimized] = useState(false);
 
-  const handleSearch = (e) => {
+  // Handle search input
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
-  const handleSort = (key) => {
-    let direction = "ascending";
-    if (sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending";
-    }
-    setSortConfig({ key, direction });
-
-    const sortedData = [...data].sort((a, b) => {
-      if (key === "name" || key === "type") {
-        if (a[key] < b[key]) return direction === "ascending" ? -1 : 1;
-        if (a[key] > b[key]) return direction === "ascending" ? 1 : -1;
-        return 0;
-      } else if (key === "date") {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
-        if (dateA < dateB) return direction === "ascending" ? -1 : 1;
-        if (dateA > dateB) return direction === "ascending" ? 1 : -1;
-        return 0;
-      } else {
-        const [hourA, minuteA, periodA] = a[key].split(/[: ]/);
-        const [hourB, minuteB, periodB] = b[key].split(/[: ]/);
-
-        let timeA = parseInt(hourA);
-        let timeB = parseInt(hourB);
-
-        if (periodA === "PM" && timeA !== 12) timeA += 12;
-        if (periodB === "PM" && timeB !== 12) timeB += 12;
-        if (periodA === "AM" && timeA === 12) timeA = 0;
-        if (periodB === "AM" && timeB === 12) timeB = 0;
-
-        const totalMinutesA = timeA * 60 + parseInt(minuteA);
-        const totalMinutesB = timeB * 60 + parseInt(minuteB);
-
-        if (totalMinutesA < totalMinutesB) return direction === "ascending" ? -1 : 1;
-        if (totalMinutesA > totalMinutesB) return direction === "ascending" ? 1 : -1;
-        return 0;
-      }
-    });
-
-    setData(sortedData);
-  };
-
-  // Function to count employees by situation
-  const countSituations = () => {
-    const counts = { "On Job": 0, "Lunch": 0, "Leave": 0 };
-
-    data.forEach((row) => {
-      const situation = determineSituation(
-        row.part1EndTime,
-        row.lunchStartTime,
-        row.lunchEndTime,
-        row.part2EndTime
-      );
-      counts[situation]++;
-    });
-
-    return counts;
-  };
-
-  const filteredData = data
-    .filter((row) => {
-      const searchMatch =
-        row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        row.type.toLowerCase().includes(searchQuery.toLowerCase());
-      const typeMatch = filterType ? row.type === filterType : true;
-      const situation = determineSituation(
-        row.part1EndTime,
-        row.lunchStartTime,
-        row.lunchEndTime,
-        row.part2EndTime
-      );
-      const situationMatch = filterSituation ? situation === filterSituation : true;
-      return searchMatch && typeMatch && situationMatch;
-    })
-    .map((row, index) => {
-      const situation = determineSituation(
-        row.part1EndTime,
-        row.lunchStartTime,
-        row.lunchEndTime,
-        row.part2EndTime
-      );
-
-      return (
-        <TableRow key={index}>
-          <TableCell className="font-medium">{row.name}</TableCell>
-          <TableCell>{row.type}</TableCell>
-          <TableCell>{row.date}</TableCell>
-          <TableCell>{row.part1StartTime}</TableCell>
-          {isMinimized ? null : (
-            <>
-              <TableCell>{row.part1EndTime}</TableCell>
-              <TableCell>{row.lunchStartTime}</TableCell>
-              <TableCell>{row.lunchEndTime}</TableCell>
-              <TableCell>{row.part2StartTime}</TableCell>
-            </>
-          )}
-          <TableCell>{row.part2EndTime}</TableCell>
-          <TableCell>{calculateTotalHours(row.part1StartTime, row.part2EndTime)}</TableCell>
-          <TableCell>
-            <Tooltip label={getSituationTooltip(situation)} placement="top">
-              <span className={`rounded-full px-2 py-1 text-sm ${getSituationStyle(situation)}`}>
-                {situation}
-              </span>
-            </Tooltip>
-          </TableCell>
-        </TableRow>
-      );
-    });
-
-  const situationCounts = countSituations();
-
-  const handleFilterTypeChange = (e) => {
+  // Handle type filter change
+  const handleFilterTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilterType(e.target.value);
   };
 
-  const handleFilterSituationChange = (e) => {
+  // Handle situation filter change
+  const handleFilterSituationChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setFilterSituation(e.target.value);
   };
 
-  const handleMinimizeClick = () => {
-    setIsMinimized(!isMinimized);
+  // Filter data based on search and filter criteria
+  const filteredData = data.filter((row) => {
+    const matchesSearch =
+      row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.type.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesType = filterType ? row.type === filterType : true;
+    const situation = determineSituation(
+      row.part1EndTime,
+      row.lunchStartTime,
+      row.lunchEndTime,
+      row.part2EndTime
+    );
+    const matchesSituation = filterSituation
+      ? situation === filterSituation
+      : true;
+
+    return matchesSearch && matchesType && matchesSituation;
+  });
+
+  // Calculate the situation counts for the summary section
+  const situationCounts = {
+    "On Job": filteredData.filter(
+      (row) =>
+        determineSituation(
+          row.part1EndTime,
+          row.lunchStartTime,
+          row.lunchEndTime,
+          row.part2EndTime
+        ) === "On Job"
+    ).length,
+    "Lunch": filteredData.filter(
+      (row) =>
+        determineSituation(
+          row.part1EndTime,
+          row.lunchStartTime,
+          row.lunchEndTime,
+          row.part2EndTime
+        ) === "Lunch"
+    ).length,
+    "Leave": filteredData.filter(
+      (row) =>
+        determineSituation(
+          row.part1EndTime,
+          row.lunchStartTime,
+          row.lunchEndTime,
+          row.part2EndTime
+        ) === "Leave"
+    ).length,
   };
 
   return (
@@ -280,21 +192,13 @@ export function TableComponent() {
           <option value="Lunch">Lunch</option>
           <option value="Leave">Leave</option>
         </select>
-        <button
-          onClick={handleMinimizeClick}
-          className="ml-2 rounded-md bg-blue-500 p-2 text-white text-sm"
-        >
-          {isMinimized ? "Maximize" : "Minimize"}
-        </button>
-        {/* Calendar Component */}
         <div className="ml-2">
           <CalendarComponent />
         </div>
       </div>
 
-      {/* Compact Summary Section */}
+      {/* Summary Section */}
       <div className="mb-4 grid grid-cols-3 gap-2">
-        {/* On Job */}
         <div className="p-2 bg-green-100 border border-green-300 rounded shadow-sm text-center">
           <div className="flex items-center justify-center mb-1">
             <UserIcon className="w-6 h-6 text-green-600" />
@@ -302,8 +206,6 @@ export function TableComponent() {
           </div>
           <p className="text-lg font-medium text-green-600">On Job</p>
         </div>
-        
-        {/* Lunch */}
         <div className="p-2 bg-blue-100 border border-blue-300 rounded shadow-sm text-center">
           <div className="flex items-center justify-center mb-1">
             <ClockIcon className="w-6 h-6 text-blue-600" />
@@ -311,8 +213,6 @@ export function TableComponent() {
           </div>
           <p className="text-lg font-medium text-blue-600">Lunch</p>
         </div>
-        
-        {/* Leave */}
         <div className="p-2 bg-red-100 border border-red-300 rounded shadow-sm text-center">
           <div className="flex items-center justify-center mb-1">
             <ShieldCheckIcon className="w-6 h-6 text-red-600" />
@@ -322,40 +222,64 @@ export function TableComponent() {
         </div>
       </div>
 
+      {/* Table */}
       <Table className="min-w-full border">
-        <TableCaption>A list of your recent invoices.</TableCaption>
-        <TableHeader>
+        <thead>
           <TableRow>
-            <TableHead onClick={() => handleSort("name")}>Name</TableHead>
-            <TableHead onClick={() => handleSort("type")}>Type</TableHead>
-            <TableHead onClick={() => handleSort("date")}>Date</TableHead>
-            <TableHead onClick={() => handleSort("part1StartTime")}>
-              Start Time
-            </TableHead>
-            {isMinimized ? null : (
-              <>
-                <TableHead onClick={() => handleSort("part1EndTime")}>
-                  End Time
-                </TableHead>
-                <TableHead onClick={() => handleSort("lunchStartTime")}>
-                  Lunch Start Time
-                </TableHead>
-                <TableHead onClick={() => handleSort("lunchEndTime")}>
-                  Lunch End Time
-                </TableHead>
-                <TableHead onClick={() => handleSort("part2StartTime")}>
-                  Start Time
-                </TableHead>
-              </>
-            )}
-            <TableHead onClick={() => handleSort("part2EndTime")}>
-              End Time
-            </TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Type</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Start Time</TableHead>
+            <TableHead>End Time</TableHead>
+            <TableHead>Total Work Hours</TableHead>
+            <TableHead>Total Lunch Hours</TableHead>
             <TableHead>Total Hours</TableHead>
             <TableHead>Situation</TableHead>
           </TableRow>
-        </TableHeader>
-        <TableBody>{filteredData}</TableBody>
+        </thead>
+        <TableBody>
+          {filteredData.map((row, index) => {
+            const totalWorkHours =
+              calculateTotalHours(row.part1StartTime, row.part1EndTime) +
+              calculateTotalHours(row.lunchEndTime, row.part2EndTime);
+            const totalLunchHours = calculateTotalHours(
+              row.lunchStartTime,
+              row.lunchEndTime
+            );
+            const totalHours = totalWorkHours + totalLunchHours;
+
+            const situation = determineSituation(
+              row.part1EndTime,
+              row.lunchStartTime,
+              row.lunchEndTime,
+              row.part2EndTime
+            );
+
+            return (
+              <TableRow key={index}>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.type}</TableCell>
+                <TableCell>{row.date}</TableCell>
+                <TableCell>{row.part1StartTime}</TableCell>
+                <TableCell>{row.part2EndTime}</TableCell>
+                <TableCell>{totalWorkHours.toFixed(2)} hours</TableCell>
+                <TableCell>{totalLunchHours.toFixed(2)} hours</TableCell>
+                <TableCell>{totalHours.toFixed(2)} hours</TableCell>
+                <TableCell>
+                  <Tooltip label={getSituationTooltip(situation)}>
+                    <span
+                      className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getSituationStyle(
+                        situation
+                      )}`}
+                    >
+                      {situation}
+                    </span>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
       </Table>
     </div>
   );
