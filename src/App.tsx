@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { TableComponent } from '@/components/AdminDashboard/AttendanceComponent';
-import { PaginationComponent } from '@/components/AdminDashboard/PaginationComponent';
-import SheetComponent from '@/components/AdminDashboard/SheetComponent';
+import { AttendanceComponent } from 'C:/Users/Admin/Paysera-FrontEnd/src/components/AdminDashboard/AttendanceComponent/index.tsx';
+import { PaginationComponent } from 'C:/Users/Admin/Paysera-FrontEnd/src/components/AdminDashboard/PaginationComponent';
+import SheetComponent from 'C:/Users/Admin/Paysera-FrontEnd/src/components/AdminDashboard/SheetComponent';
 
 // Import CSS files
 import './AdminDashboard/calendar.css';
@@ -15,7 +15,6 @@ import './AdminDashboard/settings.css';
 import './AdminDashboard/status-situation.css';
 import './AdminDashboard/table.css';
 import './App.css'; // Your main App CSS  
-
 
 function App() {
   const [currentTime, setCurrentTime] = useState<string>('');
@@ -50,7 +49,7 @@ function App() {
       </header>
       <main className="main-content">
         <section className="table-section">
-          <TableComponent />
+          <AttendanceComponent />
           <PaginationComponent />
         </section>
       </main>
