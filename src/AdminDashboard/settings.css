@@ -1,0 +1,109 @@
+/* Settings Container */
+.settings-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  /* Main Content */
+  .settings-main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+  }
+  
+  /* Title */
+  .settings-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #222;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  
+  /* Content Layout */
+  .settings-content {
+    display: flex;
+    gap: 24px;
+  }
+  
+  /* Column */
+  .settings-column {
+    flex: 1;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #fafafa;
+  }
+  
+  /* Section Title */
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 16px;
+  }
+  
+  /* Form Elements */
+  .settings-form .form-group {
+    margin-bottom: 16px;
+  }
+  
+  .settings-form .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .form-input,
+  .form-textarea,
+  .form-select {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  .form-input:focus,
+  .form-textarea:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  .form-switch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* Save Button */
+  .save-button {
+    width: 100%;
+    margin-top: 16px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .save-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .save-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+  

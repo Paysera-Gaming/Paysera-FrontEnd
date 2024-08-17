@@ -10,7 +10,15 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import '../../admindashboard.css'; // Ensure the correct path
+
+// Import CSS files for styling
+import '../../AdminDashboard/dialog-sheet.css';
+import '../../AdminDashboard/general.css';
+import '../../AdminDashboard/header.css';
+import '../../AdminDashboard/links-logout.css';
+import '../../AdminDashboard/profile.css';
+import '../../AdminDashboard/settings.css';
+
 
 const SheetComponent = () => {
   const location = useLocation();
@@ -21,8 +29,7 @@ const SheetComponent = () => {
       { path: '/', label: 'Attendance', icon: <FaHome /> },
       { path: '/manageteams', label: 'Manage Teams', icon: <FaUsers /> },
       { path: '/employeelist', label: 'Employee List', icon: <FaList /> },
-      { path: '/announcement', label: 'Announcement', icon: <FaBullhorn /> }, // Add the Announcement link
-
+      { path: '/announcement', label: 'Announcement', icon: <FaBullhorn /> },
       { path: '/messages', label: 'Messages', icon: <FaEnvelope /> },
       { path: '/settings', label: 'Settings', icon: <FaCog /> },
     ];
