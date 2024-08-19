@@ -11,53 +11,58 @@ const Announcements = () => {
     announcements,
     newAnnouncement,
     handleCreateAnnouncement,
-    handleOpenEditDialog, // Add this line
     handleDeleteAnnouncement,
-    handleOpenCreateDialog,
+    handleOpenEditDialog,
     isCreateDialogOpen,
-    isEditDialogOpen,
+    handleOpenCreateDialog,
     handleCloseCreateDialog,
-    handleCloseEditDialog,
-    setNewAnnouncement,
-    selectedAnnouncement,
-    handleEditAnnouncement,
+    searchQuery,
+    handleSearch,
     paginatedAnnouncements,
-    totalPages,
     currentPage,
+    totalPages,
+    announcementCounts,
+    setNewAnnouncement,
     handlePageChange,
-    announcementCounts
   } = useAnnouncements();
-  
+
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <SheetComponent />
-      <h2 className="text-2xl font-semibold mb-6 text-center">Announcements</h2>
-      
-      <AnnouncementDialog 
-        newAnnouncement={newAnnouncement} 
-        handleCreateAnnouncement={handleCreateAnnouncement} 
+      <div className="flex justify-between mb-6">
+        <div className="flex space-x-4">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearch}
+            placeholder="Search Announcements"
+            className="border p-2 rounded"
+          />
+          <button
+            onClick={handleOpenCreateDialog}
+            className="bg-blue-600 text-white p-2 rounded"
+          >
+            Create New Announcement
+          </button>
+        </div>
+      </div>
+
+      <AnnouncementDialog
+        newAnnouncement={newAnnouncement}
+        handleCreateAnnouncement={handleCreateAnnouncement}
         isCreateDialogOpen={isCreateDialogOpen}
         handleCloseCreateDialog={handleCloseCreateDialog}
         setNewAnnouncement={setNewAnnouncement}
       />
-      
-      {/* Edit Dialog */}
-      {selectedAnnouncement && (
-        <AnnouncementDialog
-          newAnnouncement={newAnnouncement}
-          handleCreateAnnouncement={handleEditAnnouncement}
-          isCreateDialogOpen={isEditDialogOpen}
-          handleCloseCreateDialog={handleCloseEditDialog}
-          setNewAnnouncement={setNewAnnouncement}
-        />
-      )}
-      
+
+      <h2 className="text-2xl font-semibold mb-6 text-center">Announcements</h2>
+
       <AnnouncementCounts announcementCounts={announcementCounts} />
 
       <AnnouncementTable
         announcements={paginatedAnnouncements}
         handleDeleteAnnouncement={handleDeleteAnnouncement}
-        handleOpenEditDialog={handleOpenEditDialog} // Pass it here
+        handleOpenEditDialog={handleOpenEditDialog}
       />
 
       <PaginationComponent

@@ -1,7 +1,18 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
-const AnnouncementTable = ({ announcements, handleDeleteAnnouncement, handleOpenEditDialog }) => (
+const AnnouncementTable = ({
+  announcements,
+  handleDeleteAnnouncement,
+  handleOpenEditDialog,
+}) => (
   <Table className="w-full border-collapse border border-gray-300 rounded-lg overflow-hidden">
     <TableHeader>
       <TableRow>
@@ -21,7 +32,7 @@ const AnnouncementTable = ({ announcements, handleDeleteAnnouncement, handleOpen
           <TableCell>{announcement.status}</TableCell>
           <TableCell>
             <button
-              onClick={() => handleOpenEditDialog(announcement)}
+              onClick={() => handleOpenEditDialog(announcement.id)}
               className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
             >
               Edit
@@ -40,4 +51,3 @@ const AnnouncementTable = ({ announcements, handleDeleteAnnouncement, handleOpen
 );
 
 export default AnnouncementTable;
-  
