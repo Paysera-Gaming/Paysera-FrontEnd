@@ -2,6 +2,9 @@
 import { TimerIcon } from 'lucide-react';
 import TimeForm from './TimeForm';
 import { useState } from 'react';
+// TODO:
+//  timer
+// notification
 
 export default function Timebar() {
 	const [useTimer, setTimer] = useState<string>('TIMER');

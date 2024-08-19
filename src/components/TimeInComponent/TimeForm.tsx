@@ -6,6 +6,8 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 
+import ToasterSwitch from '@/lib/timeToasterUtils';
+
 import {
 	AlarmCheckIcon,
 	AlarmClockMinusIcon,
@@ -38,7 +40,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '../ui/button';
 import { useState } from 'react';
 
-import { toast } from 'sonner';
+// import { toast } from 'sonner';
 
 interface ChildProps {
 	updateParentState: (newValue: string) => void;
@@ -62,19 +64,20 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 		defaultValues: {},
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// alert(values.TimeType);
-		// validate all your shit here
+	// values: z.infer<typeof formSchema>
+	function onSubmit() {
 		setIsOpen(true);
 	}
 
 	function runYourMother() {
 		const formValues = form.getValues('TimeType');
 		updateParentState(formValues);
-		toast(formValues);
+		// toast(formValues);
+
+		ToasterSwitch('clock-in', formValues);
 	}
 
-	//this function will require a parent function
+	//this react component will require a parent function
 	// said parent function will run as prop for this child component
 	// the child component will run the prop after submitting the form
 	// on the submit form, i will send a time stamp to the database
