@@ -38,16 +38,27 @@ const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDelet
             <TableCell className="text-center border-x">{employee.team} - {employee.role}</TableCell>
             <TableCell className="text-center border-x">{employee.type}</TableCell>
             <TableCell className="text-center border-x space-x-2">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button onClick={() => handleEditEmployee(employee)} className="bg-blue-500 text-white">Edit</Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Edit Employee</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <Button onClick={() => handleDeleteEmployee(employee.id)} className="bg-red-500 text-white">Delete</Button>
-            </TableCell>
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          onClick={() => handleEditEmployee(employee)}
+          className="bg-blue-500 text-white hover:bg-blue-600" // Add hover:bg-blue-600 for hover effect
+        >
+          Edit
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>Edit Employee</TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+  <Button
+    onClick={() => handleDeleteEmployee(employee.id)}
+    className="bg-red-500 text-white hover:bg-red-600" // Add hover:bg-red-600 for hover effect
+  >
+    Delete
+  </Button>
+</TableCell>
+
           </TableRow>
         ))}
       </TableBody>
