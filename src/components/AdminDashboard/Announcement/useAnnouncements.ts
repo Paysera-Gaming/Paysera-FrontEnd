@@ -16,6 +16,7 @@ const useAnnouncements = () => {
       content: 'We are excited to announce a new feature release.',
       status: 'Draft',
     },
+    // Add more announcements as needed for testing
   ];
 
   const [announcements, setAnnouncements] = useState(initialAnnouncements);
@@ -27,7 +28,9 @@ const useAnnouncements = () => {
     content: '',
   });
   const [editAnnouncementId, setEditAnnouncementId] = useState(null);
-  const itemsPerPage = 2;
+
+  // Set itemsPerPage to 5
+  const itemsPerPage = 5;
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -57,6 +60,7 @@ const useAnnouncements = () => {
               : announcement
           )
         );
+        setEditAnnouncementId(null);
       } else {
         // Create new announcement
         setAnnouncements([
