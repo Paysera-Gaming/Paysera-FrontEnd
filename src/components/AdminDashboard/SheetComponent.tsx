@@ -31,7 +31,7 @@ const SheetComponent = () => {
       { path: '/employeelist', label: 'Employee List', icon: <FaList /> },
       { path: '/announcement', label: 'Announcement', icon: <FaBullhorn /> },
       { path: '/messages', label: 'Messages', icon: <FaEnvelope /> },
-      { path: '/settings', label: 'Settings', icon: <FaCog /> },
+      { path: '/accountpreferences', label: 'Settings', icon: <FaCog /> },
     ];
 
     return links
