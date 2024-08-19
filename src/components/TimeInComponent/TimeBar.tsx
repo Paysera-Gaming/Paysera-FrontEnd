@@ -4,7 +4,9 @@ import TimeForm from './TimeForm';
 import { useState } from 'react';
 // TODO:
 //  timer
-// notification
+// notification - kind of done
+// time form adjustments and validity
+// form errors - use ToastSwitch
 
 export default function Timebar() {
 	const [useTimer, setTimer] = useState<string>('TIMER');

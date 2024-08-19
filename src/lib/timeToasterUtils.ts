@@ -16,7 +16,8 @@ type ToasterStringLiteral =
 	| 'lunch-out'
 	| 'lunch-out-error'
 	| 'lunch-in-already'
-	| 'error';
+	| 'error'
+	| 'invalid';
 
 function stupidAssAlert(timeStamp: string | undefined) {
 	//this shit will check if you added a timestamp string
@@ -72,5 +73,8 @@ export default function ToasterSwitch(
 		case 'error':
 			toast.error('An error has occured');
 			break;
+
+		case 'invalid':
+			toast.error('Invalid Input');
 	}
 }

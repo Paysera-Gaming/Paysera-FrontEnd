@@ -84,6 +84,8 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 	// all post and update request will be sent in this component only
 	// i need a parent function to start the time
 
+	// dear lue use zod to handle errors for the form catching
+
 	return (
 		<Form {...form}>
 			<form
