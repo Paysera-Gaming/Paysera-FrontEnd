@@ -116,7 +116,7 @@ const useAnnouncements = () => {
     handleOpenEditDialog,
     isCreateDialogOpen,
     handleOpenCreateDialog,
-    handleCloseCreateDialog,
+    handleCloseCreateDialog,  
     searchQuery,
     handleSearch,
     paginatedAnnouncements,

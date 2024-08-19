@@ -23,27 +23,33 @@ const Announcements = () => {
     totalPages,
     announcementCounts,
     setNewAnnouncement,
-    handlePageChange,
   } = useAnnouncements();
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <SheetComponent />
-      <div className="flex justify-between mb-6">
-        <div className="flex space-x-4">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearch}
-            placeholder="Search Announcements"
-            className="border p-2 rounded"
-          />
+      <h2 className="text-2xl font-semibold mb-6 text-center">Announcements</h2>
+
+      <AnnouncementCounts announcementCounts={announcementCounts} />
+
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center space-x-4">
           <button
             onClick={handleOpenCreateDialog}
             className="bg-blue-600 text-white p-2 rounded"
           >
             Create New Announcement
           </button>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearch}
+            placeholder="Search Announcements"
+            className="border p-2 rounded w-64" // Adjusted width to make it shorter
+          />
+        </div>
+        <div className="flex items-center">
+          {/* Additional controls, if any, can be placed here */}
         </div>
       </div>
 
@@ -55,10 +61,6 @@ const Announcements = () => {
         setNewAnnouncement={setNewAnnouncement}
       />
 
-      <h2 className="text-2xl font-semibold mb-6 text-center">Announcements</h2>
-
-      <AnnouncementCounts announcementCounts={announcementCounts} />
-
       <AnnouncementTable
         announcements={paginatedAnnouncements}
         handleDeleteAnnouncement={handleDeleteAnnouncement}
@@ -68,7 +70,7 @@ const Announcements = () => {
       <PaginationComponent
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={handlePageChange}
+        onPageChange={(page) => handlePageChange(page)}
       />
     </div>
   );
