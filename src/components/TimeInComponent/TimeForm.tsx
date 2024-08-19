@@ -12,7 +12,16 @@ import {
 	UtensilsIcon,
 	UtensilsCrossedIcon,
 } from 'lucide-react';
-
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import {
 	Select,
 	SelectContent,
@@ -27,8 +36,14 @@ import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '../ui/button';
+import { useState } from 'react';
 
-export default function TimeForm() {
+interface ChildProps {
+	updateParentState: (newValue: string) => void;
+}
+
+export default function TimeForm({ updateParentState }: ChildProps) {
+	const [isOpen, setIsOpen] = useState(false);
 	const timeValues = [
 		'Time-In',
 		'Start-Lunch',
@@ -46,7 +61,13 @@ export default function TimeForm() {
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		alert(values.TimeType);
+		// alert(values.TimeType);
+		// validate all your shit here
+		setIsOpen(true);
+	}
+
+	function runYourMother() {
+		updateParentState(form.getValues('TimeType'));
 	}
 
 	//this function will require a parent function
@@ -108,7 +129,24 @@ export default function TimeForm() {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">Start</Button>
+				<Button type="submit">Submit</Button>
+
+				<AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+					<AlertDialogContent>
+						<AlertDialogHeader>
+							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+							<AlertDialogDescription>
+								This action cannot be undone.
+							</AlertDialogDescription>
+						</AlertDialogHeader>
+						<AlertDialogFooter>
+							<AlertDialogCancel>Cancel</AlertDialogCancel>
+							<AlertDialogAction onClick={runYourMother}>
+								Continue
+							</AlertDialogAction>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+				</AlertDialog>
 			</form>
 		</Form>
 	);
