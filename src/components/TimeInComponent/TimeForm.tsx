@@ -38,6 +38,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '../ui/button';
 import { useState } from 'react';
 
+import { toast } from 'sonner';
+
 interface ChildProps {
 	updateParentState: (newValue: string) => void;
 }
@@ -67,7 +69,9 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 	}
 
 	function runYourMother() {
-		updateParentState(form.getValues('TimeType'));
+		const formValues = form.getValues('TimeType');
+		updateParentState(formValues);
+		toast(formValues);
 	}
 
 	//this function will require a parent function
