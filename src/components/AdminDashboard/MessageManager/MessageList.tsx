@@ -9,8 +9,26 @@ import { StarIcon } from '@heroicons/react/24/outline';
 
 const MessageList = () => {
   const initialMessages = [
-    // Initial messages array
+    {
+      id: 1,
+      sender: "John Doe",
+      recipient: "You",
+      subject: "Meeting Reminder",
+      content: "Just a reminder about our meeting tomorrow at 10 AM.",
+      date: "2024-08-19",
+      status: "Unread", // Mark as unread initially
+    },
+    {
+      id: 2,
+      sender: "Jane Smith",
+      recipient: "You",
+      subject: "Project Update",
+      content: "Please review the attached document for the latest project update.",
+      date: "2024-08-18",
+      status: "Read",
+    },
   ];
+  
 
   const [messages, setMessages] = useState(initialMessages);
   const [searchQuery, setSearchQuery] = useState("");
