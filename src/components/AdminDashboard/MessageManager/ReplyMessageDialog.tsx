@@ -13,18 +13,18 @@ const ReplyMessageDialog = ({ isOpen, onClose, replyMessage, newMessage, setNewM
       <div className="space-y-4 p-6">
         <Input
           placeholder="Recipient"
-          value={newMessage.recipient}
+          value={newMessage.recipient || ''}
           onChange={(e) => setNewMessage({ ...newMessage, recipient: e.target.value })}
           disabled
         />
         <Input
           placeholder="Subject"
-          value={newMessage.subject}
+          value={newMessage.subject || ''}
           onChange={(e) => setNewMessage({ ...newMessage, subject: e.target.value })}
         />
         <Textarea
           placeholder="Message Content"
-          value={newMessage.content}
+          value={newMessage.content || ''}
           onChange={(e) => setNewMessage({ ...newMessage, content: e.target.value })}
         />
         <button
