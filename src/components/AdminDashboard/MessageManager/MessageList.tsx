@@ -5,6 +5,7 @@ import MessageCounts from './MessageCounts';
 import CreateMessageDialog from './CreateMessageDialog';
 import ReplyMessageDialog from './ReplyMessageDialog';
 import SheetComponent from '../SheetComponent';
+import { StarIcon } from '@heroicons/react/24/outline';
 
 const MessageList = () => {
   const initialMessages = [
@@ -40,6 +41,12 @@ const MessageList = () => {
     setMessages(messages.filter(message => message.id !== id));
   };
 
+  const handleToggleFavorite = (id) => {
+    setMessages(messages.map(message => 
+      message.id === id ? { ...message, favorite: !message.favorite } : message
+    ));
+  };
+
   const filteredMessages = messages.filter((message) =>
     message.subject.toLowerCase().includes(searchQuery.toLowerCase()) &&
     (viewType === "Received" ? message.sender !== "You" : message.sender === "You")
@@ -53,10 +60,15 @@ const MessageList = () => {
   };
 
   const getMessageCounts = () => {
-    const counts = { Read: 0, Unread: 0 };
+    const counts = { Read: 0, Unread: 0, Sent: 0, Favorite: 0 };
     messages.forEach(message => {
-      if (counts[message.status] !== undefined) {
+      if (message.sender === "You") {
+        counts.Sent++;
+      } else {
         counts[message.status]++;
+      }
+      if (message.favorite) {
+        counts.Favorite++;
       }
     });
     return counts;
@@ -67,7 +79,6 @@ const MessageList = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <h2 className="text-2xl font-semibold mb-6 text-center">Messages</h2>
-      {/* Flex container to align buttons and search bar horizontally */}
       <div className="mb-6 flex items-center space-x-4">
         <button
           onClick={() => setIsCreateDialogOpen(true)}
@@ -109,6 +120,7 @@ const MessageList = () => {
             <TableHead>Date</TableHead>
             <TableHead>Content</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Favorite</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -120,6 +132,11 @@ const MessageList = () => {
               <TableCell>{message.date}</TableCell>
               <TableCell>{message.content}</TableCell>
               <TableCell>{message.status}</TableCell>
+              <TableCell>
+                <button onClick={() => handleToggleFavorite(message.id)}>
+                  <StarIcon className={`w-6 h-6 ${message.favorite ? "text-yellow-500" : "text-gray-300"}`} />
+                </button>
+              </TableCell>
               <TableCell>
                 {viewType === "Received" && (
                   <button
@@ -156,9 +173,10 @@ const MessageList = () => {
           setMessages([...messages, {
             ...newMessage,
             id: messages.length + 1,
-            sender: "You", // Set sender to "You"
+            sender: "You",
             date: new Date().toISOString().split('T')[0],
-            status: 'Unread'
+            status: 'Sent',
+            favorite: false
           }]);
           setNewMessage({ recipient: '', subject: '', content: '' });
         }}
@@ -175,12 +193,13 @@ const MessageList = () => {
             const { sender, subject } = replyMessage;
             setMessages([...messages, {
               recipient: sender,
-              sender: "You", // Set sender to "You"
+              sender: "You",
               subject: `Re: ${subject}`,
               content: newMessage.content,
               id: messages.length + 1,
               date: new Date().toISOString().split('T')[0],
-              status: 'Unread'
+              status: 'Sent',
+              favorite: false
             }]);
             setReplyMessage(null);
             setNewMessage({ recipient: '', subject: '', content: '' });
