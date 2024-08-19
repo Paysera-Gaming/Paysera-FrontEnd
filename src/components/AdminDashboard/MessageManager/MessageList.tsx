@@ -16,7 +16,8 @@ const MessageList = () => {
       subject: "Meeting Reminder",
       content: "Just a reminder about our meeting tomorrow at 10 AM.",
       date: "2024-08-19",
-      status: "Unread", // Mark as unread initially
+      status: "Unread",
+      favorite: false,
     },
     {
       id: 2,
@@ -26,16 +27,17 @@ const MessageList = () => {
       content: "Please review the attached document for the latest project update.",
       date: "2024-08-18",
       status: "Read",
+      favorite: true,
     },
   ];
-  
 
   const [messages, setMessages] = useState(initialMessages);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isReplyDialogOpen, setIsReplyDialogOpen] = useState(false);
-  const [viewType, setViewType] = useState("Received"); // "Received" or "Sent"
+  const [viewType, setViewType] = useState("Received");
+  const [filterType, setFilterType] = useState(null); // null, "Favorites", "Unread"
   const [newMessage, setNewMessage] = useState({ recipient: '', subject: '', content: '' });
   const [replyMessage, setReplyMessage] = useState(null);
   const itemsPerPage = 2;
@@ -53,6 +55,15 @@ const MessageList = () => {
       content: `Replying to ${message.sender}'s message: ${message.content}`
     });
     setIsReplyDialogOpen(true);
+  
+    // Mark the message as read when replying
+    setMessages(messages.map(m => m.id === message.id ? { ...m, status: 'Read' } : m));
+  };
+  
+
+  const handleViewMessage = (id) => {
+    // Mark the message as read when viewed
+    setMessages(messages.map(m => m.id === id ? { ...m, status: 'Read' } : m));
   };
 
   const handleDeleteMessage = (id) => {
@@ -65,10 +76,12 @@ const MessageList = () => {
     ));
   };
 
-  const filteredMessages = messages.filter((message) =>
-    message.subject.toLowerCase().includes(searchQuery.toLowerCase()) &&
-    (viewType === "Received" ? message.sender !== "You" : message.sender === "You")
-  );
+  const filteredMessages = messages.filter((message) => {
+    const matchesSearch = message.subject.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesView = viewType === "Received" ? message.sender !== "You" : message.sender === "You";
+    const matchesFilter = filterType === "Favorites" ? message.favorite : filterType === "Unread" ? message.status === "Unread" : true;
+    return matchesSearch && matchesView && matchesFilter;
+  });
 
   const totalPages = Math.ceil(filteredMessages.length / itemsPerPage);
   const paginatedMessages = filteredMessages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -105,16 +118,28 @@ const MessageList = () => {
           Create New Message
         </button>
         <button
-          onClick={() => setViewType("Received")}
-          className={`p-3 rounded-lg shadow transition ${viewType === "Received" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"}`}
+          onClick={() => { setViewType("Received"); setFilterType(null); }}
+          className={`p-3 rounded-lg shadow transition ${viewType === "Received" && !filterType ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"}`}
         >
           Received Messages
         </button>
         <button
-          onClick={() => setViewType("Sent")}
-          className={`p-3 rounded-lg shadow transition ${viewType === "Sent" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"}`}
+          onClick={() => { setViewType("Sent"); setFilterType(null); }}
+          className={`p-3 rounded-lg shadow transition ${viewType === "Sent" && !filterType ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"}`}
         >
           Sent Messages
+        </button>
+        <button
+          onClick={() => setFilterType("Favorites")}
+          className={`p-3 rounded-lg shadow transition ${filterType === "Favorites" ? "bg-yellow-500 text-white" : "bg-gray-200 text-gray-700"}`}
+        >
+          Favorites
+        </button>
+        <button
+          onClick={() => setFilterType("Unread")}
+          className={`p-3 rounded-lg shadow transition ${filterType === "Unread" ? "bg-yellow-500 text-white" : "bg-gray-200 text-gray-700"}`}
+        >
+          Unread
         </button>
         <input
           type="text"
@@ -145,10 +170,10 @@ const MessageList = () => {
         <TableBody>
           {paginatedMessages.map((message) => (
             <TableRow key={message.id}>
-              <TableCell>{message.sender}</TableCell>
-              <TableCell>{message.subject}</TableCell>
-              <TableCell>{message.date}</TableCell>
-              <TableCell>{message.content}</TableCell>
+              <TableCell onClick={() => handleViewMessage(message.id)}>{message.sender}</TableCell>
+              <TableCell onClick={() => handleViewMessage(message.id)}>{message.subject}</TableCell>
+              <TableCell onClick={() => handleViewMessage(message.id)}>{message.date}</TableCell>
+              <TableCell onClick={() => handleViewMessage(message.id)}>{message.content}</TableCell>
               <TableCell>{message.status}</TableCell>
               <TableCell>
                 <button onClick={() => handleToggleFavorite(message.id)}>
@@ -196,34 +221,30 @@ const MessageList = () => {
             status: 'Sent',
             favorite: false
           }]);
-          setNewMessage({ recipient: '', subject: '', content: '' });
+          setIsCreateDialogOpen(false);
         }}
       />
 
-      <ReplyMessageDialog
-        isOpen={isReplyDialogOpen}
-        onClose={() => setIsReplyDialogOpen(false)}
-        replyMessage={replyMessage}
-        newMessage={newMessage}
-        setNewMessage={setNewMessage}
-        onReply={() => {
-          if (replyMessage) {
-            const { sender, subject } = replyMessage;
+      {replyMessage && (
+        <ReplyMessageDialog
+          isOpen={isReplyDialogOpen}
+          onClose={() => setIsReplyDialogOpen(false)}
+          message={replyMessage}
+          onReply={(replyContent) => {
             setMessages([...messages, {
-              recipient: sender,
-              sender: "You",
-              subject: `Re: ${subject}`,
-              content: newMessage.content,
               id: messages.length + 1,
+              sender: "You",
+              recipient: replyMessage.sender,
+              subject: `Re: ${replyMessage.subject}`,
+              content: replyContent,
               date: new Date().toISOString().split('T')[0],
               status: 'Sent',
               favorite: false
             }]);
-            setReplyMessage(null);
-            setNewMessage({ recipient: '', subject: '', content: '' });
-          }
-        }}
-      />
+            setIsReplyDialogOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 };
