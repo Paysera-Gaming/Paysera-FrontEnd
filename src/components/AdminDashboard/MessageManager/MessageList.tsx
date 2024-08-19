@@ -136,11 +136,12 @@ const MessageList = () => {
           Favorites
         </button>
         <button
-          onClick={() => setFilterType("Unread")}
-          className={`p-3 rounded-lg shadow transition ${filterType === "Unread" ? "bg-yellow-500 text-white" : "bg-gray-200 text-gray-700"}`}
-        >
-          Unread
-        </button>
+  onClick={() => setFilterType("Unread")}
+  className={`p-3 rounded-lg shadow transition ${filterType === "Unread" ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"}`}
+>
+  Unread
+</button>
+
         <input
           type="text"
           placeholder="Search by subject"
