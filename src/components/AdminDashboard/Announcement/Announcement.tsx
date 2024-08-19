@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import SheetComponent from '../SheetComponent';
 import AnnouncementCounts from './AnnouncementCounts';
 import AnnouncementTable from './AnnouncementTable';
@@ -7,7 +7,26 @@ import useAnnouncements from './useAnnouncements';
 import { PaginationComponent } from '../PaginationComponent';
 
 const Announcements = () => {
-  const { announcements, newAnnouncement, handleCreateAnnouncement, ...rest } = useAnnouncements();
+  const {
+    announcements,
+    newAnnouncement,
+    handleCreateAnnouncement,
+    handleOpenEditDialog, // Add this line
+    handleDeleteAnnouncement,
+    handleOpenCreateDialog,
+    isCreateDialogOpen,
+    isEditDialogOpen,
+    handleCloseCreateDialog,
+    handleCloseEditDialog,
+    setNewAnnouncement,
+    selectedAnnouncement,
+    handleEditAnnouncement,
+    paginatedAnnouncements,
+    totalPages,
+    currentPage,
+    handlePageChange,
+    announcementCounts
+  } = useAnnouncements();
   
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -17,20 +36,34 @@ const Announcements = () => {
       <AnnouncementDialog 
         newAnnouncement={newAnnouncement} 
         handleCreateAnnouncement={handleCreateAnnouncement} 
-        {...rest} 
+        isCreateDialogOpen={isCreateDialogOpen}
+        handleCloseCreateDialog={handleCloseCreateDialog}
+        setNewAnnouncement={setNewAnnouncement}
       />
       
-      <AnnouncementCounts announcementCounts={rest.announcementCounts} />
+      {/* Edit Dialog */}
+      {selectedAnnouncement && (
+        <AnnouncementDialog
+          newAnnouncement={newAnnouncement}
+          handleCreateAnnouncement={handleEditAnnouncement}
+          isCreateDialogOpen={isEditDialogOpen}
+          handleCloseCreateDialog={handleCloseEditDialog}
+          setNewAnnouncement={setNewAnnouncement}
+        />
+      )}
+      
+      <AnnouncementCounts announcementCounts={announcementCounts} />
 
       <AnnouncementTable
-        announcements={rest.paginatedAnnouncements}
-        handleDeleteAnnouncement={rest.handleDeleteAnnouncement}
+        announcements={paginatedAnnouncements}
+        handleDeleteAnnouncement={handleDeleteAnnouncement}
+        handleOpenEditDialog={handleOpenEditDialog} // Pass it here
       />
 
       <PaginationComponent
-        currentPage={rest.currentPage}
-        totalPages={rest.totalPages}
-        onPageChange={rest.handlePageChange}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
       />
     </div>
   );
