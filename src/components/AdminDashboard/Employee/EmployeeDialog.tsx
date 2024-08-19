@@ -50,13 +50,14 @@ const EmployeeDialog = ({ isDialogOpen, setIsDialogOpen, selectedEmployee, setSe
               <SelectContent>
                 <SelectItem value="Fixed">Fixed</SelectItem>
                 <SelectItem value="Flexible">Flexible</SelectItem>
+                <SelectItem value="Super Flexible">Super Flexible</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
         <div className="mt-4 flex justify-end space-x-4">
-          <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-          <Button onClick={() => handleSaveEmployee(selectedEmployee)}>Save</Button>
+          <Button onClick={() => setIsDialogOpen(false)} className="bg-gray-500 text-white hover:bg-gray-600">Cancel</Button>
+          <Button onClick={() => handleSaveEmployee(selectedEmployee)} className="bg-green-500 text-white hover:bg-green-600">Save</Button>
         </div>
       </DialogContent>
     </Dialog>
