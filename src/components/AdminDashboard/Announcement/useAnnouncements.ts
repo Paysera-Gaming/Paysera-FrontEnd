@@ -29,8 +29,7 @@ const useAnnouncements = () => {
   });
   const [editAnnouncementId, setEditAnnouncementId] = useState(null);
 
-  // Set itemsPerPage to 5
-  const itemsPerPage = 5;
+  const itemsPerPage = 5; // Show 5 announcements per page
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -50,32 +49,33 @@ const useAnnouncements = () => {
   };
 
   const handleCreateAnnouncement = () => {
-    if (newAnnouncement.title && newAnnouncement.content) {
-      if (editAnnouncementId) {
-        // Edit existing announcement
-        setAnnouncements(
-          announcements.map((announcement) =>
-            announcement.id === editAnnouncementId
-              ? { ...announcement, ...newAnnouncement }
-              : announcement
-          )
-        );
-        setEditAnnouncementId(null);
-      } else {
-        // Create new announcement
-        setAnnouncements([
-          ...announcements,
-          {
-            ...newAnnouncement,
-            id: announcements.length + 1,
-            date: new Date().toISOString().split('T')[0],
-            status: 'Draft',
-          },
-        ]);
-      }
-      handleCloseCreateDialog();
-      setNewAnnouncement({ title: '', content: '' });
+    const isDraft = !newAnnouncement.title || !newAnnouncement.content;
+    const status = isDraft ? 'Draft' : 'Published';
+
+    if (editAnnouncementId) {
+      // Edit existing announcement
+      setAnnouncements(
+        announcements.map((announcement) =>
+          announcement.id === editAnnouncementId
+            ? { ...announcement, ...newAnnouncement, status }
+            : announcement
+        )
+      );
+      setEditAnnouncementId(null);
+    } else {
+      // Create new announcement
+      setAnnouncements([
+        ...announcements,
+        {
+          ...newAnnouncement,
+          id: announcements.length + 1,
+          date: new Date().toISOString().split('T')[0],
+          status,
+        },
+      ]);
     }
+    handleCloseCreateDialog();
+    setNewAnnouncement({ title: '', content: '' });
   };
 
   const handleOpenEditDialog = (id) => {
