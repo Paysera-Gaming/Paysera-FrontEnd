@@ -185,14 +185,14 @@ const MessageList = () => {
                 {viewType === "Received" && (
                   <button
                     onClick={() => handleReply(message)}
-                    className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                    className="p-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition"
                   >
                     Reply
                   </button>
                 )}
                 <button
                   onClick={() => handleDeleteMessage(message.id)}
-                  className="p-2 bg-red-600 text-white rounded hover:bg-red-700 transition ml-2"
+                  className="p-2 bg-red-500 text-white rounded hover:bg-red-700 transition ml-2"
                 >
                   Delete
                 </button>

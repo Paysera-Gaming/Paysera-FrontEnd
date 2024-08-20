@@ -85,7 +85,7 @@ const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDelet
                   <TooltipTrigger asChild>
                     <Button
                       onClick={() => handleEditEmployee(employee)}
-                      className="bg-blue-500 text-white hover:bg-blue-600"
+                      className="bg-blue-500 text-white hover:bg-blue-700"
                     >
                       Edit
                     </Button>
@@ -95,7 +95,7 @@ const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDelet
               </TooltipProvider>
               <Button
                 onClick={() => handleDeleteEmployee(employee.id)}
-                className="bg-red-500 text-white hover:bg-red-600"
+                className="bg-red-500 text-white hover:bg-red-700"
               >
                 Delete
               </Button>

@@ -24,8 +24,8 @@ const TeamsTable = ({ paginatedData, handleEditTeam, handleDeleteTeams, handleSo
             <TableCell className="text-center border-x">{team.members.join(', ')}</TableCell>
             <TableCell className="text-center border-x">
               <div className="space-x-2">
-                <Button onClick={() => handleEditTeam(team)} className="bg-blue-500 text-white hover:bg-blue-600">Edit</Button>
-                <Button onClick={() => handleDeleteTeams(team.id)} className="bg-red-500 text-white hover:bg-red-600">Delete</Button>
+                <Button onClick={() => handleEditTeam(team)} className="bg-blue-500 text-white hover:bg-blue-700">Edit</Button>
+                <Button onClick={() => handleDeleteTeams(team.id)} className="bg-red-500 text-white hover:bg-red-700">Delete</Button>
               </div>
             </TableCell>
           </TableRow>

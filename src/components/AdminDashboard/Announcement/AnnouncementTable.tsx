@@ -33,13 +33,13 @@ const AnnouncementTable = ({
           <TableCell>
             <button
               onClick={() => handleOpenEditDialog(announcement.id)}
-              className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+              className="p-2 bg-blue-500 text-white rounded hover:bg-blue-500 transition"
             >
               Edit
             </button>
             <button
               onClick={() => handleDeleteAnnouncement(announcement.id)}
-              className="p-2 bg-red-600 text-white rounded hover:bg-red-700 transition ml-2"
+              className="p-2 bg-red-500 text-white rounded hover:bg-red-500 transition ml-2"
             >
               Delete
             </button>
