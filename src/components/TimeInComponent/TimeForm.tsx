@@ -1,12 +1,7 @@
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 
 import ToasterSwitch from '@/lib/timeToasterUtils';
+import TimeFormErrorHandler from '@/lib/TimeFormErrorHandler';
 
 import {
 	AlarmCheckIcon,
@@ -90,7 +85,7 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 		<Form {...form}>
 			<form
 				className="flex items-start justify-center gap-x-3 "
-				onSubmit={form.handleSubmit(onSubmit)}
+				onSubmit={form.handleSubmit(onSubmit, TimeFormErrorHandler)}
 			>
 				<FormField
 					control={form.control}
@@ -134,7 +129,7 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 									</SelectContent>
 								</Select>
 							</FormControl>
-							<FormMessage />
+							{/* <FormMessage /> */}
 						</FormItem>
 					)}
 				/>
