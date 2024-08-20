@@ -1,15 +1,13 @@
-// src/components/AdminDashboard/Employee/Employee.tsx
-
 import React, { useState } from 'react';
 import EmployeeTable from './EmployeeTable';
 import EmployeeDialog from './EmployeeDialog';
 import EmployeeSummary from './EmployeeSummary';
-import { sampleEmployees } from './sampleData'; // Updated import
+import { sampleEmployees } from './sampleData';
 import SheetComponent from '../SheetComponent';
 import { PaginationComponent } from '../PaginationComponent';
 
 const Employee = () => {
-  const [data, setData] = useState(sampleEmployees); // Updated initial data
+  const [data, setData] = useState(sampleEmployees);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -67,6 +65,9 @@ const Employee = () => {
         setSelectedEmployee={setSelectedEmployee}
         setIsDialogOpen={setIsDialogOpen}
         handleDeleteEmployee={handleDeleteEmployee}
+        sortConfig={sortConfig}
+        setSortConfig={setSortConfig}
+        setData={setData}
       />
       <div className="flex justify-center mt-4">
         <PaginationComponent
