@@ -2,7 +2,7 @@ import React from 'react';
 import { UsersIcon, BuildingOfficeIcon } from '@heroicons/react/24/solid';
 
 const TeamStats = ({ totalTeams, totalDepartments }) => (
-  <div className="flex justify-center mb-6 space-x-4">
+  <div className="flex justify-center mb-6 space-x-4 mt-12"> {/* Added mt-8 for more space */}
     <div className="flex-1 p-4 bg-blue-100 border border-blue-300 rounded-md text-center shadow-sm">
       <div className="flex flex-col items-center">
         <div className="flex items-center justify-center mb-2">
@@ -23,5 +23,6 @@ const TeamStats = ({ totalTeams, totalDepartments }) => (
     </div>
   </div>
 );
+
 
 export default TeamStats;
