@@ -39,8 +39,13 @@ const ManageTeams = () => {
   };
 
   const handleSearch = (event) => {
-    setSearchQuery(event.target.value);
+    setSearchQuery(event.target.value.toLowerCase());
   };
+
+  const filteredTeams = teams.filter((team) => 
+    team.name.toLowerCase().includes(searchQuery) || 
+    team.Department.toLowerCase().includes(searchQuery)
+  );
 
   const totalTeams = teams.length;
   const totalDepartments = new Set(teams.map(team => team.Department)).size;
@@ -56,7 +61,7 @@ const ManageTeams = () => {
           </button>
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search by Team Leader or Department..."
             className="border rounded p-2 w-64"
             value={searchQuery}
             onChange={handleSearch}
@@ -66,7 +71,7 @@ const ManageTeams = () => {
 
       <TeamsTable
         className="relative w-full overflow-auto bg-white rounded-lg shadow-md px-6"
-        paginatedData={teams}
+        paginatedData={filteredTeams} // Pass the filtered teams
         handleEditTeam={handleEditTeam}
         handleDeleteTeams={handleDeleteTeams}
         handleSort={handleSort}
