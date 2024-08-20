@@ -16,21 +16,21 @@ const AnnouncementTable = ({
   <Table className="w-full border-collapse border border-gray-300 rounded-lg overflow-hidden">
     <TableHeader>
       <TableRow>
-        <TableHead>Title</TableHead>
-        <TableHead>Date</TableHead>
-        <TableHead>Content</TableHead>
-        <TableHead>Status</TableHead>
-        <TableHead>Actions</TableHead>
+        <TableHead className="text-center align-middle border border-gray-300">Title</TableHead>
+        <TableHead className="text-center align-middle border border-gray-300">Date</TableHead>
+        <TableHead className="text-center align-middle border border-gray-300">Content</TableHead>
+        <TableHead className="text-center align-middle border border-gray-300">Status</TableHead>
+        <TableHead className="text-center align-middle border border-gray-300">Actions</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
       {announcements.map((announcement) => (
         <TableRow key={announcement.id}>
-          <TableCell>{announcement.title}</TableCell>
-          <TableCell>{announcement.date}</TableCell>
-          <TableCell>{announcement.content}</TableCell>
-          <TableCell>{announcement.status}</TableCell>
-          <TableCell>
+          <TableCell className="text-center align-middle border border-gray-300">{announcement.title}</TableCell>
+          <TableCell className="text-center align-middle border border-gray-300">{announcement.date}</TableCell>
+          <TableCell className="text-center align-middle border border-gray-300">{announcement.content}</TableCell>
+          <TableCell className="text-center align-middle border border-gray-300">{announcement.status}</TableCell>
+          <TableCell className="text-center align-middle border border-gray-300">
             <button
               onClick={() => handleOpenEditDialog(announcement.id)}
               className="p-2 bg-blue-500 text-white rounded hover:bg-blue-500 transition"
