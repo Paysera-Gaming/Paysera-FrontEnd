@@ -68,7 +68,7 @@ export default function TeamLeadNavigation() {
 	];
 
 	return (
-		<nav className="bg-card boder-solid border-border border rounded-md h-full p-2 gap-y-10 w-60 flex flex-col items-start justify-between">
+		<nav className="bg-card boder-solid border-border border rounded-md h-full w-[230px] p-2 gap-y-5 flex flex-col items-start justify-between">
 			{/* unahin header */}
 			<ProfileHeader></ProfileHeader>
 			{/* then eto */}
