@@ -1,4 +1,3 @@
-// AttendanceComponent/index.tsx
 import React, { useState } from "react";
 import { Filters } from "./Filters";
 import { Summary } from "./Summary";
@@ -36,6 +35,7 @@ export function AttendanceComponent() {
   const [filterType, setFilterType] = useState("");
   const [filterSituation, setFilterSituation] = useState("");
 
+  // Handle search and filter logic
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
@@ -48,6 +48,7 @@ export function AttendanceComponent() {
     setFilterSituation(e.target.value);
   };
 
+  // Filter data based on search and filter criteria
   const filteredData = data.filter((row) => {
     const matchesSearch =
       row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -64,30 +65,87 @@ export function AttendanceComponent() {
     return matchesSearch && matchesType && matchesSituation;
   });
 
-  const calculateSituationCounts = () => {
-    const situationCounts = {
-      "On Job": { Fixed: 0, Flexible: 0, SuperFlexible: 0 },
-      "Lunch": { Fixed: 0, Flexible: 0, SuperFlexible: 0 },
-      "Leave": { Fixed: 0, Flexible: 0, SuperFlexible: 0 },
-    };
-
-    filteredData.forEach((row) => {
-      const situation = determineSituation(
-        row.part1EndTime,
-        row.lunchStartTime,
-        row.lunchEndTime,
-        row.part2EndTime
-      );
-
-      if (row.type === "Fixed") situationCounts[situation].Fixed += 1;
-      else if (row.type === "Flexible") situationCounts[situation].Flexible += 1;
-      else if (row.type === "Super Flexible") situationCounts[situation].SuperFlexible += 1;
-    });
-
-    return situationCounts;
+  // Calculate the situation counts for the summary section
+  const situationCounts = {
+    "On Job": {
+      Fixed: filteredData.filter(
+        (row) => determineSituation(
+          row.part1EndTime,
+          row.lunchStartTime,
+          row.lunchEndTime,
+          row.part2EndTime
+        ) === "On Job" && row.type === "Fixed"
+      ).length,
+      Flexible: filteredData.filter(
+        (row) => determineSituation(
+          row.part1EndTime,
+          row.lunchStartTime,
+          row.lunchEndTime,
+          row.part2EndTime
+        ) === "On Job" && row.type === "Flexible"
+      ).length,
+      SuperFlexible: filteredData.filter(
+        (row) => determineSituation(
+          row.part1EndTime,
+          row.lunchStartTime,
+          row.lunchEndTime,
+          row.part2EndTime
+        ) === "On Job" && row.type === "Super Flexible"
+      ).length,
+    },
+    "Lunch": {
+      Fixed: filteredData.filter(
+        (row) => determineSituation(
+          row.part1EndTime,
+          row.lunchStartTime,
+          row.lunchEndTime,
+          row.part2EndTime
+        ) === "Lunch" && row.type === "Fixed"
+      ).length,
+      Flexible: filteredData.filter(
+        (row) => determineSituation(
+          row.part1EndTime,
+          row.lunchStartTime,
+          row.lunchEndTime,
+          row.part2EndTime
+        ) === "Lunch" && row.type === "Flexible"
+      ).length,
+      SuperFlexible: filteredData.filter(
+        (row) => determineSituation(
+          row.part1EndTime,
+          row.lunchStartTime,
+          row.lunchEndTime,
+          row.part2EndTime
+        ) === "Lunch" && row.type === "Super Flexible"
+      ).length,
+    },
+    "Leave": {
+      Fixed: filteredData.filter(
+        (row) => determineSituation(
+          row.part1EndTime,
+          row.lunchStartTime,
+          row.lunchEndTime,
+          row.part2EndTime
+        ) === "Leave" && row.type === "Fixed"
+      ).length,
+      Flexible: filteredData.filter(
+        (row) => determineSituation(
+          row.part1EndTime,
+          row.lunchStartTime,
+          row.lunchEndTime,
+          row.part2EndTime
+        ) === "Leave" && row.type === "Flexible"
+      ).length,
+      SuperFlexible: filteredData.filter(
+        (row) => determineSituation(
+          row.part1EndTime,
+          row.lunchStartTime,
+          row.lunchEndTime,
+          row.part2EndTime
+        ) === "Leave" && row.type === "Super Flexible"
+      ).length,
+    },
   };
-
-  const situationCounts = calculateSituationCounts();
 
   return (
     <div className="p-4">
