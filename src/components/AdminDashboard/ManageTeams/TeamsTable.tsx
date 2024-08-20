@@ -21,7 +21,12 @@ const TeamsTable = ({ paginatedData, handleEditTeam, handleDeleteTeams, handleSo
             <TableCell className="text-center border-x">{team.name}</TableCell>
             <TableCell className="text-center border-x">{team.Department}</TableCell>
             <TableCell className="text-center border-x">{team.teamLeaderEmail}</TableCell>
-            <TableCell className="text-center border-x">{team.members.join(', ')}</TableCell>
+            <TableCell className="text-center border-x">
+              {team.members.slice(0, 3).join(', ')}
+              {team.members.length > 3 && (
+                <span className="text-gray-500">, and {team.members.length - 3} more...</span>
+              )}
+            </TableCell>
             <TableCell className="text-center border-x">
               <div className="space-x-2">
                 <Button onClick={() => handleEditTeam(team)} className="bg-blue-500 text-white hover:bg-blue-700">Edit</Button>
