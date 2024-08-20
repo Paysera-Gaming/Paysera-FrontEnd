@@ -44,10 +44,10 @@ interface ChildProps {
 export default function TimeForm({ updateParentState }: ChildProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const timeValues = [
-		'Time-In',
-		'Start-Lunch',
-		'End-Lunch',
-		'Time-Out',
+		'Clock-In',
+		'Lunch-In',
+		'Lunch-Out',
+		'Clock-Out',
 	] as const;
 
 	const formSchema = z.object({
@@ -68,18 +68,9 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 		const formValues = form.getValues('TimeType');
 		updateParentState(formValues);
 		// toast(formValues);
-
-		ToasterSwitch('clock-in', formValues);
+		// second param should be the snapshot
+		ToasterSwitch(formValues, formValues);
 	}
-
-	//this react component will require a parent function
-	// said parent function will run as prop for this child component
-	// the child component will run the prop after submitting the form
-	// on the submit form, i will send a time stamp to the database
-	// all post and update request will be sent in this component only
-	// i need a parent function to start the time
-
-	// dear lue use zod to handle errors for the form catching
 
 	return (
 		<Form {...form}>
@@ -104,26 +95,26 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 									</FormControl>
 									{/* Select items */}
 									<SelectContent>
-										<SelectItem value="Time-In">
+										<SelectItem value="Clock-In">
 											<div className="flex items-center justify-center gap-x-3 ">
-												<AlarmCheckIcon></AlarmCheckIcon> <p>Time In</p>
+												<AlarmCheckIcon></AlarmCheckIcon> <p>Clock In</p>
 											</div>
 										</SelectItem>
-										<SelectItem value="Start-Lunch">
+										<SelectItem value="Lunch-In">
 											<div className="flex items-center justify-center gap-x-3 ">
 												<UtensilsIcon></UtensilsIcon> <p>Start Lunch</p>
 											</div>
 										</SelectItem>
-										<SelectItem value="End-Lunch">
+										<SelectItem value="Lunch-Out">
 											<div className="flex items-center justify-center gap-x-3">
 												<UtensilsCrossedIcon></UtensilsCrossedIcon>
 												<p>End Lunch</p>
 											</div>
 										</SelectItem>
-										<SelectItem value="Time-Out">
+										<SelectItem value="Clock-Out">
 											<div className="flex items-center justify-center gap-x-3">
 												<AlarmClockMinusIcon></AlarmClockMinusIcon>
-												<p>Time Out</p>
+												<p>Clock Out</p>
 											</div>
 										</SelectItem>
 									</SelectContent>

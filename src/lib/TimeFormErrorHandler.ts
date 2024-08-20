@@ -11,6 +11,6 @@ const formSchema = z.object({
 export default function TimeFormErrorHandler(
 	errors: FieldErrors<z.infer<typeof formSchema>>
 ) {
-	ToasterSwitch('required');
+	ToasterSwitch('Required');
 	console.log(errors);
 }

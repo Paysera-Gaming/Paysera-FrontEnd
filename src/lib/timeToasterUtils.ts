@@ -7,18 +7,18 @@
 import { toast } from 'sonner';
 
 type ToasterStringLiteral =
-	| 'clock-in'
-	| 'clock-in-error'
-	| 'clock-out'
-	| 'clock-out-error'
-	| 'lunch-in'
-	| 'lunch-in-error'
-	| 'lunch-out'
-	| 'lunch-out-error'
-	| 'lunch-in-already'
-	| 'error'
-	| 'invalid'
-	| 'required';
+	| 'Clock-In'
+	| 'Clock-In-Error'
+	| 'Clock-Out'
+	| 'Clock-Out-Error'
+	| 'Lunch-In'
+	| 'Lunch-In-Error'
+	| 'Lunch-Out'
+	| 'Lunch-Out-Error'
+	| 'Lunch-In-Already'
+	| 'Error'
+	| 'Invalid'
+	| 'Required';
 
 function stupidAssAlert(timeStamp: string | undefined) {
 	//this shit will check if you added a timestamp string
@@ -30,55 +30,55 @@ export default function ToasterSwitch(
 	timeStamp?: string
 ) {
 	switch (context) {
-		case 'clock-in':
+		case 'Clock-In':
 			stupidAssAlert(timeStamp);
 
 			toast.success('Clock In Success', {
 				description: `Time started at ${timeStamp}`,
 			});
 			break;
-		case 'clock-in-error':
+		case 'Clock-In-Error':
 			toast.warning('You have already clocked-in');
 			break;
-		case 'lunch-in':
+		case 'Lunch-In':
 			stupidAssAlert(timeStamp);
-			toast.success('Clock In Success', {
+			toast.success('Your Lunch has started', {
 				description: `Time started at ${timeStamp}`,
 			});
 			break;
-		case 'lunch-in-error':
+		case 'Lunch-In-Error':
 			toast.warning('You cannot start your lunch break without clocking in');
 			break;
-		case 'lunch-out':
+		case 'Lunch-Out':
 			stupidAssAlert(timeStamp);
-			toast.success('Clock In Success', {
+			toast.success('Lunch Ended', {
 				description: `Time started at ${timeStamp}`,
 			});
 			break;
-		case 'lunch-out-error':
+		case 'Lunch-Out-Error':
 			toast.warning('You cannot end your lunch break without starting it');
 			break;
-		case 'clock-out':
+		case 'Clock-Out':
 			stupidAssAlert(timeStamp);
 			toast.success('Clock Out Success', {
 				description: `Time Ended at ${timeStamp}`,
 			});
 			break;
-		case 'clock-out-error':
+		case 'Clock-Out-Error':
 			toast.warning('You cannot clock out without clocking in');
 			break;
 
-		case 'lunch-in-already':
+		case 'Lunch-In-Already':
 			toast.warning('You have started your lunch already');
 			break;
-		case 'error':
+		case 'Error':
 			toast.error('An error has occured');
 			break;
 
-		case 'invalid':
+		case 'Invalid':
 			toast.error('Invalid Input');
 			break;
-		case 'required':
+		case 'Required':
 			toast.error('Input is required');
 	}
 }
