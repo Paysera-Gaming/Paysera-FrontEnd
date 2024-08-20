@@ -2,20 +2,8 @@ import { useState } from 'react';
 
 const useAnnouncements = () => {
   const initialAnnouncements = [
-    {
-      id: 1,
-      title: 'System Maintenance',
-      date: '2024-08-01',
-      content: 'System maintenance will be conducted on 2024-08-05.',
-      status: 'Published',
-    },
-    {
-      id: 2,
-      title: 'New Feature Release',
-      date: '2024-08-02',
-      content: 'We are excited to announce a new feature release.',
-      status: 'Draft',
-    },
+    { id: 1, title: 'System Maintenance', date: '2024-08-01', content: 'System maintenance will be conducted on 2024-08-05.', status: 'Published' },
+    { id: 2, title: 'New Feature Release', date: '2024-08-02', content: 'We are excited to announce a new feature release.', status: 'Draft' },
     // Add more announcements as needed for testing
   ];
 
@@ -23,13 +11,11 @@ const useAnnouncements = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [newAnnouncement, setNewAnnouncement] = useState({
-    title: '',
-    content: '',
-  });
+  const [newAnnouncement, setNewAnnouncement] = useState({ title: '', content: '' });
   const [editAnnouncementId, setEditAnnouncementId] = useState(null);
+  const [sortOrder, setSortOrder] = useState({ field: '', direction: 'asc' });
 
-  const itemsPerPage = 5; // Show 5 announcements per page
+  const itemsPerPage = 5;
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -53,7 +39,6 @@ const useAnnouncements = () => {
     const status = isDraft ? 'Draft' : 'Published';
 
     if (editAnnouncementId) {
-      // Edit existing announcement
       setAnnouncements(
         announcements.map((announcement) =>
           announcement.id === editAnnouncementId
@@ -63,7 +48,6 @@ const useAnnouncements = () => {
       );
       setEditAnnouncementId(null);
     } else {
-      // Create new announcement
       setAnnouncements([
         ...announcements,
         {
@@ -85,6 +69,17 @@ const useAnnouncements = () => {
       setNewAnnouncement({ ...announcementToEdit });
       setIsCreateDialogOpen(true);
     }
+  };
+
+  const handleSort = (field) => {
+    const direction = sortOrder.field === field && sortOrder.direction === 'asc' ? 'desc' : 'asc';
+    const sortedAnnouncements = [...announcements].sort((a, b) => {
+      if (a[field] < b[field]) return direction === 'asc' ? -1 : 1;
+      if (a[field] > b[field]) return direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+    setSortOrder({ field, direction });
+    setAnnouncements(sortedAnnouncements);
   };
 
   const paginatedAnnouncements = announcements
@@ -116,7 +111,7 @@ const useAnnouncements = () => {
     handleOpenEditDialog,
     isCreateDialogOpen,
     handleOpenCreateDialog,
-    handleCloseCreateDialog,  
+    handleCloseCreateDialog,
     searchQuery,
     handleSearch,
     paginatedAnnouncements,
@@ -125,7 +120,9 @@ const useAnnouncements = () => {
     announcementCounts,
     setNewAnnouncement,
     handlePageChange,
+    handleSort, // Return handleSort
   };
 };
 
 export default useAnnouncements;
+  

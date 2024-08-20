@@ -23,6 +23,7 @@ const Announcements = () => {
     totalPages,
     announcementCounts,
     setNewAnnouncement,
+    handleSort, // Added handleSort
   } = useAnnouncements();
 
   return (
@@ -45,11 +46,8 @@ const Announcements = () => {
             value={searchQuery}
             onChange={handleSearch}
             placeholder="Search Announcements"
-            className="border p-2 rounded w-64" // Adjusted width to make it shorter
+            className="border p-2 rounded w-64"
           />
-        </div>
-        <div className="flex items-center">
-          {/* Additional controls, if any, can be placed here */}
         </div>
       </div>
 
@@ -65,6 +63,7 @@ const Announcements = () => {
         announcements={paginatedAnnouncements}
         handleDeleteAnnouncement={handleDeleteAnnouncement}
         handleOpenEditDialog={handleOpenEditDialog}
+        handleSort={handleSort} // Pass handleSort here
       />
 
       <PaginationComponent
