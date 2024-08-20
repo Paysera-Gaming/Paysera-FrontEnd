@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AddEditTeamDialog from './AddEditTeamDialog';
 import TeamsTable from './TeamsTable';
 import TeamStats from './TeamStats';
@@ -10,6 +10,24 @@ const ManageTeams = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState({ id: null, name: '', Department: '', teamLeaderEmail: '', members: [] });
   const [searchQuery, setSearchQuery] = useState('');
+
+  const [currentTime, setCurrentTime] = useState<string>('');
+
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      const formattedTime = now.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+      setCurrentTime(formattedTime);
+    };
+
+    const intervalId = setInterval(updateClock, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   const handleAddTeam = () => {
     setSelectedTeam({ id: null, name: '', Department: '', teamLeaderEmail: '', members: [] });
@@ -51,40 +69,52 @@ const ManageTeams = () => {
   const totalDepartments = new Set(teams.map(team => team.Department)).size;
 
   return (
-    <div>
-      <h1 className="text-3xl font-semibold text-center mb-6">Manage Teams</h1>
-      <TeamStats totalTeams={totalTeams} totalDepartments={totalDepartments} />
-      <div className="flex justify-between items-center mb-4 px-6">
-        <div className="flex items-center space-x-4">
-          <button onClick={handleAddTeam} className="bg-green-500 text-white px-4 py-2 rounded shadow-md hover:bg-green-600">
-            Add Team
-          </button>
-          <input
-            type="text"
-            placeholder="Search by Team Leader or Department..."
-            className="border rounded p-2 w-64"
-            value={searchQuery}
-            onChange={handleSearch}
-          />
+    <div className="dashboard-container">
+      <header className="header">
+        <div className="header-left">
+          <h1>Team Management Dashboard</h1>
+          <p className="header-subtitle">Manage and organize your teams effectively</p>
         </div>
-      </div>
-
-      <TeamsTable
-        className="relative w-full overflow-auto bg-white rounded-lg shadow-md px-6"
-        paginatedData={filteredTeams} // Pass the filtered teams
-        handleEditTeam={handleEditTeam}
-        handleDeleteTeams={handleDeleteTeams}
-        handleSort={handleSort}
-      />
+        <div className="header-right">
+          <SheetComponent /> {/* Profile component */}
+          <div className="current-time">{currentTime}</div>
+        </div>
+      </header>
       
-      <AddEditTeamDialog
-        isDialogOpen={isDialogOpen}
-        setIsDialogOpen={setIsDialogOpen}
-        selectedTeam={selectedTeam}
-        setSelectedTeam={setSelectedTeam}
-        handleSaveTeam={handleSaveTeam}
-      />
-      <SheetComponent />
+      <main className="main-content container mx-auto p-6">
+        
+        <TeamStats totalTeams={totalTeams} totalDepartments={totalDepartments} />
+        <div className="flex justify-between items-center mb-4 px-6">
+          <div className="flex items-center space-x-4">
+            <button onClick={handleAddTeam} className="bg-green-500 text-white px-4 py-2 rounded shadow-md hover:bg-green-600">
+              Add Team
+            </button>
+            <input
+              type="text"
+              placeholder="Search by Team Leader or Department..."
+              className="border rounded p-2 w-64"
+              value={searchQuery}
+              onChange={handleSearch}
+            />
+          </div>
+        </div>
+
+        <TeamsTable
+          className="relative w-full overflow-auto bg-white rounded-lg shadow-md px-6"
+          paginatedData={filteredTeams} // Pass the filtered teams
+          handleEditTeam={handleEditTeam}
+          handleDeleteTeams={handleDeleteTeams}
+          handleSort={handleSort}
+        />
+        
+        <AddEditTeamDialog
+          isDialogOpen={isDialogOpen}
+          setIsDialogOpen={setIsDialogOpen}
+          selectedTeam={selectedTeam}
+          setSelectedTeam={setSelectedTeam}
+          handleSaveTeam={handleSaveTeam}
+        />
+      </main>
     </div>
   );
 };

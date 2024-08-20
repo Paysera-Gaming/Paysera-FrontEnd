@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EmployeeTable from './EmployeeTable';
 import EmployeeDialog from './EmployeeDialog';
 import EmployeeSummary from './EmployeeSummary';
@@ -15,6 +15,24 @@ const Employee = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const pageSize = 5;
+
+  const [currentTime, setCurrentTime] = useState<string>('');
+
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      const formattedTime = now.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+      setCurrentTime(formattedTime);
+    };
+
+    const intervalId = setInterval(updateClock, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -47,42 +65,54 @@ const Employee = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <SheetComponent />
-      <h2 className="text-2xl font-semibold mb-6 text-center">Employee List</h2>
-      <EmployeeSummary {...employeeCounters} />
-      <div className="flex items-center mb-6 space-x-4">
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchQuery}
-          onChange={handleSearch}
-          className="border rounded p-2 w-64 max-w-full"
+    <div className="dashboard-container">
+      <header className="header">
+        <div className="header-left">
+          <h1>Employee Dashboard</h1>
+          <p className="header-subtitle">View and manage employee information</p>
+        </div>
+        <div className="header-right">
+          <SheetComponent /> {/* Profile component */}
+          <div className="current-time">{currentTime}</div>
+        </div>
+      </header>
+      
+      <main className="main-content container mx-auto p-6">
+          
+        <EmployeeSummary {...employeeCounters} />
+        <div className="flex items-center mb-6 space-x-4">
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={handleSearch}
+            className="border rounded p-2 w-64 max-w-full"
+          />
+        </div>
+        <EmployeeTable
+          data={paginatedData}
+          setSelectedEmployee={setSelectedEmployee}
+          setIsDialogOpen={setIsDialogOpen}
+          handleDeleteEmployee={handleDeleteEmployee}
+          sortConfig={sortConfig}
+          setSortConfig={setSortConfig}
+          setData={setData}
         />
-      </div>
-      <EmployeeTable
-        data={paginatedData}
-        setSelectedEmployee={setSelectedEmployee}
-        setIsDialogOpen={setIsDialogOpen}
-        handleDeleteEmployee={handleDeleteEmployee}
-        sortConfig={sortConfig}
-        setSortConfig={setSortConfig}
-        setData={setData}
-      />
-      <div className="flex justify-center mt-4">
-        <PaginationComponent
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
+        <div className="flex justify-center mt-4">
+          <PaginationComponent
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+        <EmployeeDialog
+          isDialogOpen={isDialogOpen}
+          setIsDialogOpen={setIsDialogOpen}
+          selectedEmployee={selectedEmployee}
+          setSelectedEmployee={setSelectedEmployee}
+          handleSaveEmployee={handleSaveEmployee}
         />
-      </div>
-      <EmployeeDialog
-        isDialogOpen={isDialogOpen}
-        setIsDialogOpen={setIsDialogOpen}
-        selectedEmployee={selectedEmployee}
-        setSelectedEmployee={setSelectedEmployee}
-        handleSaveEmployee={handleSaveEmployee}
-      />
+      </main>
     </div>
   );
 };
