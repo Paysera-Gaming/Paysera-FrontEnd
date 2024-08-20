@@ -30,7 +30,6 @@ const SheetComponent = () => {
       { path: '/manageteams', label: 'Manage Teams', icon: <FaUsers /> },
       { path: '/employeelist', label: 'Employee List', icon: <FaList /> },
       { path: '/announcement', label: 'Announcement', icon: <FaBullhorn /> },
-      { path: '/messagemanager', label: 'Messages', icon: <FaEnvelope /> },
       { path: '/accountpreferences', label: 'Settings', icon: <FaCog /> },
     ];
 

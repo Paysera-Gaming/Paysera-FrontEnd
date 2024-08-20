@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import Messages from './components/AdminDashboard/MessageManager/MessageManager';
 import ManageTeams from 'C:/Users/Admin/Paysera-FrontEnd/src/components/AdminDashboard/ManageTeams';
 
 import Settings from './components/AdminDashboard/AccountPreferences';
@@ -20,10 +19,7 @@ const router = createBrowserRouter([
     element: <ManageTeams />,
   },
 
-  {
-    path: '/messagemanager',
-    element: <Messages />,
-  },
+
   {
     path: '/accountpreferences',
     element: <Settings />,
