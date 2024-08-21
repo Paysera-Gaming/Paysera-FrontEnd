@@ -63,12 +63,29 @@ const Employee = () => {
   const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   // Updated employee counters based on filtered data
-  const employeeCounters = {
-    totalActive: filteredData.filter(emp => emp.status === 'Active').length,
-    totalOnLunch: filteredData.filter(emp => emp.status === 'Lunch').length,
-    totalOnLeave: filteredData.filter(emp => emp.status === 'Leave').length,
-    totalOffline: filteredData.filter(emp => emp.status === 'Offline').length,
-  };
+// Updated employee counters based on filtered data
+const employeeCounters = {
+  totalActive: filteredData.filter(emp => emp.status === 'Active').length,
+  activeFixed: filteredData.filter(emp => emp.status === 'Active' && emp.type === 'Fixed').length,
+  activeFlexible: filteredData.filter(emp => emp.status === 'Active' && emp.type === 'Flexible').length,
+  activeSuperFlexible: filteredData.filter(emp => emp.status === 'Active' && emp.type === 'Super Flexible').length,
+
+  totalOnLunch: filteredData.filter(emp => emp.status === 'Lunch').length,
+  lunchFixed: filteredData.filter(emp => emp.status === 'Lunch' && emp.type === 'Fixed').length,
+  lunchFlexible: filteredData.filter(emp => emp.status === 'Lunch' && emp.type === 'Flexible').length,
+  lunchSuperFlexible: filteredData.filter(emp => emp.status === 'Lunch' && emp.type === 'Super Flexible').length,
+
+  totalOnLeave: filteredData.filter(emp => emp.status === 'Leave').length,
+  leaveFixed: filteredData.filter(emp => emp.status === 'Leave' && emp.type === 'Fixed').length,
+  leaveFlexible: filteredData.filter(emp => emp.status === 'Leave' && emp.type === 'Flexible').length,
+  leaveSuperFlexible: filteredData.filter(emp => emp.status === 'Leave' && emp.type === 'Super Flexible').length,
+
+  totalOffline: filteredData.filter(emp => emp.status === 'Offline').length,
+  offlineFixed: filteredData.filter(emp => emp.status === 'Offline' && emp.type === 'Fixed').length,
+  offlineFlexible: filteredData.filter(emp => emp.status === 'Offline' && emp.type === 'Flexible').length,
+  offlineSuperFlexible: filteredData.filter(emp => emp.status === 'Offline' && emp.type === 'Super Flexible').length,
+};
+
 
   return (
     <div className="dashboard-container">
