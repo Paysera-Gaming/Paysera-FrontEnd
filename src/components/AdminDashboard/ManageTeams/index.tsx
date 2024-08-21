@@ -81,14 +81,9 @@ const ManageTeams = () => {
         </div>
       </header>
       
-      <main className="main-content container mx-auto p-6">
-        
-        <TeamStats totalTeams={totalTeams} totalDepartments={totalDepartments} />
+      <main className="main-content container mx-auto p-12">
         <div className="flex justify-between items-center mb-4 px-6">
           <div className="flex items-center space-x-4">
-            <button onClick={handleAddTeam} className="bg-green-500 text-white px-4 py-2 rounded shadow-md hover:bg-green-600">
-              Add Team
-            </button>
             <input
               type="text"
               placeholder="Search by Team Leader or Department..."
@@ -96,11 +91,17 @@ const ManageTeams = () => {
               value={searchQuery}
               onChange={handleSearch}
             />
+            <button onClick={handleAddTeam} className="bg-green-500 text-white px-4 py-2 rounded shadow-md hover:bg-green-600">
+              Add Team
+            </button>
           </div>
         </div>
+        
+        {/* Team Stats */}
+        <TeamStats totalTeams={totalTeams} totalDepartments={totalDepartments} />
 
         <TeamsTable
-          className="relative w-full overflow-auto bg-white rounded-lg shadow-md px-6"
+          className="relative w-full overflow-auto bg-white rounded-lg shadow-md px-12"
           paginatedData={filteredTeams} // Pass the filtered teams
           handleEditTeam={handleEditTeam}
           handleDeleteTeams={handleDeleteTeams}
