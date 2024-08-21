@@ -100,7 +100,7 @@ const employeeCounters = {
         </div>
       </header>
 
-      <main className="main-content container mx-auto p-6">
+      <main className="main-content container mx-auto p-11">
       <div className="flex items-center mb-0 space-x-3">
   <input
     type="text"
