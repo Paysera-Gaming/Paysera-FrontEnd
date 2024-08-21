@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-
+import { TimerIcon } from 'lucide-react';
 export interface TimerProps {
 	hasStarted: boolean;
+	formAction: 'Clock-In' | 'Lunch-In' | 'Lunch-Out' | 'Clock-Out';
 }
 
 export default function TimerDisplay({ ...timerProps }: TimerProps) {
@@ -34,11 +35,14 @@ export default function TimerDisplay({ ...timerProps }: TimerProps) {
 		minutesToDisplay < 10 ? `0${minutesToDisplay}` : minutesToDisplay;
 	const secondsToDisplay = useTime % 60;
 	const secondsDisplay =
-		secondsToDisplay > 10 ? secondsToDisplay : `0${secondsToDisplay}`;
+		secondsToDisplay < 10 ? `0${secondsToDisplay}` : secondsToDisplay;
 
 	return (
-		<h3 className=" scroll-m-20 text-xl font-semibold tracking-tight">
-			{hoursDisplay}:{minutesDisplay}:{secondsDisplay}
-		</h3>
+		<span className="flex gap-x-1 justify-center items-center">
+			<TimerIcon size={`1.5rem`} className="mb-1"></TimerIcon>
+			<h3 className=" scroll-m-20 text-xl font-semibold tracking-tight">
+				{hoursDisplay}:{minutesDisplay}:{secondsDisplay}
+			</h3>
+		</span>
 	);
 }

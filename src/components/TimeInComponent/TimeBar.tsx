@@ -1,5 +1,4 @@
 // icons
-import { TimerIcon } from 'lucide-react';
 import TimeForm from './TimeForm';
 import { useState } from 'react';
 
@@ -35,10 +34,11 @@ export default function Timebar() {
 				<p className="inline"> 8:00 - 16:00</p>
 			</span>
 			{/* timer display */}
-			<span className="flex gap-x-1 justify-center items-center">
-				<TimerIcon size={`1.5rem`} className="mb-1"></TimerIcon>
-				<TimerDisplay hasStarted={useStart}></TimerDisplay>
-			</span>
+			<TimerDisplay
+				hasStarted={useStart}
+				formAction={'Clock-Out'}
+			></TimerDisplay>
+
 			{/* form */}
 			<TimeForm updateParentState={updateTimer}></TimeForm>
 		</header>
