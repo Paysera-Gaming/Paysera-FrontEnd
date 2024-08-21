@@ -1,0 +1,33 @@
+/* Table */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table th,
+  .table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  .table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+  }
+  
+  .table td {
+    font-size: 0.875rem;
+  }
+  
+  .table-caption {
+    font-size: 1.125rem;
+    margin-bottom: 0.75rem;
+    color: #333;
+    text-align: center;
+  }
+  
