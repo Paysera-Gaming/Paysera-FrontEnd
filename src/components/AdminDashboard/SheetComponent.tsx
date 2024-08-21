@@ -25,20 +25,20 @@ const SheetComponent = () => {
 
 	const renderLinks = () => {
 		const links = [
-			{ path: '/', label: 'Attendance', icon: <div className="FaHome" /> },
+			{ path: '/admin', label: 'Attendance', icon: <div className="FaHome" /> },
 			// Update the path to reflect the `ManageTeams` folder
 			{
-				path: '/manageteams',
+				path: '/admin/manageteams',
 				label: 'Manage Teams',
 				icon: <div className="FaUsers" />,
 			},
 			{
-				path: '/employeelist',
+				path: '/admin/employeelist',
 				label: 'Employee List',
 				icon: <div className="FaList" />,
 			},
 			{
-				path: '/announcement',
+				path: '/admin/announcement',
 				label: 'Announcement',
 				icon: <div className="FaBullhorn" />,
 			},
