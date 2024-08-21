@@ -1,22 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+
 import ManageTeamsAdmin from 'C:/Users/Admin/Paysera-FrontEnd/src/components/AdminDashboard/ManageTeams';
+import LoginPage from './pages/Login/LoginPage';
+// employee pages
+import EmployeePage from './pages/Employee/EmployeePage';
+import EmployeeDashboardPage from './pages/Employee/Dashboard/DashboardPage';
+import RequestPage from './pages/Employee/Request/RequestPage';
 // Teamlead pages
 import TeamLeadPage from './pages/TeamLead/TeamLeadPage';
 import TeamLeadDashboardPage from './pages/TeamLead/Dashboard/DashboardPage';
 import SchedulePage from './pages/TeamLead/Schedule/SchedulePage';
 import AttendancePage from './pages/TeamLead/Attendance/AttendancePage';
 import ManagePage from './pages/TeamLead/Manage/ManagePage';
+// Admin
+import AdminPage from './pages/AdminPage/AdminPage';     
 import Settings from './components/AdminDashboard/AccountPreferences';
 import Employee from './components/AdminDashboard/Employee';
 import Announcement from './components/AdminDashboard/Announcement/Announcement';
 import './index.css';
+
 import {
 	createBrowserRouter,
 	RouterProvider,
 	redirect,
 } from 'react-router-dom';
-import AdminPage from './pages/AdminPage/AdminPage';
 
 const router = createBrowserRouter([
 	{
@@ -59,6 +67,7 @@ const router = createBrowserRouter([
 			{ path: 'schedule', element: <SchedulePage></SchedulePage> },
 			{ path: 'attendance', element: <AttendancePage></AttendancePage> },
 		],
+
 	},
 	{
 		path: '/admin',
