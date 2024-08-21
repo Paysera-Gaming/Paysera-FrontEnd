@@ -50,7 +50,7 @@ export default function LoginForm() {
 		if (values.username && values.password) {
 			toast.success('login succesful');
 			return setTimeout(() => {
-				return navigate('/employee');
+				return navigate('/teamlead');
 			}, 500);
 		} else {
 			toast.error('please try again');
