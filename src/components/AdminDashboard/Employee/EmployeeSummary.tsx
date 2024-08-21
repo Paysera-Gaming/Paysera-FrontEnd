@@ -34,7 +34,7 @@ const EmployeeSummary = ({ totalActive, totalOnLunch, totalOnLeave, totalOffline
   ];
 
   return (
-    <div className="grid grid-cols-4 gap-4 mb-6">
+    <div className="grid grid-cols-4 gap-4 mb-0">
       {summaryItems.map(({ title, count, color, borderColor, icon }) => (
         <div 
           key={title} 

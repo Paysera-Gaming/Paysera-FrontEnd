@@ -84,46 +84,45 @@ const Employee = () => {
       </header>
 
       <main className="main-content container mx-auto p-6">
-        <div className="flex items-center mb-6 space-x-4">
-          <input
-            type="text"
-            placeholder="Search"
-            value={searchQuery}
-            onChange={handleSearch}
-            className="border rounded p-2 w-64 max-w-full"
-          />
-          <Select
-            value={statusFilter}
-            onValueChange={(value) => setStatusFilter(value)}
-            placeholder="Filter by Status"
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Filter by Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Statuses</SelectItem>
-              <SelectItem value="Active">Active</SelectItem>
-              <SelectItem value="Offline">Offline</SelectItem>
-              <SelectItem value="Lunch">On Lunch</SelectItem>
-              <SelectItem value="Leave">On Leave</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select
-            value={typeFilter}
-            onValueChange={(value) => setTypeFilter(value)}
-            placeholder="Filter by Type"
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Filter by Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="Fixed">Fixed</SelectItem>
-              <SelectItem value="Flexible">Flexible</SelectItem>
-              <SelectItem value="Super Flexible">Super Flexible</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="flex items-center mb-0 space-x-3">
+  <input
+    type="text"
+    placeholder="Search"
+    value={searchQuery}
+    onChange={handleSearch}
+    className="border rounded p-1.5 w-36 max-w-full"
+  />
+  <Select
+    value={statusFilter}
+    onValueChange={(value) => setStatusFilter(value)}
+  >
+    <SelectTrigger className="w-32">
+      <SelectValue placeholder="Status" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">All Statuses</SelectItem>
+      <SelectItem value="Active">Active</SelectItem>
+      <SelectItem value="Offline">Offline</SelectItem>
+      <SelectItem value="Lunch">On Lunch</SelectItem>
+      <SelectItem value="Leave">On Leave</SelectItem>
+    </SelectContent>
+  </Select>
+  <Select
+    value={typeFilter}
+    onValueChange={(value) => setTypeFilter(value)}
+  >
+    <SelectTrigger className="w-32">
+      <SelectValue placeholder="Type" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">All Types</SelectItem>
+      <SelectItem value="Fixed">Fixed</SelectItem>
+      <SelectItem value="Flexible">Flexible</SelectItem>
+      <SelectItem value="Super Flexible">Super Flexible</SelectItem>
+    </SelectContent>
+  </Select>
+</div>
+
 
         <EmployeeSummary {...employeeCounters} />
 
