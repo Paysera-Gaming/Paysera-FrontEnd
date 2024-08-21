@@ -12,12 +12,11 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 // Import CSS files for styling
-import '../../AdminDashboard/dialog-sheet.css';
-import '../../AdminDashboard/general.css';
-import '../../AdminDashboard/header.css';
-import '../../AdminDashboard/links-logout.css';
-import '../../AdminDashboard/profile.css';
-import '../../AdminDashboard/settings.css';
+import '../../css/AdminDashboard/dialog-sheet.css';
+import '../../css/AdminDashboard/header.css';
+import '../../css/AdminDashboard/links-logout.css';
+import '../../css/AdminDashboard/profile.css';
+import '../../css/AdminDashboard/settings.css';
 
 const SheetComponent = () => {
 	const location = useLocation();
@@ -43,7 +42,7 @@ const SheetComponent = () => {
 				icon: <div className="FaBullhorn" />,
 			},
 			{
-				path: '/accountpreferences',
+				path: '/admin/accountpreferences',
 				label: 'Settings',
 				icon: <div className="FaCog" />,
 			},

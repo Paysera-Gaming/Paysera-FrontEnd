@@ -19,7 +19,7 @@ const AnnouncementCounts = ({ announcementCounts }) => (
 		<div className="flex-1 bg-red-100 p-4 rounded-lg border border-red-300 shadow-sm mx-4 text-center">
 			<div className="flex flex-col items-center">
 				<div className="flex items-center justify-center mb-2">
-					<MegaphoneIcon className="w-8 h-8 text-red-600" />
+					{/* <MegaphoneIcon className="w-8 h-8 text-red-600" /> */}
 					<p className="text-4xl font-bold text-black ml-2">
 						{announcementCounts.Draft}
 					</p>

@@ -26,6 +26,7 @@ import {
 	createBrowserRouter,
 	RouterProvider,
 	redirect,
+	Outlet,
 } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -72,8 +73,14 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/admin',
-		element: <AdminPage></AdminPage>,
+		element: <Outlet></Outlet>,
 		children: [
+			{
+				index: true,
+				loader: () => redirect('/admin/dashboard'),
+			},
+			{ path: 'dashboard', element: <AdminPage></AdminPage> },
+
 			{
 				path: 'manageteams',
 				element: <AdminManageTeams />,
