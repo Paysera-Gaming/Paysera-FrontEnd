@@ -5,10 +5,13 @@ import EmployeeSummary from './EmployeeSummary';
 import { sampleEmployees } from './sampleData';
 import SheetComponent from '../SheetComponent';
 import { PaginationComponent } from '../PaginationComponent';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 
 const Employee = () => {
   const [data, setData] = useState(sampleEmployees);
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'lastName', direction: 'ascending' });
@@ -40,9 +43,11 @@ const Employee = () => {
   };
 
   const filteredData = data.filter((record) =>
-    record.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (record.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     record.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    record.team.toLowerCase().includes(searchQuery.toLowerCase())
+    record.team.toLowerCase().includes(searchQuery.toLowerCase())) &&
+    (statusFilter !== "all" ? record.status === statusFilter : true) &&
+    (typeFilter !== "all" ? record.type === typeFilter : true)
   );
 
   const handleSaveEmployee = (updatedEmployee) => {
@@ -76,10 +81,8 @@ const Employee = () => {
           <div className="current-time">{currentTime}</div>
         </div>
       </header>
-      
+
       <main className="main-content container mx-auto p-6">
-          
-        <EmployeeSummary {...employeeCounters} />
         <div className="flex items-center mb-6 space-x-4">
           <input
             type="text"
@@ -88,7 +91,41 @@ const Employee = () => {
             onChange={handleSearch}
             className="border rounded p-2 w-64 max-w-full"
           />
+          <Select
+            value={statusFilter}
+            onValueChange={(value) => setStatusFilter(value)}
+            placeholder="Filter by Status"
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Filter by Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="Active">Active</SelectItem>
+              <SelectItem value="Offline">Offline</SelectItem>
+              <SelectItem value="Lunch">On Lunch</SelectItem>
+              <SelectItem value="Leave">On Leave</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
+            value={typeFilter}
+            onValueChange={(value) => setTypeFilter(value)}
+            placeholder="Filter by Type"
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Filter by Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="Fixed">Fixed</SelectItem>
+              <SelectItem value="Flexible">Flexible</SelectItem>
+              <SelectItem value="Super Flexible">Super Flexible</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
+
+        <EmployeeSummary {...employeeCounters} />
+
         <EmployeeTable
           data={paginatedData}
           setSelectedEmployee={setSelectedEmployee}
@@ -98,6 +135,7 @@ const Employee = () => {
           setSortConfig={setSortConfig}
           setData={setData}
         />
+
         <div className="flex justify-center mt-4">
           <PaginationComponent
             currentPage={currentPage}
@@ -105,6 +143,7 @@ const Employee = () => {
             onPageChange={setCurrentPage}
           />
         </div>
+
         <EmployeeDialog
           isDialogOpen={isDialogOpen}
           setIsDialogOpen={setIsDialogOpen}
