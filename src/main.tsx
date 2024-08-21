@@ -14,7 +14,6 @@ import SchedulePage from './pages/TeamLead/Schedule/SchedulePage';
 import AttendancePage from './pages/TeamLead/Attendance/AttendancePage';
 import ManagePage from './pages/TeamLead/Manage/ManagePage';
 
-
 // admin
 import AdminPage from './pages/AdminPage/AdminPage';
 import AdminManageTeams from './components/AdminDashboard/ManageTeams/index';
@@ -22,7 +21,6 @@ import Settings from './components/AdminDashboard/AccountPreferences';
 import Employee from './components/AdminDashboard/Employee';
 import Announcement from './components/AdminDashboard/Announcement/Announcement';
 import './index.css';
-
 
 import {
 	createBrowserRouter,
@@ -71,27 +69,26 @@ const router = createBrowserRouter([
 			{ path: 'schedule', element: <SchedulePage></SchedulePage> },
 			{ path: 'attendance', element: <AttendancePage></AttendancePage> },
 		],
-
 	},
 	{
 		path: '/admin',
 		element: <AdminPage></AdminPage>,
 		children: [
 			{
-				path: '/manageteams',
+				path: 'manageteams',
 				element: <AdminManageTeams />,
 			},
 
 			{
-				path: '/accountpreferences',
+				path: 'accountpreferences',
 				element: <Settings />,
 			},
 			{
-				path: '/employeelist',
+				path: 'employeelist',
 				element: <Employee />,
 			},
 			{
-				path: '/announcement',
+				path: 'announcement',
 				element: <Announcement />, // Add the Announcement route
 			},
 		],
