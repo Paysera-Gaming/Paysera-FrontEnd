@@ -37,6 +37,8 @@ import { useState } from 'react';
 
 // import { toast } from 'sonner';
 
+// create a function that will create a snapshot of the start time and end time
+
 interface ChildProps {
 	updateParentState: (newValue: string) => void;
 }
@@ -66,8 +68,10 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 
 	function runYourMother() {
 		const formValues = form.getValues('TimeType');
+
+		// dapat may mangyayari
 		updateParentState(formValues);
-		// toast(formValues);
+
 		// second param should be the snapshot
 		ToasterSwitch(formValues, formValues);
 	}
