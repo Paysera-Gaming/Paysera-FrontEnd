@@ -2,7 +2,7 @@ import React from 'react';
 import { MegaphoneIcon } from '@heroicons/react/24/outline';
 
 const AnnouncementCounts = ({ announcementCounts }) => (
-  <div className="mb-6 flex justify-between">
+  <div className="mb-0 flex justify-between">
     {/* Published Announcements */}
     <div className="flex-1 bg-blue-100 p-4 rounded-lg border border-blue-300 shadow-sm text-center">
       <div className="flex flex-col items-center">
