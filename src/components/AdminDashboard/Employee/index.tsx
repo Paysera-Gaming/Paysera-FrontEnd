@@ -62,11 +62,12 @@ const Employee = () => {
   const totalPages = Math.ceil(filteredData.length / pageSize);
   const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
+  // Updated employee counters based on filtered data
   const employeeCounters = {
-    totalActive: data.filter(emp => emp.status === 'Active').length,
-    totalOnLunch: data.filter(emp => emp.status === 'Lunch').length,
-    totalOnLeave: data.filter(emp => emp.status === 'Leave').length,
-    totalOffline: data.filter(emp => emp.status === 'Offline').length,
+    totalActive: filteredData.filter(emp => emp.status === 'Active').length,
+    totalOnLunch: filteredData.filter(emp => emp.status === 'Lunch').length,
+    totalOnLeave: filteredData.filter(emp => emp.status === 'Leave').length,
+    totalOffline: filteredData.filter(emp => emp.status === 'Offline').length,
   };
 
   return (
