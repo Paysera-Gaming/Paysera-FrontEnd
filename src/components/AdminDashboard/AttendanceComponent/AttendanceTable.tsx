@@ -30,36 +30,18 @@ interface AttendanceTableProps {
 export const AttendanceTable: React.FC<AttendanceTableProps> = ({
 	filteredData,
 }) => (
-	<Table className="min-w-full border-collapse border border-gray-200">
+	<Table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #e5e7eb' }}>
 		<thead>
 			<TableRow>
-				<TableHead className="text-center align-middle border border-gray-300">
-					Name
-				</TableHead>
-				<TableHead className="text-center align-middle border border-gray-300">
-					Type
-				</TableHead>
-				<TableHead className="text-center align-middle border border-gray-300">
-					Date
-				</TableHead>
-				<TableHead className="text-center align-middle border border-gray-300">
-					Start Time
-				</TableHead>
-				<TableHead className="text-center align-middle border border-gray-300">
-					End Time
-				</TableHead>
-				<TableHead className="text-center align-middle border border-gray-300">
-					Total Work Hours
-				</TableHead>
-				<TableHead className="text-center align-middle border border-gray-300">
-					Total Lunch Hours
-				</TableHead>
-				<TableHead className="text-center align-middle border border-gray-300">
-					Total Hours
-				</TableHead>
-				<TableHead className="text-center align-middle border border-gray-300">
-					Situation
-				</TableHead>
+				<TableHead style={headerStyle}>Name</TableHead>
+				<TableHead style={headerStyle}>Type</TableHead>
+				<TableHead style={headerStyle}>Date</TableHead>
+				<TableHead style={headerStyle}>Start Time</TableHead>
+				<TableHead style={headerStyle}>End Time</TableHead>
+				<TableHead style={headerStyle}>Total Work Hours</TableHead>
+				<TableHead style={headerStyle}>Total Lunch Hours</TableHead>
+				<TableHead style={headerStyle}>Total Hours</TableHead>
+				<TableHead style={headerStyle}>Situation</TableHead>
 			</TableRow>
 		</thead>
 		<TableBody>
@@ -81,35 +63,51 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
 				);
 
 				return (
-					<TableRow key={index} className="border border-gray-300">
-						<TableCell className="text-center align-middle border border-gray-300">
-							{row.name}
-						</TableCell>
-						<TableCell className="text-center align-middle border border-gray-300">
-							{row.type}
-						</TableCell>
-						<TableCell className="text-center align-middle border border-gray-300">
-							{row.date}
-						</TableCell>
-						<TableCell className="text-center align-middle border border-gray-300">
-							{row.part1StartTime}
-						</TableCell>
-						<TableCell className="text-center align-middle border border-gray-300">
-							{row.part2EndTime}
-						</TableCell>
-						<TableCell className="text-center align-middle border border-gray-300">
+					<TableRow key={index} style={rowStyle}>
+						<TableCell style={cellStyle}>{row.name}</TableCell>
+						<TableCell style={cellStyle}>{row.type}</TableCell>
+						<TableCell style={cellStyle}>{row.date}</TableCell>
+						<TableCell style={cellStyle}>{row.part1StartTime}</TableCell>
+						<TableCell style={cellStyle}>{row.part2EndTime}</TableCell>
+						<TableCell style={cellStyle}>
 							{totalWorkHours.toFixed(2)} hours
 						</TableCell>
-						<TableCell className="text-center align-middle border border-gray-300">
+						<TableCell style={cellStyle}>
 							{totalLunchHours.toFixed(2)} hours
 						</TableCell>
-						<TableCell className="text-center align-middle border border-gray-300">
+						<TableCell style={cellStyle}>
 							{totalHours.toFixed(2)} hours
 						</TableCell>
-						<TableCell className="text-center align-middle border border-gray-300"></TableCell>
+						<TableCell style={cellStyle}>
+							{/* You can add the situation here as text or use the getSituationTooltip function */}
+							{situation}
+						</TableCell>
 					</TableRow>
 				);
 			})}
 		</TableBody>
 	</Table>
 );
+
+const headerStyle = {
+	border: '1px solid #d1d5db',
+	padding: '8px',
+	textAlign: 'center' as const,
+	backgroundColor: '#f9fafb',
+	color: '#1f2937',
+	verticalAlign: 'middle' as const,
+};
+
+const rowStyle = {
+	border: '1px solid #d1d5db',
+};
+
+const cellStyle = {
+	border: '1px solid #d1d5db',
+	padding: '8px',
+	textAlign: 'center' as const,
+	verticalAlign: 'middle' as const,
+	whiteSpace: 'nowrap' as const,
+};
+
+export default AttendanceTable;
