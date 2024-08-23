@@ -48,10 +48,13 @@ function ProfileHeader() {
 		<header>
 			<span className="flex items-center justify-start ">
 				<Icons.logo className="w-10 h-10"></Icons.logo>
-				<span>
-					<h3 className="scroll-m-20 text-2xl font-semibold  tracking-tight">
-						Paysera
-					</h3>
+				<span className="flex-1">
+					<span className="w-full flex items-center justify-between">
+						<h3 className="scroll-m-20 text-2xl font-semibold  tracking-tight">
+							Paysera
+						</h3>
+					</span>
+
 					<p className=" text-sm text-muted-foreground">Good morning John!</p>
 				</span>
 			</span>
