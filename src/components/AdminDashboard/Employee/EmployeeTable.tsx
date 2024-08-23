@@ -70,10 +70,12 @@ const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDelet
       <TableBody>
         {sortedData.map(employee => (
           <TableRow key={employee.id}>
-            <TableCell className="text-center border-x">{`${employee.lastName}, ${employee.firstName} ${employee.middleName}`}</TableCell>
+            <TableCell className="text-center border-x flex items-center justify-center space-x-2">
+              <span className={`inline-block w-3 h-3 rounded-full ${statusColors[employee.status]}`}></span>
+              <span>{`${employee.lastName}, ${employee.firstName} ${employee.middleName}`}</span>
+            </TableCell>
             <TableCell className="text-center border-x">
               <div className="flex items-center justify-center space-x-2">
-                <span className={`inline-block w-3 h-3 rounded-full ${statusColors[employee.status]}`}></span>
                 <span>{employee.status}</span>
               </div>
             </TableCell>
