@@ -9,6 +9,7 @@ import {
 	SheetTrigger,
 } from '@/components/ui/sheet';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { CalendarDays, UsersRound, Settings, Building, Megaphone, LogOut } from 'lucide-react'; // Importing CalendarDays, UsersRound, Settings, Building, Megaphone, and LogOut
 
 // Import CSS files for styling
 import '../../css/AdminDashboard/dialog-sheet.css';
@@ -26,11 +27,11 @@ const SheetComponent = () => {
 
 	const renderLinks = () => {
 		const links = [
-			{ path: '/admin/dashboard', label: 'Attendance', icon: <div className="FaHome" /> },
-			{ path: '/admin/manageteams', label: 'Manage Teams', icon: <div className="FaUsers" /> },
-			{ path: '/admin/employeelist', label: 'Employee List', icon: <div className="FaList" /> },
-			{ path: '/admin/announcement', label: 'Announcement', icon: <div className="FaBullhorn" /> },
-			{ path: '/admin/accountpreferences', label: 'Settings', icon: <div className="FaCog" /> },
+			{ path: '/admin/dashboard', label: 'Attendance', icon: <CalendarDays /> }, // CalendarDays icon
+			{ path: '/admin/manageteams', label: 'Manage Teams', icon: <Building /> }, // Building icon
+			{ path: '/admin/employeelist', label: 'Employee List', icon: <UsersRound /> }, // UsersRound icon
+			{ path: '/admin/announcement', label: 'Announcement', icon: <Megaphone /> }, // Megaphone icon
+			{ path: '/admin/accountpreferences', label: 'Settings', icon: <Settings /> }, // Settings icon
 		];
 
 		return links
@@ -68,7 +69,9 @@ const SheetComponent = () => {
 				<div className="profile-settings">
 					<ul>{renderLinks()}</ul>
 					<ul className="logout-section">
-						<li>Log Out</li>
+						<li>
+							<LogOut /> Log Out
+						</li>
 					</ul>
 				</div>
 			</SheetContent>
