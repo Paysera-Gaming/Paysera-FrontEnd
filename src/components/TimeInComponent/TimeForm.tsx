@@ -39,8 +39,10 @@ import { useState } from 'react';
 
 // create a function that will create a snapshot of the start time and end time
 
+type UserStatus = 'Clock-In' | 'Lunch-In' | 'Lunch-Out' | 'Clock-Out' | 'None';
+
 interface ChildProps {
-	updateParentState: (newValue: string) => void;
+	updateParentState: (newValue: UserStatus) => void;
 }
 
 export default function TimeForm({ updateParentState }: ChildProps) {
