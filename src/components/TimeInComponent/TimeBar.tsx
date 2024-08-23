@@ -5,7 +5,7 @@ import { useState } from 'react';
 import TimerDisplay from '@/components/TimeInComponent/TimerDisplay';
 
 import { Badge } from '@/components/ui/badge';
-
+import { ModeToggle } from '../ThemeProvider/ThemeSwitch';
 type UserStatus = 'Clock-In' | 'Lunch-In' | 'Lunch-Out' | 'Clock-Out' | 'None';
 
 function statusUser(status: UserStatus): string {
@@ -75,7 +75,9 @@ export default function Timebar() {
 			></TimerDisplay>
 
 			{/* form */}
+
 			<TimeForm updateParentState={updateTimer}></TimeForm>
+			<ModeToggle />
 		</header>
 	);
 }
