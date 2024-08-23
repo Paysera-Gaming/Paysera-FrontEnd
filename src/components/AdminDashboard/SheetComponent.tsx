@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-// import { FaHome, FaUsers, FaList, FaEnvelope, FaCog, FaBullhorn } from 'react-icons/fa';
 import {
 	Sheet,
 	SheetContent,
@@ -22,34 +21,20 @@ const SheetComponent = () => {
 	const location = useLocation();
 	const currentPath = location.pathname;
 
+	// Debugging to check the current path
+	console.log('Current Path:', currentPath);
+
 	const renderLinks = () => {
 		const links = [
-			{ path: '/admin', label: 'Attendance', icon: <div className="FaHome" /> },
-			// Update the path to reflect the `ManageTeams` folder
-			{
-				path: '/admin/manageteams',
-				label: 'Manage Teams',
-				icon: <div className="FaUsers" />,
-			},
-			{
-				path: '/admin/employeelist',
-				label: 'Employee List',
-				icon: <div className="FaList" />,
-			},
-			{
-				path: '/admin/announcement',
-				label: 'Announcement',
-				icon: <div className="FaBullhorn" />,
-			},
-			{
-				path: '/admin/accountpreferences',
-				label: 'Settings',
-				icon: <div className="FaCog" />,
-			},
+			{ path: '/admin/dashboard', label: 'Attendance', icon: <div className="FaHome" /> },
+			{ path: '/admin/manageteams', label: 'Manage Teams', icon: <div className="FaUsers" /> },
+			{ path: '/admin/employeelist', label: 'Employee List', icon: <div className="FaList" /> },
+			{ path: '/admin/announcement', label: 'Announcement', icon: <div className="FaBullhorn" /> },
+			{ path: '/admin/accountpreferences', label: 'Settings', icon: <div className="FaCog" /> },
 		];
 
 		return links
-			.filter((link) => link.path !== currentPath)
+			.filter((link) => !currentPath.includes(link.path))
 			.map((link) => (
 				<li key={link.path} className="link-item">
 					<Link to={link.path} className="link-content sheet-button">
