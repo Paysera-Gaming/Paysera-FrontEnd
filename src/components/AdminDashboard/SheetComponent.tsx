@@ -9,7 +9,7 @@ import {
 	SheetTrigger,
 } from '@/components/ui/sheet';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { CalendarDays, UsersRound, Settings, Building, Megaphone, LogOut } from 'lucide-react'; // Importing CalendarDays, UsersRound, Settings, Building, Megaphone, and LogOut
+import { CalendarDays, UsersRound, Settings, Building, Megaphone, LogOut } from 'lucide-react';
 
 // Import CSS files for styling
 import '../../css/AdminDashboard/dialog-sheet.css';
@@ -22,16 +22,13 @@ const SheetComponent = () => {
 	const location = useLocation();
 	const currentPath = location.pathname;
 
-	// Debugging to check the current path
-	console.log('Current Path:', currentPath);
-
 	const renderLinks = () => {
 		const links = [
-			{ path: '/admin/dashboard', label: 'Attendance', icon: <CalendarDays /> }, // CalendarDays icon
-			{ path: '/admin/manageteams', label: 'Manage Teams', icon: <Building /> }, // Building icon
-			{ path: '/admin/employeelist', label: 'Employee List', icon: <UsersRound /> }, // UsersRound icon
-			{ path: '/admin/announcement', label: 'Announcement', icon: <Megaphone /> }, // Megaphone icon
-			{ path: '/admin/accountpreferences', label: 'Settings', icon: <Settings /> }, // Settings icon
+			{ path: '/admin/dashboard', label: 'Attendance', icon: <CalendarDays /> },
+			{ path: '/admin/manageteams', label: 'Manage Teams', icon: <Building /> },
+			{ path: '/admin/employeelist', label: 'Employee List', icon: <UsersRound /> },
+			{ path: '/admin/announcement', label: 'Announcement', icon: <Megaphone /> },
+			{ path: '/admin/accountpreferences', label: 'Settings', icon: <Settings /> },
 		];
 
 		return links
@@ -69,8 +66,11 @@ const SheetComponent = () => {
 				<div className="profile-settings">
 					<ul>{renderLinks()}</ul>
 					<ul className="logout-section">
-						<li>
-							<LogOut /> Log Out
+						<li className="link-item">
+							<Link to="/logout" className="link-content sheet-button">
+								<LogOut className="logout-icon" />
+								<span className="logout-text">Log Out</span>
+							</Link>
 						</li>
 					</ul>
 				</div>
