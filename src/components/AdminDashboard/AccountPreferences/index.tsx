@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import SheetComponent from '../SheetComponent';
 import AccountInfo from './AccountInfo';
 import PasswordChange from './PasswordChange';
-import NotificationSettings from './NotificationSettings';
 import Preferences from './Preferences';
 
 const Settings = () => {
@@ -24,7 +23,7 @@ const Settings = () => {
         </div>
         <div className="settings-content grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <PasswordChange />
-          <NotificationSettings />
+        
         </div>
       </main>
     </div>
