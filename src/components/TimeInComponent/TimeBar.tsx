@@ -6,26 +6,61 @@ import TimerDisplay from '@/components/TimeInComponent/TimerDisplay';
 
 import { Badge } from '@/components/ui/badge';
 
-// TODO:
-//  timer - doing
-// time form adjustments and validit
+type UserStatus = 'Clock-In' | 'Lunch-In' | 'Lunch-Out' | 'Clock-Out' | 'None';
+
+function statusUser(status: UserStatus): string {
+	switch (status) {
+		case 'Clock-In':
+		case 'Lunch-Out':
+			return 'On going';
+
+		case 'Clock-Out':
+		case 'None':
+			return 'Offline';
+
+		case 'Lunch-In':
+			return 'Lunch';
+	}
+}
+// this will run true if the status is clock-in or lunch-out
+// otherwise it will stay false
+function timerStatus(status: UserStatus): boolean {
+	return status == 'Clock-In' || status == 'Lunch-Out';
+}
+function badgeVariant(
+	status: UserStatus
+): 'default' | 'secondary' | 'destructive' | 'outline' {
+	switch (status) {
+		case 'Clock-In':
+		case 'Lunch-Out':
+			return 'default';
+
+		case 'Lunch-In':
+			return 'outline';
+
+		case 'None':
+		case 'Clock-Out':
+			return 'destructive';
+	}
+}
 
 export default function Timebar() {
-	const [useTimer, setTimer] = useState<string>('NONE');
 	const [useStart, setStart] = useState<boolean>(false);
+	const [useStatus, setStatus] = useState<UserStatus>('None');
 
-	function updateTimer(time: string) {
-		setTimer(time);
-		setStart((start) => (start = !start));
+	function updateTimer(time: UserStatus) {
+		setStatus(time);
+		setStart(timerStatus(time));
 	}
 
-	//to do add useState to start time and pass a function that will run this shizz
 	return (
 		<header className="border-border border-solid border w-full rounded-md p-2 flex items-center justify-between">
 			{/* status */}
 			<span>
 				<p className="font-semibold inline">Status: &nbsp;</p>
-				<Badge className="inline">{useTimer}</Badge>
+				<Badge className="inline" variant={badgeVariant(useStatus)}>
+					{statusUser(useStatus)}
+				</Badge>
 			</span>
 
 			{/* schedule */}
