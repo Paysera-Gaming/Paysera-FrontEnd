@@ -4,7 +4,7 @@ import { PaginationComponent } from '@/components/AdminDashboard/PaginationCompo
 import SheetComponent from '@/components/AdminDashboard/SheetComponent';
 
 // Import CSS files
-import '../../css/AdminDashboard/calendar.css';
+
 import '../../css/AdminDashboard/header.css';
 import '../../css/AdminDashboard/dialog-sheet.css';
 import '../../css/AdminDashboard/links-logout.css';
