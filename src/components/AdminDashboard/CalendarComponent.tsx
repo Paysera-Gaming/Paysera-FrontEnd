@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { addDays, format } from "date-fns";
+import { addMonths, addDays, format, subMonths } from "date-fns";
 import { DateRange } from "react-day-picker";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -19,6 +19,26 @@ export function CalendarComponent({
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20),
   });
+
+  // State to control the displayed month for each calendar
+  const [startMonth, setStartMonth] = React.useState(date?.from || new Date());
+  const [endMonth, setEndMonth] = React.useState(date?.to || new Date());
+
+  const handleStartPrevious = () => {
+    setStartMonth((prevMonth) => subMonths(prevMonth, 1));
+  };
+
+  const handleStartNext = () => {
+    setStartMonth((prevMonth) => addMonths(prevMonth, 1));
+  };
+
+  const handleEndPrevious = () => {
+    setEndMonth((prevMonth) => subMonths(prevMonth, 1));
+  };
+
+  const handleEndNext = () => {
+    setEndMonth((prevMonth) => addMonths(prevMonth, 1));
+  };
 
   return (
     <div className={`grid gap-2 ${className}`}>
@@ -45,38 +65,61 @@ export function CalendarComponent({
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <div className="grid grid-cols-2 gap-4 p-4">
-            <div>
-              <h3 className="text-center font-medium mb-2">Start Date</h3>
+            {/* Start Date Section */}
+            <div className="relative">
+              <div className="flex items-center justify-between mb-2 space-x-2">
+                <Button variant="ghost" size="sm" className="p-1" onClick={handleStartPrevious}>
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <h3 className="font-medium text-sm text-center">Start Date</h3>
+                <Button variant="ghost" size="sm" className="p-1" onClick={handleStartNext}>
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
               <Calendar
                 mode="single"
                 selected={date?.from}
                 onSelect={(from) =>
                   setDate((prevDate) => ({ ...prevDate, from }))
                 }
+                month={startMonth}
+                onMonthChange={setStartMonth}
                 classNames={{
                   root: "border rounded-md shadow-sm bg-white",
-                  month: "p-4 relative",
-                  caption: "text-center font-medium text-lg mb-2",
-                  nav: "absolute top-4 left-0 right-0 flex items-center justify-between z-10",
+                  month: "p-2 relative",
+                  caption: "text-center font-medium text-sm mb-2 text-gray-600",
+                  nav: "hidden", // Hide the built-in nav buttons
                   day: "h-8 w-8 p-0 rounded-full focus:bg-gray-200 focus:text-black hover:bg-gray-100",
                   day_selected:
                     "bg-green-500 text-white rounded-full hover:bg-green-600",
                 }}
               />
             </div>
-            <div>
-              <h3 className="text-center font-medium mb-2">End Date</h3>
+
+            {/* End Date Section */}
+            <div className="relative">
+              <div className="flex items-center justify-between mb-2 space-x-2">
+                <Button variant="ghost" size="sm" className="p-1" onClick={handleEndPrevious}>
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <h3 className="font-medium text-sm text-center">End Date</h3>
+                <Button variant="ghost" size="sm" className="p-1" onClick={handleEndNext}>
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
               <Calendar
                 mode="single"
                 selected={date?.to}
                 onSelect={(to) =>
                   setDate((prevDate) => ({ ...prevDate, to }))
                 }
+                month={endMonth}
+                onMonthChange={setEndMonth}
                 classNames={{
                   root: "border rounded-md shadow-sm bg-white",
-                  month: "p-4 relative",
-                  caption: "text-center font-medium text-lg mb-2",
-                  nav: "absolute top-4 left-0 right-0 flex items-center justify-between z-10",
+                  month: "p-2 relative",
+                  caption: "text-center font-medium text-sm mb-2 text-gray-600",
+                  nav: "hidden", // Hide the built-in nav buttons
                   day: "h-8 w-8 p-0 rounded-full focus:bg-gray-200 focus:text-black hover:bg-gray-100",
                   day_selected:
                     "bg-blue-500 text-white rounded-full hover:bg-blue-600",
