@@ -48,7 +48,7 @@ const SheetComponent = () => {
 	return (
 		<Sheet>
 			<SheetTrigger className="sheet-trigger">Profile</SheetTrigger>
-			<SheetContent className="sheet-content">
+			<SheetContent aria-describedby="" className="sheet-content">
 				<SheetHeader className="header-container">
 					<div className="header-logo">
 						<img src={PayseraLogo} alt="Paysera Logo" className="paysera-logo" />
