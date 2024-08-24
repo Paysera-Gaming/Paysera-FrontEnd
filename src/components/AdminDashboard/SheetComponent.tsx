@@ -49,7 +49,7 @@ const SheetComponent = () => {
 		<Sheet>
 			<SheetTrigger className="sheet-trigger">Profile</SheetTrigger>
 			<SheetContent className="sheet-content">
-				<SheetHeader>
+				<SheetHeader className="header-container">
 					<div className="header-logo">
 						<img src={PayseraLogo} alt="Paysera Logo" className="paysera-logo" />
 						<div className="paysera-name">Paysera</div>
@@ -59,14 +59,14 @@ const SheetComponent = () => {
 							<AvatarImage src="https://github.com/shadcn.png" />
 							<AvatarFallback>CN</AvatarFallback>
 						</Avatar>
-						<div className="profile-info-text">
+						<div className="profile-text">
 							<div className="username">Admin</div>
 							<div className="user-role">Administrator</div>
 						</div>
 					</div>
 				</SheetHeader>
+				<SheetTitle className="sheet-title">Profile Settings</SheetTitle>
 				<div className="profile-settings">
-						
 					<ul>{renderLinks()}</ul>
 					<ul className="logout-section">
 						<li className="link-item">
