@@ -16,26 +16,3 @@
   right: 80px;
 }
 
-.sheet-trigger:hover {
-  background-color: #0056b3;
-}
-
-.sheet-content {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.sheet-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.sheet-description {
-  font-size: 1rem;
-  color: #666;
-  margin-bottom: 30px;
-}

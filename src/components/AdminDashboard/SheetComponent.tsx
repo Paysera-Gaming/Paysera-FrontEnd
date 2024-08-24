@@ -3,13 +3,15 @@ import { Link, useLocation } from 'react-router-dom';
 import {
 	Sheet,
 	SheetContent,
-	SheetDescription,
 	SheetHeader,
 	SheetTitle,
 	SheetTrigger,
 } from '@/components/ui/sheet';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { CalendarDays, UsersRound, Settings, Building, Megaphone, LogOut } from 'lucide-react';
+
+// Import the Paysera logo
+import PayseraLogo from '/PayseraIcon.svg';
 
 // Import CSS files for styling
 import '../../css/AdminDashboard/dialog-sheet.css';
@@ -48,6 +50,10 @@ const SheetComponent = () => {
 			<SheetTrigger className="sheet-trigger">Profile</SheetTrigger>
 			<SheetContent className="sheet-content">
 				<SheetHeader>
+					<div className="header-logo">
+						<img src={PayseraLogo} alt="Paysera Logo" className="paysera-logo" />
+						<div className="paysera-name">Paysera</div>
+					</div>
 					<div className="profile-info">
 						<Avatar className="profile-avatar">
 							<AvatarImage src="https://github.com/shadcn.png" />
@@ -58,12 +64,9 @@ const SheetComponent = () => {
 							<div className="user-role">Administrator</div>
 						</div>
 					</div>
-					<SheetTitle className="sheet-title">Profile Settings</SheetTitle>
-					<SheetDescription className="sheet-description">
-						Manage your account settings and preferences.
-					</SheetDescription>
 				</SheetHeader>
 				<div className="profile-settings">
+						
 					<ul>{renderLinks()}</ul>
 					<ul className="logout-section">
 						<li className="link-item">

@@ -44,4 +44,22 @@
   color: #6b7280; /* Gray text color */
 }
 
-  
+/* Additional Styles for Paysera Logo and Name */
+.header-logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.paysera-logo {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.paysera-name {
+  font-size: 24px;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif; /* You can choose a more formal font if preferred */
+  color: #333;
+}
