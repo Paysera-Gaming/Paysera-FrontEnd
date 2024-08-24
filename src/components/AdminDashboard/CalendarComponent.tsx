@@ -3,20 +3,15 @@
 import * as React from "react";
 import {
   addMonths,
-  addDays,
-  format,
   subMonths,
+  format,
   isBefore,
   setYear as setYearFn,
   setMonth as setMonthFn,
 } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 
@@ -38,7 +33,7 @@ export function CalendarComponent({
   ) => {
     if (key === "from") {
       setDate((prevDate) => ({ ...prevDate, from: selectedDate }));
-      setError(null); // Reset error when the start date is changed
+      setError(null);
     } else if (key === "to") {
       setDate((prevDate) => {
         const newDateRange = { ...prevDate, to: selectedDate };
@@ -47,11 +42,9 @@ export function CalendarComponent({
           selectedDate &&
           isBefore(selectedDate, newDateRange.from)
         ) {
-          setError(
-            "End date cannot be earlier than the start date. Please click 'Set Today' to remove this error message."
-          );
+          setError("End date cannot be earlier than the start date.");
         } else {
-          setError(null); // Clear error if dates are valid
+          setError(null);
         }
         return newDateRange;
       });
@@ -105,26 +98,26 @@ export function CalendarComponent({
     setDate({ from: today, to: today });
     setStartMonth(today);
     setEndMonth(today);
-    setError(null); // Clear error message when setting today
+    setError(null);
   };
 
   return (
-    <div className={`grid gap-2 ${className}`}>
+    <div className={`grid gap-1 ${className}`}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="w-full justify-start text-left font-normal text-sm px-4 py-2"
+            className="w-full justify-start text-left font-normal text-xs px-2 py-1"
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <CalendarIcon className="mr-1 h-3 w-3" />
             {date?.from ? (
               date.to ? (
-                `Start Date: ${format(date.from, "LLL dd, y")} - End Date: ${format(
+                `Start: ${format(date.from, "LLL dd, y")} - End: ${format(
                   date.to,
                   "LLL dd, y"
                 )}`
               ) : (
-                `Start Date: ${format(date.from, "LLL dd, y")}`
+                `Start: ${format(date.from, "LLL dd, y")}`
               )
             ) : (
               <span>Select Date Range</span>
@@ -132,31 +125,27 @@ export function CalendarComponent({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
-          <div className="grid grid-cols-2 gap-4 p-4">
-            {/* Button to set today as the date */}
-            <div className="col-span-2 text-center mb-4">
+          <div className="grid grid-cols-2 gap-2 p-2">
+            <div className="col-span-2 text-center mb-2">
               <Button
                 onClick={handleSetToday}
-                className="bg-green-500 text-white hover:bg-green-600"
+                className="bg-green-500 text-white hover:bg-green-600 text-xs"
               >
                 Set Today
               </Button>
             </div>
-
-            {/* Display the error message */}
             {error && (
-              <div className="text-red-500 text-sm mb-2 text-center col-span-2">
+              <div className="text-red-500 text-xs mb-1 text-center col-span-2">
                 {error}
               </div>
             )}
 
-            {/* Start Date Section */}
             <div className="relative">
-              <div className="flex items-center justify-between mb-2 space-x-2">
+              <div className="flex items-center justify-between mb-1 space-x-1">
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="p-1"
+                  className="p-2"
                   onClick={() =>
                     setStartMonth(subMonths(startMonth || new Date(), 1))
                   }
@@ -164,7 +153,7 @@ export function CalendarComponent({
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
                 <select
-                  className="border rounded p-1"
+                  className="border rounded p-1 text-xs"
                   value={startMonth?.getFullYear() || new Date().getFullYear()}
                   onChange={(e) =>
                     handleYearChange(Number(e.target.value), setStartMonth)
@@ -173,7 +162,7 @@ export function CalendarComponent({
                   {generateYearOptions(2020, 2030)}
                 </select>
                 <select
-                  className="border rounded p-1"
+                  className="border rounded p-1 text-xs"
                   value={startMonth?.getMonth() || new Date().getMonth()}
                   onChange={(e) =>
                     handleMonthChange(Number(e.target.value), setStartMonth)
@@ -184,7 +173,7 @@ export function CalendarComponent({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="p-1"
+                  className="p-2"
                   onClick={() =>
                     setStartMonth(addMonths(startMonth || new Date(), 1))
                   }
@@ -200,24 +189,23 @@ export function CalendarComponent({
                 onMonthChange={setStartMonth}
                 classNames={{
                   root: "border rounded-md shadow-sm bg-white",
-                  month: "p-2 relative",
-                  caption: "text-center font-medium text-sm mb-2 text-gray-600",
-                  nav: "hidden", // Hide the built-in nav buttons
+                  month: "p-1 relative",
+                  caption: "text-center font-medium text-xs mb-1 text-gray-600",
+                  nav: "hidden",
                   day:
-                    "h-8 w-8 p-0 rounded-full focus:bg-gray-200 focus:text-black hover:bg-gray-100",
+                    "h-8 w-10 p-1 rounded-full focus:bg-gray-200 focus:text-black hover:bg-gray-100",
                   day_selected:
                     "bg-green-500 text-white rounded-full hover:bg-green-600",
                 }}
               />
             </div>
 
-            {/* End Date Section */}
             <div className="relative">
-              <div className="flex items-center justify-between mb-2 space-x-2">
+              <div className="flex items-center justify-between mb-1 space-x-1">
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="p-1"
+                  className="p-2"
                   onClick={() =>
                     setEndMonth(subMonths(endMonth || new Date(), 1))
                   }
@@ -225,7 +213,7 @@ export function CalendarComponent({
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
                 <select
-                  className="border rounded p-1"
+                  className="border rounded p-1 text-xs"
                   value={endMonth?.getFullYear() || new Date().getFullYear()}
                   onChange={(e) =>
                     handleYearChange(Number(e.target.value), setEndMonth)
@@ -234,7 +222,7 @@ export function CalendarComponent({
                   {generateYearOptions(2020, 2030)}
                 </select>
                 <select
-                  className="border rounded p-1"
+                  className="border rounded p-1 text-xs"
                   value={endMonth?.getMonth() || new Date().getMonth()}
                   onChange={(e) =>
                     handleMonthChange(Number(e.target.value), setEndMonth)
@@ -245,7 +233,7 @@ export function CalendarComponent({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="p-1"
+                  className="p-2"
                   onClick={() =>
                     setEndMonth(addMonths(endMonth || new Date(), 1))
                   }
@@ -261,11 +249,11 @@ export function CalendarComponent({
                 onMonthChange={setEndMonth}
                 classNames={{
                   root: "border rounded-md shadow-sm bg-white",
-                  month: "p-2 relative",
-                  caption: "text-center font-medium text-sm mb-2 text-gray-600",
-                  nav: "hidden", // Hide the built-in nav buttons
+                  month: "p-1 relative",
+                  caption: "text-center font-medium text-xs mb-1 text-gray-600",
+                  nav: "hidden",
                   day:
-                    "h-8 w-8 p-0 rounded-full focus:bg-gray-200 focus:text-black hover:bg-gray-100",
+                    "h-8 w-10 p-1 rounded-full focus:bg-gray-200 focus:text-black hover:bg-gray-100",
                   day_selected:
                     "bg-blue-500 text-white rounded-full hover:bg-blue-600",
                 }}
