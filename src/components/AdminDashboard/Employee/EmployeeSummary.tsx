@@ -90,7 +90,7 @@ const EmployeeSummary = ({
                 <p className="text-4xl font-bold text-black ml-2">{count}</p>
               </div>
               <h3 className={`text-lg font-semibold ${textColor}`}>{title}</h3>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-black">
                 <p>
                   Fixed: {fixed}, Flexible: {flexible}, Super Flexible: {superFlexible}
                 </p>
