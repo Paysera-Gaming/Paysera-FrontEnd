@@ -19,34 +19,34 @@ const PasswordChange = () => {
   };
 
   return (
-    <section className="settings-column">
-      <h3 className="section-title text-lg mb-2">Security</h3>
-      <form className="settings-form space-y-4">
-        <div className="form-group">
-          <label className="form-label block mb-1">Password</label>
+    <section className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+      <h3 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">Security</h3>
+      <form className="space-y-6">
+        <div>
+          <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
           <Input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter a new password"
-            className="form-input w-full p-2 border rounded-md bg-input text-foreground"
+            className="w-full p-2 border rounded-md text-sm bg-gray-50 dark:bg-gray-900 dark:text-white"
           />
         </div>
-        <div className="form-group">
-          <label className="form-label block mb-1">Confirm Password</label>
+        <div>
+          <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
           <Input
             type="password"
             value={passwordConfirmation}
             onChange={(e) => setPasswordConfirmation(e.target.value)}
             placeholder="Confirm your new password"
-            className="form-input w-full p-2 border rounded-md bg-input text-foreground"
+            className="w-full p-2 border rounded-md text-sm bg-gray-50 dark:bg-gray-900 dark:text-white"
           />
         </div>
-        {passwordError && <p className="text-red-500">{passwordError}</p>}
+        {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
         <div className="text-right">
           <Button
             onClick={handleChangePassword}
-            className="change-password-button bg-primary text-primary-foreground p-2 rounded-md"
+            className="bg-blue-600 text-white px-4 py-2 rounded-md"
           >
             Change Password
           </Button>

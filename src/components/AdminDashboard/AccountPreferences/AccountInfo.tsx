@@ -8,27 +8,27 @@ const AccountInfo = () => {
   const [bio, setBio] = useState('');
 
   return (
-    <section className="settings-column">
-      <h3 className="section-title text-lg mb-2">Account Information</h3>
-      <form className="settings-form space-y-4">
+    <section className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+      <h3 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">Account Information</h3>
+      <form className="space-y-6">
         <AvatarUpload />
-        <div className="form-group">
-          <label className="form-label block mb-1">Username</label>
+        <div>
+          <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
           <Input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Enter your username"
-            className="form-input w-full p-2 border rounded-md bg-input text-foreground"
+            className="w-full p-2 border rounded-md text-sm bg-gray-50 dark:bg-gray-900 dark:text-white"
           />
         </div>
-        <div className="form-group">
-          <label className="form-label block mb-1">Bio</label>
+        <div>
+          <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Bio</label>
           <Textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             placeholder="Write something about yourself"
-            className="form-textarea w-full p-2 border rounded-md bg-input text-foreground"
+            className="w-full p-2 border rounded-md text-sm bg-gray-50 dark:bg-gray-900 dark:text-white"
           />
         </div>
       </form>
