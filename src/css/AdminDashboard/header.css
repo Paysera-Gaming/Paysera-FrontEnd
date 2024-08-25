@@ -26,13 +26,7 @@
   margin-top: 0.5rem;
 }
 
-.header-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding-left: 30px;
-  border-left: 2px solid #e0e0e0;
-}
+
 
 .current-time {
   font-size: 20px;
