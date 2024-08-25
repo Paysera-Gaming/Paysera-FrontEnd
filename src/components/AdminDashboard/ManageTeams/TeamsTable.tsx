@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 const TeamsTable = ({ paginatedData, handleEditTeam, handleDeleteTeams, handleSort }) => (
   <Table className="w-full border-collapse">
-    <TableCaption>Details of teams and their statuses.</TableCaption>
+    {/* <TableCaption>Details of teams and their statuses.</TableCaption> */}
     <TableHeader>
       <TableRow>
         <TableHead className="text-center border-x cursor-pointer" onClick={() => handleSort('name')}>Team Leader Name</TableHead>

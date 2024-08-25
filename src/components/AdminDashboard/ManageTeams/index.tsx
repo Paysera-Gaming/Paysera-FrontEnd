@@ -4,12 +4,15 @@ import TeamsTable from './TeamsTable';
 import TeamStats from './TeamStats';
 import SheetComponent from '../SheetComponent';
 import { initialTeams } from './teamData';
+import { PaginationComponent } from '../PaginationComponent'; // Assuming you have this component
 
 const ManageTeams = () => {
   const [teams, setTeams] = useState(initialTeams);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState({ id: null, name: '', Department: '', teamLeaderEmail: '', members: [] });
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1); // Add pagination state
+  const pageSize = 5; // Number of items per page
 
   const [currentTime, setCurrentTime] = useState<string>('');
 
@@ -58,6 +61,7 @@ const ManageTeams = () => {
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value.toLowerCase());
+    setCurrentPage(1); // Reset to first page on search
   };
 
   const filteredTeams = teams.filter((team) => 
@@ -67,6 +71,9 @@ const ManageTeams = () => {
 
   const totalTeams = teams.length;
   const totalDepartments = new Set(teams.map(team => team.Department)).size;
+
+  const totalPages = Math.ceil(filteredTeams.length / pageSize); // Calculate total pages
+  const paginatedTeams = filteredTeams.slice((currentPage - 1) * pageSize, currentPage * pageSize); // Paginate teams
 
   return (
     <div className="dashboard-container">
@@ -102,11 +109,20 @@ const ManageTeams = () => {
 
         <TeamsTable
           className="relative w-full overflow-auto bg-white rounded-lg shadow-md px-12"
-          paginatedData={filteredTeams} // Pass the filtered teams
+          paginatedData={paginatedTeams} // Pass the paginated teams
           handleEditTeam={handleEditTeam}
           handleDeleteTeams={handleDeleteTeams}
           handleSort={handleSort}
         />
+        
+        {/* Pagination Component */}
+        <div className="flex justify-center mt-4">
+          <PaginationComponent
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
         
         <AddEditTeamDialog
           isDialogOpen={isDialogOpen}
