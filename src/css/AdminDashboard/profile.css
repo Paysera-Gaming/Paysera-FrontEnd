@@ -1,49 +1,53 @@
 /* Header Container */
 .header-container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
   padding: 20px 0;
   border-bottom: 1px solid #e5e7eb; /* Light gray border for separation */
 }
 
-/* Paysera Logo and Name */
-.header-logo {
+/* Centered Paysera Logo and Name */
+.paysera-header {
   display: flex;
   align-items: center;
+  justify-content: center;
+  margin-bottom: 20px; /* Space between logo and profile info */
 }
 
 .paysera-logo {
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
+  width: 60px; /* Adjust size as needed */
+  height: 60px; /* Adjust size as needed */
+  margin-right: 10px; /* Space between logo and name */
 }
 
 .paysera-name {
-  font-size: 24px;
+  font-size: 32px; /* Larger font size */
   font-weight: bold;
   font-family: 'Arial', sans-serif;
   color: #333;
 }
 
-/* Profile Info */
-.profile-info {
+/* Left-aligned Profile Info Container */
+.profile-info-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  width: 100%; /* Take full width of the container */
+  margin-bottom: 20px; /* Space below profile info */
+  padding-left: 16px; /* Align with the padding of the content */
 }
 
 .profile-avatar {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border: 2px solid #ddd;
   border-radius: 50%;
+  margin-right: 12px; /* Space between avatar and text */
 }
 
 .profile-text {
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 .username {

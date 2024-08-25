@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-	Sheet,
-	SheetContent,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
 } from '@/components/ui/sheet';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { CalendarDays, UsersRound, Settings, Building, Megaphone, LogOut } from 'lucide-react';
@@ -21,65 +21,68 @@ import '../../css/AdminDashboard/profile.css';
 import '../../css/AdminDashboard/settings.css';
 
 const SheetComponent = () => {
-	const location = useLocation();
-	const currentPath = location.pathname;
+    const location = useLocation();
+    const currentPath = location.pathname;
 
-	const renderLinks = () => {
-		const links = [
-			{ path: '/admin/dashboard', label: 'Attendance', icon: <CalendarDays /> },
-			{ path: '/admin/manageteams', label: 'Manage Teams', icon: <Building /> },
-			{ path: '/admin/employeelist', label: 'Employee List', icon: <UsersRound /> },
-			{ path: '/admin/announcement', label: 'Announcement', icon: <Megaphone /> },
-			{ path: '/admin/accountpreferences', label: 'Settings', icon: <Settings /> },
-		];
+    const renderLinks = () => {
+        const links = [
+            { path: '/admin/dashboard', label: 'Attendance', icon: <CalendarDays /> },
+            { path: '/admin/manageteams', label: 'Manage Teams', icon: <Building /> },
+            { path: '/admin/employeelist', label: 'Employee List', icon: <UsersRound /> },
+            { path: '/admin/announcement', label: 'Announcement', icon: <Megaphone /> },
+            { path: '/admin/accountpreferences', label: 'Settings', icon: <Settings /> },
+        ];
 
-		return links
-			.filter((link) => !currentPath.includes(link.path))
-			.map((link) => (
-				<li key={link.path} className="link-item">
-					<Link to={link.path} className="link-content sheet-button">
-						{link.icon}
-						<span>{link.label}</span>
-					</Link>
-				</li>
-			));
-	};
+        return links
+            .filter((link) => !currentPath.includes(link.path))
+            .map((link) => (
+                <li key={link.path} className="link-item">
+                    <Link to={link.path} className="link-content sheet-button">
+                        {link.icon}
+                        <span>{link.label}</span>
+                    </Link>
+                </li>
+            ));
+    };
 
-	return (
-		<Sheet>
-			<SheetTrigger className="sheet-trigger">Profile</SheetTrigger>
-			<SheetContent aria-describedby="" className="sheet-content">
-				<SheetHeader className="header-container">
-					<div className="header-logo">
-						<img src={PayseraLogo} alt="Paysera Logo" className="paysera-logo" />
-						<div className="paysera-name">Paysera</div>
-					</div>
-					<div className="profile-info">
-						<Avatar className="profile-avatar">
-							<AvatarImage src="https://github.com/shadcn.png" />
-							<AvatarFallback>CN</AvatarFallback>
-						</Avatar>
-						<div className="profile-text">
-							<div className="username">Admin</div>
-							<div className="user-role">Administrator</div>
-						</div>
-					</div>
-				</SheetHeader>
-				<SheetTitle className="sheet-title">Profile Settings</SheetTitle>
-				<div className="profile-settings">
-					<ul>{renderLinks()}</ul>
-					<ul className="logout-section">
-						<li className="link-item">
-							<Link to="/logout" className="link-content sheet-button">
-								<LogOut className="logout-icon" />
-								<span className="logout-text">Log Out</span>
-							</Link>
-						</li>
-					</ul>
-				</div>
-			</SheetContent>
-		</Sheet>
-	);
+    return (
+        <Sheet>
+            <SheetTrigger className="sheet-trigger">Profile</SheetTrigger>
+            <SheetContent aria-describedby="" className="sheet-content">
+                <SheetHeader className="header-container">
+                    {/* Centered Paysera Logo and Name */}
+                    <div className="paysera-header">
+                        <img src={PayseraLogo} alt="Paysera Logo" className="paysera-logo" />
+                        <div className="paysera-name">Paysera</div>
+                    </div>
+
+                    {/* Left-aligned Profile Information */}
+                    <div className="profile-info-container">
+                        <Avatar className="profile-avatar">
+                            <AvatarImage src="https://github.com/shadcn.png" />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        <div className="profile-text">
+                            <div className="username">Admin</div>
+                            <div className="user-role">Administrator</div>
+                        </div>
+                    </div>
+                </SheetHeader>
+                <SheetTitle className="sheet-title">Profile Settings</SheetTitle>
+                <div className="profile-settings">
+                    <ul>{renderLinks()}</ul>
+                    <ul className="logout-section">
+                        <li className="link-item">
+                            <Link to="/logout" className="link-content sheet-button">
+                                <LogOut className="logout-icon" />
+                                <span className="logout-text">Log Out</span>
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+            </SheetContent>
+        </Sheet>
+    );
 };
 
 export default SheetComponent;
