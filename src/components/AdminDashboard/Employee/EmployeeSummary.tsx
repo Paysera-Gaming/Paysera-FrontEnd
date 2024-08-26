@@ -18,6 +18,7 @@ const EmployeeSummary = ({
   offlineFixed,
   offlineFlexible,
   offlineSuperFlexible,
+  onStatusFilterChange, // Added prop for handling status filter change
 }) => {
   const summaryItems = [
     {
@@ -30,6 +31,7 @@ const EmployeeSummary = ({
       borderColor: 'border-green-300',
       textColor: 'text-green-600',
       icon: <LogIn className="w-8 h-8 text-green-600" />, // Use LogIn icon for Active
+      status: 'Active', // Added status for filtering
     },
     {
       title: 'On Lunch',
@@ -41,6 +43,7 @@ const EmployeeSummary = ({
       borderColor: 'border-yellow-300',
       textColor: 'text-orange-600',
       icon: <Coffee className="w-8 h-8 text-orange-600" />, // Use Coffee icon for On Lunch
+      status: 'Lunch', // Added status for filtering
     },
     {
       title: 'On Leave',
@@ -52,6 +55,7 @@ const EmployeeSummary = ({
       borderColor: 'border-red-300',
       textColor: 'text-red-600',
       icon: <LogOut className="w-8 h-8 text-red-600" />, // Use LogOut icon for On Leave
+      status: 'Leave', // Added status for filtering
     },
     {
       title: 'Offline',
@@ -63,6 +67,7 @@ const EmployeeSummary = ({
       borderColor: 'border-gray-300',
       textColor: 'text-gray-600',
       icon: <PowerOff className="w-8 h-8 text-gray-600" />, // Use PowerOff icon for Offline
+      status: 'Offline', // Added status for filtering
     },
   ];
 
@@ -79,10 +84,12 @@ const EmployeeSummary = ({
           borderColor,
           textColor,
           icon,
+          status,
         }) => (
           <div
             key={title}
-            className={`p-4 rounded-lg border ${borderColor} ${color} text-center shadow-md`}
+            onClick={() => onStatusFilterChange(status)} // Call the filter change handler on click
+            className={`p-4 rounded-lg border ${borderColor} ${color} text-center shadow-md cursor-pointer transform transition-transform duration-200 hover:-translate-y-1`}
           >
             <div className="flex flex-col items-center">
               <div className="flex items-center justify-center mb-2">
