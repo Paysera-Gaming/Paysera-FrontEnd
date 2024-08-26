@@ -44,7 +44,7 @@ const EmployeeSummary = ({
       borderColor: 'border-gray-300',
       textColor: 'text-gray-600',
       icon: <Users className="w-6 h-6 text-gray-600" />,
-      status: 'Overall',
+      status: 'all', // Use 'all' for resetting the filter
       isOverall: true, // Mark this as the "Overall" item
     },
     {
@@ -115,12 +115,7 @@ const EmployeeSummary = ({
         }) => (
           <div
             key={title}
-            onClick={() => {
-              // Prevent filtering if it's the "Overall Total" item
-              if (!isOverall) {
-                onStatusFilterChange(status);
-              }
-            }}
+            onClick={() => onStatusFilterChange(isOverall ? "all" : status)}
             className={`p-4 rounded-lg border ${borderColor} ${color} text-center shadow-md cursor-pointer transform transition-transform duration-200 hover:-translate-y-1`}
           >
             <div className="flex flex-col items-center">
