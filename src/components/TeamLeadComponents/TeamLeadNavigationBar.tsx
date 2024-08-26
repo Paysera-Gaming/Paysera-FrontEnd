@@ -86,7 +86,7 @@ export default function TeamLeadNavigation() {
 			{/* then eto */}
 			<ul className="flex-1 w-full">
 				<p className="text-muted-foreground text-base font-semibold ml-2 ">
-					Main
+					Navigation
 				</p>
 				<RouteItems links={routeLinks} />
 			</ul>
