@@ -41,7 +41,7 @@ const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDelet
       <TableHeader>
         <TableRow>
           <TableHead
-            className="text-center border-x cursor-pointer"
+            className="text-left border-x cursor-pointer"
             onClick={() => handleSort('lastName')}
           >
             Full Name {sortConfig.key === 'lastName' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
@@ -70,7 +70,7 @@ const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDelet
       <TableBody>
         {sortedData.map(employee => (
           <TableRow key={employee.id}>
-            <TableCell className="text-center border-x flex items-center justify-center space-x-2">
+            <TableCell className="text-left border-x flex items-center space-x-2">
               <span className={`inline-block w-3 h-3 rounded-full ${statusColors[employee.status]}`}></span>
               <span>{`${employee.lastName}, ${employee.firstName} ${employee.middleName}`}</span>
             </TableCell>
