@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogIn, LogOut, Coffee, PowerOff } from 'lucide-react'; // Import the necessary icons
+import { LogIn, LogOut, Coffee, PowerOff, Users } from 'lucide-react';
 
 const EmployeeSummary = ({
   totalActive,
@@ -18,9 +18,35 @@ const EmployeeSummary = ({
   offlineFixed,
   offlineFlexible,
   offlineSuperFlexible,
-  onStatusFilterChange, // Added prop for handling status filter change
+  onStatusFilterChange,
 }) => {
+  // Calculate the overall total by summing all status counts
+  const totalOverall =
+    totalActive + totalOnLunch + totalOnLeave + totalOffline;
+  const overallFixed =
+    activeFixed + lunchFixed + leaveFixed + offlineFixed;
+  const overallFlexible =
+    activeFlexible + lunchFlexible + leaveFlexible + offlineFlexible;
+  const overallSuperFlexible =
+    activeSuperFlexible +
+    lunchSuperFlexible +
+    leaveSuperFlexible +
+    offlineSuperFlexible;
+
   const summaryItems = [
+    {
+      title: 'Overall Total',
+      count: totalOverall,
+      fixed: overallFixed,
+      flexible: overallFlexible,
+      superFlexible: overallSuperFlexible,
+      color: 'bg-gray-100',
+      borderColor: 'border-gray-300',
+      textColor: 'text-gray-600',
+      icon: <Users className="w-6 h-6 text-gray-600" />,
+      status: 'Overall',
+      isOverall: true, // Mark this as the "Overall" item
+    },
     {
       title: 'Active',
       count: totalActive,
@@ -30,8 +56,8 @@ const EmployeeSummary = ({
       color: 'bg-green-100',
       borderColor: 'border-green-300',
       textColor: 'text-green-600',
-      icon: <LogIn className="w-8 h-8 text-green-600" />, // Use LogIn icon for Active
-      status: 'Active', // Added status for filtering
+      icon: <LogIn className="w-6 h-6 text-green-600" />,
+      status: 'Active',
     },
     {
       title: 'On Lunch',
@@ -42,8 +68,8 @@ const EmployeeSummary = ({
       color: 'bg-yellow-100',
       borderColor: 'border-yellow-300',
       textColor: 'text-orange-600',
-      icon: <Coffee className="w-8 h-8 text-orange-600" />, // Use Coffee icon for On Lunch
-      status: 'Lunch', // Added status for filtering
+      icon: <Coffee className="w-6 h-6 text-orange-600" />,
+      status: 'Lunch',
     },
     {
       title: 'On Leave',
@@ -54,8 +80,8 @@ const EmployeeSummary = ({
       color: 'bg-red-100',
       borderColor: 'border-red-300',
       textColor: 'text-red-600',
-      icon: <LogOut className="w-8 h-8 text-red-600" />, // Use LogOut icon for On Leave
-      status: 'Leave', // Added status for filtering
+      icon: <LogOut className="w-6 h-6 text-red-600" />,
+      status: 'Leave',
     },
     {
       title: 'Offline',
@@ -66,13 +92,13 @@ const EmployeeSummary = ({
       color: 'bg-gray-100',
       borderColor: 'border-gray-300',
       textColor: 'text-gray-600',
-      icon: <PowerOff className="w-8 h-8 text-gray-600" />, // Use PowerOff icon for Offline
-      status: 'Offline', // Added status for filtering
+      icon: <PowerOff className="w-6 h-6 text-gray-600" />,
+      status: 'Offline',
     },
   ];
 
   return (
-    <div className="grid grid-cols-4 gap-4 mb-0">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-0">
       {summaryItems.map(
         ({
           title,
@@ -85,19 +111,25 @@ const EmployeeSummary = ({
           textColor,
           icon,
           status,
+          isOverall, // Destructure the isOverall property
         }) => (
           <div
             key={title}
-            onClick={() => onStatusFilterChange(status)} // Call the filter change handler on click
+            onClick={() => {
+              // Prevent filtering if it's the "Overall Total" item
+              if (!isOverall) {
+                onStatusFilterChange(status);
+              }
+            }}
             className={`p-4 rounded-lg border ${borderColor} ${color} text-center shadow-md cursor-pointer transform transition-transform duration-200 hover:-translate-y-1`}
           >
             <div className="flex flex-col items-center">
               <div className="flex items-center justify-center mb-2">
                 {icon}
-                <p className="text-4xl font-bold text-black ml-2">{count}</p>
+                <p className="text-3xl font-bold text-black ml-2">{count}</p>
               </div>
               <h3 className={`text-lg font-semibold ${textColor}`}>{title}</h3>
-              <div className="text-sm text-black">
+              <div className="text-sm text-gray-800">
                 <p>
                   Fixed: {fixed}, Flexible: {flexible}, Super Flexible: {superFlexible}
                 </p>
