@@ -30,7 +30,7 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
 	const routes = links.map((link, index) => {
 		return (
 			<li
-				className="my-5 "
+				className="my-3 "
 				key={link}
 				onClick={() => {
 					document.getElementById(link)?.click();
@@ -41,7 +41,7 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
 						clsx(
 							'p-1 rounded-sm outline outline-2 outline-transparent transition-all ease-in-out hover:bg-border flex gap-x-5 justify-start items-center text-base text-center capitalize',
 							isActive &&
-								'outline-ring outline-offset-2  bg-secondary text-ring'
+								'outline-primary outline-offset-2  bg-secondary text-ring'
 						)
 					}
 					id={link}

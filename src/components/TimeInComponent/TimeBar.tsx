@@ -57,7 +57,7 @@ export default function Timebar() {
 		<header className="border-border border-solid border w-full rounded-md p-2 px-5 flex items-center justify-between">
 			{/* status */}
 			<span>
-				<p className="font-semibold inline">Status: &nbsp;</p>
+				<p className="font-semibold inline text-lg">Status: &nbsp;</p>
 				<Badge className="inline" variant={badgeVariant(useStatus)}>
 					{statusUser(useStatus)}
 				</Badge>
@@ -65,8 +65,8 @@ export default function Timebar() {
 
 			{/* schedule */}
 			<span>
-				<p className="font-semibold inline">Today's Schedule: &nbsp;</p>
-				<p className="inline"> 8:00 - 16:00</p>
+				<p className="font-semibold inline text-lg">Schedule: &nbsp;</p>
+				<p className="inline text-lg"> 8:00 - 16:00</p>
 			</span>
 			{/* timer display */}
 			<TimerDisplay

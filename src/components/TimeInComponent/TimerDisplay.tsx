@@ -7,7 +7,7 @@ export interface TimerProps {
 
 export default function TimerDisplay({ ...timerProps }: TimerProps) {
 	// logic to state managed time if there is any
-	const [useTime, setTime] = useState(0);
+	const [useTime, setTime] = useState(288800);
 	const timerIntervalId = useRef<ReturnType<typeof setInterval> | undefined>(
 		undefined
 	);
@@ -30,7 +30,7 @@ export default function TimerDisplay({ ...timerProps }: TimerProps) {
 
 	const hours = Math.floor(useTime / 36000);
 	const hoursDisplay = hours > 10 ? hours : `0${hours}`;
-	const minutesToDisplay = Math.floor(useTime / 60);
+	const minutesToDisplay = Math.floor((useTime % 360000) / 6000);
 	const minutesDisplay =
 		minutesToDisplay < 10 ? `0${minutesToDisplay}` : minutesToDisplay;
 	const secondsToDisplay = useTime % 60;
@@ -38,11 +38,16 @@ export default function TimerDisplay({ ...timerProps }: TimerProps) {
 		secondsToDisplay < 10 ? `0${secondsToDisplay}` : secondsToDisplay;
 
 	return (
-		<span className="flex gap-x-1 justify-center items-center">
-			<TimerIcon size={`1.5rem`} className="mb-1"></TimerIcon>
-			<h3 className=" scroll-m-20 text-xl font-semibold tracking-tight">
-				{hoursDisplay}:{minutesDisplay}:{secondsDisplay}
-			</h3>
+		<span className="  flex items-center justify-center py-1 px-2 bg-primary rounded-full text-secondary-foreground outline-2 outline-primary outline outline-offset-2">
+			<TimerIcon
+				size={`1.5rem`}
+				className="mb-1 text-primary-foreground stroke-[2px]"
+			></TimerIcon>
+			<span className="w-24 text-accent text-center rounded-full ">
+				<h3 className="text-lg font-semibold ">
+					{hoursDisplay}:{minutesDisplay}:{secondsDisplay}
+				</h3>
+			</span>
 		</span>
 	);
 }
