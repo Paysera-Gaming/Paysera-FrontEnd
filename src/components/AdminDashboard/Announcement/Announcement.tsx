@@ -41,7 +41,8 @@ const Announcements = () => {
     totalPages,
     announcementCounts,
     setNewAnnouncement,
-    handleSort, // Added handleSort
+    handleSort, 
+    handleFilterByStatus, // Added filtering by status
   } = useAnnouncements();
 
   return (
@@ -58,48 +59,50 @@ const Announcements = () => {
       </header>
       
       <main className="main-content p-12 max-w-7xl mx-auto">
-  <div className="flex justify-between items-center mb-0">
-    <div className="flex items-center space-x-4">
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={handleSearch}
-        placeholder="Search Announcements"
-        className="border p-2 rounded w-64"
-      />
-      <button
-        onClick={handleOpenCreateDialog}
-        className="bg-blue-600 text-white p-2 rounded"
-      >
-        Create New Announcement
-      </button>
-    </div>
-  </div>
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center space-x-4">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearch}
+              placeholder="Search Announcements"
+              className="border p-2 rounded w-64"
+            />
+            <button
+              onClick={handleOpenCreateDialog}
+              className="bg-blue-600 text-white p-2 rounded"
+            >
+              Create New Announcement
+            </button>
+          </div>
+        </div>
 
-  <AnnouncementCounts announcementCounts={announcementCounts} />
+        <AnnouncementCounts
+          announcementCounts={announcementCounts}
+          onFilter={handleFilterByStatus} // Pass filter function to AnnouncementCounts
+        />
 
-  <AnnouncementDialog
-    newAnnouncement={newAnnouncement}
-    handleCreateAnnouncement={handleCreateAnnouncement}
-    isCreateDialogOpen={isCreateDialogOpen}
-    handleCloseCreateDialog={handleCloseCreateDialog}
-    setNewAnnouncement={setNewAnnouncement}
-  />
+        <AnnouncementDialog
+          newAnnouncement={newAnnouncement}
+          handleCreateAnnouncement={handleCreateAnnouncement}
+          isCreateDialogOpen={isCreateDialogOpen}
+          handleCloseCreateDialog={handleCloseCreateDialog}
+          setNewAnnouncement={setNewAnnouncement}
+        />
 
-  <AnnouncementTable
-    announcements={paginatedAnnouncements}
-    handleDeleteAnnouncement={handleDeleteAnnouncement}
-    handleOpenEditDialog={handleOpenEditDialog}
-    handleSort={handleSort}
-  />
+        <AnnouncementTable
+          announcements={paginatedAnnouncements}
+          handleDeleteAnnouncement={handleDeleteAnnouncement}
+          handleOpenEditDialog={handleOpenEditDialog}
+          handleSort={handleSort}
+        />
 
-  <PaginationComponent
-    currentPage={currentPage}
-    totalPages={totalPages}
-    onPageChange={(page) => handlePageChange(page)}
-  />
-</main>
-
+        <PaginationComponent
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => handlePageChange(page)}
+        />
+      </main>
     </div>
   );
 };
