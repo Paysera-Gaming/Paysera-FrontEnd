@@ -9,7 +9,7 @@ import { ReactNode } from 'react';
 import LogOutButton from '../LogoutComponent/LogoutButton';
 
 import { ModeToggle } from '../ThemeProvider/ThemeSwitch';
-import { cn } from '@/lib/utils';
+
 import clsx from 'clsx';
 interface RouteItemProps {
 	links: string[];
