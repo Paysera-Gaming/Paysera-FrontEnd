@@ -1,20 +1,25 @@
 export const calculateTotalHours = (startTime: string, endTime: string): number => {
+  if (!startTime || !endTime) return 0; // Safeguard for undefined values
   const start = new Date(`1970-01-01T${startTime}Z`);
   const end = new Date(`1970-01-01T${endTime}Z`);
   return (end.getTime() - start.getTime()) / (1000 * 60 * 60);
 };
 
 export const determineSituation = (
-  part1EndTime: string,
-  lunchStartTime: string,
-  lunchEndTime: string,
-  part2EndTime: string
+  part1EndTime: string | undefined,
+  lunchStartTime: string | undefined,
+  lunchEndTime: string | undefined,
+  part2EndTime: string | undefined
 ): string => {
+  if (!part1EndTime || !lunchStartTime || !lunchEndTime || !part2EndTime) {
+    return "Leave"; // Default situation when any time is undefined
+  }
+
   const now = new Date().getHours();
-  const lunchStart = parseInt(lunchStartTime.split(":")[0]);
-  const lunchEnd = parseInt(lunchEndTime.split(":")[0]);
-  const part1End = parseInt(part1EndTime.split(":")[0]);
-  const part2End = parseInt(part2EndTime.split(":")[0]);
+  const lunchStart = parseInt(lunchStartTime.split(":")[0], 10);
+  const lunchEnd = parseInt(lunchEndTime.split(":")[0], 10);
+  const part1End = parseInt(part1EndTime.split(":")[0], 10);
+  const part2End = parseInt(part2EndTime.split(":")[0], 10);
 
   if (now >= lunchStart && now < lunchEnd) return "Lunch";
   if (now >= part1End && now < part2End) return "On Job";
@@ -49,6 +54,7 @@ export const getSituationTooltip = (situation: string): string => {
 
 // Helper function to format the name
 export const formatName = (fullName: string): string => {
+  if (!fullName) return ""; // Safeguard for undefined or empty fullName
   const parts = fullName.split(" ");
   if (parts.length === 2) {
     return `${parts[1]}, ${parts[0]}`;

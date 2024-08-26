@@ -4,7 +4,6 @@ import { Summary } from "./Summary";
 import { AttendanceTable } from "./AttendanceTable";
 import { determineSituation } from "./helpers";
 
-// Example initial data
 const initialData = [
   {
     name: "John Doe",
@@ -35,7 +34,6 @@ export function AttendanceComponent() {
   const [filterType, setFilterType] = useState("");
   const [filterSituation, setFilterSituation] = useState("");
 
-  // Handle search and filter logic
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
@@ -44,11 +42,10 @@ export function AttendanceComponent() {
     setFilterType(e.target.value);
   };
 
-  const handleFilterSituationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilterSituation(e.target.value);
+  const handleFilterSituationChange = (situation: string) => {
+    setFilterSituation(situation);
   };
 
-  // Filter data based on search and filter criteria
   const filteredData = data.filter((row) => {
     const matchesSearch =
       row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -65,7 +62,6 @@ export function AttendanceComponent() {
     return matchesSearch && matchesType && matchesSituation;
   });
 
-  // Calculate the situation counts for the summary section
   const situationCounts = {
     "On Job": {
       Fixed: filteredData.filter(
@@ -106,8 +102,7 @@ export function AttendanceComponent() {
         (row) => determineSituation(
           row.part1EndTime,
           row.lunchStartTime,
-          row.lunchEndTime,
-          row.part2EndTime
+          row.lunchEndTime
         ) === "Lunch" && row.type === "Flexible"
       ).length,
       SuperFlexible: filteredData.filter(
@@ -155,9 +150,9 @@ export function AttendanceComponent() {
         filterSituation={filterSituation}
         handleSearch={handleSearch}
         handleFilterTypeChange={handleFilterTypeChange}
-        handleFilterSituationChange={handleFilterSituationChange}
+        handleFilterSituationChange={(e) => handleFilterSituationChange(e.target.value)}
       />
-      <Summary situationCounts={situationCounts} />
+      <Summary situationCounts={situationCounts} onFilter={handleFilterSituationChange} />
       <AttendanceTable filteredData={filteredData} />
     </div>
   );
