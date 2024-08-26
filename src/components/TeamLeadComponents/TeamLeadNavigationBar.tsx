@@ -5,8 +5,12 @@ import { NavLink } from 'react-router-dom';
 import { ReactNode } from 'react';
 
 // logout component
+
 import LogOutButton from '../LogoutComponent/LogoutButton';
 
+import { ModeToggle } from '../ThemeProvider/ThemeSwitch';
+import { cn } from '@/lib/utils';
+import clsx from 'clsx';
 interface RouteItemProps {
 	links: string[];
 }
@@ -26,14 +30,23 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
 	const routes = links.map((link, index) => {
 		return (
 			<li
-				className=" p-1 w-auto rounded-sm border-primary transition-colors ease-in-out hover:bg-border my-2 flex gap-x-3 justify-start items-center"
+				className="my-2 "
 				key={link}
 				onClick={() => {
 					document.getElementById(link)?.click();
 				}}
 			>
-				{iconList[index]}
-				<NavLink className="text-lg text-center capitalize" id={link} to={link}>
+				<NavLink
+					className={({ isActive }: { isActive: boolean }) =>
+						clsx(
+							'p-2 rounded-sm border border-solid border-transparent transition-all ease-in-out hover:bg-border flex gap-x-5 justify-start items-center text-lg text-center capitalize',
+							isActive && 'border-ring text-ring'
+						)
+					}
+					id={link}
+					to={link}
+				>
+					{iconList[index]}
 					{link}
 				</NavLink>
 			</li>
@@ -42,22 +55,18 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
 
 	return routes;
 }
-// this is some magic text
+
 function ProfileHeader() {
 	return (
-		<header>
-			<span className="flex items-center justify-start ">
+		<header className="flex items-start justify-between w-full">
+			<div className="flex items-center justify-start gap-x-1 px-2 ">
 				<Icons.logo className="w-10 h-10"></Icons.logo>
-				<span className="flex-1">
-					<span className="w-full flex items-center justify-between">
-						<h3 className="scroll-m-20 text-2xl font-semibold  tracking-tight">
-							Paysera
-						</h3>
-					</span>
+				<h3 className="scroll-m-20 text-2xl font-semibold mb-1 tracking-tight">
+					Paysera
+				</h3>
+			</div>
 
-					<p className=" text-sm text-muted-foreground">Good morning John!</p>
-				</span>
-			</span>
+			<ModeToggle></ModeToggle>
 		</header>
 	);
 }
@@ -71,11 +80,14 @@ export default function TeamLeadNavigation() {
 	];
 
 	return (
-		<nav className="bg-card boder-solid border-border border rounded-md h-full w-[230px] p-2 gap-y-5 flex flex-col items-start justify-between">
+		<nav className="bg-card boder-solid border-border border rounded-md h-full w-[230px] p-2 py-3 gap-y-10 flex flex-col items-start justify-between">
 			{/* unahin header */}
 			<ProfileHeader></ProfileHeader>
 			{/* then eto */}
 			<ul className="flex-1 w-full">
+				<p className="text-muted-foreground text-base font-semibold ml-2 ">
+					Main
+				</p>
 				<RouteItems links={routeLinks} />
 			</ul>
 			{/* {then eto} */}
