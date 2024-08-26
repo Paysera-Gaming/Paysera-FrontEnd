@@ -59,7 +59,7 @@ const Employee = () => {
   };
 
   const handleStatusFilterChange = (status) => {
-    setStatusFilter(status);
+    setStatusFilter((prevStatus) => (prevStatus === status ? "all" : status));
     setCurrentPage(1); // Reset to the first page on filter change
   };
 
