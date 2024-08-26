@@ -54,7 +54,7 @@ export default function Timebar() {
 	}
 
 	return (
-		<header className="border-border border-solid border w-full rounded-md p-2 flex items-center justify-between">
+		<header className="border-border border-solid border w-full rounded-md p-2 px-5 flex items-center justify-between">
 			{/* status */}
 			<span>
 				<p className="font-semibold inline">Status: &nbsp;</p>
