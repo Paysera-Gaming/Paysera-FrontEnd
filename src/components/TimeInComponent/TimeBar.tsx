@@ -36,7 +36,7 @@ function badgeVariant(
 			return 'default';
 
 		case 'Lunch-In':
-			return 'outline';
+			return 'secondary';
 
 		case 'None':
 		case 'Clock-Out':
@@ -63,16 +63,8 @@ export default function Timebar() {
 				</Badge>
 			</span>
 
-			{/* schedule */}
-			<span>
-				<p className="font-semibold inline text-lg">Schedule: &nbsp;</p>
-				<p className="inline text-lg"> 8:00 - 16:00</p>
-			</span>
 			{/* timer display */}
-			<TimerDisplay
-				hasStarted={useStart}
-				formAction={'Clock-Out'}
-			></TimerDisplay>
+			<TimerDisplay hasStarted={useStart} formAction={'None'}></TimerDisplay>
 
 			{/* form */}
 
