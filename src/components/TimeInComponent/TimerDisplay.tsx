@@ -31,7 +31,7 @@ export default function TimerDisplay({ ...timerProps }: TimerProps) {
 
 	const hours = Math.floor(useTime / 36000);
 	const hoursDisplay = hours > 10 ? hours : `0${hours}`;
-	const minutesToDisplay = Math.floor((useTime % 360000) / 6000);
+	const minutesToDisplay = Math.floor(useTime / 60);
 	const minutesDisplay =
 		minutesToDisplay < 10 ? `0${minutesToDisplay}` : minutesToDisplay;
 	const secondsToDisplay = useTime % 60;

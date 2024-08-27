@@ -10,7 +10,7 @@ import LogOutButton from '../LogoutComponent/LogoutButton';
 
 import { ModeToggle } from '../ThemeProvider/ThemeSwitch';
 
-import clsx from 'clsx';
+import { cn } from '@/lib/utils';
 interface RouteItemProps {
 	links: string[];
 }
@@ -38,10 +38,13 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
 			>
 				<NavLink
 					className={({ isActive }: { isActive: boolean }) =>
-						clsx(
-							'p-1 rounded-sm outline outline-2 outline-transparent transition-all ease-in-out hover:bg-border flex gap-x-5 justify-start items-center text-base text-center capitalize',
-							isActive &&
-								'outline-ring outline-offset-2  bg-secondary text-ring'
+						cn(
+							'p-1 rounded-sm outline outline-2 transition-all ease-in-out hover:bg-border flex gap-x-5 justify-start items-center text-base text-center capitalize outline-transparent',
+
+							{
+								'outline-offset-2  bg-secondary text-ring outline-ring ':
+									isActive,
+							}
 						)
 					}
 					id={link}
