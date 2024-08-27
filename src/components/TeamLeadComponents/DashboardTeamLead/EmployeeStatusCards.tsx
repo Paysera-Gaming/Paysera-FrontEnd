@@ -54,7 +54,7 @@ export default function EmployeesStatusCards() {
 	});
 
 	return (
-		<div className="flex item-center justify-around gap-5 mt-5">
+		<div className="flex item-center justify-around gap-5 my-5">
 			{CardItems}
 		</div>
 	);
