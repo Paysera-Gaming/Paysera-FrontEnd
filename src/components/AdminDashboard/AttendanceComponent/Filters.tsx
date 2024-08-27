@@ -8,7 +8,7 @@ interface FiltersProps {
   handleSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleFilterTypeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   handleFilterSituationChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  handleExportToExcel: () => void;  // Add this prop
+  handleExportToExcel: () => void;
 }
 
 export const Filters: React.FC<FiltersProps> = ({
@@ -18,7 +18,7 @@ export const Filters: React.FC<FiltersProps> = ({
   handleSearch,
   handleFilterTypeChange,
   handleFilterSituationChange,
-  handleExportToExcel,  // Receive the function to handle Excel export
+  handleExportToExcel,
 }) => (
   <div className="mb-4 flex items-center justify-between">
     <div className="flex items-center">
@@ -53,9 +53,10 @@ export const Filters: React.FC<FiltersProps> = ({
         <CalendarComponent />
       </div>
     </div>
+
     <button
       onClick={handleExportToExcel}
-      className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md text-sm"
+      className="text-lg font-medium bg-green-600 text-white hover:bg-green-700 py-2 px-4 rounded-md text-sm"
     >
       Export as Excel
     </button>
