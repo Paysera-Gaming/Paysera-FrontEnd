@@ -6,6 +6,7 @@ import { sampleEmployees } from './sampleData';
 import SheetComponent from '../SheetComponent';
 import { PaginationComponent } from '../PaginationComponent';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import ConfirmationDialog from './ConfirmationDialog'; // Import the confirmation dialog
 
 const Employee = () => {
   const [data, setData] = useState(sampleEmployees);
@@ -16,6 +17,8 @@ const Employee = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'lastName', direction: 'ascending' });
   const [currentPage, setCurrentPage] = useState(1);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // State for confirmation dialog
+  const [employeeToDelete, setEmployeeToDelete] = useState(null); // Employee to delete
 
   const pageSize = 5;
   const [currentTime, setCurrentTime] = useState<string>('');
@@ -54,8 +57,14 @@ const Employee = () => {
     setIsDialogOpen(false);
   };
 
-  const handleDeleteEmployee = (id) => {
+  const confirmDeleteEmployee = (id) => {
     setData(data.filter(emp => emp.id !== id));
+    setIsConfirmationOpen(false);
+  };
+
+  const handleDeleteEmployee = (id) => {
+    setEmployeeToDelete(id);
+    setIsConfirmationOpen(true); // Open confirmation dialog
   };
 
   const handleStatusFilterChange = (status) => {
@@ -171,6 +180,13 @@ const Employee = () => {
           selectedEmployee={selectedEmployee}
           setSelectedEmployee={setSelectedEmployee}
           handleSaveEmployee={handleSaveEmployee}
+        />
+
+        <ConfirmationDialog
+          isOpen={isConfirmationOpen}
+          onClose={() => setIsConfirmationOpen(false)}
+          onConfirm={() => confirmDeleteEmployee(employeeToDelete)}
+          message="Are you sure you want to delete this employee?"
         />
       </main>
     </div>
