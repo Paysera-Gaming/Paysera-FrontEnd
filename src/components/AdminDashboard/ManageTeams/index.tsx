@@ -5,10 +5,12 @@ import TeamStats from './TeamStats';
 import SheetComponent from '../SheetComponent';
 import { initialTeams } from './teamData';
 import { PaginationComponent } from '../PaginationComponent'; // Assuming you have this component
+import ConfirmationDialog from './ConfirmationDialog'; // Import the new dialog component
 
 const ManageTeams = () => {
   const [teams, setTeams] = useState(initialTeams);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false); // State for confirmation dialog
   const [selectedTeam, setSelectedTeam] = useState({ id: null, name: '', Department: '', teamLeaderEmail: '', members: [] });
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1); // Add pagination state
@@ -50,8 +52,20 @@ const ManageTeams = () => {
     }
   };
 
-  const handleDeleteTeams = (teamId) => {
-    setTeams(teams.filter((team) => team.id !== teamId));
+  const openConfirmationDialog = (teamId) => {
+    setSelectedTeam(teams.find(team => team.id === teamId) || { id: null, name: '', Department: '', teamLeaderEmail: '', members: [] });
+    setIsConfirmationDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedTeam.id) {
+      setTeams(teams.filter((team) => team.id !== selectedTeam.id));
+    }
+    setIsConfirmationDialogOpen(false);
+  };
+
+  const handleCancelDelete = () => {
+    setIsConfirmationDialogOpen(false);
   };
 
   const handleSort = (key) => {
@@ -111,7 +125,7 @@ const ManageTeams = () => {
           className="relative w-full overflow-auto bg-white rounded-lg shadow-md px-12"
           paginatedData={paginatedTeams} // Pass the paginated teams
           handleEditTeam={handleEditTeam}
-          handleDeleteTeams={handleDeleteTeams}
+          handleDeleteTeams={openConfirmationDialog} // Pass the function to open the confirmation dialog
           handleSort={handleSort}
         />
         
@@ -130,6 +144,13 @@ const ManageTeams = () => {
           selectedTeam={selectedTeam}
           setSelectedTeam={setSelectedTeam}
           handleSaveTeam={handleSaveTeam}
+        />
+        
+        <ConfirmationDialog
+          isOpen={isConfirmationDialogOpen}
+          message={`Are you sure you want to delete the team "${selectedTeam.name}"?`}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
         />
       </main>
     </div>
