@@ -7,6 +7,7 @@ import SheetComponent from '../SheetComponent';
 import { PaginationComponent } from '../PaginationComponent';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import ConfirmationDialog from './ConfirmationDialog'; // Import the confirmation dialog
+import { Button } from "@/components/ui/button"; // Import the button component
 
 const Employee = () => {
   const [data, setData] = useState(sampleEmployees);
@@ -14,7 +15,7 @@ const Employee = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<{ id: number, lastName: string, firstName: string, middleName: string, status: string, team: string, role: string, email: string, type: string } | null>(null);
   const [sortConfig, setSortConfig] = useState({ key: 'lastName', direction: 'ascending' });
   const [currentPage, setCurrentPage] = useState(1);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // State for confirmation dialog
@@ -55,6 +56,21 @@ const Employee = () => {
   const handleSaveEmployee = (updatedEmployee: { id: number; lastName: string; firstName: string; middleName: string; status: string; team: string; role: string; email: string; type: string; }) => {
     setData(data.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp));
     setIsDialogOpen(false);
+  };
+
+  const handleCreateEmployee = () => {
+    setSelectedEmployee({
+      id: data.length + 1,
+      lastName: "",
+      firstName: "",
+      middleName: "",
+      status: "",
+      team: "",
+      role: "",
+      email: "",
+      type: "Fixed"
+    });
+    setIsDialogOpen(true);
   };
 
   const confirmDeleteEmployee = (id: number | null) => {
@@ -149,6 +165,13 @@ const Employee = () => {
               <SelectItem value="Super Flexible">Super Flexible</SelectItem>
             </SelectContent>
           </Select>
+
+          <Button
+            onClick={handleCreateEmployee}
+            className="bg-blue-500 text-white hover:bg-blue-600"
+          >
+            Add New Employee
+          </Button>
         </div>
 
         <EmployeeSummary 

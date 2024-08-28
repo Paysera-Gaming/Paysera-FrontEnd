@@ -21,9 +21,9 @@ const EmployeeDialog = ({
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Employee</DialogTitle>
+          <DialogTitle>{selectedEmployee ? "Edit Employee" : "Create Employee"}</DialogTitle>
           <DialogDescription>
-            Please update the employee details and click Save to apply changes.
+            {selectedEmployee ? "Please update the employee details and click Save to apply changes." : "Enter the employee details to create a new employee."}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
@@ -44,6 +44,14 @@ const EmployeeDialog = ({
             />
           </div>
           <div>
+            <label htmlFor="middleName">Middle Name</label>
+            <Input
+              id="middleName"
+              value={selectedEmployee?.middleName || ''}
+              onChange={(e) => setSelectedEmployee({ ...selectedEmployee, middleName: e.target.value })}
+            />
+          </div>
+          <div>
             <label htmlFor="team">Team</label>
             <Input
               id="team"
@@ -52,12 +60,20 @@ const EmployeeDialog = ({
             />
           </div>
           <div>
+            <label htmlFor="role">Role</label>
+            <Input
+              id="role"
+              value={selectedEmployee?.role || ''}
+              onChange={(e) => setSelectedEmployee({ ...selectedEmployee, role: e.target.value })}
+            />
+          </div>
+          <div>
             <label htmlFor="type">Type</label>
             <Select
               value={selectedEmployee?.type || 'Fixed'}
               onValueChange={(value) => setSelectedEmployee({ ...selectedEmployee, type: value })}
             >
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="Fixed">Fixed</SelectItem>
                 <SelectItem value="Flexible">Flexible</SelectItem>
