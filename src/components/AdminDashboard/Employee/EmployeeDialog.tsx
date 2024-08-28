@@ -2,8 +2,21 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import { EmployeeType } from './EmployeeTypes'; // Adjust the path if needed
 
-const EmployeeDialog = ({ isDialogOpen, setIsDialogOpen, selectedEmployee, setSelectedEmployee, handleSaveEmployee }) => {
+const EmployeeDialog = ({
+  isDialogOpen,
+  setIsDialogOpen,
+  selectedEmployee,
+  setSelectedEmployee,
+  handleSaveEmployee
+}: {
+  isDialogOpen: boolean,
+  setIsDialogOpen: (isOpen: boolean) => void,
+  selectedEmployee: EmployeeType,
+  setSelectedEmployee: (employee: EmployeeType) => void,
+  handleSaveEmployee: (employee: EmployeeType) => void
+}) => {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogContent>
@@ -34,14 +47,13 @@ const EmployeeDialog = ({ isDialogOpen, setIsDialogOpen, selectedEmployee, setSe
             <label htmlFor="team">Team</label>
             <Input
               id="team"
-              value={selectedEmployee?.team || ''}
+              value={selectedEmployee?.team || ''}  
               onChange={(e) => setSelectedEmployee({ ...selectedEmployee, team: e.target.value })}
             />
           </div>
           <div>
             <label htmlFor="type">Type</label>
             <Select
-              id="type"
               value={selectedEmployee?.type || 'Fixed'}
               onValueChange={(value) => setSelectedEmployee({ ...selectedEmployee, type: value })}
             >
