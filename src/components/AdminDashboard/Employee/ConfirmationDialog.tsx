@@ -1,14 +1,8 @@
-import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import React from 'react';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-type ConfirmationDialogProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  message: string;
-};
-
-const ConfirmationDialog = ({ isOpen, onClose, onConfirm, message }: ConfirmationDialogProps) => {
+const ConfirmationDialog = ({ isOpen, onClose, onConfirm, message }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>

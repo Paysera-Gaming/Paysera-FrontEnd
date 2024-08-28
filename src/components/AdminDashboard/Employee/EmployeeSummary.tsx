@@ -1,24 +1,5 @@
-import { LogIn, PowerOff, Users } from 'lucide-react';
-
-interface EmployeeSummaryProps {
-  totalActive: number;
-  activeFixed: number;
-  activeFlexible: number;
-  activeSuperFlexible: number;
-  totalOnLunch: number;
-  lunchFixed: number;
-  lunchFlexible: number;
-  lunchSuperFlexible: number;
-  totalOnLeave: number;
-  leaveFixed: number;
-  leaveFlexible: number;
-  leaveSuperFlexible: number;
-  totalOffline: number;
-  offlineFixed: number;
-  offlineFlexible: number;
-  offlineSuperFlexible: number;
-  onStatusFilterChange: (status: string) => void;
-}
+import React from 'react';
+import { LogIn, LogOut, Coffee, PowerOff, Users } from 'lucide-react';
 
 const EmployeeSummary = ({
   totalActive,
@@ -38,24 +19,19 @@ const EmployeeSummary = ({
   offlineFlexible,
   offlineSuperFlexible,
   onStatusFilterChange,
-}: EmployeeSummaryProps) => {
-  // Add Lunch to Active counts
-  const totalActiveWithLunch = totalActive + totalOnLunch;
-  const activeFixedWithLunch = activeFixed + lunchFixed;
-  const activeFlexibleWithLunch = activeFlexible + lunchFlexible;
-  const activeSuperFlexibleWithLunch = activeSuperFlexible + lunchSuperFlexible;
-
-  // Add Leave to Offline counts
-  const totalOfflineWithLeave = totalOffline + totalOnLeave;
-  const offlineFixedWithLeave = offlineFixed + leaveFixed;
-  const offlineFlexibleWithLeave = offlineFlexible + leaveFlexible;
-  const offlineSuperFlexibleWithLeave = offlineSuperFlexible + leaveSuperFlexible;
-
-  // Calculate the overall total by summing Active (including Lunch) and Offline (including Leave)
-  const totalOverall = totalActiveWithLunch + totalOfflineWithLeave;
-  const overallFixed = activeFixedWithLunch + offlineFixedWithLeave;
-  const overallFlexible = activeFlexibleWithLunch + offlineFlexibleWithLeave;
-  const overallSuperFlexible = activeSuperFlexibleWithLunch + offlineSuperFlexibleWithLeave;
+}) => {
+  // Calculate the overall total by summing all status counts
+  const totalOverall =
+    totalActive + totalOnLunch + totalOnLeave + totalOffline;
+  const overallFixed =
+    activeFixed + lunchFixed + leaveFixed + offlineFixed;
+  const overallFlexible =
+    activeFlexible + lunchFlexible + leaveFlexible + offlineFlexible;
+  const overallSuperFlexible =
+    activeSuperFlexible +
+    lunchSuperFlexible +
+    leaveSuperFlexible +
+    offlineSuperFlexible;
 
   const summaryItems = [
     {
@@ -73,10 +49,10 @@ const EmployeeSummary = ({
     },
     {
       title: 'Active',
-      count: totalActiveWithLunch, // Including Lunch
-      fixed: activeFixedWithLunch,
-      flexible: activeFlexibleWithLunch,
-      superFlexible: activeSuperFlexibleWithLunch,
+      count: totalActive,
+      fixed: activeFixed,
+      flexible: activeFlexible,
+      superFlexible: activeSuperFlexible,
       color: 'bg-green-100',
       borderColor: 'border-green-300',
       textColor: 'text-green-600',
@@ -84,21 +60,45 @@ const EmployeeSummary = ({
       status: 'Active',
     },
     {
-      title: 'Offline',
-      count: totalOfflineWithLeave, // Including Leave
-      fixed: offlineFixedWithLeave,
-      flexible: offlineFlexibleWithLeave,
-      superFlexible: offlineSuperFlexibleWithLeave,
+      title: 'On Lunch',
+      count: totalOnLunch,
+      fixed: lunchFixed,
+      flexible: lunchFlexible,
+      superFlexible: lunchSuperFlexible,
+      color: 'bg-yellow-100',
+      borderColor: 'border-yellow-300',
+      textColor: 'text-orange-600',
+      icon: <Coffee className="w-6 h-6 text-orange-600" />,
+      status: 'Lunch',
+    },
+    {
+      title: 'On Leave',
+      count: totalOnLeave,
+      fixed: leaveFixed,
+      flexible: leaveFlexible,
+      superFlexible: leaveSuperFlexible,
       color: 'bg-red-100',
       borderColor: 'border-red-300',
       textColor: 'text-red-600',
-      icon: <PowerOff className="w-6 h-6 text-red-600" />,
+      icon: <LogOut className="w-6 h-6 text-red-600" />,
+      status: 'Leave',
+    },
+    {
+      title: 'Offline',
+      count: totalOffline,
+      fixed: offlineFixed,
+      flexible: offlineFlexible,
+      superFlexible: offlineSuperFlexible,
+      color: 'bg-gray-100',
+      borderColor: 'border-gray-300',
+      textColor: 'text-gray-600',
+      icon: <PowerOff className="w-6 h-6 text-gray-600" />,
       status: 'Offline',
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-0">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-0">
       {summaryItems.map(
         ({
           title,
@@ -111,11 +111,11 @@ const EmployeeSummary = ({
           textColor,
           icon,
           status,
-          isOverall,
+          isOverall, // Destructure the isOverall property
         }) => (
           <div
             key={title}
-            onClick={() => onStatusFilterChange(isOverall ? 'all' : status)}
+            onClick={() => onStatusFilterChange(isOverall ? "all" : status)}
             className={`p-4 rounded-lg border ${borderColor} ${color} text-center shadow-md cursor-pointer transform transition-transform duration-200 hover:-translate-y-1`}
           >
             <div className="flex flex-col items-center">

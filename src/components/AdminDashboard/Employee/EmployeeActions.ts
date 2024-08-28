@@ -1,4 +1,4 @@
-export const handleSort = (key: string | number, sortConfig: { key: any; direction: string; }, setSortConfig: (arg0: { key: any; direction: string; }) => void, data: any, setData: (arg0: any[]) => void) => {
+export const handleSort = (key, sortConfig, setSortConfig, data, setData) => {
   const direction = sortConfig?.key === key && sortConfig?.direction === 'ascending' ? 'descending' : 'ascending';
   const sortedData = [...data].sort((a, b) => {
     if (a[key].toLowerCase() < b[key].toLowerCase()) return direction === 'ascending' ? -1 : 1;
