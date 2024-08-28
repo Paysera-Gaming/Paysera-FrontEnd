@@ -62,7 +62,14 @@ const EmployeeComponent = () => {
   );
 
   const handleSaveEmployee = (updatedEmployee: Employee) => {
-    setData(data.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp));
+    if (updatedEmployee.id === 0) {
+      // Create new employee
+      const newEmployee = { ...updatedEmployee, id: data.length + 1 };
+      setData([...data, newEmployee]);
+    } else {
+      // Update existing employee
+      setData(data.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp));
+    }
     setIsDialogOpen(false);
   };
 
@@ -153,6 +160,15 @@ const EmployeeComponent = () => {
               <SelectItem value="Super Flexible">Super Flexible</SelectItem>
             </SelectContent>
           </Select>
+          <button
+            onClick={() => {
+              setSelectedEmployee({ id: 0, lastName: '', firstName: '', middleName: '', status: 'Active', team: '', role: '', email: '', type: 'Fixed' });
+              setIsDialogOpen(true);
+            }}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Create Employee
+          </button>
         </div>
 
         <EmployeeSummary 

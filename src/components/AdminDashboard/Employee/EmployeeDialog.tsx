@@ -6,9 +6,14 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 
 // Define the Employee type
 type Employee = {
+  id: number;
   lastName: string;
   firstName: string;
+  middleName?: string;
+  status: string;
   team: string;
+  role?: string;
+  email?: string;
   type: 'Fixed' | 'Flexible' | 'Super Flexible';
 };
 
@@ -32,9 +37,9 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Employee</DialogTitle>
+          <DialogTitle>{selectedEmployee?.id === 0 ? 'Create Employee' : 'Edit Employee'}</DialogTitle>
           <DialogDescription>
-            Please update the employee details and click Save to apply changes.
+            {selectedEmployee?.id === 0 ? 'Please enter the employee details and click Save to create a new employee.' : 'Please update the employee details and click Save to apply changes.'}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
