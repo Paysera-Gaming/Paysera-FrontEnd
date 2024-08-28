@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { TimerIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 export interface TimerProps {
 	hasStarted: boolean;
-	formAction: 'Clock-In' | 'Lunch-In' | 'Lunch-Out' | 'Clock-Out';
+	formAction: 'Clock-In' | 'Lunch-In' | 'Lunch-Out' | 'Clock-Out' | 'None';
 }
 
 export default function TimerDisplay({ ...timerProps }: TimerProps) {
@@ -36,13 +37,27 @@ export default function TimerDisplay({ ...timerProps }: TimerProps) {
 	const secondsToDisplay = useTime % 60;
 	const secondsDisplay =
 		secondsToDisplay < 10 ? `0${secondsToDisplay}` : secondsToDisplay;
+	// "flex items-center justify-center py-1 px-2 bg-primary rounded-full text-secondary-foreground outline-2 outline-primary outline outline-offset-2"
 
 	return (
-		<span className="flex gap-x-1 justify-center items-center">
-			<TimerIcon size={`1.5rem`} className="mb-1"></TimerIcon>
-			<h3 className=" scroll-m-20 text-xl font-semibold tracking-tight">
-				{hoursDisplay}:{minutesDisplay}:{secondsDisplay}
-			</h3>
+		<span
+			className={cn(
+				'transition ease-in-out flex items-center justify-center py-1 px-2 bg-primary rounded-full text-secondary-foreground outline-2 outline-destructive outline outline-offset-2',
+				{
+					'bg-primary outline-ring': timerProps.hasStarted,
+					'bg-destructive outline-destructive': !timerProps.hasStarted,
+				}
+			)}
+		>
+			<TimerIcon
+				size={`1.5rem`}
+				className="mb-1 text-primary-foreground stroke-[2px]"
+			></TimerIcon>
+			<span className="w-24 text-accent text-center rounded-full ">
+				<h3 className="text-lg font-semibold ">
+					{hoursDisplay}:{minutesDisplay}:{secondsDisplay}
+				</h3>
+			</span>
 		</span>
 	);
 }

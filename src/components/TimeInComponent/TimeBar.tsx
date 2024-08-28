@@ -5,7 +5,7 @@ import { useState } from 'react';
 import TimerDisplay from '@/components/TimeInComponent/TimerDisplay';
 
 import { Badge } from '@/components/ui/badge';
-import { ModeToggle } from '../ThemeProvider/ThemeSwitch';
+
 type UserStatus = 'Clock-In' | 'Lunch-In' | 'Lunch-Out' | 'Clock-Out' | 'None';
 
 function statusUser(status: UserStatus): string {
@@ -36,7 +36,7 @@ function badgeVariant(
 			return 'default';
 
 		case 'Lunch-In':
-			return 'outline';
+			return 'secondary';
 
 		case 'None':
 		case 'Clock-Out':
@@ -54,30 +54,21 @@ export default function Timebar() {
 	}
 
 	return (
-		<header className="border-border border-solid border w-full rounded-md p-2 flex items-center justify-between">
+		<header className="border-border border-solid border w-full rounded-md p-2 px-5 flex items-center justify-between">
 			{/* status */}
 			<span>
-				<p className="font-semibold inline">Status: &nbsp;</p>
+				<p className="font-semibold inline text-lg">Status: &nbsp;</p>
 				<Badge className="inline" variant={badgeVariant(useStatus)}>
 					{statusUser(useStatus)}
 				</Badge>
 			</span>
 
-			{/* schedule */}
-			<span>
-				<p className="font-semibold inline">Today's Schedule: &nbsp;</p>
-				<p className="inline"> 8:00 - 16:00</p>
-			</span>
 			{/* timer display */}
-			<TimerDisplay
-				hasStarted={useStart}
-				formAction={'Clock-Out'}
-			></TimerDisplay>
+			<TimerDisplay hasStarted={useStart} formAction={'None'}></TimerDisplay>
 
 			{/* form */}
 
 			<TimeForm updateParentState={updateTimer}></TimeForm>
-			<ModeToggle />
 		</header>
 	);
 }
