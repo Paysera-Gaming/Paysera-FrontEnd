@@ -40,8 +40,8 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogContent className="max-w-4xl p-6">
         <DialogHeader>
-          <DialogTitle className="text-2xl">{selectedEmployee?.id === 0 ? 'Create Employee' : 'Edit Employee'}</DialogTitle>
-          <DialogDescription className="text-lg">
+          <DialogTitle className="text-2xl font-bold">{selectedEmployee?.id === 0 ? 'Create Employee' : 'Edit Employee'}</DialogTitle>
+          <DialogDescription className="text-lg text-gray-600">
             {selectedEmployee?.id === 0 ? 'Please enter the employee details and click Save to create a new employee.' : 'Please update the employee details and click Save to apply changes.'}
           </DialogDescription>
         </DialogHeader>
@@ -55,7 +55,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
                 id="lastName"
                 value={selectedEmployee?.lastName || ''}
                 onChange={(e) => handleInputChange('lastName', e.target.value)}
-                className="w-full p-2"
+                className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
             <div className="mb-4">
@@ -64,7 +64,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
                 id="firstName"
                 value={selectedEmployee?.firstName || ''}
                 onChange={(e) => handleInputChange('firstName', e.target.value)}
-                className="w-full p-2"
+                className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
             <div className="mb-4">
@@ -73,10 +73,12 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
                 id="middleName"
                 value={selectedEmployee?.middleName || ''}
                 onChange={(e) => handleInputChange('middleName', e.target.value)}
-                className="w-full p-2"
+                className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
           </div>
+
+          <div className="border-l border-gray-300"></div>
 
           {/* Part 2: Account Credentials */}
           <div className="flex-1">
@@ -87,7 +89,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
                 id="username"
                 value={selectedEmployee?.username || ''}
                 onChange={(e) => handleInputChange('username', e.target.value)}
-                className="w-full p-2"
+                className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
             <div className="mb-4">
@@ -97,7 +99,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
                 type="password"
                 value={selectedEmployee?.password || ''}
                 onChange={(e) => handleInputChange('password', e.target.value)}
-                className="w-full p-2"
+                className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
             <div className="mb-4">
@@ -107,10 +109,12 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
                 type="password"
                 value={selectedEmployee?.confirmPassword || ''}
                 onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                className="w-full p-2"
+                className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
           </div>
+
+          <div className="border-l border-gray-300"></div>
 
           {/* Part 3: Job Duties */}
           <div className="flex-1">
@@ -121,7 +125,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
                 id="team"
                 value={selectedEmployee?.team || ''}
                 onChange={(e) => handleInputChange('team', e.target.value)}
-                className="w-full p-2"
+                className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
             <div className="mb-4">
@@ -130,7 +134,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
                 id="role"
                 value={selectedEmployee?.role || ''}
                 onChange={(e) => handleInputChange('role', e.target.value)}
-                className="w-full p-2"
+                className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
             <div className="mb-4">
@@ -143,7 +147,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
                   }
                 }}
               >
-                <SelectTrigger className="w-full p-2"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="w-full p-2 border border-gray-300 rounded"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Fixed">Fixed</SelectItem>
                   <SelectItem value="Flexible">Flexible</SelectItem>
@@ -154,14 +158,14 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
           </div>
         </div>
         <div className="mt-6 flex justify-end space-x-4">
-          <Button onClick={() => setIsDialogOpen(false)} className="bg-gray-500 text-white hover:bg-gray-600 px-4 py-2">Cancel</Button>
+          <Button onClick={() => setIsDialogOpen(false)} className="bg-gray-500 text-white hover:bg-gray-600 px-4 py-2 rounded">Cancel</Button>
           <Button
             onClick={() => {
               if (selectedEmployee) {
                 handleSaveEmployee(selectedEmployee);
               }
             }}
-            className="bg-green-500 text-white hover:bg-green-600 px-4 py-2"
+            className="bg-green-500 text-white hover:bg-green-600 px-4 py-2 rounded"
           >
             Save
           </Button>
