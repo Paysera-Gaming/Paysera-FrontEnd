@@ -1,8 +1,6 @@
 import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@/components/ui/table";
 
-import { calculateTotalHours, determineSituation, formatName } from "./helpers";
-
 interface AttendanceTableProps {
   filteredData: Array<{
     name: string;
@@ -15,6 +13,25 @@ interface AttendanceTableProps {
     part2EndTime: string;
   }>;
 }
+
+const calculateTotalHours = (startTime: string, endTime: string) => {
+  const [startHours, startMinutes] = startTime.split(":").map(Number);
+  const [endHours, endMinutes] = endTime.split(":").map(Number);
+  const start = new Date();
+  const end = new Date();
+
+  start.setHours(startHours, startMinutes);
+  end.setHours(endHours, endMinutes);
+
+  const diff = end.getTime() - start.getTime();
+  return diff / (1000 * 60 * 60);
+};
+
+const determineSituation = (part1EndTime: string, lunchStartTime: string, lunchEndTime: string, part2EndTime: string) => {
+  if (part1EndTime === lunchStartTime) return "Lunch";
+  if (lunchEndTime === part2EndTime) return "Leave";
+  return "On Job";
+};
 
 export const AttendanceTable: React.FC<AttendanceTableProps> = ({ filteredData }) => (
   <Table className="min-w-full border-collapse border border-gray-200">
@@ -59,7 +76,7 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({ filteredData }
           <TableRow key={index} className="border border-gray-300">
             <TableCell className="text-center align-middle border border-gray-300 flex items-center">
               <span className={`w-3 h-3 rounded-full mr-2 ${situationColor}`} style={{ display: "inline-block" }}></span>
-              {formatName(row.name)}
+              {row.name}
             </TableCell>
             <TableCell className="text-center align-middle border border-gray-300">{row.type}</TableCell>
             <TableCell className="text-center align-middle border border-gray-300">{row.date}</TableCell>

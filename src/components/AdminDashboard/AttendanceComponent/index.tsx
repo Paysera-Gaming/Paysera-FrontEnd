@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { Filters } from "./Filters";
 import { Summary } from "./Summary";
 import { AttendanceTable } from "./AttendanceTable";
-import { determineSituation } from "./helpers";
+
+const determineSituation = (part1EndTime: string, lunchStartTime: string, lunchEndTime: string, part2EndTime: string) => {
+  if (part1EndTime === lunchStartTime) return "Lunch";
+  if (lunchEndTime === part2EndTime) return "Leave";
+  return "On Job";
+};
 
 interface AttendanceData {
   name: string;
@@ -162,9 +167,11 @@ export const AttendanceComponent: React.FC = () => {
         filterSituation={filterSituation}
         handleSearch={handleSearch}
         handleFilterTypeChange={handleFilterTypeChange}
-        handleFilterSituationChange={(e) => handleFilterSituationChange(e.target.value)} handleExportToExcel={function (): void {
+        handleFilterSituationChange={(e) => handleFilterSituationChange(e.target.value)}
+        handleExportToExcel={function (): void {
           throw new Error("Function not implemented.");
-        } }      />
+        }}
+      />
       <Summary situationCounts={situationCounts} onFilter={handleFilterSituationChange} />
       <AttendanceTable filteredData={filteredData} />
     </div>
