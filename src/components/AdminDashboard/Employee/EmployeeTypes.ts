@@ -1,5 +1,9 @@
 // EmployeeTypes.ts
 export type EmployeeType = {
+  username: string;
+  password: string;
+  confirmPassword: string;
+  department: string;
   id: number;
   lastName: string;
   firstName: string;
