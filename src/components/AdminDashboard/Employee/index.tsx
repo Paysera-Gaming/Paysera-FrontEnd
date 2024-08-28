@@ -15,7 +15,17 @@ const Employee = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<{ id: number, lastName: string, firstName: string, middleName: string, status: string, team: string, role: string, email: string, type: string } | null>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<{
+    id: number,
+    lastName: string,
+    firstName: string,
+    middleName: string,
+    status: string,
+    team: string,
+    role: string,
+    email: string,
+    type: string
+  } | null>(null);
   const [sortConfig, setSortConfig] = useState({ key: 'lastName', direction: 'ascending' });
   const [currentPage, setCurrentPage] = useState(1);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // State for confirmation dialog
@@ -54,17 +64,25 @@ const Employee = () => {
   );
 
   const handleSaveEmployee = (updatedEmployee: { id: number; lastName: string; firstName: string; middleName: string; status: string; team: string; role: string; email: string; type: string; }) => {
-    setData(data.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp));
+    if (updatedEmployee.id === 0) {
+      // Assign a new unique ID
+      updatedEmployee.id = data.length + 1;
+      // Add new employee to the data list
+      setData([...data, updatedEmployee]);
+    } else {
+      // Update existing employee
+      setData(data.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp));
+    }
     setIsDialogOpen(false);
   };
 
   const handleCreateEmployee = () => {
     setSelectedEmployee({
-      id: data.length + 1,
+      id: 0,  // New employee has id 0
       lastName: "",
       firstName: "",
       middleName: "",
-      status: "",
+      status: "Active",
       team: "",
       role: "",
       email: "",
