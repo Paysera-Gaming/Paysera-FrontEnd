@@ -10,7 +10,7 @@ import LogOutButton from '../LogoutComponent/LogoutButton';
 
 import { ModeToggle } from '../ThemeProvider/ThemeSwitch';
 
-import clsx from 'clsx';
+import { cn } from '@/lib/utils';
 interface RouteItemProps {
 	links: string[];
 }
@@ -30,7 +30,7 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
 	const routes = links.map((link, index) => {
 		return (
 			<li
-				className="my-2 "
+				className="my-3 "
 				key={link}
 				onClick={() => {
 					document.getElementById(link)?.click();
@@ -38,9 +38,13 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
 			>
 				<NavLink
 					className={({ isActive }: { isActive: boolean }) =>
-						clsx(
-							'p-2 rounded-sm border border-solid border-transparent transition-all ease-in-out hover:bg-border flex gap-x-5 justify-start items-center text-lg text-center capitalize',
-							isActive && 'border-ring text-ring'
+						cn(
+							'p-1 rounded-sm outline outline-2 transition-all ease-in-out hover:bg-border flex gap-x-5 justify-start items-center text-base text-center capitalize outline-transparent',
+
+							{
+								'outline-offset-2  bg-secondary text-ring outline-ring ':
+									isActive,
+							}
 						)
 					}
 					id={link}
@@ -80,7 +84,7 @@ export default function TeamLeadNavigation() {
 	];
 
 	return (
-		<nav className="bg-card boder-solid border-border border rounded-md h-full w-[230px] p-2 py-3 gap-y-10 flex flex-col items-start justify-between">
+		<nav className="bg-card boder-solid border-border border rounded-md h-full w-[230px] p-3 gap-y-10 flex flex-col items-start justify-between">
 			{/* unahin header */}
 			<ProfileHeader></ProfileHeader>
 			{/* then eto */}
