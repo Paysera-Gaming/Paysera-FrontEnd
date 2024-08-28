@@ -1,5 +1,3 @@
-// src/components/AdminDashboard/Employee/sampleData.ts
-
 export const sampleEmployees = [
   {
     id: 1,
@@ -17,7 +15,7 @@ export const sampleEmployees = [
     lastName: 'Johnson',
     firstName: 'Abe',
     middleName: 'B.',
-    status: 'Leave',
+    status: 'Offline',  // Updated from 'Leave'
     team: 'Call Department',
     role: 'Support',
     email: 'abe.johnson@example.com',
@@ -28,7 +26,7 @@ export const sampleEmployees = [
     lastName: 'Lee',
     firstName: 'Monserrat',
     middleName: 'C.',
-    status: 'Lunch',
+    status: 'Active',  // Updated from 'Lunch'
     team: 'Tech Department',
     role: 'Lead Developer',
     email: 'monserrat.lee@example.com',
@@ -61,7 +59,7 @@ export const sampleEmployees = [
     lastName: 'Brown',
     firstName: 'Jack',
     middleName: 'F.',
-    status: 'On Leave',
+    status: 'Offline',  // Updated from 'On Leave'
     team: 'HR Department',
     role: 'Recruiter',
     email: 'jack.brown@example.com',

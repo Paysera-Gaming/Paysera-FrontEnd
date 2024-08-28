@@ -1,4 +1,4 @@
-import { } from 'react';
+import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
@@ -29,9 +29,18 @@ interface EmployeeTableProps {
   handleDeleteEmployee: (id: number) => void;
   sortConfig: { key: keyof Employee | '', direction: 'ascending' | 'descending' | '' };
   setSortConfig: React.Dispatch<React.SetStateAction<{ key: keyof Employee | '', direction: 'ascending' | 'descending' | '' }>>;
+  setData: React.Dispatch<React.SetStateAction<Employee[]>>;
 }
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({ data, setSelectedEmployee, setIsDialogOpen, handleDeleteEmployee, sortConfig, setSortConfig }) => {
+const EmployeeTable: React.FC<EmployeeTableProps> = ({
+  data,
+  setSelectedEmployee,
+  setIsDialogOpen,
+  handleDeleteEmployee,
+  sortConfig,
+  setSortConfig,
+  setData,
+}) => {
 
   const handleSort = (key: keyof Employee) => {
     let direction: 'ascending' | 'descending' = 'ascending';
@@ -54,6 +63,23 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ data, setSelectedEmployee
   const handleEditEmployee = (employee: Employee) => {
     setSelectedEmployee(employee);
     setIsDialogOpen(true);
+  };
+
+  const updateEmployeeStatus = (employee: Employee) => {
+    let updatedStatus = employee.status;
+
+    if (employee.status === "Leave") {
+      updatedStatus = "Offline";
+    } else if (employee.status === "Lunch") {
+      updatedStatus = "Active";
+    }
+
+    const updatedEmployee = { ...employee, status: updatedStatus };
+    setData(prevData =>
+      prevData.map(emp =>
+        emp.id === updatedEmployee.id ? updatedEmployee : emp
+      )
+    );
   };
 
   return (
@@ -115,12 +141,22 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ data, setSelectedEmployee
                   <TooltipContent>Edit Employee</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <Button
-                onClick={() => handleDeleteEmployee(employee.id)}
-                className="bg-red-500 text-white hover:bg-red-700"
-              >
-                Delete
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={() => {
+                        updateEmployeeStatus(employee);
+                        handleDeleteEmployee(employee.id);
+                      }}
+                      className="bg-red-500 text-white hover:bg-red-700"
+                    >
+                      Delete
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Delete Employee</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </TableCell>
           </TableRow>
         ))}

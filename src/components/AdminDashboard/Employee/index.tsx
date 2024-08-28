@@ -27,7 +27,7 @@ const EmployeeComponent = () => {
   const [typeFilter, setTypeFilter] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null); // Use Employee type
-  const [sortConfig, setSortConfig] = useState({ key: 'lastName', direction: 'ascending' });
+  const [sortConfig, setSortConfig] = useState<{ key: keyof Employee; direction: "ascending" | "descending" }>({ key: 'lastName', direction: 'ascending' } as { key: keyof Employee; direction: "ascending" | "descending" });
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // State for confirmation dialog
   const [employeeToDelete, setEmployeeToDelete] = useState<number | null>(null); // Employee ID to delete
 
