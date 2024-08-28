@@ -136,8 +136,7 @@ const EmployeeComponent = () => {
               <SelectItem value="all">All Statuses</SelectItem>
               <SelectItem value="Active">Active</SelectItem>
               <SelectItem value="Offline">Offline</SelectItem>
-              <SelectItem value="Lunch">On Lunch</SelectItem>
-              <SelectItem value="Leave">On Leave</SelectItem>
+
             </SelectContent>
           </Select>
           <Select

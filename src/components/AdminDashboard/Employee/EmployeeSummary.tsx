@@ -1,4 +1,4 @@
-import { LogIn, LogOut, Coffee, PowerOff, Users } from 'lucide-react';
+import { LogIn, PowerOff, Users } from 'lucide-react';
 
 type EmployeeSummaryProps = {
   totalActive: number,
@@ -78,30 +78,7 @@ const EmployeeSummary = ({
       icon: <LogIn className="w-6 h-6 text-green-600" />,
       status: 'Active',
     },
-    {
-      title: 'On Lunch',
-      count: totalOnLunch,
-      fixed: lunchFixed,
-      flexible: lunchFlexible,
-      superFlexible: lunchSuperFlexible,
-      color: 'bg-yellow-100',
-      borderColor: 'border-yellow-300',
-      textColor: 'text-orange-600',
-      icon: <Coffee className="w-6 h-6 text-orange-600" />,
-      status: 'Lunch',
-    },
-    {
-      title: 'On Leave',
-      count: totalOnLeave,
-      fixed: leaveFixed,
-      flexible: leaveFlexible,
-      superFlexible: leaveSuperFlexible,
-      color: 'bg-red-100',
-      borderColor: 'border-red-300',
-      textColor: 'text-red-600',
-      icon: <LogOut className="w-6 h-6 text-red-600" />,
-      status: 'Leave',
-    },
+
     {
       title: 'Offline',
       count: totalOffline,
@@ -117,7 +94,7 @@ const EmployeeSummary = ({
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-0">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-0">
       {summaryItems.map(
         ({
           title,
