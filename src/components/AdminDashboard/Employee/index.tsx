@@ -7,16 +7,29 @@ import SheetComponent from '../SheetComponent';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import ConfirmationDialog from './ConfirmationDialog'; // Import the confirmation dialog
 
-const Employee = () => {
-  const [data, setData] = useState(sampleEmployees);
+// Define the Employee type
+type Employee = {
+  id: number;
+  lastName: string;
+  firstName: string;
+  middleName: string;
+  status: string;
+  team: string;
+  role: string;
+  email: string;
+  type: string;
+};
+
+const EmployeeComponent = () => {
+  const [data, setData] = useState<Employee[]>(sampleEmployees);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<typeof Employee | null>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null); // Use Employee type
   const [sortConfig, setSortConfig] = useState({ key: 'lastName', direction: 'ascending' });
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // State for confirmation dialog
-  const [employeeToDelete, setEmployeeToDelete] = useState(null); // Employee to delete
+  const [employeeToDelete, setEmployeeToDelete] = useState<number | null>(null); // Employee ID to delete
 
   const [currentTime, setCurrentTime] = useState<string>('');
 
@@ -36,7 +49,7 @@ const Employee = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const handleSearch = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
@@ -48,17 +61,17 @@ const Employee = () => {
     (typeFilter !== "all" ? record.type === typeFilter : true)
   );
 
-  const handleSaveEmployee = (updatedEmployee: { id: number; lastName: string; firstName: string; middleName: string; status: string; team: string; role: string; email: string; type: string; }) => {
+  const handleSaveEmployee = (updatedEmployee: Employee) => {
     setData(data.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp));
     setIsDialogOpen(false);
   };
 
-  const confirmDeleteEmployee = (id: number | null) => {
+  const confirmDeleteEmployee = (id: number) => {
     setData(data.filter(emp => emp.id !== id));
     setIsConfirmationOpen(false);
   };
 
-  const handleDeleteEmployee = (id: React.SetStateAction<null>) => {
+  const handleDeleteEmployee = (id: number) => {
     setEmployeeToDelete(id);
     setIsConfirmationOpen(true); // Open confirmation dialog
   };
@@ -150,11 +163,11 @@ const Employee = () => {
 
         <EmployeeTable
           data={filteredData}
-          setSelectedEmployee={(employee: typeof Employee | null) => setSelectedEmployee(employee)}
+          setSelectedEmployee={setSelectedEmployee} // Adjusted to match the type
           setIsDialogOpen={setIsDialogOpen}
           handleDeleteEmployee={handleDeleteEmployee}
-          sortConfig={sortConfig}
-          setSortConfig={setSortConfig}
+          setSortConfig={sortConfig}
+          sortConfig={setSortConfig}
           setData={setData}
         />
 
@@ -169,7 +182,7 @@ const Employee = () => {
         <ConfirmationDialog
           isOpen={isConfirmationOpen}
           onClose={() => setIsConfirmationOpen(false)}
-          onConfirm={() => confirmDeleteEmployee(employeeToDelete)}
+          onConfirm={() => employeeToDelete !== null && confirmDeleteEmployee(employeeToDelete)}
           message="Are you sure you want to delete this employee?"
         />
       </main>
@@ -177,4 +190,4 @@ const Employee = () => {
   );
 };
 
-export default Employee;
+export default EmployeeComponent;

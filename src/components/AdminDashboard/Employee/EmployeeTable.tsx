@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
@@ -27,10 +27,11 @@ interface EmployeeTableProps {
   setSelectedEmployee: (employee: Employee | null) => void;
   setIsDialogOpen: (isOpen: boolean) => void;
   handleDeleteEmployee: (id: number) => void;
+  sortConfig: { key: keyof Employee | '', direction: 'ascending' | 'descending' | '' };
+  setSortConfig: React.Dispatch<React.SetStateAction<{ key: keyof Employee | '', direction: 'ascending' | 'descending' | '' }>>;
 }
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({ data, setSelectedEmployee, setIsDialogOpen, handleDeleteEmployee }) => {
-  const [sortConfig, setSortConfig] = useState<{ key: keyof Employee | '', direction: 'ascending' | 'descending' | '' }>({ key: '', direction: '' });
+const EmployeeTable: React.FC<EmployeeTableProps> = ({ data, setSelectedEmployee, setIsDialogOpen, handleDeleteEmployee, sortConfig, setSortConfig }) => {
 
   const handleSort = (key: keyof Employee) => {
     let direction: 'ascending' | 'descending' = 'ascending';

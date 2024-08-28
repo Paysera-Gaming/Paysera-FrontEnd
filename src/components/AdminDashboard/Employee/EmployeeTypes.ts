@@ -1,6 +1,5 @@
-export type EmployeeType = {
-  password: string;
-  username: string;
+// types.ts
+export type Employee = {
   id: number;
   lastName: string;
   firstName: string;
@@ -8,9 +7,6 @@ export type EmployeeType = {
   status: string;
   team: string;
   role: string;
+  email: string;
   type: string;
 };
-
-export const initialData: EmployeeType[] = [
-  // initial employee data
-];
