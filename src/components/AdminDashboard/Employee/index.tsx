@@ -4,7 +4,6 @@ import EmployeeDialog from './EmployeeDialog';
 import EmployeeSummary from './EmployeeSummary';
 import { sampleEmployees } from './sampleData';
 import SheetComponent from '../SheetComponent';
-import { PaginationComponent } from '../PaginationComponent';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import ConfirmationDialog from './ConfirmationDialog'; // Import the confirmation dialog
 
@@ -14,13 +13,11 @@ const Employee = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<typeof Employee | null>(null);
   const [sortConfig, setSortConfig] = useState({ key: 'lastName', direction: 'ascending' });
-  const [currentPage, setCurrentPage] = useState(1);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // State for confirmation dialog
   const [employeeToDelete, setEmployeeToDelete] = useState(null); // Employee to delete
 
-  const pageSize = 5;
   const [currentTime, setCurrentTime] = useState<string>('');
 
   useEffect(() => {
@@ -39,9 +36,8 @@ const Employee = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setSearchQuery(e.target.value);
-    setCurrentPage(1);
   };
 
   const filteredData = data.filter((record) =>
@@ -52,28 +48,24 @@ const Employee = () => {
     (typeFilter !== "all" ? record.type === typeFilter : true)
   );
 
-  const handleSaveEmployee = (updatedEmployee) => {
+  const handleSaveEmployee = (updatedEmployee: { id: number; lastName: string; firstName: string; middleName: string; status: string; team: string; role: string; email: string; type: string; }) => {
     setData(data.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp));
     setIsDialogOpen(false);
   };
 
-  const confirmDeleteEmployee = (id) => {
+  const confirmDeleteEmployee = (id: number | null) => {
     setData(data.filter(emp => emp.id !== id));
     setIsConfirmationOpen(false);
   };
 
-  const handleDeleteEmployee = (id) => {
+  const handleDeleteEmployee = (id: React.SetStateAction<null>) => {
     setEmployeeToDelete(id);
     setIsConfirmationOpen(true); // Open confirmation dialog
   };
 
-  const handleStatusFilterChange = (status) => {
+  const handleStatusFilterChange = (status: string) => {
     setStatusFilter((prevStatus) => (prevStatus === status ? "all" : status));
-    setCurrentPage(1); // Reset to the first page on filter change
   };
-
-  const totalPages = Math.ceil(filteredData.length / pageSize);
-  const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   // Updated employee counters based on filtered data
   const employeeCounters = {
@@ -157,22 +149,14 @@ const Employee = () => {
         />
 
         <EmployeeTable
-          data={paginatedData}
-          setSelectedEmployee={setSelectedEmployee}
+          data={filteredData}
+          setSelectedEmployee={(employee: typeof Employee | null) => setSelectedEmployee(employee)}
           setIsDialogOpen={setIsDialogOpen}
           handleDeleteEmployee={handleDeleteEmployee}
           sortConfig={sortConfig}
           setSortConfig={setSortConfig}
           setData={setData}
         />
-
-        <div className="flex justify-center mt-4">
-          <PaginationComponent
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
 
         <EmployeeDialog
           isDialogOpen={isDialogOpen}

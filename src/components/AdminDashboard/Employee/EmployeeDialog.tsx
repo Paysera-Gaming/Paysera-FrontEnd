@@ -4,7 +4,30 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 
-const EmployeeDialog = ({ isDialogOpen, setIsDialogOpen, selectedEmployee, setSelectedEmployee, handleSaveEmployee }) => {
+// Define the Employee type
+type Employee = {
+  lastName: string;
+  firstName: string;
+  team: string;
+  type: 'Fixed' | 'Flexible' | 'Super Flexible';
+};
+
+type EmployeeDialogProps = {
+  isDialogOpen: boolean;
+  setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedEmployee: Employee | null; // Allow for null
+  setSelectedEmployee: React.Dispatch<React.SetStateAction<Employee | null>>; // Allow for null
+  handleSaveEmployee: (employee: Employee) => void;
+};
+
+const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDialogOpen, selectedEmployee, setSelectedEmployee, handleSaveEmployee }) => {
+  // Check if selectedEmployee is null
+  const handleInputChange = (field: keyof Employee, value: string) => {
+    if (selectedEmployee) {
+      setSelectedEmployee({ ...selectedEmployee, [field]: value });
+    }
+  };
+
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogContent>
@@ -20,7 +43,7 @@ const EmployeeDialog = ({ isDialogOpen, setIsDialogOpen, selectedEmployee, setSe
             <Input
               id="lastName"
               value={selectedEmployee?.lastName || ''}
-              onChange={(e) => setSelectedEmployee({ ...selectedEmployee, lastName: e.target.value })}
+              onChange={(e) => handleInputChange('lastName', e.target.value)}
             />
           </div>
           <div>
@@ -28,7 +51,7 @@ const EmployeeDialog = ({ isDialogOpen, setIsDialogOpen, selectedEmployee, setSe
             <Input
               id="firstName"
               value={selectedEmployee?.firstName || ''}
-              onChange={(e) => setSelectedEmployee({ ...selectedEmployee, firstName: e.target.value })}
+              onChange={(e) => handleInputChange('firstName', e.target.value)}
             />
           </div>
           <div>
@@ -36,15 +59,18 @@ const EmployeeDialog = ({ isDialogOpen, setIsDialogOpen, selectedEmployee, setSe
             <Input
               id="team"
               value={selectedEmployee?.team || ''}
-              onChange={(e) => setSelectedEmployee({ ...selectedEmployee, team: e.target.value })}
+              onChange={(e) => handleInputChange('team', e.target.value)}
             />
           </div>
           <div>
             <label htmlFor="type">Type</label>
             <Select
-              id="type"
               value={selectedEmployee?.type || 'Fixed'}
-              onValueChange={(value) => setSelectedEmployee({ ...selectedEmployee, type: value })}
+              onValueChange={(value) => {
+                if (selectedEmployee) {
+                  setSelectedEmployee({ ...selectedEmployee, type: value as "Fixed" | "Flexible" | "Super Flexible" });
+                }
+              }}
             >
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -57,7 +83,16 @@ const EmployeeDialog = ({ isDialogOpen, setIsDialogOpen, selectedEmployee, setSe
         </div>
         <div className="mt-4 flex justify-end space-x-4">
           <Button onClick={() => setIsDialogOpen(false)} className="bg-gray-500 text-white hover:bg-gray-600">Cancel</Button>
-          <Button onClick={() => handleSaveEmployee(selectedEmployee)} className="bg-green-500 text-white hover:bg-green-600">Save</Button>
+          <Button
+            onClick={() => {
+              if (selectedEmployee) {
+                handleSaveEmployee(selectedEmployee);
+              }
+            }}
+            className="bg-green-500 text-white hover:bg-green-600"
+          >
+            Save
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

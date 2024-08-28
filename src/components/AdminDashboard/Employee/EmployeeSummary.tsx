@@ -1,5 +1,24 @@
-import React from 'react';
 import { LogIn, LogOut, Coffee, PowerOff, Users } from 'lucide-react';
+
+type EmployeeSummaryProps = {
+  totalActive: number,
+  activeFixed: number,
+  activeFlexible: number,
+  activeSuperFlexible: number,
+  totalOnLunch: number,
+  lunchFixed: number,
+  lunchFlexible: number,
+  lunchSuperFlexible: number,
+  totalOnLeave: number,
+  leaveFixed: number,
+  leaveFlexible: number,
+  leaveSuperFlexible: number,
+  totalOffline: number,
+  offlineFixed: number,
+  offlineFlexible: number,
+  offlineSuperFlexible: number,
+  onStatusFilterChange: (status: string) => void,
+};
 
 const EmployeeSummary = ({
   totalActive,
@@ -19,7 +38,7 @@ const EmployeeSummary = ({
   offlineFlexible,
   offlineSuperFlexible,
   onStatusFilterChange,
-}) => {
+}: EmployeeSummaryProps) => {
   // Calculate the overall total by summing all status counts
   const totalOverall =
     totalActive + totalOnLunch + totalOnLeave + totalOffline;

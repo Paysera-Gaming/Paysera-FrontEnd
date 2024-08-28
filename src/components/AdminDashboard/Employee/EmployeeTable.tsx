@@ -1,20 +1,39 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
-const statusColors = {
+const statusColors: { [key: string]: string } = {
   Active: 'bg-green-500',
   Leave: 'bg-red-500',
   Lunch: 'bg-orange-500',
   Offline: 'bg-gray-500'
 };
 
-const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDeleteEmployee }) => {
-  const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
+interface Employee {
+  id: number;
+  lastName: string;
+  firstName: string;
+  middleName: string;
+  status: string;
+  team: string;
+  role: string;
+  email: string;
+  type: string;
+}
 
-  const handleSort = (key) => {
-    let direction = 'ascending';
+interface EmployeeTableProps {
+  data: Employee[];
+  setSelectedEmployee: (employee: Employee | null) => void;
+  setIsDialogOpen: (isOpen: boolean) => void;
+  handleDeleteEmployee: (id: number) => void;
+}
+
+const EmployeeTable: React.FC<EmployeeTableProps> = ({ data, setSelectedEmployee, setIsDialogOpen, handleDeleteEmployee }) => {
+  const [sortConfig, setSortConfig] = useState<{ key: keyof Employee | '', direction: 'ascending' | 'descending' | '' }>({ key: '', direction: '' });
+
+  const handleSort = (key: keyof Employee) => {
+    let direction: 'ascending' | 'descending' = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
       direction = 'descending';
     }
@@ -22,16 +41,16 @@ const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDelet
   };
 
   const sortedData = [...data].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
+    if (sortConfig.key !== '' && a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === 'ascending' ? -1 : 1;
     }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
+    if (sortConfig.key !== '' && a[sortConfig.key] > b[sortConfig.key]) {
       return sortConfig.direction === 'ascending' ? 1 : -1;
     }
     return 0;
   });
 
-  const handleEditEmployee = (employee) => {
+  const handleEditEmployee = (employee: Employee) => {
     setSelectedEmployee(employee);
     setIsDialogOpen(true);
   };

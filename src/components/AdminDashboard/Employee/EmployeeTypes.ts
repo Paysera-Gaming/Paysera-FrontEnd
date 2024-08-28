@@ -1,4 +1,6 @@
 export type EmployeeType = {
+  password: string;
+  username: string;
   id: number;
   lastName: string;
   firstName: string;
