@@ -18,7 +18,7 @@ const Employee = () => {
   const [sortConfig, setSortConfig] = useState({ key: 'lastName', direction: 'ascending' });
   const [currentPage, setCurrentPage] = useState(1);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // State for confirmation dialog
-  const [employeeToDelete, setEmployeeToDelete] = useState(null); // Employee to delete
+  const [employeeToDelete, setEmployeeToDelete] = useState<number | null>(null); // Employee to delete
 
   const pageSize = 5;
   const [currentTime, setCurrentTime] = useState<string>('');
@@ -39,7 +39,7 @@ const Employee = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setSearchQuery(e.target.value);
     setCurrentPage(1);
   };
@@ -52,22 +52,22 @@ const Employee = () => {
     (typeFilter !== "all" ? record.type === typeFilter : true)
   );
 
-  const handleSaveEmployee = (updatedEmployee) => {
+  const handleSaveEmployee = (updatedEmployee: { id: number; lastName: string; firstName: string; middleName: string; status: string; team: string; role: string; email: string; type: string; }) => {
     setData(data.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp));
     setIsDialogOpen(false);
   };
 
-  const confirmDeleteEmployee = (id) => {
+  const confirmDeleteEmployee = (id: number | null) => {
     setData(data.filter(emp => emp.id !== id));
     setIsConfirmationOpen(false);
   };
 
-  const handleDeleteEmployee = (id) => {
+  const handleDeleteEmployee = (id: number) => {
     setEmployeeToDelete(id);
     setIsConfirmationOpen(true); // Open confirmation dialog
   };
 
-  const handleStatusFilterChange = (status) => {
+  const handleStatusFilterChange = (status: string) => {
     setStatusFilter((prevStatus) => (prevStatus === status ? "all" : status));
     setCurrentPage(1); // Reset to the first page on filter change
   };

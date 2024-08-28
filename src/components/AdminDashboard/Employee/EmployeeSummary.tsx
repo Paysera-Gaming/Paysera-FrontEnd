@@ -1,4 +1,3 @@
-import React from 'react';
 import { LogIn, LogOut, Coffee, PowerOff, Users } from 'lucide-react';
 
 const EmployeeSummary = ({

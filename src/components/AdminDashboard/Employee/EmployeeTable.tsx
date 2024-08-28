@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
-const statusColors = {
+const statusColors: { [key: string]: string } = {
   Active: 'bg-green-500',
   Leave: 'bg-red-500',
   Lunch: 'bg-orange-500',
   Offline: 'bg-gray-500'
 };
 
-const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDeleteEmployee }) => {
+const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDeleteEmployee }: { data: any[], setSelectedEmployee: (employee: any) => void, setIsDialogOpen: (isOpen: boolean) => void, handleDeleteEmployee: (id: number) => void }) => {
   const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
 
-  const handleSort = (key) => {
+  const handleSort = (key: string) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
       direction = 'descending';
@@ -31,7 +31,7 @@ const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDelet
     return 0;
   });
 
-  const handleEditEmployee = (employee) => {
+  const handleEditEmployee = (employee: any) => {
     setSelectedEmployee(employee);
     setIsDialogOpen(true);
   };
