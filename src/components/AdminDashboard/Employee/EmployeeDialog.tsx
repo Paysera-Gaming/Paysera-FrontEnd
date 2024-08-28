@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -47,6 +47,12 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
       handleSaveEmployee(selectedEmployee);
     }
   };
+
+  useEffect(() => {
+    if (!isDialogOpen) {
+      setErrorMessage(null);
+    }
+  }, [isDialogOpen]);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
