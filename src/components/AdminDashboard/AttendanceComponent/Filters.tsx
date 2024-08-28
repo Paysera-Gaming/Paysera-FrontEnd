@@ -53,10 +53,9 @@ export const Filters: React.FC<FiltersProps> = ({
         <CalendarComponent />
       </div>
     </div>
-
     <button
       onClick={handleExportToExcel}
-      className="text-lg font-medium bg-green-600 text-white hover:bg-green-700 py-2 px-4 rounded-md text-sm"
+      className="text-lg font-medium bg-green-600 text-white hover:bg-green-700 py-2 px-4 rounded-md"
     >
       Export as Excel
     </button>

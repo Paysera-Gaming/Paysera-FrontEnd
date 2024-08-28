@@ -4,7 +4,18 @@ import { Summary } from "./Summary";
 import { AttendanceTable } from "./AttendanceTable";
 import { determineSituation } from "./helpers";
 
-const initialData = [
+interface AttendanceData {
+  name: string;
+  type: string;
+  date: string;
+  part1StartTime: string;
+  part1EndTime: string;
+  lunchStartTime: string;
+  lunchEndTime: string;
+  part2EndTime: string;
+}
+
+const initialData: AttendanceData[] = [
   {
     name: "John Doe",
     type: "Fixed",
@@ -28,11 +39,11 @@ const initialData = [
   // Add more data as needed
 ];
 
-export function AttendanceComponent() {
-  const [data, setData] = useState(initialData);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterType, setFilterType] = useState("");
-  const [filterSituation, setFilterSituation] = useState("");
+export const AttendanceComponent: React.FC = () => {
+  const [data] = useState<AttendanceData[]>(initialData);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filterType, setFilterType] = useState<string>("");
+  const [filterSituation, setFilterSituation] = useState<string>("");
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -102,7 +113,8 @@ export function AttendanceComponent() {
         (row) => determineSituation(
           row.part1EndTime,
           row.lunchStartTime,
-          row.lunchEndTime
+          row.lunchEndTime,
+          row.part2EndTime
         ) === "Lunch" && row.type === "Flexible"
       ).length,
       SuperFlexible: filteredData.filter(
@@ -150,10 +162,11 @@ export function AttendanceComponent() {
         filterSituation={filterSituation}
         handleSearch={handleSearch}
         handleFilterTypeChange={handleFilterTypeChange}
-        handleFilterSituationChange={(e) => handleFilterSituationChange(e.target.value)}
-      />
+        handleFilterSituationChange={(e) => handleFilterSituationChange(e.target.value)} handleExportToExcel={function (): void {
+          throw new Error("Function not implemented.");
+        } }      />
       <Summary situationCounts={situationCounts} onFilter={handleFilterSituationChange} />
       <AttendanceTable filteredData={filteredData} />
     </div>
   );
-}
+};
