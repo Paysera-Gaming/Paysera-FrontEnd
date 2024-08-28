@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -29,10 +29,22 @@ type EmployeeDialogProps = {
 };
 
 const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDialogOpen, selectedEmployee, setSelectedEmployee, handleSaveEmployee }) => {
-  // Check if selectedEmployee is null
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const handleInputChange = (field: keyof Employee, value: string) => {
     if (selectedEmployee) {
       setSelectedEmployee({ ...selectedEmployee, [field]: value });
+    }
+  };
+
+  const handleSave = () => {
+    if (selectedEmployee?.password !== selectedEmployee?.confirmPassword) {
+      setErrorMessage("Passwords do not match.");
+      return;
+    }
+    setErrorMessage(null);
+    if (selectedEmployee) {
+      handleSaveEmployee(selectedEmployee);
     }
   };
 
@@ -112,6 +124,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
                 className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
+            {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
           </div>
 
           <div className="border-l border-gray-300"></div>
@@ -160,11 +173,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
         <div className="mt-6 flex justify-end space-x-4">
           <Button onClick={() => setIsDialogOpen(false)} className="bg-gray-500 text-white hover:bg-gray-600 px-4 py-2 rounded">Cancel</Button>
           <Button
-            onClick={() => {
-              if (selectedEmployee) {
-                handleSaveEmployee(selectedEmployee);
-              }
-            }}
+            onClick={handleSave}
             className="bg-green-500 text-white hover:bg-green-600 px-4 py-2 rounded"
           >
             Save
