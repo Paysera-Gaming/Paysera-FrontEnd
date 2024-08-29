@@ -41,13 +41,13 @@ export default function EmployeeInfoCard() {
 					</ul>
 				</CardContent>
 			</Card>
-			<Card className="border-green-600  text-green-600 bg-green-50">
+			<Card className="border-primary  text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out ">
 				<CardHeader className=" pb-0 flex flex-row items-center justify-between">
 					<CardTitle className="">Handbook</CardTitle>
 					<Book></Book>
 				</CardHeader>
 				<CardContent className="">
-					<CardDescription className="text-green-500">
+					<CardDescription className="text-primary">
 						Click here to open
 					</CardDescription>
 				</CardContent>
