@@ -1,5 +1,5 @@
 // src/components/AdminDashboard/CurrentTimeComponent.tsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import '../../admindashboard.css'; // Adjust the path according to your project structure
 
 const CurrentTimeComponent = () => {
