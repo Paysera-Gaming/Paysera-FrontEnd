@@ -33,7 +33,10 @@ export default function LogOutButton() {
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
-				<Button variant={'outline'} className="gap-2 w-full">
+				<Button
+					variant={'outline'}
+					className="gap-2 w-full border-destructive transition-colors ease-in-out hover:text-destructive"
+				>
 					<LogOut></LogOut> <p>Logout</p>{' '}
 				</Button>
 			</AlertDialogTrigger>
