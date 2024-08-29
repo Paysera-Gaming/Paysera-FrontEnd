@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
     Sheet,
@@ -8,7 +7,7 @@ import {
     SheetTrigger,
 } from '@/components/ui/sheet';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { CalendarDays, UsersRound, Settings, Building, Megaphone, LogOut } from 'lucide-react';
+import { CalendarDays, UsersRound, Settings, Building, LogOut } from 'lucide-react';
 
 // Import the Paysera logo
 import PayseraLogo from '/PayseraIcon.svg';
@@ -29,7 +28,6 @@ const SheetComponent = () => {
             { path: '/admin/dashboard', label: 'Attendance', icon: <CalendarDays /> },
             { path: '/admin/manageteams', label: 'Manage Teams', icon: <Building /> },
             { path: '/admin/employeelist', label: 'Employee List', icon: <UsersRound /> },
-            { path: '/admin/announcement', label: 'Announcement', icon: <Megaphone /> },
             { path: '/admin/accountpreferences', label: 'Settings', icon: <Settings /> },
         ];
 

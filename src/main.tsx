@@ -19,7 +19,7 @@ import AdminPage from './pages/AdminPage/AdminPage';
 import AdminManageTeams from './components/AdminDashboard/ManageTeams/index';
 import Settings from './components/AdminDashboard/AccountPreferences';
 import Employee from './components/AdminDashboard/Employee';
-import Announcement from './components/AdminDashboard/Announcement/Announcement';
+
 import './index.css';
 
 import {
@@ -94,10 +94,7 @@ const router = createBrowserRouter([
 				path: 'employeelist',
 				element: <Employee />,
 			},
-			{
-				path: 'announcement',
-				element: <Announcement />, // Add the Announcement route
-			},
+
 		],
 	},
 ]);
