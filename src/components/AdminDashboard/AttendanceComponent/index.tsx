@@ -2,10 +2,25 @@ import React, { useState } from "react";
 import { Filters } from "./Filters";
 import { Summary } from "./Summary";
 import { AttendanceTable } from "./AttendanceTable";
-import { determineSituation } from "./helpers";
 
-// Example initial data
-const initialData = [
+const determineSituation = (part1EndTime: string, lunchStartTime: string, lunchEndTime: string, part2EndTime: string) => {
+  if (part1EndTime === lunchStartTime) return "Lunch";
+  if (lunchEndTime === part2EndTime) return "Leave";
+  return "On Job";
+};
+
+interface AttendanceData {
+  name: string;
+  type: string;
+  date: string;
+  part1StartTime: string;
+  part1EndTime: string;
+  lunchStartTime: string;
+  lunchEndTime: string;
+  part2EndTime: string;
+}
+
+const initialData: AttendanceData[] = [
   {
     name: "John Doe",
     type: "Fixed",
@@ -29,13 +44,12 @@ const initialData = [
   // Add more data as needed
 ];
 
-export function AttendanceComponent() {
-  const [data, setData] = useState(initialData);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterType, setFilterType] = useState("");
-  const [filterSituation, setFilterSituation] = useState("");
+export const AttendanceComponent: React.FC = () => {
+  const [data] = useState<AttendanceData[]>(initialData);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filterType, setFilterType] = useState<string>("");
+  const [filterSituation, setFilterSituation] = useState<string>("");
 
-  // Handle search and filter logic
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
@@ -44,11 +58,10 @@ export function AttendanceComponent() {
     setFilterType(e.target.value);
   };
 
-  const handleFilterSituationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilterSituation(e.target.value);
+  const handleFilterSituationChange = (situation: string) => {
+    setFilterSituation(situation);
   };
 
-  // Filter data based on search and filter criteria
   const filteredData = data.filter((row) => {
     const matchesSearch =
       row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -65,7 +78,6 @@ export function AttendanceComponent() {
     return matchesSearch && matchesType && matchesSituation;
   });
 
-  // Calculate the situation counts for the summary section
   const situationCounts = {
     "On Job": {
       Fixed: filteredData.filter(
@@ -155,10 +167,13 @@ export function AttendanceComponent() {
         filterSituation={filterSituation}
         handleSearch={handleSearch}
         handleFilterTypeChange={handleFilterTypeChange}
-        handleFilterSituationChange={handleFilterSituationChange}
+        handleFilterSituationChange={(e) => handleFilterSituationChange(e.target.value)}
+        handleExportToExcel={function (): void {
+          throw new Error("Function not implemented.");
+        }}
       />
-      <Summary situationCounts={situationCounts} />
+      <Summary situationCounts={situationCounts} onFilter={handleFilterSituationChange} />
       <AttendanceTable filteredData={filteredData} />
     </div>
   );
-}
+};

@@ -14,6 +14,7 @@ const useAnnouncements = () => {
   const [newAnnouncement, setNewAnnouncement] = useState({ title: '', content: '' });
   const [editAnnouncementId, setEditAnnouncementId] = useState(null);
   const [sortOrder, setSortOrder] = useState({ field: '', direction: 'asc' });
+  const [filterStatus, setFilterStatus] = useState(''); // Add filter status state
 
   const itemsPerPage = 5;
 
@@ -82,21 +83,19 @@ const useAnnouncements = () => {
     setAnnouncements(sortedAnnouncements);
   };
 
-  const paginatedAnnouncements = announcements
-    .filter((announcement) =>
-      announcement.title.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const handleFilterByStatus = (status) => {
+    setFilterStatus(status); // Update filter status
+    setCurrentPage(1);
+  };
 
-  const totalPages = Math.ceil(
-    announcements.filter((announcement) =>
-      announcement.title.toLowerCase().includes(searchQuery.toLowerCase())
-    ).length / itemsPerPage
+  const filteredAnnouncements = announcements.filter((announcement) =>
+    announcement.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+    (filterStatus ? announcement.status === filterStatus : true)
   );
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+  const paginatedAnnouncements = filteredAnnouncements.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const totalPages = Math.ceil(filteredAnnouncements.length / itemsPerPage);
 
   const announcementCounts = {
     Published: announcements.filter((a) => a.status === 'Published').length,
@@ -119,10 +118,9 @@ const useAnnouncements = () => {
     totalPages,
     announcementCounts,
     setNewAnnouncement,
-    handlePageChange,
-    handleSort, // Return handleSort
+    handleSort,
+    handleFilterByStatus, // Expose filter function
   };
 };
 
 export default useAnnouncements;
-  

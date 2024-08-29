@@ -4,20 +4,32 @@ import EmployeeDialog from './EmployeeDialog';
 import EmployeeSummary from './EmployeeSummary';
 import { sampleEmployees } from './sampleData';
 import SheetComponent from '../SheetComponent';
-import { PaginationComponent } from '../PaginationComponent';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import ConfirmationDialog from './ConfirmationDialog'; // Import the confirmation dialog
 
-const Employee = () => {
-  const [data, setData] = useState(sampleEmployees);
+// Define the Employee type
+type Employee = {
+  id: number;
+  lastName: string;
+  firstName: string;
+  middleName: string;
+  status: string;
+  team: string;
+  role: string;
+  email: string;
+  type: string;
+};
+
+const EmployeeComponent = () => {
+  const [data, setData] = useState<Employee[]>(sampleEmployees);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const [sortConfig, setSortConfig] = useState({ key: 'lastName', direction: 'ascending' });
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const pageSize = 5;
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null); // Use Employee type
+  const [sortConfig, setSortConfig] = useState<{ key: keyof Employee; direction: "ascending" | "descending" }>({ key: 'lastName', direction: 'ascending' } as { key: keyof Employee; direction: "ascending" | "descending" });
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // State for confirmation dialog
+  const [employeeToDelete, setEmployeeToDelete] = useState<number | null>(null); // Employee ID to delete
 
   const [currentTime, setCurrentTime] = useState<string>('');
 
@@ -37,9 +49,8 @@ const Employee = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    setCurrentPage(1);
   };
 
   const filteredData = data.filter((record) =>
@@ -50,42 +61,54 @@ const Employee = () => {
     (typeFilter !== "all" ? record.type === typeFilter : true)
   );
 
-  const handleSaveEmployee = (updatedEmployee) => {
-    setData(data.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp));
+  const handleSaveEmployee = (updatedEmployee: Employee) => {
+    if (updatedEmployee.id === 0) {
+      // Create new employee
+      const newEmployee = { ...updatedEmployee, id: data.length + 1 };
+      setData([...data, newEmployee]);
+    } else {
+      // Update existing employee
+      setData(data.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp));
+    }
     setIsDialogOpen(false);
   };
 
-  const handleDeleteEmployee = (id) => {
+  const confirmDeleteEmployee = (id: number) => {
     setData(data.filter(emp => emp.id !== id));
+    setIsConfirmationOpen(false);
   };
 
-  const totalPages = Math.ceil(filteredData.length / pageSize);
-  const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const handleDeleteEmployee = (id: number) => {
+    setEmployeeToDelete(id);
+    setIsConfirmationOpen(true); // Open confirmation dialog
+  };
+
+  const handleStatusFilterChange = (status: string) => {
+    setStatusFilter((prevStatus) => (prevStatus === status ? "all" : status));
+  };
 
   // Updated employee counters based on filtered data
-// Updated employee counters based on filtered data
-const employeeCounters = {
-  totalActive: filteredData.filter(emp => emp.status === 'Active').length,
-  activeFixed: filteredData.filter(emp => emp.status === 'Active' && emp.type === 'Fixed').length,
-  activeFlexible: filteredData.filter(emp => emp.status === 'Active' && emp.type === 'Flexible').length,
-  activeSuperFlexible: filteredData.filter(emp => emp.status === 'Active' && emp.type === 'Super Flexible').length,
+  const employeeCounters = {
+    totalActive: filteredData.filter(emp => emp.status === 'Active').length,
+    activeFixed: filteredData.filter(emp => emp.status === 'Active' && emp.type === 'Fixed').length,
+    activeFlexible: filteredData.filter(emp => emp.status === 'Active' && emp.type === 'Flexible').length,
+    activeSuperFlexible: filteredData.filter(emp => emp.status === 'Active' && emp.type === 'Super Flexible').length,
 
-  totalOnLunch: filteredData.filter(emp => emp.status === 'Lunch').length,
-  lunchFixed: filteredData.filter(emp => emp.status === 'Lunch' && emp.type === 'Fixed').length,
-  lunchFlexible: filteredData.filter(emp => emp.status === 'Lunch' && emp.type === 'Flexible').length,
-  lunchSuperFlexible: filteredData.filter(emp => emp.status === 'Lunch' && emp.type === 'Super Flexible').length,
+    totalOnLunch: filteredData.filter(emp => emp.status === 'Lunch').length,
+    lunchFixed: filteredData.filter(emp => emp.status === 'Lunch' && emp.type === 'Fixed').length,
+    lunchFlexible: filteredData.filter(emp => emp.status === 'Lunch' && emp.type === 'Flexible').length,
+    lunchSuperFlexible: filteredData.filter(emp => emp.status === 'Lunch' && emp.type === 'Super Flexible').length,
 
-  totalOnLeave: filteredData.filter(emp => emp.status === 'Leave').length,
-  leaveFixed: filteredData.filter(emp => emp.status === 'Leave' && emp.type === 'Fixed').length,
-  leaveFlexible: filteredData.filter(emp => emp.status === 'Leave' && emp.type === 'Flexible').length,
-  leaveSuperFlexible: filteredData.filter(emp => emp.status === 'Leave' && emp.type === 'Super Flexible').length,
+    totalOnLeave: filteredData.filter(emp => emp.status === 'Leave').length,
+    leaveFixed: filteredData.filter(emp => emp.status === 'Leave' && emp.type === 'Fixed').length,
+    leaveFlexible: filteredData.filter(emp => emp.status === 'Leave' && emp.type === 'Flexible').length,
+    leaveSuperFlexible: filteredData.filter(emp => emp.status === 'Leave' && emp.type === 'Super Flexible').length,
 
-  totalOffline: filteredData.filter(emp => emp.status === 'Offline').length,
-  offlineFixed: filteredData.filter(emp => emp.status === 'Offline' && emp.type === 'Fixed').length,
-  offlineFlexible: filteredData.filter(emp => emp.status === 'Offline' && emp.type === 'Flexible').length,
-  offlineSuperFlexible: filteredData.filter(emp => emp.status === 'Offline' && emp.type === 'Super Flexible').length,
-};
-
+    totalOffline: filteredData.filter(emp => emp.status === 'Offline').length,
+    offlineFixed: filteredData.filter(emp => emp.status === 'Offline' && emp.type === 'Fixed').length,
+    offlineFlexible: filteredData.filter(emp => emp.status === 'Offline' && emp.type === 'Flexible').length,
+    offlineSuperFlexible: filteredData.filter(emp => emp.status === 'Offline' && emp.type === 'Super Flexible').length,
+  };
 
   return (
     <div className="dashboard-container">
@@ -101,65 +124,67 @@ const employeeCounters = {
       </header>
 
       <main className="main-content container mx-auto p-11">
-      <div className="flex items-center mb-0 space-x-3">
-  <input
-    type="text"
-    placeholder="Search"
-    value={searchQuery}
-    onChange={handleSearch}
-    className="border rounded p-1.5 w-36 max-w-full"
-  />
-  <Select
-    value={statusFilter}
-    onValueChange={(value) => setStatusFilter(value)}
-  >
-    <SelectTrigger className="w-32">
-      <SelectValue placeholder="Status" />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectItem value="all">All Statuses</SelectItem>
-      <SelectItem value="Active">Active</SelectItem>
-      <SelectItem value="Offline">Offline</SelectItem>
-      <SelectItem value="Lunch">On Lunch</SelectItem>
-      <SelectItem value="Leave">On Leave</SelectItem>
-    </SelectContent>
-  </Select>
-  <Select
-    value={typeFilter}
-    onValueChange={(value) => setTypeFilter(value)}
-  >
-    <SelectTrigger className="w-32">
-      <SelectValue placeholder="Type" />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectItem value="all">All Types</SelectItem>
-      <SelectItem value="Fixed">Fixed</SelectItem>
-      <SelectItem value="Flexible">Flexible</SelectItem>
-      <SelectItem value="Super Flexible">Super Flexible</SelectItem>
-    </SelectContent>
-  </Select>
-</div>
+        <div className="flex items-center mb-0 space-x-3">
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={handleSearch}
+            className="border rounded p-1.5 w-36 max-w-full"
+          />
+          <Select
+            value={statusFilter}
+            onValueChange={(value) => setStatusFilter(value)}
+          >
+            <SelectTrigger className="w-32">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="Active">Active</SelectItem>
+              <SelectItem value="Offline">Offline</SelectItem>
 
+            </SelectContent>
+          </Select>
+          <Select
+            value={typeFilter}
+            onValueChange={(value) => setTypeFilter(value)}
+          >
+            <SelectTrigger className="w-32">
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="Fixed">Fixed</SelectItem>
+              <SelectItem value="Flexible">Flexible</SelectItem>
+              <SelectItem value="Super Flexible">Super Flexible</SelectItem>
+            </SelectContent>
+          </Select>
+          <button
+            onClick={() => {
+              setSelectedEmployee({ id: 0, lastName: '', firstName: '', middleName: '', status: 'Active', team: '', role: '', email: '', type: 'Fixed' });
+              setIsDialogOpen(true);
+            }}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Create Employee
+          </button>
+        </div>
 
-        <EmployeeSummary {...employeeCounters} />
-
-        <EmployeeTable
-          data={paginatedData}
-          setSelectedEmployee={setSelectedEmployee}
-          setIsDialogOpen={setIsDialogOpen}
-          handleDeleteEmployee={handleDeleteEmployee}
-          sortConfig={sortConfig}
-          setSortConfig={setSortConfig}
-          setData={setData}
+        <EmployeeSummary 
+          {...employeeCounters} 
+          onStatusFilterChange={handleStatusFilterChange} // Pass the filter change handler
         />
 
-        <div className="flex justify-center mt-4">
-          <PaginationComponent
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
+        <EmployeeTable
+          data={filteredData}
+          setSelectedEmployee={setSelectedEmployee} // Adjusted to match the type
+          setIsDialogOpen={setIsDialogOpen}
+          handleDeleteEmployee={handleDeleteEmployee}
+          setSortConfig={sortConfig}
+          sortConfig={setSortConfig}
+          setData={setData}
+        />
 
         <EmployeeDialog
           isDialogOpen={isDialogOpen}
@@ -168,9 +193,16 @@ const employeeCounters = {
           setSelectedEmployee={setSelectedEmployee}
           handleSaveEmployee={handleSaveEmployee}
         />
+
+        <ConfirmationDialog
+          isOpen={isConfirmationOpen}
+          onClose={() => setIsConfirmationOpen(false)}
+          onConfirm={() => employeeToDelete !== null && confirmDeleteEmployee(employeeToDelete)}
+          message="Are you sure you want to delete this employee?"
+        />
       </main>
     </div>
   );
 };
 
-export default Employee;
+export default EmployeeComponent;

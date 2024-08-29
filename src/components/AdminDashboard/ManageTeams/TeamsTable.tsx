@@ -1,10 +1,17 @@
-import React from 'react';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 
-const TeamsTable = ({ paginatedData, handleEditTeam, handleDeleteTeams, handleSort }) => (
+type TeamsTableProps = {
+  paginatedData: YourDataType; // Replace 'YourDataType' with the actual type of 'paginatedData'
+  handleEditTeam: (team: YourTeamType) => void; // Replace 'YourTeamType' with the actual type of 'team'
+  handleDeleteTeams: (id: number) => void; // Replace 'number' with the actual type of 'id'
+  handleSort: (sortKey: string) => void; // Replace 'string' with the actual type of 'sortKey'
+};
+
+const TeamsTable = ({ paginatedData, handleEditTeam, handleDeleteTeams, handleSort }: TeamsTableProps) => (
   <Table className="w-full border-collapse">
-    <TableCaption>Details of teams and their statuses.</TableCaption>
+    {/* <TableCaption>Details of teams and their statuses.</TableCaption> */}
     <TableHeader>
       <TableRow>
         <TableHead className="text-center border-x cursor-pointer" onClick={() => handleSort('name')}>Team Leader Name</TableHead>
@@ -16,7 +23,7 @@ const TeamsTable = ({ paginatedData, handleEditTeam, handleDeleteTeams, handleSo
     </TableHeader>
     <TableBody>
       {paginatedData.length > 0 ? (
-        paginatedData.map((team) => (
+        paginatedData.map((team: { id: Key | null | undefined; name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; Department: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; teamLeaderEmail: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; members: any[]; }) => (
           <TableRow key={team.id}>
             <TableCell className="text-center border-x">{team.name}</TableCell>
             <TableCell className="text-center border-x">{team.Department}</TableCell>
@@ -30,7 +37,7 @@ const TeamsTable = ({ paginatedData, handleEditTeam, handleDeleteTeams, handleSo
             <TableCell className="text-center border-x">
               <div className="space-x-2">
                 <Button onClick={() => handleEditTeam(team)} className="bg-blue-500 text-white hover:bg-blue-700">Edit</Button>
-                <Button onClick={() => handleDeleteTeams(team.id)} className="bg-red-500 text-white hover:bg-red-700">Delete</Button>
+                <Button onClick={() => handleDeleteTeams(team.id as number)} className="bg-red-500 text-white hover:bg-red-700">Delete</Button>
               </div>
             </TableCell>
           </TableRow>

@@ -1,6 +1,5 @@
 // src/components/PaginationComponent.tsx
 
-import React from 'react';
 import {
   Pagination,
   PaginationContent,

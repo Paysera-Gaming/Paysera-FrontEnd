@@ -4,7 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { isValidName, isValidEmail } from './validation';
 
-const AddEditTeamDialog = ({ isDialogOpen, setIsDialogOpen, selectedTeam, setSelectedTeam, handleSaveTeam }) => {
+type AddEditTeamDialogProps = {
+  isDialogOpen: boolean;
+  setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedTeam: Team;
+  setSelectedTeam: React.Dispatch<React.SetStateAction<Team>>;
+  handleSaveTeam: () => void;
+};
+
+const AddEditTeamDialog = ({ isDialogOpen, setIsDialogOpen, selectedTeam, setSelectedTeam, handleSaveTeam }: AddEditTeamDialogProps) => {
   const [newMember, setNewMember] = useState("");
   const [errors, setErrors] = useState({ name: '', email: '' });
 
@@ -15,8 +23,8 @@ const AddEditTeamDialog = ({ isDialogOpen, setIsDialogOpen, selectedTeam, setSel
     }
   };
 
-  const handleDeleteMember = (member) => {
-    setSelectedTeam({ ...selectedTeam, members: selectedTeam.members.filter((m) => m !== member) });
+  const handleDeleteMember = (member: any) => {
+    setSelectedTeam({ ...selectedTeam, members: selectedTeam.members.filter((m: any) => m !== member) });
   };
 
   const saveTeam = () => {
@@ -93,7 +101,7 @@ const AddEditTeamDialog = ({ isDialogOpen, setIsDialogOpen, selectedTeam, setSel
             <Button onClick={handleAddMember} className="bg-green-500 text-white hover:bg-green-600">Add</Button>
           </div>
           <div className="flex flex-wrap">
-            {selectedTeam.members.map((member, index) => (
+            {selectedTeam.members.map((member: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined, index: React.Key | null | undefined) => (
               <div key={index} className="bg-gray-200 rounded-full px-4 py-2 mb-2 mr-2 flex items-center space-x-2">
                 <span>{member}</span>
                 <button onClick={() => handleDeleteMember(member)} className="text-red-500 hover:text-red-700">×</button>
