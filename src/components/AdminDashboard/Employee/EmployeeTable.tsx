@@ -1,20 +1,49 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
-const statusColors = {
+const statusColors: { [key: string]: string } = {
   Active: 'bg-green-500',
   Leave: 'bg-red-500',
   Lunch: 'bg-orange-500',
   Offline: 'bg-gray-500'
 };
 
-const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDeleteEmployee }) => {
-  const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
+interface Employee {
+  id: number;
+  lastName: string;
+  firstName: string;
+  middleName: string;
+  status: string;
+  team: string;
+  role: string;
+  email: string;
+  type: string;
+}
 
-  const handleSort = (key) => {
-    let direction = 'ascending';
+interface EmployeeTableProps {
+  data: Employee[];
+  setSelectedEmployee: (employee: Employee | null) => void;
+  setIsDialogOpen: (isOpen: boolean) => void;
+  handleDeleteEmployee: (id: number) => void;
+  sortConfig: { key: keyof Employee | '', direction: 'ascending' | 'descending' | '' };
+  setSortConfig: React.Dispatch<React.SetStateAction<{ key: keyof Employee | '', direction: 'ascending' | 'descending' | '' }>>;
+  setData: React.Dispatch<React.SetStateAction<Employee[]>>;
+}
+
+const EmployeeTable: React.FC<EmployeeTableProps> = ({
+  data,
+  setSelectedEmployee,
+  setIsDialogOpen,
+  handleDeleteEmployee,
+  sortConfig,
+  setSortConfig,
+  setData,
+}) => {
+
+  const handleSort = (key: keyof Employee) => {
+    let direction: 'ascending' | 'descending' = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
       direction = 'descending';
     }
@@ -22,18 +51,35 @@ const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDelet
   };
 
   const sortedData = [...data].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
+    if (sortConfig.key !== '' && a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === 'ascending' ? -1 : 1;
     }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
+    if (sortConfig.key !== '' && a[sortConfig.key] > b[sortConfig.key]) {
       return sortConfig.direction === 'ascending' ? 1 : -1;
     }
     return 0;
   });
 
-  const handleEditEmployee = (employee) => {
+  const handleEditEmployee = (employee: Employee) => {
     setSelectedEmployee(employee);
     setIsDialogOpen(true);
+  };
+
+  const updateEmployeeStatus = (employee: Employee) => {
+    let updatedStatus = employee.status;
+
+    if (employee.status === "Leave") {
+      updatedStatus = "Offline";
+    } else if (employee.status === "Lunch") {
+      updatedStatus = "Active";
+    }
+
+    const updatedEmployee = { ...employee, status: updatedStatus };
+    setData(prevData =>
+      prevData.map(emp =>
+        emp.id === updatedEmployee.id ? updatedEmployee : emp
+      )
+    );
   };
 
   return (
@@ -41,7 +87,7 @@ const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDelet
       <TableHeader>
         <TableRow>
           <TableHead
-            className="text-center border-x cursor-pointer"
+            className="text-left border-x cursor-pointer"
             onClick={() => handleSort('lastName')}
           >
             Full Name {sortConfig.key === 'lastName' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
@@ -70,10 +116,12 @@ const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDelet
       <TableBody>
         {sortedData.map(employee => (
           <TableRow key={employee.id}>
-            <TableCell className="text-center border-x">{`${employee.lastName}, ${employee.firstName} ${employee.middleName}`}</TableCell>
+            <TableCell className="text-left border-x flex items-center space-x-2">
+              <span className={`inline-block w-3 h-3 rounded-full ${statusColors[employee.status]}`}></span>
+              <span>{`${employee.lastName}, ${employee.firstName} ${employee.middleName}`}</span>
+            </TableCell>
             <TableCell className="text-center border-x">
               <div className="flex items-center justify-center space-x-2">
-                <span className={`inline-block w-3 h-3 rounded-full ${statusColors[employee.status]}`}></span>
                 <span>{employee.status}</span>
               </div>
             </TableCell>
@@ -93,12 +141,22 @@ const EmployeeTable = ({ data, setSelectedEmployee, setIsDialogOpen, handleDelet
                   <TooltipContent>Edit Employee</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <Button
-                onClick={() => handleDeleteEmployee(employee.id)}
-                className="bg-red-500 text-white hover:bg-red-700"
-              >
-                Delete
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={() => {
+                        updateEmployeeStatus(employee);
+                        handleDeleteEmployee(employee.id);
+                      }}
+                      className="bg-red-500 text-white hover:bg-red-700"
+                    >
+                      Delete
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Delete Employee</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </TableCell>
           </TableRow>
         ))}
