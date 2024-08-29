@@ -39,7 +39,7 @@ const ManageTeams = () => {
     setIsDialogOpen(true);
   };
 
-  const handleEditTeam = (team) => {
+  const handleEditTeam = (team: React.SetStateAction<{ id: null; name: string; Department: string; teamLeaderEmail: string; members: never[]; }>) => {
     setSelectedTeam(team);
     setIsDialogOpen(true);
   };
@@ -52,7 +52,7 @@ const ManageTeams = () => {
     }
   };
 
-  const openConfirmationDialog = (teamId) => {
+  const openConfirmationDialog = (teamId: number) => {
     setSelectedTeam(teams.find(team => team.id === teamId) || { id: null, name: '', Department: '', teamLeaderEmail: '', members: [] });
     setIsConfirmationDialogOpen(true);
   };
@@ -68,12 +68,12 @@ const ManageTeams = () => {
     setIsConfirmationDialogOpen(false);
   };
 
-  const handleSort = (key) => {
-    const sortedTeams = [...teams].sort((a, b) => a[key].localeCompare(b[key]));
+  const handleSort = (key: string | number) => {
+    const sortedTeams = [...teams].sort((a, b) => (a as any)[key].localeCompare((b as any)[key]));
     setTeams(sortedTeams);
   };
 
-  const handleSearch = (event) => {
+  const handleSearch = (event: { target: { value: string; }; }) => {
     setSearchQuery(event.target.value.toLowerCase());
     setCurrentPage(1); // Reset to first page on search
   };
@@ -122,7 +122,6 @@ const ManageTeams = () => {
         <TeamStats totalTeams={totalTeams} totalDepartments={totalDepartments} />
 
         <TeamsTable
-          className="relative w-full overflow-auto bg-white rounded-lg shadow-md px-12"
           paginatedData={paginatedTeams} // Pass the paginated teams
           handleEditTeam={handleEditTeam}
           handleDeleteTeams={openConfirmationDialog} // Pass the function to open the confirmation dialog

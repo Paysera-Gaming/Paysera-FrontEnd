@@ -1,7 +1,6 @@
-import React from 'react';
 import { Handshake, Building2 } from 'lucide-react';
 
-const TeamStats = ({ totalTeams, totalDepartments }) => (
+const TeamStats = ({ totalTeams, totalDepartments }: { totalTeams: number, totalDepartments: number }) => (
   <div className="flex justify-center mb-0 space-x-4 mt-0">
     {/* Added mt-8 for more space */}
     <div className="flex-1 p-4 bg-blue-100 border border-blue-300 rounded-md text-center shadow-sm">
