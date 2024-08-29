@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '../../ui/avatar';
 
 const AvatarUpload = () => {
