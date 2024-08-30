@@ -25,31 +25,24 @@ const EmployeeComponent = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null); // Use Employee type
-  const [sortConfig, setSortConfig] = useState<{ key: keyof Employee; direction: "ascending" | "descending" }>({ key: 'lastName', direction: 'ascending' } as { key: keyof Employee; direction: "ascending" | "descending" });
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // State for confirmation dialog
-  const [employeeToDelete, setEmployeeToDelete] = useState<number | null>(null); // Employee ID to delete
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [sortConfig, setSortConfig] = useState<{ key: keyof Employee; direction: "ascending" | "descending" }>({ key: 'lastName', direction: 'ascending' });
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [employeeToDelete, setEmployeeToDelete] = useState<number | null>(null);
 
-  // Use useEffect to fetch data when the component mounts
+  // Fetch data from API
   useEffect(() => {
-    // Fetch data using Axios
     axios.get('https://192.168.3.50:8080/api/employee')
       .then(response => {
-        // Set the employee data from the response
         setData(response.data);
-        console.log(response.data);
       })
       .catch(error => {
-        // Handle any errors
         console.log(error);
         alert('An error occurred while fetching the data');
       });
-  }, []); // Empty array means this runs once when the component mounts
+  }, []);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
+  // Filter and search employees
   const filteredData = data.filter((record) =>
     (record.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       record.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -58,18 +51,18 @@ const EmployeeComponent = () => {
     (typeFilter !== "all" ? record.accessLevel === typeFilter : true)
   );
 
+  // Save employee data
   const handleSaveEmployee = (updatedEmployee: Employee) => {
     if (updatedEmployee.id === 0) {
-      // Create new employee
       const newEmployee = { ...updatedEmployee, id: data.length + 1 };
       setData([...data, newEmployee]);
     } else {
-      // Update existing employee
       setData(data.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp));
     }
     setIsDialogOpen(false);
   };
 
+  // Handle employee deletion
   const confirmDeleteEmployee = (id: number) => {
     setData(data.filter(emp => emp.id !== id));
     setIsConfirmationOpen(false);
@@ -77,22 +70,20 @@ const EmployeeComponent = () => {
 
   const handleDeleteEmployee = (id: number) => {
     setEmployeeToDelete(id);
-    setIsConfirmationOpen(true); // Open confirmation dialog
+    setIsConfirmationOpen(true);
   };
 
+  // Handle status filter change
   const handleStatusFilterChange = (status: string) => {
     setStatusFilter((prevStatus) => (prevStatus === status ? "all" : status));
   };
 
-  // Updated employee counters based on filtered data
+  // Employee counters
   const employeeCounters = {
     totalActive: filteredData.filter(emp => emp.isActive).length,
-    activeAdmin: filteredData.filter(emp => emp.isActive && emp.accessLevel === 'ADMIN').length,
-    activeUser: filteredData.filter(emp => emp.isActive && emp.accessLevel === 'USER').length,
-
     totalInactive: filteredData.filter(emp => !emp.isActive).length,
+    activeAdmin: filteredData.filter(emp => emp.isActive && emp.accessLevel === 'ADMIN').length,
     inactiveAdmin: filteredData.filter(emp => !emp.isActive && emp.accessLevel === 'ADMIN').length,
-    inactiveUser: filteredData.filter(emp => !emp.isActive && emp.accessLevel === 'USER').length,
   };
 
   return (
@@ -110,7 +101,7 @@ const EmployeeComponent = () => {
             type="text"
             placeholder="Search"
             value={searchQuery}
-            onChange={handleSearch}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="border rounded p-1.5 w-36 max-w-full"
           />
           <Select
@@ -152,16 +143,16 @@ const EmployeeComponent = () => {
 
         <EmployeeSummary
           {...employeeCounters}
-          onStatusFilterChange={handleStatusFilterChange} // Pass the filter change handler
+          onStatusFilterChange={handleStatusFilterChange}
         />
 
         <EmployeeTable
           data={filteredData}
-          setSelectedEmployee={setSelectedEmployee} // Adjusted to match the type
+          setSelectedEmployee={setSelectedEmployee}
           setIsDialogOpen={setIsDialogOpen}
           handleDeleteEmployee={handleDeleteEmployee}
-          setSortConfig={sortConfig}
-          sortConfig={setSortConfig}
+          setSortConfig={setSortConfig}
+          sortConfig={sortConfig}
           setData={setData}
         />
 
