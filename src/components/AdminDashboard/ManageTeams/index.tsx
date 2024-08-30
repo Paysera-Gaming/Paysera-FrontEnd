@@ -4,7 +4,6 @@ import TeamsTable from './TeamsTable';
 import TeamStats from './TeamStats';
 import SheetComponent from '../SheetComponent';
 import { initialTeams } from './teamData';
-import { PaginationComponent } from '../PaginationComponent'; // Assuming you have this component
 import ConfirmationDialog from './ConfirmationDialog'; // Import the new dialog component
 
 const ManageTeams = () => {
@@ -13,8 +12,6 @@ const ManageTeams = () => {
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false); // State for confirmation dialog
   const [selectedTeam, setSelectedTeam] = useState({ id: null, name: '', Department: '', teamLeaderEmail: '', members: [] });
   const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1); // Add pagination state
-  const pageSize = 5; // Number of items per page
 
   const [currentTime, setCurrentTime] = useState<string>('');
 
@@ -75,7 +72,6 @@ const ManageTeams = () => {
 
   const handleSearch = (event: { target: { value: string; }; }) => {
     setSearchQuery(event.target.value.toLowerCase());
-    setCurrentPage(1); // Reset to first page on search
   };
 
   const filteredTeams = teams.filter((team) => 
@@ -85,9 +81,6 @@ const ManageTeams = () => {
 
   const totalTeams = teams.length;
   const totalDepartments = new Set(teams.map(team => team.Department)).size;
-
-  const totalPages = Math.ceil(filteredTeams.length / pageSize); // Calculate total pages
-  const paginatedTeams = filteredTeams.slice((currentPage - 1) * pageSize, currentPage * pageSize); // Paginate teams
 
   return (
     <div className="dashboard-container">
@@ -122,20 +115,11 @@ const ManageTeams = () => {
         <TeamStats totalTeams={totalTeams} totalDepartments={totalDepartments} />
 
         <TeamsTable
-          paginatedData={paginatedTeams} // Pass the paginated teams
+          paginatedData={filteredTeams} // Pass the filtered teams
           handleEditTeam={handleEditTeam}
           handleDeleteTeams={openConfirmationDialog} // Pass the function to open the confirmation dialog
           handleSort={handleSort}
         />
-        
-        {/* Pagination Component */}
-        <div className="flex justify-center mt-4">
-          <PaginationComponent
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
         
         <AddEditTeamDialog
           isDialogOpen={isDialogOpen}

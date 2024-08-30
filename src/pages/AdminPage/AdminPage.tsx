@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { AttendanceComponent } from '@/components/AdminDashboard/AttendanceComponent/index.tsx';
-import { PaginationComponent } from '@/components/AdminDashboard/PaginationComponent';
 import SheetComponent from '@/components/AdminDashboard/SheetComponent';
 
 // Import CSS files
@@ -15,44 +14,43 @@ import '../../css/AdminDashboard/status-situation.css';
 import '../../css/AdminDashboard/table.css';
 
 function AdminPage() {
-	const [currentTime, setCurrentTime] = useState<string>('');
+    const [currentTime, setCurrentTime] = useState<string>('');
 
-	useEffect(() => {
-		const updateClock = () => {
-			const now = new Date();
-			const formattedTime = now.toLocaleTimeString([], {
-				hour: '2-digit',
-				minute: '2-digit',
-				second: '2-digit',
-			});
-			setCurrentTime(formattedTime);
-		};
+    useEffect(() => {
+        const updateClock = () => {
+            const now = new Date();
+            const formattedTime = now.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+            });
+            setCurrentTime(formattedTime);
+        };
 
-		const intervalId = setInterval(updateClock, 1000);
+        const intervalId = setInterval(updateClock, 1000);
 
-		return () => clearInterval(intervalId);
-	}, []);
+        return () => clearInterval(intervalId);
+    }, []);
 
-	return (
-		<div className="dashboard-container">
-			<header className="header">
-				<div className="header-left">
-					<h1>Attendance Dashboard</h1>
-					<p className="header-subtitle">Manage your records efficiently</p>
-				</div>
-				<div className="header-right">
-					<SheetComponent /> {/* Profile component */}
-					<div className="current-time">{currentTime}</div>
-				</div>
-			</header>
-			<main className="main-content">
-				<section className="table-section">
-					<AttendanceComponent />
-					<PaginationComponent />
-				</section>
-			</main>
-		</div>
-	);
+    return (
+        <div className="dashboard-container">
+            <header className="header">
+                <div className="header-left">
+                    <h1>Attendance Dashboard</h1>
+                    <p className="header-subtitle">Manage your records efficiently</p>
+                </div>
+                <div className="header-right">
+                    <SheetComponent /> {/* Profile component */}
+                    <div className="current-time">{currentTime}</div>
+                </div>
+            </header>
+            <main className="main-content">
+                <section className="table-section">
+                    <AttendanceComponent />
+                </section>
+            </main>
+        </div>
+    );
 }
 
 export default AdminPage;
