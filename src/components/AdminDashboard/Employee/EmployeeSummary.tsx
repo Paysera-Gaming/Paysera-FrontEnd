@@ -39,18 +39,36 @@ const EmployeeSummary = ({
   offlineSuperFlexible,
   onStatusFilterChange,
 }: EmployeeSummaryProps) => {
+  // Ensure all values are valid numbers
+  const safeTotalActive = isNaN(totalActive) ? 0 : totalActive;
+  const safeActiveFixed = isNaN(activeFixed) ? 0 : activeFixed;
+  const safeActiveFlexible = isNaN(activeFlexible) ? 0 : activeFlexible;
+  const safeActiveSuperFlexible = isNaN(activeSuperFlexible) ? 0 : activeSuperFlexible;
+  const safeTotalOnLunch = isNaN(totalOnLunch) ? 0 : totalOnLunch;
+  const safeLunchFixed = isNaN(lunchFixed) ? 0 : lunchFixed;
+  const safeLunchFlexible = isNaN(lunchFlexible) ? 0 : lunchFlexible;
+  const safeLunchSuperFlexible = isNaN(lunchSuperFlexible) ? 0 : lunchSuperFlexible;
+  const safeTotalOnLeave = isNaN(totalOnLeave) ? 0 : totalOnLeave;
+  const safeLeaveFixed = isNaN(leaveFixed) ? 0 : leaveFixed;
+  const safeLeaveFlexible = isNaN(leaveFlexible) ? 0 : leaveFlexible;
+  const safeLeaveSuperFlexible = isNaN(leaveSuperFlexible) ? 0 : leaveSuperFlexible;
+  const safeTotalOffline = isNaN(totalOffline) ? 0 : totalOffline;
+  const safeOfflineFixed = isNaN(offlineFixed) ? 0 : offlineFixed;
+  const safeOfflineFlexible = isNaN(offlineFlexible) ? 0 : offlineFlexible;
+  const safeOfflineSuperFlexible = isNaN(offlineSuperFlexible) ? 0 : offlineSuperFlexible;
+
   // Calculate the overall total by summing all status counts
   const totalOverall =
-    totalActive + totalOnLunch + totalOnLeave + totalOffline;
+    safeTotalActive + safeTotalOnLunch + safeTotalOnLeave + safeTotalOffline;
   const overallFixed =
-    activeFixed + lunchFixed + leaveFixed + offlineFixed;
+    safeActiveFixed + safeLunchFixed + safeLeaveFixed + safeOfflineFixed;
   const overallFlexible =
-    activeFlexible + lunchFlexible + leaveFlexible + offlineFlexible;
+    safeActiveFlexible + safeLunchFlexible + safeLeaveFlexible + safeOfflineFlexible;
   const overallSuperFlexible =
-    activeSuperFlexible +
-    lunchSuperFlexible +
-    leaveSuperFlexible +
-    offlineSuperFlexible;
+    safeActiveSuperFlexible +
+    safeLunchSuperFlexible +
+    safeLeaveSuperFlexible +
+    safeOfflineSuperFlexible;
 
   const summaryItems = [
     {
@@ -68,23 +86,22 @@ const EmployeeSummary = ({
     },
     {
       title: 'Active',
-      count: totalActive,
-      fixed: activeFixed,
-      flexible: activeFlexible,
-      superFlexible: activeSuperFlexible,
+      count: safeTotalActive,
+      fixed: safeActiveFixed,
+      flexible: safeActiveFlexible,
+      superFlexible: safeActiveSuperFlexible,
       color: 'bg-green-100',
       borderColor: 'border-green-300',
       textColor: 'text-green-600',
       icon: <LogIn className="w-6 h-6 text-green-600" />,
       status: 'Active',
     },
-
     {
       title: 'Offline',
-      count: totalOffline,
-      fixed: offlineFixed,
-      flexible: offlineFlexible,
-      superFlexible: offlineSuperFlexible,
+      count: safeTotalOffline,
+      fixed: safeOfflineFixed,
+      flexible: safeOfflineFlexible,
+      superFlexible: safeOfflineSuperFlexible,
       color: 'bg-gray-100',
       borderColor: 'border-gray-300',
       textColor: 'text-gray-600',
