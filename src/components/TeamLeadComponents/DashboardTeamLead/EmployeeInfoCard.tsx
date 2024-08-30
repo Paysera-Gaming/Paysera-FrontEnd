@@ -19,25 +19,12 @@ export default function EmployeeInfoCard() {
 				</CardHeader>
 				<CardContent>
 					<ul>
-						<li>
-							<b>Name:</b> John Doe
-						</li>
-						<li>
-							<b>Department: </b> Utilities
-						</li>
-						<li>
-							<b>Role:</b> <Badge className="bg-yellow-500"> Team Lead</Badge>
-						</li>
-						<li>
-							<b> Overtime: </b>
-							<Badge variant={'default'}> Allowed</Badge>
-						</li>
-						<li>
-							<b>Sched type:</b> <Badge className="bg-purple-500">Flexi</Badge>
-						</li>
-						<li>
-							<b>Today's Schedule</b>: 8:00 - 15:00
-						</li>
+						<li>Name: John Doe</li>
+						<li>Department: Utilities</li>
+						<li>Role:Team Lead</li>
+						<li>Overtime: Allowed</li>
+						<li>Sched type: Flexi</li>
+						<li>Today's Schedule: 8:00 - 15:00</li>
 					</ul>
 				</CardContent>
 			</Card>
