@@ -19,7 +19,7 @@ export default function EmployeeInfoCard() {
 					<ul>
 						<li>Name: John Doe</li>
 						<li>Department: Utilities</li>
-						<li>Role:Team Lead</li>
+						<li>Role: Team Lead</li>
 						<li>Overtime: Allowed</li>
 						<li>Sched type: Flexi</li>
 						<li>Today's Schedule: 8:00 - 15:00</li>
