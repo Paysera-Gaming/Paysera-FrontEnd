@@ -52,13 +52,13 @@ const EmployeeSummary = ({
           onClick={() => onStatusFilterChange(status)}
           className={`p-4 rounded-lg border ${borderColor} ${color} text-center shadow-md cursor-pointer transform transition-transform duration-200 hover:-translate-y-1`}
         >
-          <div className="flex flex-col items-center">
-            <div className={`p-2 rounded-full ${textColor} mb-2`}>
+          <div className="flex items-center justify-center mb-2">
+            <div className={`p-2 rounded-full ${textColor} mr-2`}>
               {icon}
             </div>
-            <h2 className={`font-semibold ${textColor} text-lg`}>{title}</h2>
-            <p className={`font-bold text-3xl text-black`}>{count}</p> {/* Total count number font color is black */}
+            <p className={`font-bold text-3xl text-black`}>{count}</p>
           </div>
+          <h2 className={`font-semibold ${textColor} text-lg`}>{title}</h2>
         </div>
       ))}
     </div>
