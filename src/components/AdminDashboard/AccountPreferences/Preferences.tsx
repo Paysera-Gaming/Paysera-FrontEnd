@@ -1,6 +1,6 @@
 import { Switch } from '../../ui/switch';
 
-const Preferences = ({ darkMode, setDarkMode }) => {
+const Preferences = ({ darkMode, setDarkMode }: { darkMode: boolean, setDarkMode: (arg0: boolean) => void }) => {
   return (
     <section className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
       <h3 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">Preferences</h3>
