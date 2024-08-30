@@ -130,7 +130,7 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">Submit</Button>
+				<Button type="submit">Start</Button>
 
 				<AlertDialog open={isOpen} onOpenChange={setIsOpen}>
 					<AlertDialogContent>

@@ -1,9 +1,7 @@
-import { Badge } from '@/components/ui/badge';
 import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
@@ -19,36 +17,23 @@ export default function EmployeeInfoCard() {
 				</CardHeader>
 				<CardContent>
 					<ul>
-						<li>
-							<b>Name:</b> John Doe
-						</li>
-						<li>
-							<b>Department: </b>Call Center
-						</li>
-						<li>
-							<b>Role:</b> <Badge> Team Lead</Badge>
-						</li>
-						<li>
-							<b> Overtime: </b>
-							<Badge variant={'default'}> Allowed</Badge>
-						</li>
-						<li>
-							<b>Sched type:</b> <Badge>Flexi</Badge>
-						</li>
-						<li>
-							<b>Today's Schedule</b>: 8:00 - 15:00
-						</li>
+						<li>Name: John Doe</li>
+						<li>Department: Utilities</li>
+						<li>Role:Team Lead</li>
+						<li>Overtime: Allowed</li>
+						<li>Sched type: Flexi</li>
+						<li>Today's Schedule: 8:00 - 15:00</li>
 					</ul>
 				</CardContent>
 			</Card>
-			<Card className="border-primary  text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out ">
+			<Card className="select-none border-primary hover:cursor-pointer text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out ">
 				<CardHeader className=" pb-0 flex flex-row items-center justify-between">
-					<CardTitle className="">Handbook</CardTitle>
+					<CardTitle className="">Employee Handbook</CardTitle>
 					<Book></Book>
 				</CardHeader>
 				<CardContent className="">
 					<CardDescription className="text-primary">
-						Click here to open
+						Click here to download
 					</CardDescription>
 				</CardContent>
 			</Card>

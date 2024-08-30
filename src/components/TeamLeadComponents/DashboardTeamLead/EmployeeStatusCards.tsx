@@ -41,12 +41,14 @@ export default function EmployeesStatusCards() {
 		return (
 			<Card className="flex-1 p-4">
 				<CardContent className="flex item-cineter justify-between p-0 pb-2">
-					<p>{card.title}:</p>
+					<p className="text-lg">{card.title}:</p>
 					{card.icon}
 				</CardContent>
 				<CardHeader className="p-0">
 					<CardTitle>{card.population}</CardTitle>
-					<CardDescription>{card.description}</CardDescription>
+					<CardDescription className="text-base">
+						{card.description}
+					</CardDescription>
 				</CardHeader>
 			</Card>
 		);
