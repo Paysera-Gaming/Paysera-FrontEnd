@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AttendanceComponent } from '@/components/AdminDashboard/AttendanceComponent/index.tsx';
 import SheetComponent from '@/components/AdminDashboard/SheetComponent';
-import {ModeToggle} from '@/components/ThemeProvider/ThemeSwitch'
 // Import CSS files
 
 import '../../css/AdminDashboard/header.css';
@@ -38,7 +37,7 @@ function AdminPage() {
             <header className="header">
                 <div className="header-left">
                     <h1>Attendance Dashboard</h1>
-<ModeToggle></ModeToggle>
+
                     <p className="header-subtitle">Manage your records efficiently</p>
                 </div>
                 <div className="header-right">

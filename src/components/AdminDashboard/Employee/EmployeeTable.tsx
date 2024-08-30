@@ -11,18 +11,17 @@ const statusColors: { [key: string]: string } = {
   Offline: 'bg-gray-500'
 };
 
-interface Employee {
+type Employee = {
   id: number;
-  lastName: string;
+  username: string;
   firstName: string;
+  lastName: string;
   middleName: string;
+  accessLevel: 'ADMIN' | 'EMPLOYEE' | 'TEAM_LEADER';
   isActive: boolean;
-  status: string;
-  team: string;
+  departmentId: number | null;
   role: string;
-  email: string;
-  type: string;
-}
+};
 
 interface EmployeeTableProps {
   data: Employee[];
@@ -53,10 +52,10 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   };
 
   const sortedData = [...data].sort((a, b) => {
-    if (sortConfig.key !== '' && a[sortConfig.key] < b[sortConfig.key]) {
+    if (sortConfig.key !== '' && a[sortConfig.key]! < b[sortConfig.key]!) {
       return sortConfig.direction === 'ascending' ? -1 : 1;
     }
-    if (sortConfig.key !== '' && a[sortConfig.key] > b[sortConfig.key]) {
+    if (sortConfig.key !== '' && a[sortConfig.key]! > b[sortConfig.key]!) {
       return sortConfig.direction === 'ascending' ? 1 : -1;
     }
     return 0;
@@ -68,11 +67,11 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   };
 
   const updateEmployeeStatus = (employee: Employee) => {
-    let updatedStatus = employee.status;
+    let updatedStatus = employee.isActive ? "Inactive" : "Online";
 
-    if (employee.status === "Leave") {
+    if (employee.isActive ) {
       updatedStatus = "Offline";
-    } else if (employee.status === "Lunch") {
+    } else {
       updatedStatus = "Online";
     }
 
@@ -96,21 +95,21 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
           </TableHead>
           <TableHead
             className="text-center border-x cursor-pointer"
-            onClick={() => handleSort('status')}
+            onClick={() => handleSort('isActive')}
           >
-            Status {sortConfig.key === 'status' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
+            Status {sortConfig.key === 'isActive' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
           </TableHead>
           <TableHead
             className="text-center border-x cursor-pointer"
-            onClick={() => handleSort('team')}
+            onClick={() => handleSort('departmentId')}
           >
-            Team & Role {sortConfig.key === 'team' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
+            Team & Role {sortConfig.key === '' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
           </TableHead>
           <TableHead
             className="text-center border-x cursor-pointer"
-            onClick={() => handleSort('type')}
+            onClick={() => handleSort('accessLevel')}
           >
-            Type {sortConfig.key === 'type' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
+            Type {sortConfig.key === 'accessLevel' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
           </TableHead>
           <TableHead className="text-center border-x">Actions</TableHead>
         </TableRow>
@@ -127,8 +126,8 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 <span>{employee.isActive ? 'Online' : 'Inactive'}</span>
               </div>
             </TableCell>
-            <TableCell className="text-center border-x">{employee.team} - {employee.role}</TableCell>
-            <TableCell className="text-center border-x">{employee.type}</TableCell>
+            <TableCell className="text-center border-x">{employee.departmentId} - {employee.role}</TableCell>
+            <TableCell className="text-center border-x">{employee.accessLevel}</TableCell>
             <TableCell className="text-center border-x space-x-2">
               <TooltipProvider>
                 <Tooltip>

@@ -14,7 +14,7 @@ type Employee = {
   firstName: string;
   lastName: string;
   middleName: string;
-  accessLevel: string;
+  accessLevel: 'ADMIN' | 'EMPLOYEE' | 'TEAM_LEADER';
   isActive: boolean;
   departmentId: number | null;
   role: string;
@@ -97,12 +97,12 @@ const EmployeeComponent = () => {
   // Updated employee counters based on filtered data
   const employeeCounters = {
     totalActive: filteredData.filter(emp => emp.isActive).length,
-    activeAdmin: filteredData.filter(emp => emp.isActive && emp.accessLevel === 'ADMIN').length,
-    activeUser: filteredData.filter(emp => emp.isActive && emp.accessLevel === 'USER').length,
+    activeAdmin: filteredData.filter(emp => emp.isActive && emp.accessLevel === 'TEAM_LEADER').length,
+    activeUser: filteredData.filter(emp => emp.isActive && emp.accessLevel === 'EMPLOYEE').length,
 
     totalInactive: filteredData.filter(emp => !emp.isActive).length,
-    inactiveAdmin: filteredData.filter(emp => !emp.isActive && emp.accessLevel === 'ADMIN').length,
-    inactiveUser: filteredData.filter(emp => !emp.isActive && emp.accessLevel === 'USER').length,
+    inactiveAdmin: filteredData.filter(emp => !emp.isActive && emp.accessLevel === 'TEAM_LEADER').length,
+    inactiveUser: filteredData.filter(emp => !emp.isActive && emp.accessLevel === 'EMPLOYEE').length,
   };
 
   return (
@@ -155,7 +155,7 @@ const EmployeeComponent = () => {
           </Select>
           <button
             onClick={() => {
-              setSelectedEmployee({ id: 0, username: '', firstName: '', lastName: '', middleName: '', accessLevel: 'USER', isActive: true, departmentId: null, role: '' });
+              setSelectedEmployee({ id: 0, username: '', firstName: '', lastName: '', middleName: '', accessLevel: 'EMPLOYEE', isActive: true, departmentId: null, role: '' });
               setIsDialogOpen(true);
             }}
             className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -182,7 +182,7 @@ const EmployeeComponent = () => {
         <EmployeeDialog
           isDialogOpen={isDialogOpen}
           setIsDialogOpen={setIsDialogOpen}
-          selectedEmployee={selectedEmployee}
+          selectedEmployee={selectedEmployee }
           setSelectedEmployee={setSelectedEmployee}
           handleSaveEmployee={handleSaveEmployee}
         />

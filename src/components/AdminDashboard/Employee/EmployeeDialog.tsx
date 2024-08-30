@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import axios from 'axios';
 
 // Define the Employee type
 type Employee = {
@@ -46,6 +47,24 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
     if (selectedEmployee) {
       handleSaveEmployee(selectedEmployee);
     }
+    if (selectedEmployee) {
+      axios.post('https://192.168.3.50:8080/api/employee', selectedEmployee)
+        .then(response => {
+          // Handle success
+          console.log(response.data);
+          // Call the handleSaveEmployee function with the updated employee data
+          // Close the dialog
+          setIsDialogOpen(false);
+        })
+        .catch(error => {
+          // Handle error
+          console.error(error);
+          // Set the error message
+          setErrorMessage("Failed to save employee.");
+        });
+    }
+  
+    
   };
 
   useEffect(() => {

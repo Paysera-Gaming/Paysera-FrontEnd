@@ -25,7 +25,7 @@ const SheetComponent = () => {
     const renderLinks = () => {
         const links = [
             { path: '/admin/dashboard', label: 'Attendance', icon: <CalendarDays /> },
-            { path: '/admin/manageteams', label: 'Manage Teams', icon: <Building /> },
+            { path: '/admin/manageteams', label: 'Department', icon: <Building /> },
             { path: '/admin/employeelist', label: 'Employee List', icon: <UsersRound /> },
             { path: '/admin/accountpreferences', label: 'Settings', icon: <Settings /> },
         ];
