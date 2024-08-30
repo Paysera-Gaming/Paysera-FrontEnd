@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 const statusColors: { [key: string]: string } = {
-  Active: 'bg-green-500',
+  Online: 'bg-green-500',
+  Inactive: 'bg-gray-500',
   Leave: 'bg-red-500',
   Lunch: 'bg-orange-500',
   Offline: 'bg-gray-500'
@@ -15,6 +16,7 @@ interface Employee {
   lastName: string;
   firstName: string;
   middleName: string;
+  isActive: boolean;
   status: string;
   team: string;
   role: string;
@@ -71,7 +73,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
     if (employee.status === "Leave") {
       updatedStatus = "Offline";
     } else if (employee.status === "Lunch") {
-      updatedStatus = "Active";
+      updatedStatus = "Online";
     }
 
     const updatedEmployee = { ...employee, status: updatedStatus };
@@ -117,12 +119,12 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
         {sortedData.map(employee => (
           <TableRow key={employee.id}>
             <TableCell className="text-left border-x flex items-center space-x-2">
-              <span className={`inline-block w-3 h-3 rounded-full ${statusColors[employee.status]}`}></span>
+              <span className={`inline-block w-3 h-3 rounded-full ${statusColors[employee.isActive ? 'Online' : 'Inactive']}`}></span>
               <span>{`${employee.lastName}, ${employee.firstName} ${employee.middleName}`}</span>
             </TableCell>
             <TableCell className="text-center border-x">
               <div className="flex items-center justify-center space-x-2">
-                <span>{employee.status}</span>
+                <span>{employee.isActive ? 'Online' : 'Inactive'}</span>
               </div>
             </TableCell>
             <TableCell className="text-center border-x">{employee.team} - {employee.role}</TableCell>
