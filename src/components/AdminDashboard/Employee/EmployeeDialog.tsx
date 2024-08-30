@@ -11,7 +11,7 @@ type Employee = {
   firstName: string;
   middleName?: string;
   status: string;
-  team: string;
+  department: string;
   role?: string;
   email?: string;
   type: 'Fixed' | 'Flexible' | 'Super Flexible';
@@ -139,11 +139,11 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
           <div className="flex-1">
             <h3 className="text-xl font-semibold mb-4">Job Duties</h3>
             <div className="mb-4">
-              <label htmlFor="team" className="block mb-1">Team</label>
+              <label htmlFor="department" className="block mb-1">Department</label>
               <Input
-                id="team"
-                value={selectedEmployee?.team || ''}
-                onChange={(e) => handleInputChange('team', e.target.value)}
+                id="department"
+                value={selectedEmployee?.department || ''}
+                onChange={(e) => handleInputChange('department', e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
