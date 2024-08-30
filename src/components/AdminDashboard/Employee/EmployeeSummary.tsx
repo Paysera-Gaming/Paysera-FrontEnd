@@ -5,14 +5,6 @@ type EmployeeSummaryProps = {
   activeFixed: number,
   activeFlexible: number,
   activeSuperFlexible: number,
-  totalOnLunch: number,
-  lunchFixed: number,
-  lunchFlexible: number,
-  lunchSuperFlexible: number,
-  totalOnLeave: number,
-  leaveFixed: number,
-  leaveFlexible: number,
-  leaveSuperFlexible: number,
   totalOffline: number,
   offlineFixed: number,
   offlineFlexible: number,
@@ -25,14 +17,6 @@ const EmployeeSummary = ({
   activeFixed,
   activeFlexible,
   activeSuperFlexible,
-  totalOnLunch,
-  lunchFixed,
-  lunchFlexible,
-  lunchSuperFlexible,
-  totalOnLeave,
-  leaveFixed,
-  leaveFlexible,
-  leaveSuperFlexible,
   totalOffline,
   offlineFixed,
   offlineFlexible,
@@ -44,31 +28,16 @@ const EmployeeSummary = ({
   const safeActiveFixed = isNaN(activeFixed) ? 0 : activeFixed;
   const safeActiveFlexible = isNaN(activeFlexible) ? 0 : activeFlexible;
   const safeActiveSuperFlexible = isNaN(activeSuperFlexible) ? 0 : activeSuperFlexible;
-  const safeTotalOnLunch = isNaN(totalOnLunch) ? 0 : totalOnLunch;
-  const safeLunchFixed = isNaN(lunchFixed) ? 0 : lunchFixed;
-  const safeLunchFlexible = isNaN(lunchFlexible) ? 0 : lunchFlexible;
-  const safeLunchSuperFlexible = isNaN(lunchSuperFlexible) ? 0 : lunchSuperFlexible;
-  const safeTotalOnLeave = isNaN(totalOnLeave) ? 0 : totalOnLeave;
-  const safeLeaveFixed = isNaN(leaveFixed) ? 0 : leaveFixed;
-  const safeLeaveFlexible = isNaN(leaveFlexible) ? 0 : leaveFlexible;
-  const safeLeaveSuperFlexible = isNaN(leaveSuperFlexible) ? 0 : leaveSuperFlexible;
   const safeTotalOffline = isNaN(totalOffline) ? 0 : totalOffline;
   const safeOfflineFixed = isNaN(offlineFixed) ? 0 : offlineFixed;
   const safeOfflineFlexible = isNaN(offlineFlexible) ? 0 : offlineFlexible;
   const safeOfflineSuperFlexible = isNaN(offlineSuperFlexible) ? 0 : offlineSuperFlexible;
 
   // Calculate the overall total by summing all status counts
-  const totalOverall =
-    safeTotalActive + safeTotalOnLunch + safeTotalOnLeave + safeTotalOffline;
-  const overallFixed =
-    safeActiveFixed + safeLunchFixed + safeLeaveFixed + safeOfflineFixed;
-  const overallFlexible =
-    safeActiveFlexible + safeLunchFlexible + safeLeaveFlexible + safeOfflineFlexible;
-  const overallSuperFlexible =
-    safeActiveSuperFlexible +
-    safeLunchSuperFlexible +
-    safeLeaveSuperFlexible +
-    safeOfflineSuperFlexible;
+  const totalOverall = safeTotalActive + safeTotalOffline;
+  const overallFixed = safeActiveFixed + safeOfflineFixed;
+  const overallFlexible = safeActiveFlexible + safeOfflineFlexible;
+  const overallSuperFlexible = safeActiveSuperFlexible + safeOfflineSuperFlexible;
 
   const summaryItems = [
     {
