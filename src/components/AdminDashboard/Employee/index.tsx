@@ -5,6 +5,7 @@ import EmployeeSummary from './EmployeeSummary';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import ConfirmationDialog from './ConfirmationDialog'; // Import the confirmation dialog
 import axios from 'axios'; // Import Axios for API requests
+import SheetComponent from '../SheetComponent';
 
 // Define the Employee type
 type Employee = {
@@ -29,6 +30,7 @@ const EmployeeComponent = () => {
   const [sortConfig, setSortConfig] = useState<{ key: keyof Employee; direction: "ascending" | "descending" }>({ key: 'lastName', direction: 'ascending' } as { key: keyof Employee; direction: "ascending" | "descending" });
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // State for confirmation dialog
   const [employeeToDelete, setEmployeeToDelete] = useState<number | null>(null); // Employee ID to delete
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
 
   // Use useEffect to fetch data when the component mounts
   useEffect(() => {
@@ -44,6 +46,14 @@ const EmployeeComponent = () => {
         console.log(error);
         alert('An error occurred while fetching the data');
       });
+
+    // Update the current time every second
+    const timer = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+
+    // Cleanup the timer on component unmount
+    return () => clearInterval(timer);
   }, []); // Empty array means this runs once when the component mounts
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,6 +111,10 @@ const EmployeeComponent = () => {
         <div className="header-left">
           <h1>Employee Dashboard</h1>
           <p className="header-subtitle">View and manage employee information</p>
+        </div>
+        <div className="header-right">
+          <SheetComponent /> {/* Profile component */}
+          <div className="current-time">{currentTime}</div>
         </div>
       </header>
 
