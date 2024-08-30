@@ -17,8 +17,10 @@ type Employee = {
   email?: string;
   type: 'Fixed' | 'Flexible' | 'Super Flexible';
   username?: string;
-  password?: string;
-  confirmPassword?: string;
+  passwordCredentials?: {
+    password?: string;
+    confirmPassword?: string;
+  };
 };
 
 type EmployeeDialogProps = {
@@ -38,8 +40,20 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
     }
   };
 
+  const handlePasswordChange = (field: 'password' | 'confirmPassword', value: string) => {
+    if (selectedEmployee) {
+      setSelectedEmployee({
+        ...selectedEmployee,
+        passwordCredentials: {
+          ...selectedEmployee.passwordCredentials,
+          [field]: value,
+        },
+      });
+    }
+  };
+
   const handleSave = () => {
-    if (selectedEmployee?.password !== selectedEmployee?.confirmPassword) {
+    if (selectedEmployee?.passwordCredentials?.password !== selectedEmployee?.passwordCredentials?.confirmPassword) {
       setErrorMessage("Passwords do not match.");
       return;
     }
@@ -63,8 +77,6 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
           setErrorMessage("Failed to save employee.");
         });
     }
-  
-    
   };
 
   useEffect(() => {
@@ -134,8 +146,8 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
               <Input
                 id="password"
                 type="password"
-                value={selectedEmployee?.password || ''}
-                onChange={(e) => handleInputChange('password', e.target.value)}
+                value={selectedEmployee?.passwordCredentials?.password || ''}
+                onChange={(e) => handlePasswordChange('password', e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
@@ -144,8 +156,8 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
               <Input
                 id="confirmPassword"
                 type="password"
-                value={selectedEmployee?.confirmPassword || ''}
-                onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                value={selectedEmployee?.passwordCredentials?.confirmPassword || ''}
+                onChange={(e) => handlePasswordChange('confirmPassword', e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
