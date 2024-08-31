@@ -34,7 +34,7 @@ export default function SearchBar({ searchTerm, setSearchTerm }: SearchBarProps)
                     </Button>
                 </div>
             </div>
-            {isFormOpen && <EmployeeForm onSubmit={handleFormSubmit} />}
+            <EmployeeForm isOpen={isFormOpen} onSubmit={handleFormSubmit} onClose={() => setIsFormOpen(false)} />
         </div>
     );
 }
