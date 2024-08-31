@@ -13,11 +13,15 @@ import TeamLeadDashboardPage from './pages/TeamLead/Dashboard/DashboardPage';
 import SchedulePage from './pages/TeamLead/Schedule/SchedulePage';
 import AttendancePage from './pages/TeamLead/Attendance/AttendancePage';
 import ManagePage from './pages/TeamLead/Manage/ManagePage';
-// admin
+// admin (old version of superadmin, this is my reference)
 import AdminPage from './pages/AdminPage/AdminPage';
 import AdminManageTeams from './components/AdminDashboard/ManageTeams/index';
 import Settings from './components/AdminDashboard/AccountPreferences';
 import Employee from './components/AdminDashboard/Employee';
+// superadmin
+import SuperAdminPage from './pages/SuperAdmin/SuperAdminPage';
+import SuperAdminDashboardPage from './pages/SuperAdmin/Dashboard/DashboardPage';
+
 
 import './index.css';
 // Theme provider
@@ -95,10 +99,21 @@ const router = createBrowserRouter([
 				path: 'employeelist',
 				element: <Employee />,
 			},
-
 		],
 	},
+	{
+        path: '/superadmin',
+        element: <SuperAdminPage></SuperAdminPage>,
+        children: [
+            {
+                path: 'dashboard',
+                element: <SuperAdminDashboardPage />, // SuperAdmin Dashboard
+            },
+            // Add more child routes if needed
+        ],
+    },
 ]);
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
