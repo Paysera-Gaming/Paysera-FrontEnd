@@ -121,6 +121,7 @@ export default function AttendanceList() {
                     icon={<Users size={32} className="text-blue-500" />}
                     active={activeFilter === 'overall'}
                     onClick={() => setActiveFilter('overall')}
+                    outlineColor="border-blue-500" // Outline color for Overall
                 />
                 <SummaryCard
                     title="On Job"
@@ -129,6 +130,7 @@ export default function AttendanceList() {
                     icon={<UserCheck size={32} className="text-green-500" />}
                     active={activeFilter === 'onJob'}
                     onClick={() => setActiveFilter('onJob')}
+                    outlineColor="border-green-500" // Outline color for On Job
                 />
                 <SummaryCard
                     title="Lunch"
@@ -137,6 +139,7 @@ export default function AttendanceList() {
                     icon={<Coffee size={32} className="text-yellow-500" />}
                     active={activeFilter === 'lunch'}
                     onClick={() => setActiveFilter('lunch')}
+                    outlineColor="border-yellow-500" // Outline color for Lunch
                 />
                 <SummaryCard
                     title="Leave"
@@ -145,6 +148,7 @@ export default function AttendanceList() {
                     icon={<Clock size={32} className="text-red-500" />}
                     active={activeFilter === 'leave'}
                     onClick={() => setActiveFilter('leave')}
+                    outlineColor="border-red-500" // Outline color for Leave
                 />
             </div>
 
