@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Circle } from 'lucide-react';
 
 interface AttendanceRecord {
     id: number;
@@ -19,6 +20,19 @@ interface AttendanceTableProps {
 }
 
 export function AttendanceTable({ attendanceData }: AttendanceTableProps) {
+    const getSituationColor = (situation: string) => {
+        switch (situation) {
+            case 'On Job':
+                return 'green';
+            case 'Lunch':
+                return 'yellow';
+            case 'Leave':
+                return 'red';
+            default:
+                return 'gray';
+        }
+    };
+
     return (
         <Card>
             <CardHeader>
@@ -42,7 +56,16 @@ export function AttendanceTable({ attendanceData }: AttendanceTableProps) {
                     <TableBody>
                         {attendanceData.map((att) => (
                             <TableRow key={att.id}>
-                                <TableCell>{att.fullName}</TableCell>
+                                <TableCell>
+                                    <div className="flex items-center gap-2">
+                                        <Circle
+                                            size={16}
+                                            color={getSituationColor(att.situation)}
+                                            fill={getSituationColor(att.situation)}
+                                        />
+                                        {att.fullName}
+                                    </div>
+                                </TableCell>
                                 <TableCell>{att.type}</TableCell>
                                 <TableCell>{att.date}</TableCell>
                                 <TableCell>{att.startTime}</TableCell>
