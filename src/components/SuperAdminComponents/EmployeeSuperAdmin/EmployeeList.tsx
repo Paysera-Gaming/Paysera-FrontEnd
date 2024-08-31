@@ -12,19 +12,34 @@ const sampleEmployees = [
 ];
 
 export default function EmployeeList() {
-    const [employees, setEmployees] = useState(sampleEmployees);
+    const [employees] = useState(sampleEmployees);
     const [searchTerm, setSearchTerm] = useState('');
+    const [activeFilter, setActiveFilter] = useState('overall');
 
-    const filteredEmployees = employees.filter(emp =>
-        emp.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.middleName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.role.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const handleFilterClick = (filter) => {
+        setActiveFilter(filter);
+    };
 
-    const onlineCount = employees.filter(emp => emp.isActive).length;
-    const offlineCount = employees.length - onlineCount;
+    const filteredEmployees = employees
+        .filter((emp) => {
+            if (activeFilter === 'online') {
+                return emp.isActive;
+            } else if (activeFilter === 'offline') {
+                return !emp.isActive;
+            }
+            return true; // 'overall' filter shows all employees
+        })
+        .filter((emp) =>
+            emp.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            emp.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            emp.middleName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            emp.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            emp.role.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+    const overallCount = employees.length;
+    const onlineCount = employees.filter((emp) => emp.isActive).length;
+    const offlineCount = overallCount - onlineCount;
 
     return (
         <div className="p-4 space-y-4">
@@ -37,23 +52,35 @@ export default function EmployeeList() {
                     className="w-full max-w-xs"
                 />
                 <div className="flex gap-2">
-                    <Button variant="outline" size="sm" leftIcon={<Plus size={16} />}>Create</Button>
+                    <Button variant="outline" size="sm" leftIcon={<Plus size={16} />}>
+                        Create
+                    </Button>
                 </div>
             </div>
 
             {/* Summary Cards */}
             <div className="flex gap-4 mb-4">
-                <Card className="flex-1 p-4">
+                <Card
+                    onClick={() => handleFilterClick('overall')}
+                    className={`flex-1 p-4 cursor-pointer bg-transparent ${
+                        activeFilter === 'overall' ? 'bg-blue-50 dark:bg-blue-900' : ''
+                    }`}
+                >
                     <CardContent className="flex items-center">
                         <Users size={32} className="text-blue-500" />
                         <div className="ml-3 flex items-center">
                             <CardTitle className="text-lg">Overall</CardTitle>
-                            <p className="ml-2 text-2xl font-semibold">{employees.length}</p>
+                            <p className="ml-2 text-2xl font-semibold">{overallCount}</p>
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="flex-1 p-4">
+                <Card
+                    onClick={() => handleFilterClick('online')}
+                    className={`flex-1 p-4 cursor-pointer bg-transparent ${
+                        activeFilter === 'online' ? 'bg-green-50 dark:bg-green-900' : ''
+                    }`}
+                >
                     <CardContent className="flex items-center">
                         <UserCheck size={32} className="text-green-500" />
                         <div className="ml-3 flex items-center">
@@ -63,7 +90,12 @@ export default function EmployeeList() {
                     </CardContent>
                 </Card>
 
-                <Card className="flex-1 p-4">
+                <Card
+                    onClick={() => handleFilterClick('offline')}
+                    className={`flex-1 p-4 cursor-pointer bg-transparent ${
+                        activeFilter === 'offline' ? 'bg-red-50 dark:bg-red-900' : ''
+                    }`}
+                >
                     <CardContent className="flex items-center">
                         <UserX size={32} className="text-red-500" />
                         <div className="ml-3 flex items-center">
@@ -98,8 +130,12 @@ export default function EmployeeList() {
                                     <TableCell>{emp.role}</TableCell>
                                     <TableCell>
                                         <div className="flex gap-2">
-                                            <Button variant="outline" size="sm" leftIcon={<Edit2 size={16} />}>Edit</Button>
-                                            <Button variant="outline" size="sm" color="red" leftIcon={<Trash2 size={16} />}>Delete</Button>
+                                            <Button variant="outline" size="sm" leftIcon={<Edit2 size={16} />}>
+                                                Edit
+                                            </Button>
+                                            <Button variant="outline" size="sm" color="red" leftIcon={<Trash2 size={16} />}>
+                                                Delete
+                                            </Button>
                                         </div>
                                     </TableCell>
                                 </TableRow>
