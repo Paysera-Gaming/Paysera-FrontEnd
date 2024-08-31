@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Users, Clock, Coffee, UserCheck } from 'lucide-react';
 
 // Sample data for demonstration
@@ -47,9 +46,6 @@ export default function AttendanceList() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full max-w-xs"
                 />
-                <div className="flex gap-2">
-                    <Button variant="outline" size="sm">Create</Button>
-                </div>
             </div>
 
             {/* Summary Cards */}
@@ -58,7 +54,7 @@ export default function AttendanceList() {
                     <CardContent className="flex items-center">
                         <Users size={32} className="text-blue-500" />
                         <div className="ml-3 flex items-center">
-                            <CardTitle className="text-lg">Overall</CardTitle>
+                            <CardTitle className="text-lg">Overall Total</CardTitle>
                             <p className="ml-2 text-2xl font-semibold">{attendanceData.length}</p>
                         </div>
                     </CardContent>
