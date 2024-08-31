@@ -14,19 +14,19 @@ export default function EmployeeInfoCard() {
 		<div className="flex flex-col gap-2">
 			<Card className="flex-1 p-0">
 				<CardHeader className="pb-2 flex items-center justify-between flex-row">
-					<CardTitle>Employee Info</CardTitle>
+					<CardTitle>Super Admin Info</CardTitle>
 					<BookUser size={'1.8rem'}></BookUser>
 				</CardHeader>
 				<CardContent>
 					<ul>
 						<li>
-							<b>Name:</b> John Doe
+							<b>Name:</b> Ms. Paysera
 						</li>
 						<li>
-							<b>Department: </b>Call Center
+							<b>Department: </b>Paysera
 						</li>
 						<li>
-							<b>Role:</b> <Badge> Team Lead</Badge>
+							<b>Role:</b> <Badge>Super Admin</Badge>
 						</li>
 						<li>
 							<b> Overtime: </b>
