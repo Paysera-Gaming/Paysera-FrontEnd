@@ -3,6 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Users, Clock, Coffee, UserCheck } from 'lucide-react';
+import { Calendar as CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils"; // Ensure this utility exists or replace it with your own
 
 // Sample data for demonstration
 const sampleAttendance = [
@@ -44,6 +54,37 @@ const sampleAttendance = [
     },
 ];
 
+// DatePickerDemo Component
+function DatePickerDemo() {
+    const [date, setDate] = useState<Date>();
+
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button
+                    variant={"outline"}
+                    className={cn(
+                        "w-[280px] justify-start text-left font-normal",
+                        !date && "text-muted-foreground"
+                    )}
+                >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+                <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    initialFocus
+                />
+            </PopoverContent>
+        </Popover>
+    );
+}
+
+// AttendanceList Component
 export default function AttendanceList() {
     const [attendanceData] = useState(sampleAttendance);
     const [searchTerm, setSearchTerm] = useState('');
@@ -100,7 +141,7 @@ export default function AttendanceList() {
 
     return (
         <div className="p-4 space-y-4">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-2 mb-4">
                 <Input
                     type="text"
                     placeholder="Search..."
@@ -108,6 +149,7 @@ export default function AttendanceList() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full max-w-xs"
                 />
+                <DatePickerDemo /> {/* Calendar Button moved next to the search bar */}
             </div>
 
             {/* Summary Cards with Filter Functionality */}
@@ -201,16 +243,16 @@ export default function AttendanceList() {
                 </Card>
             </div>
 
-            {/* Attendance List Table */}
+            {/* Attendance Table */}
             <Card>
                 <CardHeader>
-                    <CardTitle>Attendance List</CardTitle>
+                    <CardTitle>Attendance Records</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Full Name</TableHead>
+                                <TableHead>Name</TableHead>
                                 <TableHead>Type</TableHead>
                                 <TableHead>Date</TableHead>
                                 <TableHead>Start Time</TableHead>
