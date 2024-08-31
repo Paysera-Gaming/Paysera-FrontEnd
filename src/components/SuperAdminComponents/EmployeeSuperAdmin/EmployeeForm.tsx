@@ -72,9 +72,9 @@ export default function EmployeeForm({ onSubmit }: { onSubmit: (values: z.infer<
             <FormItem>
               <FormLabel>First Name</FormLabel>
               <FormControl>
-                <Input placeholder="John" {...field} />
+                <Input {...field} />
               </FormControl>
-              <FormDescription>Insert your first name here.</FormDescription>
+              <FormDescription>Insert employee first name here.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -86,9 +86,9 @@ export default function EmployeeForm({ onSubmit }: { onSubmit: (values: z.infer<
             <FormItem>
               <FormLabel>Last Name</FormLabel>
               <FormControl>
-                <Input placeholder="Doe" {...field} />
+                <Input {...field} />
               </FormControl>
-              <FormDescription>Insert your last name here.</FormDescription>
+              <FormDescription>Insert employee last name here.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -100,9 +100,9 @@ export default function EmployeeForm({ onSubmit }: { onSubmit: (values: z.infer<
             <FormItem>
               <FormLabel>Middle Name</FormLabel>
               <FormControl>
-                <Input placeholder="M" {...field} />
+                <Input {...field} />
               </FormControl>
-              <FormDescription>Insert your middle name here.</FormDescription>
+              <FormDescription>Insert employee middle name here.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -114,9 +114,9 @@ export default function EmployeeForm({ onSubmit }: { onSubmit: (values: z.infer<
             <FormItem>
               <FormLabel>Department</FormLabel>
               <FormControl>
-                <Input placeholder="HR" {...field} />
+                <Input {...field} />
               </FormControl>
-              <FormDescription>Insert your department here.</FormDescription>
+              <FormDescription>Insert employee department here.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -128,9 +128,9 @@ export default function EmployeeForm({ onSubmit }: { onSubmit: (values: z.infer<
             <FormItem>
               <FormLabel>Role</FormLabel>
               <FormControl>
-                <Input placeholder="Manager" {...field} />
+                <Input {...field} />
               </FormControl>
-              <FormDescription>Insert your role here.</FormDescription>
+              <FormDescription>Insert employee role here.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -142,9 +142,9 @@ export default function EmployeeForm({ onSubmit }: { onSubmit: (values: z.infer<
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="******" {...field} />
+                <Input type="password" {...field} />
               </FormControl>
-              <FormDescription>Insert your password here.</FormDescription>
+              <FormDescription>Insert employee password here.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -156,9 +156,9 @@ export default function EmployeeForm({ onSubmit }: { onSubmit: (values: z.infer<
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="******" {...field} />
+                <Input type="password" {...field} />
               </FormControl>
-              <FormDescription>Confirm your password here.</FormDescription>
+              <FormDescription>Confirm employee password here.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
