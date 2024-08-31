@@ -143,6 +143,9 @@ export default function AttendanceList() {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+                <span className="ml-2 text-gray-700 dark:text-gray-300">
+                    Filtered: {typeFilter !== 'all' ? typeFilter : 'All'}
+                </span>
             </div>
 
             {/* Summary Cards with Filter Functionality */}
@@ -196,7 +199,7 @@ export default function AttendanceList() {
                 <div className="text-center text-gray-500 dark:text-gray-400">
                     {searchTerm
                         ? `No results found for "${searchTerm}".`
-                        : `No ${typeFilter !== 'all' ? typeFilter : ''} employees are ${activeFilter !== 'overall' ? activeFilter : 'available'}.`}
+                        : `No ${typeFilter !== 'all' ? typeFilter : 'All'} employees are ${activeFilter !== 'overall' ? activeFilter : 'available'}.`}
                 </div>
             )}
         </div>
