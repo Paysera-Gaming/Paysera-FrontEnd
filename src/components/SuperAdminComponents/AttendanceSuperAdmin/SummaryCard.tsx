@@ -14,7 +14,7 @@ export function SummaryCard({ title, count, typeCounts, icon, active, onClick, o
     return (
         <Card
             onClick={onClick}
-            className={`flex-1 p-4 cursor-pointer bg-transparent border-2 ${outlineColor} ${active ? 'bg-blue-50 dark:bg-blue-900' : ''}`}
+            className={`flex-1 p-4 cursor-pointer bg-transparent border-2 ${outlineColor} ${active ? 'bg-blue-100 dark:bg-gray-800' : ''}`}
         >
             <CardContent className="flex flex-col items-center">
                 <div className="flex items-center">
