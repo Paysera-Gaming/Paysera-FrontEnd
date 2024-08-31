@@ -40,35 +40,40 @@ export default function EmployeeList() {
                     <Button variant="outline" size="sm" leftIcon={<Plus size={16} />}>Create</Button>
                 </div>
             </div>
+
+            {/* Summary Cards */}
             <div className="flex gap-4 mb-4">
-                <Card className="flex-1 p-2">
-                    <CardHeader className="flex items-center justify-between">
-                        <Users size={20} />
-                        <div className="flex items-center gap-2">
+                <Card className="flex-1 p-4">
+                    <CardContent className="flex items-center">
+                        <Users size={24} className="text-blue-500" />
+                        <div className="ml-3 flex items-center">
                             <CardTitle>Overall Total</CardTitle>
-                            <p className="text-xl font-semibold">{employees.length}</p>
+                            <p className="ml-2 text-xl font-semibold">{employees.length}</p>
                         </div>
-                    </CardHeader>
+                    </CardContent>
                 </Card>
-                <Card className="flex-1 p-2">
-                    <CardHeader className="flex items-center justify-between">
-                        <UserCheck size={20} />
-                        <div className="flex items-center gap-2">
+
+                <Card className="flex-1 p-4">
+                    <CardContent className="flex items-center">
+                        <UserCheck size={24} className="text-green-500" />
+                        <div className="ml-3 flex items-center">
                             <CardTitle>Online</CardTitle>
-                            <p className="text-xl font-semibold">{onlineCount}</p>
+                            <p className="ml-2 text-xl font-semibold">{onlineCount}</p>
                         </div>
-                    </CardHeader>
+                    </CardContent>
                 </Card>
-                <Card className="flex-1 p-2">
-                    <CardHeader className="flex items-center justify-between">
-                        <UserX size={20} />
-                        <div className="flex items-center gap-2">
+
+                <Card className="flex-1 p-4">
+                    <CardContent className="flex items-center">
+                        <UserX size={24} className="text-red-500" />
+                        <div className="ml-3 flex items-center">
                             <CardTitle>Offline</CardTitle>
-                            <p className="text-xl font-semibold">{offlineCount}</p>
+                            <p className="ml-2 text-xl font-semibold">{offlineCount}</p>
                         </div>
-                    </CardHeader>
+                    </CardContent>
                 </Card>
             </div>
+
             <Card>
                 <CardHeader>
                     <CardTitle>Employee List</CardTitle>
