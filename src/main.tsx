@@ -121,7 +121,7 @@ const router = createBrowserRouter([
             },
 			{ path: 'schedule', element: <SchedulePage></SchedulePage> },
 			{ path: 'attendance', element: <AttendanceDashboard></AttendanceDashboard> },
-			{ path: 'employees', element: <SuperAdminEmployeeDashboard></SuperAdminEmployeeDashboard> },
+			{ path: 'employee', element: <SuperAdminEmployeeDashboard></SuperAdminEmployeeDashboard> },
 			{ path: 'departments', element: <SuperAdminDepartmentDashboard></SuperAdminDepartmentDashboard> },
 
 

@@ -80,7 +80,7 @@ export default function SuperAdminNavigation() {
 	const routeLinks: string[] = [
 		'dashboard',
 		'attendance',
-		'employees',
+		'employee',
 		'departments',
 
 
