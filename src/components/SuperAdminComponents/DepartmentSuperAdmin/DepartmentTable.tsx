@@ -54,7 +54,7 @@ export default function DepartmentTable({ departments }: DepartmentTableProps) {
                                         )}
                                     </TableCell>
                                     <TableCell>
-                                        {team.members > 3 ? `${team.members} members (showing only 3)` : `${team.members} members`}
+                                        {team.members > 3 ? `${team.members} members (etc)` : `${team.members} members`}
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex gap-2">
@@ -77,4 +77,3 @@ export default function DepartmentTable({ departments }: DepartmentTableProps) {
         </Card>
     );
 }
-    
