@@ -1,4 +1,4 @@
-import { Home, Calendar, FolderKanban, UserCheck } from 'lucide-react';
+import { Home, Users, Calendar } from 'lucide-react';
 import { Icons } from '@/icons/Icon';
 // router
 import { NavLink } from 'react-router-dom';
@@ -11,6 +11,7 @@ import LogOutButton from '../LogoutComponent/LogoutButton';
 import { ModeToggle } from '../ThemeProvider/ThemeSwitch';
 
 import { cn } from '@/lib/utils';
+import { Building } from 'lucide-react';
 interface RouteItemProps {
 	links: string[];
 }
@@ -22,9 +23,9 @@ interface RouteItemProps {
 function RouteItems({ links }: RouteItemProps): ReactNode {
 	const iconList = [
 		<Home></Home>,
-		<FolderKanban></FolderKanban>,
-		<UserCheck></UserCheck>,
 		<Calendar></Calendar>,
+		<Users></Users>,
+		<Building></Building>,
 	];
 
 	const routes = links.map((link, index) => {
@@ -78,9 +79,11 @@ function ProfileHeader() {
 export default function SuperAdminNavigation() {
 	const routeLinks: string[] = [
 		'dashboard',
-		'manage',
 		'attendance',
-		'schedule',
+		'employees',
+		'departments',
+
+
 	];
 
 	return (
