@@ -45,30 +45,30 @@ export default function EmployeeList() {
             <div className="flex gap-4 mb-4">
                 <Card className="flex-1 p-4">
                     <CardContent className="flex items-center">
-                        <Users size={24} className="text-blue-500" />
+                        <Users size={32} className="text-blue-500" />
                         <div className="ml-3 flex items-center">
-                            <CardTitle>Overall Total</CardTitle>
-                            <p className="ml-2 text-xl font-semibold">{employees.length}</p>
+                            <CardTitle className="text-lg">Overall Total</CardTitle>
+                            <p className="ml-2 text-2xl font-semibold">{employees.length}</p>
                         </div>
                     </CardContent>
                 </Card>
 
                 <Card className="flex-1 p-4">
                     <CardContent className="flex items-center">
-                        <UserCheck size={24} className="text-green-500" />
+                        <UserCheck size={32} className="text-green-500" />
                         <div className="ml-3 flex items-center">
-                            <CardTitle>Online</CardTitle>
-                            <p className="ml-2 text-xl font-semibold">{onlineCount}</p>
+                            <CardTitle className="text-lg">Online</CardTitle>
+                            <p className="ml-2 text-2xl font-semibold">{onlineCount}</p>
                         </div>
                     </CardContent>
                 </Card>
 
                 <Card className="flex-1 p-4">
                     <CardContent className="flex items-center">
-                        <UserX size={24} className="text-red-500" />
+                        <UserX size={32} className="text-red-500" />
                         <div className="ml-3 flex items-center">
-                            <CardTitle>Offline</CardTitle>
-                            <p className="ml-2 text-xl font-semibold">{offlineCount}</p>
+                            <CardTitle className="text-lg">Offline</CardTitle>
+                            <p className="ml-2 text-2xl font-semibold">{offlineCount}</p>
                         </div>
                     </CardContent>
                 </Card>
