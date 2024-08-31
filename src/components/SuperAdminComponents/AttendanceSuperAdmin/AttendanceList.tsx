@@ -73,6 +73,31 @@ export default function AttendanceList() {
     const lunchCount = attendanceData.filter((att) => att.situation === 'Lunch').length;
     const leaveCount = attendanceData.filter((att) => att.situation === 'Leave').length;
 
+    const typeCounts = {
+        Fixed: attendanceData.filter((att) => att.type === 'Fixed').length,
+        Flexible: attendanceData.filter((att) => att.type === 'Flexible').length,
+        'Super Flexible': attendanceData.filter((att) => att.type === 'Super Flexible').length,
+    };
+
+    // Calculate counts for each situation type
+    const situationTypeCounts = {
+        onJob: {
+            Fixed: attendanceData.filter((att) => att.situation === 'On Job' && att.type === 'Fixed').length,
+            Flexible: attendanceData.filter((att) => att.situation === 'On Job' && att.type === 'Flexible').length,
+            'Super Flexible': attendanceData.filter((att) => att.situation === 'On Job' && att.type === 'Super Flexible').length,
+        },
+        lunch: {
+            Fixed: attendanceData.filter((att) => att.situation === 'Lunch' && att.type === 'Fixed').length,
+            Flexible: attendanceData.filter((att) => att.situation === 'Lunch' && att.type === 'Flexible').length,
+            'Super Flexible': attendanceData.filter((att) => att.situation === 'Lunch' && att.type === 'Super Flexible').length,
+        },
+        leave: {
+            Fixed: attendanceData.filter((att) => att.situation === 'Leave' && att.type === 'Fixed').length,
+            Flexible: attendanceData.filter((att) => att.situation === 'Leave' && att.type === 'Flexible').length,
+            'Super Flexible': attendanceData.filter((att) => att.situation === 'Leave' && att.type === 'Super Flexible').length,
+        }
+    };
+
     return (
         <div className="p-4 space-y-4">
             <div className="flex justify-between items-center mb-4">
@@ -93,11 +118,18 @@ export default function AttendanceList() {
                         activeFilter === 'overall' ? 'bg-blue-50 dark:bg-blue-900' : ''
                     }`}
                 >
-                    <CardContent className="flex items-center">
-                        <Users size={32} className="text-blue-500" />
-                        <div className="ml-3 flex items-center">
-                            <CardTitle className="text-lg">Overall</CardTitle>
-                            <p className="ml-2 text-2xl font-semibold">{overallCount}</p>
+                    <CardContent className="flex flex-col items-center">
+                        <div className="flex items-center">
+                            <Users size={32} className="text-blue-500" />
+                            <div className="ml-3 flex flex-col items-start">
+                                <CardTitle className="text-base">Overall</CardTitle>
+                                <p className="text-xl font-semibold">{overallCount}</p>
+                            </div>
+                        </div>
+                        <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                            <p>Fixed: {typeCounts.Fixed}</p>
+                            <p>Flexible: {typeCounts.Flexible}</p>
+                            <p>Super Flexible: {typeCounts['Super Flexible']}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -108,11 +140,18 @@ export default function AttendanceList() {
                         activeFilter === 'onJob' ? 'bg-green-50 dark:bg-green-900' : ''
                     }`}
                 >
-                    <CardContent className="flex items-center">
-                        <UserCheck size={32} className="text-green-500" />
-                        <div className="ml-3 flex items-center">
-                            <CardTitle className="text-lg">On Job</CardTitle>
-                            <p className="ml-2 text-2xl font-semibold">{onJobCount}</p>
+                    <CardContent className="flex flex-col items-center">
+                        <div className="flex items-center">
+                            <UserCheck size={32} className="text-green-500" />
+                            <div className="ml-3 flex flex-col items-start">
+                                <CardTitle className="text-base">On Job</CardTitle>
+                                <p className="text-xl font-semibold">{onJobCount}</p>
+                            </div>
+                        </div>
+                        <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                            <p>Fixed: {situationTypeCounts.onJob.Fixed}</p>
+                            <p>Flexible: {situationTypeCounts.onJob.Flexible}</p>
+                            <p>Super Flexible: {situationTypeCounts.onJob['Super Flexible']}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -123,11 +162,18 @@ export default function AttendanceList() {
                         activeFilter === 'lunch' ? 'bg-yellow-50 dark:bg-yellow-900' : ''
                     }`}
                 >
-                    <CardContent className="flex items-center">
-                        <Coffee size={32} className="text-yellow-500" />
-                        <div className="ml-3 flex items-center">
-                            <CardTitle className="text-lg">Lunch</CardTitle>
-                            <p className="ml-2 text-2xl font-semibold">{lunchCount}</p>
+                    <CardContent className="flex flex-col items-center">
+                        <div className="flex items-center">
+                            <Coffee size={32} className="text-yellow-500" />
+                            <div className="ml-3 flex flex-col items-start">
+                                <CardTitle className="text-base">Lunch</CardTitle>
+                                <p className="text-xl font-semibold">{lunchCount}</p>
+                            </div>
+                        </div>
+                        <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                            <p>Fixed: {situationTypeCounts.lunch.Fixed}</p>
+                            <p>Flexible: {situationTypeCounts.lunch.Flexible}</p>
+                            <p>Super Flexible: {situationTypeCounts.lunch['Super Flexible']}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -138,11 +184,18 @@ export default function AttendanceList() {
                         activeFilter === 'leave' ? 'bg-red-50 dark:bg-red-900' : ''
                     }`}
                 >
-                    <CardContent className="flex items-center">
-                        <Clock size={32} className="text-red-500" />
-                        <div className="ml-3 flex items-center">
-                            <CardTitle className="text-lg">Leave</CardTitle>
-                            <p className="ml-2 text-2xl font-semibold">{leaveCount}</p>
+                    <CardContent className="flex flex-col items-center">
+                        <div className="flex items-center">
+                            <Clock size={32} className="text-red-500" />
+                            <div className="ml-3 flex flex-col items-start">
+                                <CardTitle className="text-base">Leave</CardTitle>
+                                <p className="text-xl font-semibold">{leaveCount}</p>
+                            </div>
+                        </div>
+                        <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                            <p>Fixed: {situationTypeCounts.leave.Fixed}</p>
+                            <p>Flexible: {situationTypeCounts.leave.Flexible}</p>
+                            <p>Super Flexible: {situationTypeCounts.leave['Super Flexible']}</p>
                         </div>
                     </CardContent>
                 </Card>
