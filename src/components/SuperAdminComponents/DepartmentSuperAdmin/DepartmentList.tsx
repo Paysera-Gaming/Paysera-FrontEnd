@@ -6,36 +6,21 @@ import DepartmentTable from './DepartmentTable';
 const sampleDepartments = [
     {
         id: 1,
-        name: 'HR',
+        name: 'Human Resources',
+        totalTeams: 3,
         teams: [
-            {
-                id: 1,
-                name: 'Recruitment',
-                leader: { id: 1, firstName: 'Alice', lastName: 'Johnson', middleName: 'A' },
-                members: [
-                    { id: 2, firstName: 'Bob', lastName: 'Smith', middleName: 'B' },
-                    { id: 3, firstName: 'Charlie', lastName: 'Brown', middleName: 'C' },
-                    { id: 4, firstName: 'David', lastName: 'Lee', middleName: 'D' },
-                ],
-            },
-            // Add more teams as needed
+            { id: 1, name: 'Recruitment', teamLeader: { firstName: 'Alice', lastName: 'Brown', middleName: 'T' }, members: 5 },
+            { id: 2, name: 'Training', teamLeader: { firstName: 'Bob', lastName: 'Smith', middleName: 'R' }, members: 4 },
+            { id: 3, name: 'Employee Relations', teamLeader: { firstName: 'Charlie', lastName: 'Davis', middleName: 'L' }, members: 6 },
         ],
     },
     {
         id: 2,
-        name: 'IT',
+        name: 'Finance',
+        totalTeams: 2,
         teams: [
-            {
-                id: 2,
-                name: 'Development',
-                leader: { id: 5, firstName: 'Eve', lastName: 'Doe', middleName: 'E' },
-                members: [
-                    { id: 6, firstName: 'Frank', lastName: 'Miller', middleName: 'F' },
-                    { id: 7, firstName: 'Grace', lastName: 'Williams', middleName: 'G' },
-                    { id: 8, firstName: 'Hank', lastName: 'Anderson', middleName: 'H' },
-                ],
-            },
-            // Add more teams as needed
+            { id: 1, name: 'Accounts', teamLeader: { firstName: 'David', lastName: 'Evans', middleName: 'M' }, members: 3 },
+            { id: 2, name: 'Payroll', teamLeader: { firstName: 'Ella', lastName: 'White', middleName: 'A' }, members: 4 },
         ],
     },
 ];
@@ -43,18 +28,13 @@ const sampleDepartments = [
 export default function DepartmentList() {
     const [departments] = useState(sampleDepartments);
     const [searchTerm, setSearchTerm] = useState('');
-    const [activeFilter, setActiveFilter] = useState('overall');
 
-    const handleFilterClick = (filter: string) => {
-        setActiveFilter(filter);
-    };
-
-    const filteredDepartments = departments.filter((dept) => {
-        return dept.name.toLowerCase().includes(searchTerm.toLowerCase());
-    });
+    const filteredDepartments = departments.filter(dept =>
+        dept.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const totalDepartments = departments.length;
-    const totalTeams = departments.reduce((acc, dept) => acc + dept.teams.length, 0);
+    const totalTeams = departments.reduce((sum, dept) => sum + dept.totalTeams, 0);
 
     return (
         <div className="p-4 space-y-4">
@@ -62,16 +42,12 @@ export default function DepartmentList() {
             <SummaryCards
                 totalDepartments={totalDepartments}
                 totalTeams={totalTeams}
-                activeFilter={activeFilter}
-                handleFilterClick={handleFilterClick}
             />
             {filteredDepartments.length > 0 ? (
                 <DepartmentTable departments={filteredDepartments} />
             ) : (
                 <div className="text-center text-gray-500 dark:text-gray-400">
-                    {searchTerm
-                        ? `No results found for "${searchTerm}".`
-                        : `No departments found.`}
+                    No departments found.
                 </div>
             )}
         </div>

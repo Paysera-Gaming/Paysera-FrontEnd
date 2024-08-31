@@ -1,26 +1,24 @@
-import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Edit2, Trash2 } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 interface Team {
     id: number;
     name: string;
-    leader: Employee;
-    members: Employee[];
+    teamLeader?: {
+        firstName: string;
+        lastName: string;
+        middleName?: string;
+    };
+    members: number;
 }
 
 interface Department {
     id: number;
     name: string;
+    totalTeams: number;
     teams: Team[];
-}
-
-interface Employee {
-    id: number;
-    firstName: string;
-    lastName: string;
-    middleName: string;
 }
 
 interface DepartmentTableProps {
@@ -38,7 +36,7 @@ export default function DepartmentTable({ departments }: DepartmentTableProps) {
                     <TableHeader>
                         <TableRow>
                             <TableHead>Department</TableHead>
-                            <TableHead>Team Leader Full Name</TableHead>
+                            <TableHead>Team Leader</TableHead>
                             <TableHead>Team Members</TableHead>
                             <TableHead>Actions</TableHead>
                         </TableRow>
@@ -48,15 +46,15 @@ export default function DepartmentTable({ departments }: DepartmentTableProps) {
                             dept.teams.map((team) => (
                                 <TableRow key={team.id}>
                                     <TableCell>{dept.name}</TableCell>
-                                    <TableCell>{`${team.leader.lastName}, ${team.leader.firstName} ${team.leader.middleName}`}</TableCell>
                                     <TableCell>
-                                        {team.members.slice(0, 3).map((member, index) => (
-                                            <span key={member.id}>
-                                                {`${member.lastName}, ${member.firstName} ${member.middleName}`}
-                                                {index < team.members.length - 1 ? ', ' : ''}
-                                            </span>
-                                        ))}
-                                        {team.members.length > 3 && '...'}
+                                        {team.teamLeader ? (
+                                            `${team.teamLeader.lastName}, ${team.teamLeader.firstName} ${team.teamLeader.middleName ?? ''}`
+                                        ) : (
+                                            'No Leader'
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {team.members > 3 ? `${team.members} members (showing only 3)` : `${team.members} members`}
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex gap-2">
@@ -79,3 +77,4 @@ export default function DepartmentTable({ departments }: DepartmentTableProps) {
         </Card>
     );
 }
+    
