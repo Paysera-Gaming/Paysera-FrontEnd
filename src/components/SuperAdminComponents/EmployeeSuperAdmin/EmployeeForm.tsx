@@ -57,14 +57,19 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
     if (values.firstName && values.lastName && values.department && values.role && values.password && values.confirmPassword) {
       toast.success('Form submitted successfully!');
       onSubmit(values);
-      onClose();
+      handleClose();
     } else {
       toast.error('Please fill out all required fields.');
     }
   }
 
+  function handleClose() {
+    form.reset();
+    onClose();
+  }
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Employee</DialogTitle>
@@ -183,7 +188,7 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
             </div>
             <DialogFooter>
               <Button type="submit">Submit</Button>
-              <Button variant="outline" onClick={onClose}>Cancel</Button>
+              <Button variant="outline" onClick={handleClose}>Cancel</Button>
             </DialogFooter>
           </form>
         </Form>
