@@ -155,6 +155,7 @@ export default function AttendanceList() {
                     active={activeFilter === 'overall'}
                     onClick={() => setActiveFilter('overall')}
                     outlineColor="border-blue-500" // Outline color for Overall
+                    activeColor="bg-blue-100 dark:bg-blue-900" // Active color for Overall
                 />
                 <SummaryCard
                     title="On Job"
@@ -164,6 +165,7 @@ export default function AttendanceList() {
                     active={activeFilter === 'onJob'}
                     onClick={() => setActiveFilter('onJob')}
                     outlineColor="border-green-500" // Outline color for On Job
+                    activeColor="bg-green-100 dark:bg-green-900" // Active color for On Job
                 />
                 <SummaryCard
                     title="Lunch"
@@ -173,6 +175,7 @@ export default function AttendanceList() {
                     active={activeFilter === 'lunch'}
                     onClick={() => setActiveFilter('lunch')}
                     outlineColor="border-yellow-500" // Outline color for Lunch
+                    activeColor="bg-yellow-100 dark:bg-yellow-900" // Active color for Lunch
                 />
                 <SummaryCard
                     title="Leave"
@@ -182,6 +185,7 @@ export default function AttendanceList() {
                     active={activeFilter === 'leave'}
                     onClick={() => setActiveFilter('leave')}
                     outlineColor="border-red-500" // Outline color for Leave
+                    activeColor="bg-red-100 dark:bg-red-900" // Active color for Leave
                 />
             </div>
 

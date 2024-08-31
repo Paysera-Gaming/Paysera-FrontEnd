@@ -8,13 +8,14 @@ interface SummaryCardProps {
     active: boolean;
     onClick: () => void;
     outlineColor: string; // New prop for outline color
+    activeColor: string; // New prop for active color
 }
 
-export function SummaryCard({ title, count, typeCounts, icon, active, onClick, outlineColor }: SummaryCardProps) {
+export function SummaryCard({ title, count, typeCounts, icon, active, onClick, outlineColor, activeColor }: SummaryCardProps) {
     return (
         <Card
             onClick={onClick}
-            className={`flex-1 p-4 cursor-pointer bg-transparent border-2 ${outlineColor} ${active ? 'bg-blue-100 dark:bg-gray-800' : ''}`}
+            className={`flex-1 p-4 cursor-pointer border-2 ${outlineColor} ${active ? activeColor : ''} ${active ? `hover:${activeColor}` : ''}`}
         >
             <CardContent className="flex flex-col items-center">
                 <div className="flex items-center">
