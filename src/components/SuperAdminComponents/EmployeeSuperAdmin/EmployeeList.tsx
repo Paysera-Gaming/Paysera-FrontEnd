@@ -49,7 +49,15 @@ export default function EmployeeList() {
                 activeFilter={activeFilter}
                 handleFilterClick={handleFilterClick}
             />
-            <EmployeeTable employees={filteredEmployees} />
+            {filteredEmployees.length > 0 ? (
+                <EmployeeTable employees={filteredEmployees} />
+            ) : (
+                <div className="text-center text-gray-500 dark:text-gray-400">
+                    {searchTerm
+                        ? `No results found for "${searchTerm}".`
+                        : `No ${activeFilter !== 'overall' ? activeFilter : ''} employees found.`}
+                </div>
+            )}
         </div>
     );
 }

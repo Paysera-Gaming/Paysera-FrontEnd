@@ -20,8 +20,8 @@ export default function SummaryCards({
         <div className="flex gap-4 mb-4">
             <Card
                 onClick={() => handleFilterClick('overall')}
-                className={`flex-1 p-4 cursor-pointer bg-transparent ${
-                    activeFilter === 'overall' ? 'bg-blue-50 dark:bg-blue-900' : ''
+                className={`flex-1 p-4 cursor-pointer border-2 border-blue-500 ${
+                    activeFilter === 'overall' ? 'bg-blue-100 dark:bg-blue-900' : ''
                 }`}
             >
                 <CardContent className="flex items-center">
@@ -35,8 +35,8 @@ export default function SummaryCards({
 
             <Card
                 onClick={() => handleFilterClick('online')}
-                className={`flex-1 p-4 cursor-pointer bg-transparent ${
-                    activeFilter === 'online' ? 'bg-green-50 dark:bg-green-900' : ''
+                className={`flex-1 p-4 cursor-pointer border-2 border-green-500 ${
+                    activeFilter === 'online' ? 'bg-green-100 dark:bg-green-900' : ''
                 }`}
             >
                 <CardContent className="flex items-center">
@@ -50,8 +50,8 @@ export default function SummaryCards({
 
             <Card
                 onClick={() => handleFilterClick('offline')}
-                className={`flex-1 p-4 cursor-pointer bg-transparent ${
-                    activeFilter === 'offline' ? 'bg-red-50 dark:bg-red-900' : ''
+                className={`flex-1 p-4 cursor-pointer border-2 border-red-500 ${
+                    activeFilter === 'offline' ? 'bg-red-100 dark:bg-red-900' : ''
                 }`}
             >
                 <CardContent className="flex items-center">
