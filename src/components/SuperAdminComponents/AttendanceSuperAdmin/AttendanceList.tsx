@@ -4,6 +4,7 @@ import { DatePickerDemo } from './DatePickerDemo';
 import { SummaryCard } from './SummaryCard';
 import { AttendanceTable } from './AttendanceTable';
 import { Users, UserCheck, Coffee, Clock } from 'lucide-react';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
 // Sample data for demonstration
 const sampleAttendance = [
@@ -49,6 +50,7 @@ export default function AttendanceList() {
     const [attendanceData] = useState(sampleAttendance);
     const [searchTerm, setSearchTerm] = useState('');
     const [activeFilter, setActiveFilter] = useState('overall');
+    const [typeFilter, setTypeFilter] = useState('all');
 
     // Filter attendance data based on selected filter and search term
     const filteredAttendance = attendanceData
@@ -61,6 +63,16 @@ export default function AttendanceList() {
                 return att.situation === 'Leave';
             }
             return true; // Show all records if the overall filter is selected
+        })
+        .filter((att) => {
+            if (typeFilter === 'Fixed') {
+                return att.type === 'Fixed';
+            } else if (typeFilter === 'Flexible') {
+                return att.type === 'Flexible';
+            } else if (typeFilter === 'Super Flexible') {
+                return att.type === 'Super Flexible';
+            }
+            return true; // Show all records if no type filter is selected
         })
         .filter((att) =>
             att.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -110,6 +122,27 @@ export default function AttendanceList() {
                     className="w-full max-w-xs"
                 />
                 <DatePickerDemo /> {/* Calendar Button moved next to the search bar */}
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none">
+                            Filter
+                        </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-white dark:bg-gray-800 dark:text-white shadow-lg rounded-md mt-2">
+                        <DropdownMenuItem onSelect={() => setTypeFilter('all')} className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                            All
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => setTypeFilter('Fixed')} className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                            Fixed
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => setTypeFilter('Flexible')} className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                            Flexible
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => setTypeFilter('Super Flexible')} className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                            Super Flexible
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
 
             {/* Summary Cards with Filter Functionality */}
@@ -153,7 +186,15 @@ export default function AttendanceList() {
             </div>
 
             {/* Attendance Table */}
-            <AttendanceTable attendanceData={filteredAttendance} />
+            {filteredAttendance.length > 0 ? (
+                <AttendanceTable attendanceData={filteredAttendance} />
+            ) : (
+                <div className="text-center text-gray-500 dark:text-gray-400">
+                    {searchTerm
+                        ? `No results found for "${searchTerm}".`
+                        : `No ${typeFilter !== 'all' ? typeFilter : ''} employees are ${activeFilter !== 'overall' ? activeFilter : 'available'}.`}
+                </div>
+            )}
         </div>
     );
 }
