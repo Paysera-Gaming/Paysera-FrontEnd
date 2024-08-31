@@ -2,8 +2,6 @@ import { SetStateAction, useState } from 'react';
 import SearchBar from './SearchBar';
 import SummaryCards from './SummaryCards';
 import EmployeeTable from './EmployeeTable';
-import EmployeeForm from './EmployeeForm';
-import { Button } from '@/components/ui/button'; // Add this import
 
 const sampleEmployees = [
     { id: 1, firstName: 'John', lastName: 'Doe', middleName: 'M', isActive: true, department: 'HR', role: 'Manager' },
@@ -15,15 +13,9 @@ export default function EmployeeList() {
     const [employees] = useState(sampleEmployees);
     const [searchTerm, setSearchTerm] = useState('');
     const [activeFilter, setActiveFilter] = useState('overall');
-    const [isFormOpen, setIsFormOpen] = useState(false);
 
     const handleFilterClick = (filter: SetStateAction<string>) => {
         setActiveFilter(filter);
-    };
-
-    const handleFormSubmit = (_data: any) => {
-        // Handle form submission logic here
-        setIsFormOpen(false);
     };
 
     const filteredEmployees = employees
@@ -57,8 +49,6 @@ export default function EmployeeList() {
                 activeFilter={activeFilter}
                 handleFilterClick={handleFilterClick}
             />
-            <Button onClick={() => setIsFormOpen(true)}>Add Employee</Button>
-            {isFormOpen && <EmployeeForm onSubmit={handleFormSubmit} />}
             {filteredEmployees.length > 0 ? (
                 <EmployeeTable employees={filteredEmployees} />
             ) : (
