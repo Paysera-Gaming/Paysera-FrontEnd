@@ -106,13 +106,18 @@ const router = createBrowserRouter([
         element: <SuperAdminPage></SuperAdminPage>,
         children: [
             {
+                index: true,
+                loader: () => redirect('/superadmin/dashboard'),
+            },
+            {
                 path: 'dashboard',
                 element: <SuperAdminDashboardPage />, // SuperAdmin Dashboard
             },
-            // Add more child routes if needed
+			// Add more child routes if needed
         ],
     },
 ]);
+
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
