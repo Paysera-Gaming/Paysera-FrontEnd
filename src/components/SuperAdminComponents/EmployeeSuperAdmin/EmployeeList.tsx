@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Users, UserCheck, UserX } from 'lucide-react';
 
 const sampleEmployees = [
     { id: 1, firstName: 'John', lastName: 'Doe', middleName: 'M', isActive: true, department: 'HR', role: 'Manager' },
@@ -38,13 +38,15 @@ export default function EmployeeList() {
                 />
                 <div className="flex gap-2">
                     <Button variant="outline" size="sm" leftIcon={<Plus size={16} />}>Create</Button>
-                    {/* No extra Edit button, Edit will be part of table actions */}
                 </div>
             </div>
             <div className="flex gap-4 mb-4">
                 <Card className="flex-1 text-center p-2">
                     <CardHeader>
-                        <CardTitle>Overall Total</CardTitle>
+                        <CardTitle className="flex items-center justify-center gap-2">
+                            <Users size={20} />
+                            Overall Total
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <p className="text-xl font-semibold">{employees.length}</p>
@@ -52,7 +54,10 @@ export default function EmployeeList() {
                 </Card>
                 <Card className="flex-1 text-center p-2">
                     <CardHeader>
-                        <CardTitle>Online</CardTitle>
+                        <CardTitle className="flex items-center justify-center gap-2">
+                            <UserCheck size={20} />
+                            Online
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <p className="text-xl font-semibold">{onlineCount}</p>
@@ -60,7 +65,10 @@ export default function EmployeeList() {
                 </Card>
                 <Card className="flex-1 text-center p-2">
                     <CardHeader>
-                        <CardTitle>Offline</CardTitle>
+                        <CardTitle className="flex items-center justify-center gap-2">
+                            <UserX size={20} />
+                            Offline
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <p className="text-xl font-semibold">{offlineCount}</p>
