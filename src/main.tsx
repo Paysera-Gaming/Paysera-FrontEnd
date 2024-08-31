@@ -21,6 +21,9 @@ import Employee from './components/AdminDashboard/Employee';
 // superadmin
 import SuperAdminPage from './pages/SuperAdmin/SuperAdminPage';
 import SuperAdminDashboardPage from './pages/SuperAdmin/Dashboard/DashboardPage';
+import AttendanceDashboard from './pages/SuperAdmin/Attendance/AttendanceDashboard';
+
+
 
 
 
@@ -112,8 +115,13 @@ const router = createBrowserRouter([
             },
             {
                 path: 'dashboard',
-                element: <SuperAdminDashboardPage />, // SuperAdmin Dashboard
+                element: <SuperAdminDashboardPage />,
+				 // SuperAdmin Dashboard
             },
+			{ path: 'schedule', element: <SchedulePage></SchedulePage> },
+			{ path: 'attendance', element: <AttendanceDashboard></AttendanceDashboard> },
+
+			
 			// Add more child routes if needed
         ],
     },
