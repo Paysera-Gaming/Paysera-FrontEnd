@@ -47,7 +47,7 @@ export default function EmployeeList() {
                     <CardContent className="flex items-center">
                         <Users size={32} className="text-blue-500" />
                         <div className="ml-3 flex items-center">
-                            <CardTitle className="text-lg">Overall Total</CardTitle>
+                            <CardTitle className="text-lg">Overall</CardTitle>
                             <p className="ml-2 text-2xl font-semibold">{employees.length}</p>
                         </div>
                     </CardContent>
