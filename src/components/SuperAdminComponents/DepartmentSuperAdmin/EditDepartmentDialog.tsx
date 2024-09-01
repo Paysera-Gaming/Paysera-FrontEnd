@@ -15,6 +15,8 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
     const [name, setName] = useState('');
     const [teamLeader, setTeamLeader] = useState('');
     const [teamMembers, setTeamMembers] = useState<string[]>(['']);
+    const [currentPage, setCurrentPage] = useState(0);
+    const membersPerPage = 3;
 
     useEffect(() => {
         if (department) {
@@ -49,6 +51,10 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
         setTeamMembers(newTeamMembers);
     };
 
+    const startIndex = currentPage * membersPerPage;
+    const endIndex = startIndex + membersPerPage;
+    const currentMembers = teamMembers.slice(startIndex, endIndex);
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent>
@@ -74,22 +80,37 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                             className="mt-2"
                         />
                     </div>
-                    {teamMembers.map((member, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                            <div className="flex-1">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-white">{`Team Member ${index + 1}`}</label>
-                                <div className="flex items-center space-x-2 mt-2">
-                                    <Input
-                                        type="text"
-                                        value={member}
-                                        onChange={(e) => handleMemberChange(index, e.target.value)}
-                                    />
-                                    <Button variant="outline" onClick={() => handleRemoveMember(index)}>Remove</Button>
-                                </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-white">Team Members</label>
+                        {currentMembers.map((member, index) => (
+                            <div key={startIndex + index} className="flex items-center space-x-2 mt-2">
+                                <Input
+                                    type="text"
+                                    value={member}
+                                    onChange={(e) => handleMemberChange(startIndex + index, e.target.value)}
+                                    className="flex-1"
+                                />
+                                <Button variant="outline" onClick={() => handleRemoveMember(startIndex + index)}>Remove</Button>
                             </div>
-                        </div>
-                    ))}
-                    <Button variant="outline" onClick={handleAddMember}>Add Team Member</Button>
+                        ))}
+                    </div>
+                    <div className="flex justify-between mt-4">
+                        <Button
+                            variant="outline"
+                            onClick={() => setCurrentPage(currentPage - 1)}
+                            disabled={currentPage === 0}
+                        >
+                            Previous
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={() => setCurrentPage(currentPage + 1)}
+                            disabled={endIndex >= teamMembers.length}
+                        >
+                            Next
+                        </Button>
+                    </div>
+                    <Button variant="outline" onClick={handleAddMember} className="mt-4">Add Team Member</Button>
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={onClose}>Cancel</Button>
