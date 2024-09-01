@@ -5,6 +5,7 @@ import { Edit2, Trash2, Circle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import EmployeeEdit from './EmployeeEdit';
 
 interface Employee {
     id: number;
@@ -22,6 +23,7 @@ interface EmployeeTableProps {
 
 export default function EmployeeTable({ employees }: EmployeeTableProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
 
     const handleDeleteClick = (employee: Employee) => {
@@ -29,9 +31,21 @@ export default function EmployeeTable({ employees }: EmployeeTableProps) {
         setIsDialogOpen(true);
     };
 
+    const handleEditClick = (employee: Employee) => {
+        setSelectedEmployee(employee);
+        setIsEditDialogOpen(true);
+    };
+
     const handleConfirmDelete = () => {
         setIsDialogOpen(false);
         toast.success(`Successfully deleted ${selectedEmployee?.firstName} ${selectedEmployee?.lastName}`);
+    };
+
+    const handleEditSubmit = (values: any) => {
+        // Handle the edit form submission
+        console.log('Edited values:', values);
+        setIsEditDialogOpen(false);
+        toast.success(`Successfully edited ${selectedEmployee?.firstName} ${selectedEmployee?.lastName}`);
     };
 
     return (
@@ -68,7 +82,7 @@ export default function EmployeeTable({ employees }: EmployeeTableProps) {
                                 <TableCell>{emp.role}</TableCell>
                                 <TableCell>
                                     <div className="flex gap-2">
-                                        <Button variant="outline" size="sm">
+                                        <Button variant="outline" size="sm" onClick={() => handleEditClick(emp)}>
                                             <Edit2 size={16} />
                                             Edit
                                         </Button>
@@ -95,6 +109,14 @@ export default function EmployeeTable({ employees }: EmployeeTableProps) {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+            {selectedEmployee && (
+                <EmployeeEdit
+                    employee={selectedEmployee}
+                    onSubmit={handleEditSubmit}
+                    isOpen={isEditDialogOpen}
+                    onClose={() => setIsEditDialogOpen(false)}
+                />
+            )}
         </Card>
     );
 }
