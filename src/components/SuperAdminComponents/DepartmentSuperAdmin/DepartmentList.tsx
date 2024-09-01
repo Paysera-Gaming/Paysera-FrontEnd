@@ -54,7 +54,7 @@ export default function DepartmentList() {
                 <DepartmentTable departments={filteredDepartments} />
             ) : (
                 <div className="text-center text-gray-500 dark:text-gray-400">
-                    No departments found.
+                    {`No results found for "${searchTerm}"`}
                 </div>
             )}
             <AddDepartmentDialog
