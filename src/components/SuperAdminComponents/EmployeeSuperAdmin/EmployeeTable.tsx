@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Edit2, Trash2, Circle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 
 interface Employee {
     id: number;
@@ -95,7 +95,6 @@ export default function EmployeeTable({ employees }: EmployeeTableProps) {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-            <Toaster />
         </Card>
     );
 }
