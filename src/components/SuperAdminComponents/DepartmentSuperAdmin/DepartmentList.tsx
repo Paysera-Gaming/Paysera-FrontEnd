@@ -3,7 +3,6 @@ import SearchBar from './SearchBar';
 import SummaryCards from './SummaryCards';
 import DepartmentTable from './DepartmentTable';
 import AddDepartmentDialog from './AddDepartmentDialog';
-import { toast } from 'sonner';
 
 const sampleDepartments = [
     {
@@ -28,7 +27,7 @@ const sampleDepartments = [
 ];
 
 export default function DepartmentList() {
-    const [departments, setDepartments] = useState(sampleDepartments);
+    const [departments] = useState(sampleDepartments);
     const [searchTerm, setSearchTerm] = useState('');
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
@@ -46,7 +45,7 @@ export default function DepartmentList() {
 
     return (
         <div className="p-4 space-y-4">
-            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} onAddDepartment={() => setIsAddDialogOpen(true)} />
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             <SummaryCards
                 totalDepartments={totalDepartments}
                 totalTeams={totalTeams}
