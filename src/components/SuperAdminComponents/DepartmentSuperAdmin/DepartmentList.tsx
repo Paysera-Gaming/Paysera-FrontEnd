@@ -28,7 +28,7 @@ const sampleDepartments = [
 ];
 
 export default function DepartmentList() {
-    const [departments, setDepartments] = useState(sampleDepartments);
+    const [departments] = useState(sampleDepartments);
     const [searchTerm, setSearchTerm] = useState('');
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
