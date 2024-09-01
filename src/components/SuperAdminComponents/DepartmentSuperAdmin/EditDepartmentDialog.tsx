@@ -44,6 +44,11 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
         setTeamMembers(newTeamMembers);
     };
 
+    const handleRemoveMember = (index: number) => {
+        const newTeamMembers = teamMembers.filter((_, i) => i !== index);
+        setTeamMembers(newTeamMembers);
+    };
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent>
@@ -70,14 +75,18 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                         />
                     </div>
                     {teamMembers.map((member, index) => (
-                        <div key={index}>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-white">{`Team Member ${index + 1}`}</label>
-                            <Input
-                                type="text"
-                                value={member}
-                                onChange={(e) => handleMemberChange(index, e.target.value)}
-                                className="mt-2"
-                            />
+                        <div key={index} className="flex items-center space-x-2">
+                            <div className="flex-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-white">{`Team Member ${index + 1}`}</label>
+                                <div className="flex items-center space-x-2 mt-2">
+                                    <Input
+                                        type="text"
+                                        value={member}
+                                        onChange={(e) => handleMemberChange(index, e.target.value)}
+                                    />
+                                    <Button variant="outline" onClick={() => handleRemoveMember(index)}>Remove</Button>
+                                </div>
+                            </div>
                         </div>
                     ))}
                     <Button variant="outline" onClick={handleAddMember}>Add Team Member</Button>
