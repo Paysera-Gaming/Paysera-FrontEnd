@@ -90,7 +90,7 @@ export function DatePickerDemo() {
                                 range_start: "text-xs font-medium text-white bg-green-600 dark:bg-green-400 rounded-full", // Special style for start date
                                 range_end: "text-xs font-medium text-white bg-red-600 dark:bg-red-400 rounded-full", // Special style for end date
                                 range_middle: "text-xs font-medium text-white bg-blue-500 dark:bg-blue-300 rounded-full",
-                                today: "text-xs font-medium text-white bg-blue-600 dark:bg-blue-400 rounded-full", // Ensure today is styled correctly
+                                today: selected?.from && format(selected.from, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") ? "text-xs font-medium text-white bg-blue-600 dark:bg-blue-400 rounded-full" : "", // Highlight today only if selected
                             }}
                             className="bg-white dark:bg-gray-800 p-1"
                             styles={{
