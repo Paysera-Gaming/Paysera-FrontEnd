@@ -42,7 +42,6 @@ export default function DepartmentList() {
     const handleAddDepartment = (newDepartment: { name: string; teamLeader: string; teamMembers: string[] }) => {
         // You can handle the addition logic here if needed
         console.log('New Department:', newDepartment);
-        toast.success('Department added successfully!');
     };
 
     return (
