@@ -84,6 +84,7 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                         <label className="block text-sm font-medium text-gray-700 dark:text-white">Team Members</label>
                         {currentMembers.map((member, index) => (
                             <div key={startIndex + index} className="flex items-center space-x-2 mt-2">
+                                <div className="w-6 text-right">{startIndex + index + 1}.</div>
                                 <Input
                                     type="text"
                                     value={member}
