@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Edit2, Trash2, Circle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Toaster, toast } from 'sonner';
 
 interface Employee {
     id: number;
@@ -30,7 +31,7 @@ export default function EmployeeTable({ employees }: EmployeeTableProps) {
 
     const handleConfirmDelete = () => {
         setIsDialogOpen(false);
-        // Perform delete action here
+        toast.success(`Successfully deleted ${selectedEmployee?.firstName} ${selectedEmployee?.lastName}`);
     };
 
     return (
@@ -94,6 +95,7 @@ export default function EmployeeTable({ employees }: EmployeeTableProps) {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+            <Toaster />
         </Card>
     );
 }
