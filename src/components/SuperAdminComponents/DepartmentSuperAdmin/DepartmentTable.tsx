@@ -23,9 +23,10 @@ interface Department {
 
 interface DepartmentTableProps {
     departments: Department[];
+    onEditClick: (department: { id: number; name: string; teamLeader: string; teamMembers: string[] }) => void;
 }
 
-export default function DepartmentTable({ departments }: DepartmentTableProps) {
+export default function DepartmentTable({ departments, onEditClick }: DepartmentTableProps) {
     return (
         <Card>
             <CardHeader>
@@ -58,7 +59,12 @@ export default function DepartmentTable({ departments }: DepartmentTableProps) {
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex gap-2">
-                                            <Button variant="outline" size="sm">
+                                            <Button variant="outline" size="sm" onClick={() => onEditClick({
+                                                id: dept.id,
+                                                name: dept.name,
+                                                teamLeader: team.teamLeader ? `${team.teamLeader.firstName} ${team.teamLeader.lastName}` : '',
+                                                teamMembers: dept.teams.map(t => t.name)
+                                            })}>
                                                 <Edit2 size={16} />
                                                 Edit
                                             </Button>

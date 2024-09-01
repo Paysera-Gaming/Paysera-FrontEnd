@@ -3,6 +3,7 @@ import SearchBar from './SearchBar';
 import SummaryCards from './SummaryCards';
 import DepartmentTable from './DepartmentTable';
 import AddDepartmentDialog from './AddDepartmentDialog';
+import EditDepartmentDialog from './EditDepartmentDialog';
 
 const sampleDepartments = [
     {
@@ -27,9 +28,11 @@ const sampleDepartments = [
 ];
 
 export default function DepartmentList() {
-    const [departments] = useState(sampleDepartments);
+    const [departments, setDepartments] = useState(sampleDepartments);
     const [searchTerm, setSearchTerm] = useState('');
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [selectedDepartment, setSelectedDepartment] = useState<{ id: number; name: string; teamLeader: string; teamMembers: string[] } | null>(null);
 
     const filteredDepartments = departments.filter(dept =>
         dept.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -43,6 +46,16 @@ export default function DepartmentList() {
         console.log('New Department:', newDepartment);
     };
 
+    const handleEditDepartment = (updatedDepartment: { id: number; name: string; teamLeader: string; teamMembers: string[] }) => {
+        // You can handle the edit logic here if needed
+        console.log('Updated Department:', updatedDepartment);
+    };
+
+    const handleEditClick = (department: { id: number; name: string; teamLeader: string; teamMembers: string[] }) => {
+        setSelectedDepartment(department);
+        setIsEditDialogOpen(true);
+    };
+
     return (
         <div className="p-4 space-y-4">
             <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
@@ -51,7 +64,7 @@ export default function DepartmentList() {
                 totalTeams={totalTeams}
             />
             {filteredDepartments.length > 0 ? (
-                <DepartmentTable departments={filteredDepartments} />
+                <DepartmentTable departments={filteredDepartments} onEditClick={handleEditClick} />
             ) : (
                 <div className="text-center text-gray-500 dark:text-gray-400">
                     {`No results found for "${searchTerm}"`}
@@ -61,6 +74,12 @@ export default function DepartmentList() {
                 isOpen={isAddDialogOpen}
                 onClose={() => setIsAddDialogOpen(false)}
                 onAdd={handleAddDepartment}
+            />
+            <EditDepartmentDialog
+                isOpen={isEditDialogOpen}
+                onClose={() => setIsEditDialogOpen(false)}
+                onEdit={handleEditDepartment}
+                department={selectedDepartment}
             />
         </div>
     );
