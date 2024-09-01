@@ -5,9 +5,10 @@ import { Plus } from 'lucide-react';
 interface SearchBarProps {
     searchTerm: string;
     setSearchTerm: (term: string) => void;
+    onAddDepartment: () => void;
 }
 
-export default function SearchBar({ searchTerm, setSearchTerm }: SearchBarProps) {
+export default function SearchBar({ searchTerm, setSearchTerm, onAddDepartment }: SearchBarProps) {
     return (
         <div className="flex justify-between items-center mb-4">
             <Input
@@ -18,9 +19,9 @@ export default function SearchBar({ searchTerm, setSearchTerm }: SearchBarProps)
                 className="w-full max-w-xs"
             />
             <div className="flex gap-2">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={onAddDepartment}>
                     <Plus size={16} />
-                    Create
+                    Add Department
                 </Button>
             </div>
         </div>

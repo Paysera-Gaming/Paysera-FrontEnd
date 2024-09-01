@@ -2,6 +2,8 @@ import { useState } from 'react';
 import SearchBar from './SearchBar';
 import SummaryCards from './SummaryCards';
 import DepartmentTable from './DepartmentTable';
+import AddDepartmentDialog from './AddDepartmentDialog';
+import { toast } from 'sonner';
 
 const sampleDepartments = [
     {
@@ -26,8 +28,9 @@ const sampleDepartments = [
 ];
 
 export default function DepartmentList() {
-    const [departments] = useState(sampleDepartments);
+    const [departments, setDepartments] = useState(sampleDepartments);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
     const filteredDepartments = departments.filter(dept =>
         dept.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -36,9 +39,15 @@ export default function DepartmentList() {
     const totalDepartments = departments.length;
     const totalTeams = departments.reduce((sum, dept) => sum + dept.totalTeams, 0);
 
+    const handleAddDepartment = (newDepartment: { name: string; teamLeader: string; teamMembers: string[] }) => {
+        // You can handle the addition logic here if needed
+        console.log('New Department:', newDepartment);
+        toast.success('Department added successfully!');
+    };
+
     return (
         <div className="p-4 space-y-4">
-            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} onAddDepartment={() => setIsAddDialogOpen(true)} />
             <SummaryCards
                 totalDepartments={totalDepartments}
                 totalTeams={totalTeams}
@@ -50,6 +59,11 @@ export default function DepartmentList() {
                     No departments found.
                 </div>
             )}
+            <AddDepartmentDialog
+                isOpen={isAddDialogOpen}
+                onClose={() => setIsAddDialogOpen(false)}
+                onAdd={handleAddDepartment}
+            />
         </div>
     );
 }
