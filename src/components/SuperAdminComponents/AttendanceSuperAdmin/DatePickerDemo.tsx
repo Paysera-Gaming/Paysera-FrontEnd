@@ -86,11 +86,15 @@ export function DatePickerDemo() {
                             month={month}
                             onMonthChange={setMonth}
                             modifiersClassNames={{
-                                selected: "text-sm font-medium text-blue-600 bg-blue-50 dark:bg-blue-900 rounded-full",
+                                selected: "text-xs font-medium text-white bg-blue-600 dark:bg-blue-400 rounded-full",
+                                range_start: "text-xs font-medium text-white bg-green-600 dark:bg-green-400 rounded-full", // Special style for start date
+                                range_end: "text-xs font-medium text-white bg-red-600 dark:bg-red-400 rounded-full", // Special style for end date
+                                range_middle: "text-xs font-medium text-white bg-blue-500 dark:bg-blue-300 rounded-full",
+                                today: "text-xs font-medium text-white bg-blue-600 dark:bg-blue-400 rounded-full", // Ensure today is styled correctly
                             }}
                             className="bg-white dark:bg-gray-800 p-1"
                             styles={{
-                                day: { height: "1.5rem", lineHeight: "1.5rem" }, // Adjust the height of the calendar days
+                                day: { height: "1rem", lineHeight: "1rem", padding: "0.1rem", margin: "0.2rem" }, // Adjust the height, padding, and margin of the calendar days
                             }}
                         />
                     </div>
