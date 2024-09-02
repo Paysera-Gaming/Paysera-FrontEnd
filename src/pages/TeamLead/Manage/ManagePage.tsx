@@ -5,7 +5,7 @@ import { TEmployee } from '@/components/DataTable/DataColumns';
 export default function ManagePage() {
 	const dataEmployees: TEmployee[] = [
 		{
-			id: 'adawdd',
+			id: 'lue',
 			fName: 'Bohn',
 			lName: 'Boe',
 			mName: 'Belacruz',
@@ -14,7 +14,7 @@ export default function ManagePage() {
 			updatedAt: new Date('05-03-2024'),
 		},
 		{
-			id: 'adawdda',
+			id: 'kelly',
 			fName: 'Cohn',
 			lName: 'Coe',
 			mName: 'Celacruz',
@@ -23,7 +23,7 @@ export default function ManagePage() {
 			updatedAt: new Date('07-03-2024'),
 		},
 		{
-			id: 'adawdd1',
+			id: 'anunciacion',
 			fName: 'Aohn',
 			lName: 'Aoe',
 			mName: 'Aelacruz',

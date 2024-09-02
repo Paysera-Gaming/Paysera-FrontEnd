@@ -1,9 +1,11 @@
 import {
 	ColumnDef,
+	ColumnFiltersState,
 	flexRender,
 	SortingState,
 	getSortedRowModel,
 	getCoreRowModel,
+	getFilteredRowModel,
 	getPaginationRowModel,
 	VisibilityState,
 	useReactTable,
@@ -25,6 +27,7 @@ import {
 	TableRow,
 } from '@/components/ui/table';
 import { Button } from '../ui/button';
+import { Input } from '@/components/ui/input';
 import React from 'react';
 
 interface DataTableProps<TData, TValue> {
@@ -38,6 +41,10 @@ export function DataTable<TData, TValue>({
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
+
+	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+		[]
+	);
 	const table = useReactTable({
 		data,
 		columns,
@@ -46,14 +53,54 @@ export function DataTable<TData, TValue>({
 		onSortingChange: setSorting,
 		getSortedRowModel: getSortedRowModel(),
 		onColumnVisibilityChange: setColumnVisibility,
+		onColumnFiltersChange: setColumnFilters,
+		getFilteredRowModel: getFilteredRowModel(),
+
 		state: {
 			sorting,
 			columnVisibility,
+			columnFilters,
 		},
 	});
 
 	return (
 		<div>
+			<div className="flex items-center py-4">
+				<Input
+					placeholder="Filter By EmployeeID"
+					value={(table.getColumn('id')?.getFilterValue() as string) ?? ''}
+					onChange={(event) =>
+						table.getColumn('id')?.setFilterValue(event.target.value)
+					}
+					className="max-w-xs"
+				/>
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button variant="outline" className="ml-auto">
+							Columns
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end">
+						{table
+							.getAllColumns()
+							.filter((column) => column.getCanHide())
+							.map((column) => {
+								return (
+									<DropdownMenuCheckboxItem
+										key={column.id}
+										className="capitalize"
+										checked={column.getIsVisible()}
+										onCheckedChange={(value) =>
+											column.toggleVisibility(!!value)
+										}
+									>
+										{column.id}
+									</DropdownMenuCheckboxItem>
+								);
+							})}
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</div>
 			<div className="rounded-md border">
 				<Table>
 					<TableHeader>

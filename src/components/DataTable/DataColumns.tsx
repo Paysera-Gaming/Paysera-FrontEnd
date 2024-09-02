@@ -33,6 +33,20 @@ function formatDate(date: Date): string {
 
 export const employeeColumns: ColumnDef<TEmployee>[] = [
 	{
+		accessorKey: 'id',
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+				>
+					Employee ID
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+	},
+	{
 		accessorKey: 'lName',
 		header: ({ column }) => {
 			return (
@@ -126,14 +140,12 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="start">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem
-							onClick={() => navigator.clipboard.writeText(employee.id)}
-						>
-							Copy Employee Id
-						</DropdownMenuItem>
+
 						<DropdownMenuSeparator />
 						<DropdownMenuItem>Edit User</DropdownMenuItem>
-						<DropdownMenuItem>Delete User </DropdownMenuItem>
+						<DropdownMenuItem className="text-destructive">
+							Delete Employee
+						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			);
