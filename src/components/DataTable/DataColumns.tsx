@@ -142,9 +142,9 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
 
 						<DropdownMenuSeparator />
-						<DropdownMenuItem>Edit User</DropdownMenuItem>
+						<DropdownMenuItem> Edit Role </DropdownMenuItem>
 						<DropdownMenuItem className="text-destructive">
-							Delete Employee
+							Remove from department
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
