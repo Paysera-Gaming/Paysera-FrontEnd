@@ -29,6 +29,7 @@ import {
 import { Button } from '../ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
+import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -64,8 +65,8 @@ export function DataTable<TData, TValue>({
 	});
 
 	return (
-		<div>
-			<div className="flex items-center py-4">
+		<div className="w-full flex flex-col items-center justify-between ">
+			<div className="w-full flex justify-between items-center py-4">
 				<Input
 					placeholder="Filter By EmployeeID"
 					value={(table.getColumn('id')?.getFilterValue() as string) ?? ''}
@@ -101,7 +102,8 @@ export function DataTable<TData, TValue>({
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</div>
-			<div className="rounded-md border">
+
+			<ScrollArea className=" w-full xl:w-[900px] rounded-md border">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -151,8 +153,10 @@ export function DataTable<TData, TValue>({
 						)}
 					</TableBody>
 				</Table>
-			</div>
-			<div className="flex items-center justify-end space-x-2 py-4">
+				<ScrollBar orientation="horizontal" />
+			</ScrollArea>
+
+			<div className="w-full flex items-center justify-end space-x-2 py-4">
 				<Button
 					variant="outline"
 					size="sm"

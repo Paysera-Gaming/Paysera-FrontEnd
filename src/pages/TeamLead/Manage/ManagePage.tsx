@@ -47,7 +47,7 @@ export default function ManagePage() {
 			{/* search bar sa table with a add employee of the side then after adding empoyee may form na lalagay anong role nya  */}
 			{/* and table of employeees */}
 			{/*  TO DO ADD THE FILTER AND VISIBILITY OPTIOn*/}
-			<h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 mb-5">
+			<h2 className="scroll-m-20  border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 mb-5">
 				Manage Employees
 			</h2>
 			<DataTable columns={employeeColumns} data={dataEmployees}></DataTable>
