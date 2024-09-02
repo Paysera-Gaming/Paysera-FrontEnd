@@ -43,7 +43,7 @@ export default function ManagePage() {
 	];
 
 	return (
-		<div className=" w-full h-full border-border border-solid border p-5 rounded-md">
+		<div className="w-full inline-block border-border border-solid border p-5 rounded-md">
 			{/* search bar sa table with a add employee of the side then after adding empoyee may form na lalagay anong role nya  */}
 			{/* and table of employeees */}
 			{/*  TO DO ADD THE FILTER AND VISIBILITY OPTIOn*/}
