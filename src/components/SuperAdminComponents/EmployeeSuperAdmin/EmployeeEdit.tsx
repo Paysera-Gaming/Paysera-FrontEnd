@@ -31,9 +31,13 @@ const formSchema = z.object({
   firstName: z.string().min(2, { message: "First name must be at least 2 characters." }).optional(),
   lastName: z.string().min(2, { message: "Last name must be at least 2 characters." }).optional(),
   middleName: z.string().optional(),
-  password: z.string().min(8, { message: "Password must be at least 8 characters." }).optional(),
-  confirmPassword: z.string().min(8, { message: "Confirm password must be at least 8 characters." }).optional(),
-}).refine((data) => data.password === data.confirmPassword, {
+  password: z.string().optional().refine((val) => (val ?? "") === "" || (val ?? "").length >= 8, {
+    message: "Password must be at least 8 characters.",
+  }),
+  confirmPassword: z.string().optional().refine((val) => (val ?? "") === "" || (val ?? "").length >= 8, {
+    message: "Confirm password must be at least 8 characters.",
+  }),
+}).refine((data) => data.password === data.confirmPassword || data.password === "" || data.confirmPassword === "", {
   message: "Passwords don't match",
   path: ["confirmPassword"],
 });
