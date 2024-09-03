@@ -15,14 +15,16 @@ export function SummaryCard({ title, count, typeCounts, icon, active, onClick, o
     return (
         <Card
             onClick={onClick}
-            className={`flex-1 p-4 cursor-pointer border-2 ${outlineColor} ${active ? activeColor : ''} ${active ? `hover:${activeColor}` : ''}`}
+            className={`flex-1 p-4 cursor-pointer border-2 ${outlineColor} transition-transform transform hover:scale-105 ${
+                active ? activeColor : ''
+            } ${active ? `hover:${activeColor}` : ''}`}
         >
             <CardContent className="flex flex-col items-center">
                 <div className="flex items-center">
-                    {icon}
-                    <div className="ml-3 flex flex-col items-start">
-                        <CardTitle className="text-base">{title}</CardTitle>
-                        <p className="text-xl font-semibold">{count}</p>
+                    <div className="text-2xl">{icon}</div>
+                    <div className="ml-2 flex flex-col items-start">
+                        <CardTitle className="text-lg">{title}</CardTitle>
+                        <p className="text-2xl font-bold">{count}</p>
                     </div>
                 </div>
                 <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
