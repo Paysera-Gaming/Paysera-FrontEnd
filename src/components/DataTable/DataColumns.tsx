@@ -22,6 +22,8 @@ import { Button } from '../ui/button';
 
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
+import EditRole from '../TeamLeadComponents/DialogForms/EditRole';
+import RemoveDialog from '../TeamLeadComponents/DialogForms/RemovalDialog';
 
 function formatDate(date: Date): string {
 	const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
@@ -131,6 +133,7 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 			const employee = row.original;
 
 			return (
+				// try to make this drop down into a stupid standalone
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant="ghost" className="h-8 w-8 p-0">
@@ -142,9 +145,13 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
 
 						<DropdownMenuSeparator />
-						<DropdownMenuItem> Edit Role </DropdownMenuItem>
-						<DropdownMenuItem className="text-destructive">
-							Remove from department
+
+						<DropdownMenu>
+							<EditRole employeeRole={employee.role}></EditRole>
+						</DropdownMenu>
+
+						<DropdownMenuItem asChild>
+							<RemoveDialog></RemoveDialog>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
