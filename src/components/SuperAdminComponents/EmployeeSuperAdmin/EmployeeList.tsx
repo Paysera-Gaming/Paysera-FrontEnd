@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import EmployeeTable from './EmployeeTable'; // Import the EmployeeTable component
 
 interface Employee {
   id: number;
@@ -43,36 +44,7 @@ const EmployeeList: React.FC = () => {
       {error ? (
         <p>{error}</p>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Username</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Middle Name</th>
-              <th>Access Level</th>
-              <th>Is Active</th>
-              <th>Department ID</th>
-              <th>Role</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Array.isArray(employees) && employees.map(employee => (
-              <tr key={employee.id}>
-                <td>{employee.id}</td>
-                <td>{employee.username}</td>
-                <td>{employee.firstName}</td>
-                <td>{employee.lastName}</td>
-                <td>{employee.middleName}</td>
-                <td>{employee.accessLevel}</td>
-                <td>{employee.isActive ? 'Yes' : 'No'}</td>
-                <td>{employee.departmentId}</td>
-                <td>{employee.role}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <EmployeeTable employees={employees} /> // Use the EmployeeTable component
       )}
     </div>
   );
