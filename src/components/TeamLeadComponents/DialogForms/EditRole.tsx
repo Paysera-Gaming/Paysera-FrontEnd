@@ -18,7 +18,7 @@ export default function EditRole({ employeeRole }: { employeeRole: string }) {
 	return (
 		<Dialog open={isOpen} onOpenChange={setOpen}>
 			<div
-				className="pl-2 w-full text-sm hover:bg-secondary select-none "
+				className="p-2 w-full text-sm hover:bg-secondary select-none "
 				onClick={() => {
 					setOpen(true);
 				}}

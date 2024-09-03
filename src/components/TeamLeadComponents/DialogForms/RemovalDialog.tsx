@@ -16,12 +16,12 @@ export default function RemoveDialog() {
 	return (
 		<AlertDialog open={openWarn} onOpenChange={setWarn}>
 			<div
-				className="pl-2 w-full text-sm text-destructive hover:bg-secondary cursor-pointer select-none "
+				className="p-2 w-full text-sm text-destructive hover:bg-secondary cursor-pointer select-none "
 				onClick={() => {
 					setWarn(true);
 				}}
 			>
-				<p>Remove From Role</p>
+				<p>Remove Employee</p>
 			</div>
 
 			<AlertDialogContent>
