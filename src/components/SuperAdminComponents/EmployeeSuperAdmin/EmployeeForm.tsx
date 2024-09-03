@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 
 // schema for the form
 const formSchema = z.object({
@@ -86,6 +86,9 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Employee</DialogTitle>
+          <DialogDescription>
+            Fill out the form below to add a new employee.
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">

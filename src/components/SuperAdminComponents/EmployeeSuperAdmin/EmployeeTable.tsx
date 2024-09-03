@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button';
 import { Edit2, Trash2, Circle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import axios from 'axios';
 import EmployeeEdit from './EmployeeEdit';
@@ -108,8 +108,10 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Confirm Deletion</DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to delete {selectedEmployee?.firstName} {selectedEmployee?.lastName}?
+                        </DialogDescription>
                     </DialogHeader>
-                    <p>Are you sure you want to delete {selectedEmployee?.firstName} {selectedEmployee?.lastName}?</p>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
                         <Button variant="destructive" onClick={handleConfirmDelete}>Confirm</Button>
