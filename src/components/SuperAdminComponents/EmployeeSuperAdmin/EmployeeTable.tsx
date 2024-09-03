@@ -5,6 +5,7 @@ import { Edit2, Trash2, Circle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import axios from 'axios';
 import EmployeeEdit from './EmployeeEdit';
 
 interface Employee {
@@ -35,9 +36,18 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
         setIsEditDialogOpen(true);
     };
 
-    const handleConfirmDelete = () => {
-        setIsDialogOpen(false);
-        toast.success(`Successfully deleted ${selectedEmployee?.firstName} ${selectedEmployee?.lastName}`);
+    const handleConfirmDelete = async () => {
+        if (!selectedEmployee) return;
+
+        try {
+            await axios.delete(`https://192.168.110.6:8080/api/employee/${selectedEmployee.id}`);
+            toast.success(`Successfully deleted ${selectedEmployee.firstName} ${selectedEmployee.lastName}`);
+            setIsDialogOpen(false);
+            // Optionally, you can remove the deleted employee from the state to update the UI
+        } catch (error) {
+            toast.error('Error deleting the employee.');
+            console.error('Error deleting the employee:', error);
+        }
     };
 
     const handleEditSubmit = (values: any) => {
