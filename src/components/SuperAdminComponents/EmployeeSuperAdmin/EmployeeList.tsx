@@ -13,7 +13,6 @@ interface Employee {
   middleName: string;
   accessLevel: string;
   isActive: boolean;
-  departmentId: number;
 }
 
 const EmployeeList: React.FC = () => {
@@ -65,8 +64,7 @@ const EmployeeList: React.FC = () => {
       emp.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       emp.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       emp.middleName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      emp.username.toLowerCase().includes(searchTerm.toLowerCase()) || // Added username to search filter
-      emp.departmentId.toString().includes(searchTerm.toLowerCase())
+      emp.username.toLowerCase().includes(searchTerm.toLowerCase()) // Added username to search filter
     );
 
   const overallCount = employees.length;
@@ -83,7 +81,6 @@ const EmployeeList: React.FC = () => {
         activeFilter={activeFilter}
         handleFilterClick={handleFilterClick}
       />
-      <button onClick={() => setIsFormOpen(true)}>Add Employee</button>
       {error ? (
         <p>{error}</p>
       ) : filteredEmployees.length > 0 ? (
