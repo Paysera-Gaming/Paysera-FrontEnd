@@ -9,6 +9,7 @@ import EmployeeEdit from './EmployeeEdit';
 
 interface Employee {
     id: number;
+    username: string; // Added username field
     firstName: string;
     lastName: string;
     middleName: string;
@@ -58,6 +59,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                     <TableHeader>
                         <TableRow>
                             <TableHead>Full Name</TableHead>
+                            <TableHead>Username</TableHead> {/* Added Username column */}
                             <TableHead>Status</TableHead>
                             <TableHead>Department</TableHead>
                             <TableHead>Role</TableHead>
@@ -77,6 +79,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                                         {`${emp.lastName}, ${emp.firstName} ${emp.middleName}`}
                                     </div>
                                 </TableCell>
+                                <TableCell>{emp.username}</TableCell> {/* Display Username */}
                                 <TableCell>{emp.isActive ? 'Online' : 'Offline'}</TableCell>
                                 <TableCell>{emp.department}</TableCell>
                                 <TableCell>{emp.role}</TableCell>

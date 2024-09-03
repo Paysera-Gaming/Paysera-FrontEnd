@@ -3,6 +3,7 @@ import axios from 'axios';
 import SearchBar from './SearchBar';
 import SummaryCards from './SummaryCards';
 import EmployeeTable from './EmployeeTable';
+import EmployeeForm from './EmployeeForm'; // Import EmployeeForm
 
 interface Employee {
   id: number;
@@ -13,7 +14,6 @@ interface Employee {
   accessLevel: string;
   isActive: boolean;
   departmentId: number;
-  role: string;
 }
 
 const EmployeeList: React.FC = () => {
@@ -21,6 +21,7 @@ const EmployeeList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('overall');
+  const [isFormOpen, setIsFormOpen] = useState(false); // State to control form visibility
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -46,6 +47,11 @@ const EmployeeList: React.FC = () => {
     setActiveFilter(filter);
   };
 
+  const handleFormSubmit = (newEmployee: Employee) => {
+    setEmployees((prevEmployees) => [...prevEmployees, newEmployee]);
+    setIsFormOpen(false);
+  };
+
   const filteredEmployees = employees
     .filter((emp) => {
       if (activeFilter === 'online') {
@@ -59,8 +65,8 @@ const EmployeeList: React.FC = () => {
       emp.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       emp.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       emp.middleName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      emp.departmentId.toString().includes(searchTerm.toLowerCase()) ||
-      emp.role.toLowerCase().includes(searchTerm.toLowerCase())
+      emp.username.toLowerCase().includes(searchTerm.toLowerCase()) || // Added username to search filter
+      emp.departmentId.toString().includes(searchTerm.toLowerCase())
     );
 
   const overallCount = employees.length;
@@ -77,6 +83,7 @@ const EmployeeList: React.FC = () => {
         activeFilter={activeFilter}
         handleFilterClick={handleFilterClick}
       />
+      <button onClick={() => setIsFormOpen(true)}>Add Employee</button>
       {error ? (
         <p>{error}</p>
       ) : filteredEmployees.length > 0 ? (
@@ -88,6 +95,7 @@ const EmployeeList: React.FC = () => {
             : `No ${activeFilter !== 'overall' ? activeFilter : ''} employees found.`}
         </div>
       )}
+      <EmployeeForm onSubmit={handleFormSubmit} isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
     </div>
   );
 };
