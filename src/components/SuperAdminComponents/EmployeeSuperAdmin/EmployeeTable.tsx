@@ -14,8 +14,6 @@ interface Employee {
     lastName: string;
     middleName: string;
     isActive: boolean;
-    department: string;
-    role: string;
 }
 
 interface EmployeeTableProps {
@@ -61,8 +59,6 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                             <TableHead>Full Name</TableHead>
                             <TableHead>Username</TableHead> {/* Added Username column */}
                             <TableHead>Status</TableHead>
-                            <TableHead>Department</TableHead>
-                            <TableHead>Role</TableHead>
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -81,8 +77,6 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                                 </TableCell>
                                 <TableCell>{emp.username}</TableCell> {/* Display Username */}
                                 <TableCell>{emp.isActive ? 'Online' : 'Offline'}</TableCell>
-                                <TableCell>{emp.department}</TableCell>
-                                <TableCell>{emp.role}</TableCell>
                                 <TableCell>
                                     <div className="flex gap-2">
                                         <Button variant="outline" size="sm" onClick={() => handleEditClick(emp)}>
