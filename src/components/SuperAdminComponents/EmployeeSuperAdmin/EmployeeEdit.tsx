@@ -27,12 +27,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 
 // schema for the form
 const formSchema = z.object({
-  username: z.string().min(2, { message: "Username must be at least 2 characters." }),
-  firstName: z.string().min(2, { message: "First name must be at least 2 characters." }),
-  lastName: z.string().min(2, { message: "Last name must be at least 2 characters." }),
+  username: z.string().min(8, { message: "Username must be at least 8 characters." }).optional(),
+  firstName: z.string().min(2, { message: "First name must be at least 2 characters." }).optional(),
+  lastName: z.string().min(2, { message: "Last name must be at least 2 characters." }).optional(),
   middleName: z.string().optional(),
-  password: z.string().min(6, { message: "Password must be at least 6 characters." }).optional(),
-  confirmPassword: z.string().min(6, { message: "Confirm password must be at least 6 characters." }).optional(),
+  password: z.string().min(8, { message: "Password must be at least 8 characters." }).optional(),
+  confirmPassword: z.string().min(8, { message: "Confirm password must be at least 8 characters." }).optional(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
@@ -54,13 +54,16 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
   });
 
   async function handleSubmit(values: z.infer<typeof formSchema>) {
+    const updatedFields: any = {};
+    if (values.username) updatedFields.username = values.username;
+    if (values.firstName) updatedFields.firstName = values.firstName;
+    if (values.lastName) updatedFields.lastName = values.lastName;
+    if (values.middleName) updatedFields.middleName = values.middleName;
+    if (values.password) updatedFields.passwordCredentials = values.password;
+
     try {
       const response = await axios.put(`https://192.168.110.6:8080/api/employee/${employee.id}`, {
-        username: values.username,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        middleName: values.middleName || "",
-        passwordCredentials: values.password || undefined,
+        ...updatedFields,
         isActive: true,
       });
       toast.success('Employee updated successfully!');
