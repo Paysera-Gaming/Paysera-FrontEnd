@@ -4,6 +4,7 @@ import SearchBar from './SearchBar';
 import SummaryCards from './SummaryCards';
 import EmployeeTable from './EmployeeTable';
 import EmployeeForm from './EmployeeForm'; // Import EmployeeForm
+import EmployeeEdit from './EmployeeEdit'; // Import EmployeeEdit
 
 interface Employee {
   id: number;
@@ -21,6 +22,8 @@ const EmployeeList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('overall');
   const [isFormOpen, setIsFormOpen] = useState(false); // State to control form visibility
+  const [isEditOpen, setIsEditOpen] = useState(false); // State to control edit form visibility
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null); // State to hold the selected employee for editing
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -49,6 +52,19 @@ const EmployeeList: React.FC = () => {
   const handleFormSubmit = (newEmployee: Employee) => {
     setEmployees((prevEmployees) => [...prevEmployees, newEmployee]);
     setIsFormOpen(false);
+  };
+
+  const handleEditClick = (employee: Employee) => {
+    setSelectedEmployee(employee);
+    setIsEditOpen(true);
+  };
+
+  const handleEditSubmit = (updatedEmployee: Employee) => {
+    setEmployees((prevEmployees) =>
+      prevEmployees.map((emp) => (emp.id === updatedEmployee.id ? updatedEmployee : emp))
+    );
+    setIsEditOpen(false);
+    setSelectedEmployee(null);
   };
 
   const filteredEmployees = employees
@@ -84,7 +100,7 @@ const EmployeeList: React.FC = () => {
       {error ? (
         <p>{error}</p>
       ) : filteredEmployees.length > 0 ? (
-        <EmployeeTable employees={filteredEmployees} />
+        <EmployeeTable employees={filteredEmployees} onEditClick={handleEditClick} />
       ) : (
         <div className="text-center text-gray-500 dark:text-gray-400">
           {searchTerm
@@ -93,6 +109,14 @@ const EmployeeList: React.FC = () => {
         </div>
       )}
       <EmployeeForm onSubmit={handleFormSubmit} isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
+      {selectedEmployee && (
+        <EmployeeEdit
+          onSubmit={handleEditSubmit}
+          isOpen={isEditOpen}
+          onClose={() => setIsEditOpen(false)}
+          employee={selectedEmployee}
+        />
+      )}
     </div>
   );
 };
