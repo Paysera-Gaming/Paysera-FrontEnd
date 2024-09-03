@@ -54,10 +54,6 @@ const EmployeeList: React.FC = () => {
     setIsFormOpen(false);
   };
 
-  const handleEditClick = (employee: Employee) => {
-    setSelectedEmployee(employee);
-    setIsEditOpen(true);
-  };
 
   const handleEditSubmit = (updatedEmployee: Employee) => {
     setEmployees((prevEmployees) =>
@@ -100,7 +96,7 @@ const EmployeeList: React.FC = () => {
       {error ? (
         <p>{error}</p>
       ) : filteredEmployees.length > 0 ? (
-        <EmployeeTable employees={filteredEmployees} onEditClick={handleEditClick} />
+        <EmployeeTable employees={filteredEmployees}  />
       ) : (
         <div className="text-center text-gray-500 dark:text-gray-400">
           {searchTerm
