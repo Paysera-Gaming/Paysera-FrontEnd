@@ -25,14 +25,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { AlertDialogAction } from '@radix-ui/react-alert-dialog';
+import { useState } from 'react';
+
 const formSchema = z.object({
 	userID: z
 		.string()
 		.min(5, { message: 'Minimum Characters must be atleast 5' })
-		.max(8),
+		.max(8, { message: 'Maximum Characters are 8' }),
+	role: z.string().min(5, { message: 'Minimum Charactus must be atleast 5' }),
 });
 
 export default function AddEmployee() {
+	const [openAlert, setAlert] = useState<boolean>(false);
 	// form schema
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -46,10 +50,11 @@ export default function AddEmployee() {
 		// Do something with the form values.
 
 		console.log(values.userID);
+		setAlert(false);
 	}
 
 	return (
-		<AlertDialog>
+		<AlertDialog open={openAlert} onOpenChange={setAlert}>
 			<AlertDialogTrigger>
 				<Button variant={'default'} className="mr-3">
 					Add Employee
@@ -57,7 +62,7 @@ export default function AddEmployee() {
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>Adding User</AlertDialogTitle>
+					<AlertDialogTitle>Adding Employee</AlertDialogTitle>
 					<AlertDialogDescription>
 						You are now adding an employee into your department
 					</AlertDialogDescription>
@@ -74,9 +79,19 @@ export default function AddEmployee() {
 									<FormControl>
 										<Input placeholder="Enter Employee ID" {...field} />
 									</FormControl>
-									<FormDescription>
-										Please enter the employee id
-									</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="role"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Designated Role</FormLabel>
+									<FormControl>
+										<Input placeholder="Enter Role" {...field} />
+									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -85,11 +100,10 @@ export default function AddEmployee() {
 				</Form>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction
-						type="submit"
-						onClick={form.handleSubmit(onSubmit)}
-					>
-						<Button variant={'default'}>Submit</Button>
+					<AlertDialogAction type="submit">
+						<Button variant={'default'} onClick={form.handleSubmit(onSubmit)}>
+							Submit
+						</Button>
 					</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>
