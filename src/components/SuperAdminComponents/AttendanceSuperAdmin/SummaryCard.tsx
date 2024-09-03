@@ -15,22 +15,23 @@ export function SummaryCard({ title, count, typeCounts, icon, active, onClick, o
     return (
         <Card
             onClick={onClick}
-            className={`flex-1 p-4 cursor-pointer border-2 ${outlineColor} transition-transform transform hover:scale-105 ${
+            className={`flex-1 p-6 cursor-pointer border-2 ${outlineColor} transition-transform transform hover:scale-105 ${
                 active ? activeColor : ''
             } ${active ? `hover:${activeColor}` : ''}`}
+            style={{ maxWidth: '300px' }} // Adjust the max-width of the card
         >
             <CardContent className="flex flex-col items-center">
-                <div className="flex items-center">
-                    <div className="text-2xl">{icon}</div>
-                    <div className="ml-2 flex flex-col items-start">
-                        <CardTitle className="text-lg">{title}</CardTitle>
-                        <p className="text-2xl font-bold">{count}</p>
+                <div className="flex items-center justify-between w-full">
+                    <div className="text-3xl">{icon}</div>
+                    <div className="ml-4 text-right">
+                        <CardTitle className="text-xl">{title}</CardTitle>
+                        <p className="text-3xl font-bold">{count}</p>
                     </div>
                 </div>
-                <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                <div className="mt-4 text-sm text-gray-600 dark:text-gray-400 w-full">
                     <p>Fixed: {typeCounts.Fixed}</p>
                     <p>Flexible: {typeCounts.Flexible}</p>
-                    <p>Super Flexible: {typeCounts['Super Flexible']}</p>
+                    <p>Super Flex: {typeCounts['Super Flexible']}</p> {/* Shortened text */}
                 </div>
             </CardContent>
         </Card>
