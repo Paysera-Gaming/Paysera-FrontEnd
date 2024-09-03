@@ -27,7 +27,7 @@ export default function EditRole({ employeeRole }: { employeeRole: string }) {
 			</div>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>Edit Role</DialogTitle>
+        	<DialogTitle>Edit Role</DialogTitle>
 					<DialogDescription>
 						Make changes to Employee's role here. Click save when you're done.
 					</DialogDescription>
