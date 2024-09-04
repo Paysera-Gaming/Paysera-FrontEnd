@@ -41,19 +41,17 @@ export const exportToExcel = (data: AttendanceData[], fileName: string, startDat
     const summaryWorksheet = XLSX.utils.json_to_sheet(summaryData, { skipHeader: false });
 
     // Create the worksheet from the attendance data
-
-    // Combine the summary and attendance data into one worksheet
-    const combinedData = XLSX.utils.sheet_add_json(summaryWorksheet, [], { origin: -1 });
-    XLSX.utils.sheet_add_json(combinedData, data, { origin: -1 });
+    const attendanceWorksheet = XLSX.utils.json_to_sheet(data, { skipHeader: false });
 
     // Create a new workbook
     const workbook = XLSX.utils.book_new();
 
-    // Append the combined sheet to the workbook
-    XLSX.utils.book_append_sheet(workbook, combinedData, 'Attendance Data');
+    // Append the summary and attendance sheets to the workbook
+    XLSX.utils.book_append_sheet(workbook, summaryWorksheet, 'Summary');
+    XLSX.utils.book_append_sheet(workbook, attendanceWorksheet, 'Attendance Data');
 
-    // Format the file name with the start date
-    const formattedFileName = `${fileName}_${startDate.toISOString().split('T')[0]}.xlsx`;
+    // Format the file name with the start date using toLocaleDateString with 'en-CA' locale
+    const formattedFileName = `${fileName}_${startDate.toLocaleDateString('en-CA')}.xlsx`;
 
     // Write the workbook to a file
     XLSX.writeFile(workbook, formattedFileName);
