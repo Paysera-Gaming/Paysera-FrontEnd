@@ -107,62 +107,64 @@ export function DataTable<TData, TValue>({
 				</div>
 			</div>
 
-			<ScrollArea className=" xl:w-[950px] md:w-[500px]  lg:w-[800px] whitespace-nowrap rounded-md border">
-				<div className="w-full whitespace-nowrap">
-					<Table className="relative min-w-full ">
-						<TableHeader>
-							{table.getHeaderGroups().map((headerGroup) => (
-								<TableRow key={headerGroup.id}>
-									{headerGroup.headers.map((header) => {
-										return (
-											<TableHead key={header.id}>
-												{header.isPlaceholder
-													? null
-													: flexRender(
-															header.column.columnDef.header,
-															header.getContext()
-															// eslint-disable-next-line no-mixed-spaces-and-tabs
-													  )}
-											</TableHead>
-										);
-									})}
+			<ScrollArea className=" md:w-[500px] lg:w-[950px] lg:h-[300px] md:h-[250px]  whitespace-nowrap rounded-md border">
+				<Table className="relative min-w-full ">
+					<TableHeader>
+						{table.getHeaderGroups().map((headerGroup) => (
+							<TableRow key={headerGroup.id}>
+								{headerGroup.headers.map((header) => {
+									return (
+										<TableHead key={header.id}>
+											{header.isPlaceholder
+												? null
+												: flexRender(
+														header.column.columnDef.header,
+														header.getContext()
+														// eslint-disable-next-line no-mixed-spaces-and-tabs
+												  )}
+										</TableHead>
+									);
+								})}
+							</TableRow>
+						))}
+					</TableHeader>
+					<TableBody>
+						{table.getRowModel().rows?.length ? (
+							table.getRowModel().rows.map((row) => (
+								<TableRow
+									key={row.id}
+									data-state={row.getIsSelected() && 'selected'}
+								>
+									{row.getVisibleCells().map((cell) => (
+										<TableCell key={cell.id}>
+											{flexRender(
+												cell.column.columnDef.cell,
+												cell.getContext()
+											)}
+										</TableCell>
+									))}
 								</TableRow>
-							))}
-						</TableHeader>
-						<TableBody>
-							{table.getRowModel().rows?.length ? (
-								table.getRowModel().rows.map((row) => (
-									<TableRow
-										key={row.id}
-										data-state={row.getIsSelected() && 'selected'}
-									>
-										{row.getVisibleCells().map((cell) => (
-											<TableCell key={cell.id}>
-												{flexRender(
-													cell.column.columnDef.cell,
-													cell.getContext()
-												)}
-											</TableCell>
-										))}
-									</TableRow>
-								))
-							) : (
-								<TableRow>
-									<TableCell
-										colSpan={columns.length}
-										className="h-24 text-center"
-									>
-										No results.
-									</TableCell>
-								</TableRow>
-							)}
-						</TableBody>
-					</Table>
-				</div>
+							))
+						) : (
+							<TableRow>
+								<TableCell
+									colSpan={columns.length}
+									className="h-24 text-center"
+								>
+									No results.
+								</TableCell>
+							</TableRow>
+						)}
+					</TableBody>
+				</Table>
 				<ScrollBar orientation="horizontal" />
 			</ScrollArea>
 
-			<div className="w-full flex items-center justify-end space-x-2 py-4">
+			<div className="w-full flex items-center justify-end space-x-2">
+				<div className="flex w-[100px] items-center justify-center text-sm font-medium">
+					Page {table.getState().pagination.pageIndex + 1} of{' '}
+					{table.getPageCount()}
+				</div>
 				<Button
 					variant="outline"
 					size="sm"

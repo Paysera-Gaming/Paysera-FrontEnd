@@ -3,10 +3,78 @@ import {
 	attendanceColumns,
 	TAttendanceColumn,
 } from '@/components/DataTable/AttendanceColumns';
-import { DatePicker } from '@/components/TeamLeadComponents/AttendancePage/DatePicker';
-import { Button } from '@/components/ui/button';
 
 const dummyData: TAttendanceColumn[] = [
+	{
+		userID: 'user-001',
+		fName: 'John',
+		lName: 'Doe',
+		mName: 'A',
+		role: 'Developer',
+		timeIn: new Date('2024-09-04T13:00:00'),
+		timeOut: new Date('2024-09-04T13:00:00'),
+		lunchTimeIn: new Date('2024-09-04T12:00:00'),
+		lunchTimeOut: new Date('2024-09-04T12:30:00'),
+		lunchTimeTotal: 30,
+		timeHoursWorked: 7.5,
+		overTimeTotal: 1,
+		timeTotal: 8.5,
+		createdAt: new Date('2024-09-04T09:00:00'),
+		updatedAt: new Date('2024-09-04T17:00:00'),
+	},
+	{
+		userID: 'user-001',
+		fName: 'John',
+		lName: 'Doe',
+		mName: 'A',
+		role: 'Developer',
+		timeIn: new Date('2024-09-04T13:00:00'),
+		timeOut: new Date('2024-09-04T13:00:00'),
+		lunchTimeIn: new Date('2024-09-04T12:00:00'),
+		lunchTimeOut: new Date('2024-09-04T12:30:00'),
+		lunchTimeTotal: 30,
+		timeHoursWorked: 7.5,
+		overTimeTotal: 1,
+		timeTotal: 8.5,
+		createdAt: new Date('2024-09-04T09:00:00'),
+		updatedAt: new Date('2024-09-04T17:00:00'),
+	},
+	{
+		userID: 'user-001',
+		fName: 'John',
+		lName: 'Doe',
+		mName: 'A',
+		role: 'Developer',
+		timeIn: new Date('2024-09-04T13:00:00'),
+		timeOut: new Date('2024-09-04T13:00:00'),
+		lunchTimeIn: new Date('2024-09-04T12:00:00'),
+		lunchTimeOut: new Date('2024-09-04T12:30:00'),
+		lunchTimeTotal: 30,
+		timeHoursWorked: 7.5,
+		overTimeTotal: 1,
+		timeTotal: 8.5,
+		createdAt: new Date('2024-09-04T09:00:00'),
+		updatedAt: new Date('2024-09-04T17:00:00'),
+	},
+
+	{
+		userID: 'user-001',
+		fName: 'John',
+		lName: 'Doe',
+		mName: 'A',
+		role: 'Developer',
+		timeIn: new Date('2024-09-04T13:00:00'),
+		timeOut: new Date('2024-09-04T13:00:00'),
+		lunchTimeIn: new Date('2024-09-04T12:00:00'),
+		lunchTimeOut: new Date('2024-09-04T12:30:00'),
+		lunchTimeTotal: 30,
+		timeHoursWorked: 7.5,
+		overTimeTotal: 1,
+		timeTotal: 8.5,
+		createdAt: new Date('2024-09-04T09:00:00'),
+		updatedAt: new Date('2024-09-04T17:00:00'),
+	},
+
 	{
 		userID: 'user-001',
 		fName: 'John',
@@ -64,14 +132,9 @@ const dummyData: TAttendanceColumn[] = [
 export default function AttendancePage() {
 	return (
 		<div className="w-full flex-1 inline-block border-border border-solid border p-5 rounded-md">
-			<h2 className="scroll-m-20  border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 mb-5">
+			<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0 mb-5">
 				Attendance
 			</h2>
-
-			<div>
-				<DatePicker></DatePicker>
-				<Button className="ml-2">Search</Button>
-			</div>
 
 			{/* table */}
 			<AttendanceTable

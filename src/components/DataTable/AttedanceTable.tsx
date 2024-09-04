@@ -7,8 +7,12 @@ import {
 	useReactTable,
 	SortingState,
 	getSortedRowModel,
+	getFilteredRowModel,
+	ColumnFiltersState,
 	getPaginationRowModel,
 } from '@tanstack/react-table';
+
+import { DatePicker } from '../TeamLeadComponents/AttendancePage/DatePicker';
 import React from 'react';
 
 import {
@@ -21,6 +25,7 @@ import {
 } from '@/components/ui/table';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 import { Button } from '@/components/ui/button';
+import { Input } from '../ui/input';
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
@@ -31,7 +36,9 @@ export function AttendanceTable<TData, TValue>({
 	data,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
-
+	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+		[]
+	);
 	const table = useReactTable({
 		data,
 		columns,
@@ -39,14 +46,32 @@ export function AttendanceTable<TData, TValue>({
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 		onSortingChange: setSorting,
+		onColumnFiltersChange: setColumnFilters,
+		getFilteredRowModel: getFilteredRowModel(),
 		state: {
 			sorting,
+			columnFilters,
 		},
 	});
 
 	return (
-		<div className="rounded-md border">
-			<ScrollArea className="xl:w-[950px] md:w-[500px]  lg:w-[800px] whitespace-nowrap rounded-md border">
+		<div className="w-full flex items-center justify-center flex-col gap-4 mt-1">
+			<div className="w-full flex items-center justify-between">
+				<div className="flex items-center justify-center">
+					<DatePicker></DatePicker>
+					<Button className="ml-4">Search</Button>
+				</div>
+				<Input
+					placeholder="Filter Employee via ID..."
+					value={(table.getColumn('userID')?.getFilterValue() as string) ?? ''}
+					onChange={(event) =>
+						table.getColumn('userID')?.setFilterValue(event.target.value)
+					}
+					className="w-[220px]"
+				/>
+			</div>
+
+			<ScrollArea className=" md:w-[500px] lg:w-[950px] lg:h-[300px] md:h-[250px]  whitespace-nowrap rounded-md border">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -98,8 +123,12 @@ export function AttendanceTable<TData, TValue>({
 				</Table>
 				<ScrollBar orientation="horizontal"></ScrollBar>
 			</ScrollArea>
+			<div className="w-full flex items-center justify-end space-x-2 py-4">
+				<div className="flex w-[100px] items-center justify-center text-sm font-medium">
+					Page {table.getState().pagination.pageIndex + 1} of{' '}
+					{table.getPageCount()}
+				</div>
 
-			<div className="flex items-center justify-end space-x-2 py-4">
 				<Button
 					variant="outline"
 					size="sm"
