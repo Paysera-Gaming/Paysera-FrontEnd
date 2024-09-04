@@ -49,13 +49,34 @@ export const exportToExcel = (data: AttendanceData[], fileName: string, startDat
     ];
 
     // Create the worksheet from the combined data
-    const worksheet = XLSX.utils.json_to_sheet(combinedData, { skipHeader: true });
+    const worksheet1 = XLSX.utils.json_to_sheet(combinedData, { skipHeader: true });
+
+    // Create the detailed data array with the specified structure
+    const detailedData = [
+        { A: 'Fixed On Job', B: data.filter((att) => att.type === 'Fixed' && att.situation === 'On Job').length },
+        { A: 'Fixed Lunch', B: data.filter((att) => att.type === 'Fixed' && att.situation === 'Lunch').length },
+        { A: 'Fixed Leave', B: data.filter((att) => att.type === 'Fixed' && att.situation === 'Leave').length },
+        {},
+        { A: 'Flexible On Job', B: data.filter((att) => att.type === 'Flexible' && att.situation === 'On Job').length },
+        { A: 'Flexible Lunch', B: data.filter((att) => att.type === 'Flexible' && att.situation === 'Lunch').length },
+        { A: 'Flexible Leave', B: data.filter((att) => att.type === 'Flexible' && att.situation === 'Leave').length },
+        {},
+        { A: 'Super Flexible On Job', B: data.filter((att) => att.type === 'Super Flexible' && att.situation === 'On Job').length },
+        { A: 'Super Flexible Lunch', B: data.filter((att) => att.type === 'Super Flexible' && att.situation === 'Lunch').length },
+        { A: 'Super Flexible Leave', B: data.filter((att) => att.type === 'Super Flexible' && att.situation === 'Leave').length },
+    ];
+
+    // Create the worksheet from the detailed data
+    const worksheet2 = XLSX.utils.json_to_sheet(detailedData, { skipHeader: true });
 
     // Create a new workbook
     const workbook = XLSX.utils.book_new();
 
     // Append the combined sheet to the workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Summary and Attendance');
+    XLSX.utils.book_append_sheet(workbook, worksheet1, 'Summary and Attendance');
+
+    // Append the detailed sheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet2, 'More Detailed');
 
     // Format the file name with the start date and end date using toLocaleDateString with 'en-CA' locale
     const formattedFileName = `${fileName}_${startDate.toLocaleDateString('en-CA')}_to_${endDate.toLocaleDateString('en-CA')}_attendance.xlsx`;
