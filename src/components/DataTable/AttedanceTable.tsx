@@ -10,7 +10,14 @@ import {
 	getFilteredRowModel,
 	ColumnFiltersState,
 	getPaginationRowModel,
+	VisibilityState,
 } from '@tanstack/react-table';
+import {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 import { DatePicker } from '../TeamLeadComponents/AttendancePage/DatePicker';
 import React from 'react';
@@ -40,6 +47,8 @@ export function AttendanceTable<TData, TValue>({
 		[]
 	);
 	const [selectedDate, setDate] = React.useState<Date>();
+	const [columnVisibility, setColumnVisibility] =
+		React.useState<VisibilityState>({});
 	const table = useReactTable({
 		data,
 		columns,
@@ -49,9 +58,11 @@ export function AttendanceTable<TData, TValue>({
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
+		onColumnVisibilityChange: setColumnVisibility,
 		state: {
 			sorting,
 			columnFilters,
+			columnVisibility,
 		},
 	});
 
@@ -66,14 +77,45 @@ export function AttendanceTable<TData, TValue>({
 				<div className="flex items-center justify-center">
 					<DatePicker updateParentState={checkDate}></DatePicker>
 				</div>
-				<Input
-					placeholder="Filter Employee via ID..."
-					value={(table.getColumn('userID')?.getFilterValue() as string) ?? ''}
-					onChange={(event) =>
-						table.getColumn('userID')?.setFilterValue(event.target.value)
-					}
-					className="w-[220px]"
-				/>
+
+				<div className="flex items-center justify-center gap-2">
+					<Input
+						placeholder="Filter Employee via ID..."
+						value={
+							(table.getColumn('userID')?.getFilterValue() as string) ?? ''
+						}
+						onChange={(event) =>
+							table.getColumn('userID')?.setFilterValue(event.target.value)
+						}
+						className="w-[220px]"
+					/>
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant="outline" className="ml-auto">
+								View
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							{table
+								.getAllColumns()
+								.filter((column) => column.getCanHide())
+								.map((column) => {
+									return (
+										<DropdownMenuCheckboxItem
+											key={column.id}
+											className="capitalize"
+											checked={column.getIsVisible()}
+											onCheckedChange={(value) =>
+												column.toggleVisibility(!!value)
+											}
+										>
+											{column.id}
+										</DropdownMenuCheckboxItem>
+									);
+								})}
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
 			</div>
 
 			<ScrollArea className=" md:w-[500px] lg:w-[950px] lg:h-[300px] md:h-[250px]  whitespace-nowrap rounded-md border">
