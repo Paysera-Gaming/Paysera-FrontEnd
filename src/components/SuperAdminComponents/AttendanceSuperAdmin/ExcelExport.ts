@@ -28,11 +28,15 @@ export const exportToExcel = (data: AttendanceData[], fileName: string, startDat
 
     // Create the combined data array with the specified structure
     const combinedData = [
+        { A: `Attendance Report: ${startDate.toLocaleDateString('en-CA')} to ${endDate.toLocaleDateString('en-CA')}`, B: '', C: '', D: '', E: '', F: '', G: '', H: '', I: '', J: '' },
+        {},
+        { A: 'Summary', B: '', C: '', D: '', E: '' },
         { A: 'Overall', B: overallCount, C: '', D: '', E: '' },
         { A: 'On Job', B: onJobCount, C: '', D: 'Fixed', E: typeCounts.Fixed },
         { A: 'Lunch', B: lunchCount, C: '', D: 'Flexible', E: typeCounts.Flexible },
         { A: 'Leave', B: leaveCount, C: '', D: 'Super Flexible', E: typeCounts['Super Flexible'] },
         {},
+        { A: 'Details', B: '', C: '', D: '', E: '' },
         { A: 'ID', B: 'Full Name', C: 'Type', D: 'Date', E: 'Start Time', F: 'End Time', G: 'Work Hours', H: 'Lunch Hours', I: 'Total Hours', J: 'Situation' },
         ...data.map(att => ({
             A: att.id,
@@ -53,6 +57,7 @@ export const exportToExcel = (data: AttendanceData[], fileName: string, startDat
 
     // Create the detailed data array with the specified structure
     const detailedData = [
+        { A: 'Detailed Breakdown', B: '', C: '', D: '', E: '' },
         { A: 'Fixed On Job', B: data.filter((att) => att.type === 'Fixed' && att.situation === 'On Job').length },
         { A: 'Fixed Lunch', B: data.filter((att) => att.type === 'Fixed' && att.situation === 'Lunch').length },
         { A: 'Fixed Leave', B: data.filter((att) => att.type === 'Fixed' && att.situation === 'Leave').length },
@@ -68,6 +73,52 @@ export const exportToExcel = (data: AttendanceData[], fileName: string, startDat
 
     // Create the worksheet from the detailed data
     const worksheet2 = XLSX.utils.json_to_sheet(detailedData, { skipHeader: true });
+
+    // Apply basic styling
+    const headerStyle = { font: { bold: true }, alignment: { horizontal: 'center' } };
+    const titleStyle = { font: { bold: true, sz: 14 }, alignment: { horizontal: 'center', vertical: 'center' } };
+
+    // Apply styles to the first worksheet
+    worksheet1['A1'].s = titleStyle;
+    worksheet1['A3'].s = headerStyle;
+    worksheet1['A9'].s = headerStyle;
+
+    // Apply styles to the second worksheet
+    worksheet2['A1'].s = titleStyle;
+
+    // Set the width of column A to 10.5 characters (approximately 1.47 cm) in the first worksheet
+    worksheet1['!cols'] = [{ wch: 10.5 }];
+    
+    // Set the width of column A to 33 characters (approximately 4.63 cm) in the second worksheet
+    worksheet2['!cols'] = [{ wch: 20 }];
+
+    // Auto-width for other columns
+    const setColumnWidths = (ws: XLSX.WorkSheet) => {
+        const colWidths = ws['!cols'] || [];
+        const range = XLSX.utils.decode_range(ws['!ref']!);
+        for (let C = range.s.c + 1; C <= range.e.c; ++C) { // Start from the second column
+            let maxWidth = 10;
+            for (let R = range.s.r; R <= range.e.r; ++R) {
+                const cell = ws[XLSX.utils.encode_cell({ r: R, c: C })];
+                if (cell && cell.v) {
+                    const cellValue = cell.v.toString();
+                    maxWidth = Math.max(maxWidth, cellValue.length);
+                }
+            }
+            colWidths.push({ wch: maxWidth });
+        }
+        ws['!cols'] = colWidths;
+    };
+
+    setColumnWidths(worksheet1);
+    setColumnWidths(worksheet2);
+
+    // Freeze panes
+    worksheet1['!freeze'] = { xSplit: 0, ySplit: 10 };
+    worksheet2['!freeze'] = { xSplit: 0, ySplit: 1 };
+
+    // Merge the title row across columns A to J
+    worksheet1['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 9 } }];
 
     // Create a new workbook
     const workbook = XLSX.utils.book_new();
