@@ -4,23 +4,24 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 const statusColors: { [key: string]: string } = {
-  Active: 'bg-green-500',
+  Online: 'bg-green-500',
+  Inactive: 'bg-gray-500',
   Leave: 'bg-red-500',
   Lunch: 'bg-orange-500',
   Offline: 'bg-gray-500'
 };
 
-interface Employee {
+type Employee = {
   id: number;
-  lastName: string;
+  username: string;
   firstName: string;
+  lastName: string;
   middleName: string;
-  status: string;
-  team: string;
+  accessLevel: 'ADMIN' | 'EMPLOYEE' | 'TEAM_LEADER';
+  isActive: boolean;
+  departmentId: number | null;
   role: string;
-  email: string;
-  type: string;
-}
+};
 
 interface EmployeeTableProps {
   data: Employee[];
@@ -51,10 +52,10 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   };
 
   const sortedData = [...data].sort((a, b) => {
-    if (sortConfig.key !== '' && a[sortConfig.key] < b[sortConfig.key]) {
+    if (sortConfig.key !== '' && a[sortConfig.key]! < b[sortConfig.key]!) {
       return sortConfig.direction === 'ascending' ? -1 : 1;
     }
-    if (sortConfig.key !== '' && a[sortConfig.key] > b[sortConfig.key]) {
+    if (sortConfig.key !== '' && a[sortConfig.key]! > b[sortConfig.key]!) {
       return sortConfig.direction === 'ascending' ? 1 : -1;
     }
     return 0;
@@ -66,12 +67,12 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   };
 
   const updateEmployeeStatus = (employee: Employee) => {
-    let updatedStatus = employee.status;
+    let updatedStatus = employee.isActive ? "Inactive" : "Online";
 
-    if (employee.status === "Leave") {
+    if (employee.isActive ) {
       updatedStatus = "Offline";
-    } else if (employee.status === "Lunch") {
-      updatedStatus = "Active";
+    } else {
+      updatedStatus = "Online";
     }
 
     const updatedEmployee = { ...employee, status: updatedStatus };
@@ -94,21 +95,21 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
           </TableHead>
           <TableHead
             className="text-center border-x cursor-pointer"
-            onClick={() => handleSort('status')}
+            onClick={() => handleSort('isActive')}
           >
-            Status {sortConfig.key === 'status' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
+            Status {sortConfig.key === 'isActive' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
           </TableHead>
           <TableHead
             className="text-center border-x cursor-pointer"
-            onClick={() => handleSort('team')}
+            onClick={() => handleSort('departmentId')}
           >
-            Team & Role {sortConfig.key === 'team' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
+            Team & Role {sortConfig.key === '' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
           </TableHead>
           <TableHead
             className="text-center border-x cursor-pointer"
-            onClick={() => handleSort('type')}
+            onClick={() => handleSort('accessLevel')}
           >
-            Type {sortConfig.key === 'type' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
+            Type {sortConfig.key === 'accessLevel' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
           </TableHead>
           <TableHead className="text-center border-x">Actions</TableHead>
         </TableRow>
@@ -117,16 +118,16 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
         {sortedData.map(employee => (
           <TableRow key={employee.id}>
             <TableCell className="text-left border-x flex items-center space-x-2">
-              <span className={`inline-block w-3 h-3 rounded-full ${statusColors[employee.status]}`}></span>
+              <span className={`inline-block w-3 h-3 rounded-full ${statusColors[employee.isActive ? 'Online' : 'Inactive']}`}></span>
               <span>{`${employee.lastName}, ${employee.firstName} ${employee.middleName}`}</span>
             </TableCell>
             <TableCell className="text-center border-x">
               <div className="flex items-center justify-center space-x-2">
-                <span>{employee.status}</span>
+                <span>{employee.isActive ? 'Online' : 'Inactive'}</span>
               </div>
             </TableCell>
-            <TableCell className="text-center border-x">{employee.team} - {employee.role}</TableCell>
-            <TableCell className="text-center border-x">{employee.type}</TableCell>
+            <TableCell className="text-center border-x">{employee.departmentId} - {employee.role}</TableCell>
+            <TableCell className="text-center border-x">{employee.accessLevel}</TableCell>
             <TableCell className="text-center border-x space-x-2">
               <TooltipProvider>
                 <Tooltip>

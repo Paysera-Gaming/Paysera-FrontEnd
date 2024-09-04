@@ -6,8 +6,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { CalendarDays, UsersRound, Settings, Building, LogOut } from 'lucide-react';
+import { CalendarDays, UsersRound, Settings, Building, LogOut, CircleUser } from 'lucide-react';
 
 // Import the Paysera logo
 import PayseraLogo from '/PayseraIcon.svg';
@@ -26,7 +25,7 @@ const SheetComponent = () => {
     const renderLinks = () => {
         const links = [
             { path: '/admin/dashboard', label: 'Attendance', icon: <CalendarDays /> },
-            { path: '/admin/manageteams', label: 'Manage Teams', icon: <Building /> },
+            { path: '/admin/manageteams', label: 'Department', icon: <Building /> },
             { path: '/admin/employeelist', label: 'Employee List', icon: <UsersRound /> },
             { path: '/admin/accountpreferences', label: 'Settings', icon: <Settings /> },
         ];
@@ -56,10 +55,7 @@ const SheetComponent = () => {
 
                     {/* Left-aligned Profile Information */}
                     <div className="profile-info-container">
-                        <Avatar className="profile-avatar">
-                            <AvatarImage src="https://github.com/shadcn.png" />
-                            <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
+                        <CircleUser className="profile-avatar" size={48} />
                         <div className="profile-text">
                             <div className="username">Admin</div>
                             <div className="user-role">Administrator</div>

@@ -13,11 +13,20 @@ import TeamLeadDashboardPage from './pages/TeamLead/Dashboard/DashboardPage';
 import SchedulePage from './pages/TeamLead/Schedule/SchedulePage';
 import AttendancePage from './pages/TeamLead/Attendance/AttendancePage';
 import ManagePage from './pages/TeamLead/Manage/ManagePage';
-// admin
+// admin (old version of superadmin, this is my reference)
 import AdminPage from './pages/AdminPage/AdminPage';
 import AdminManageTeams from './components/AdminDashboard/ManageTeams/index';
 import Settings from './components/AdminDashboard/AccountPreferences';
 import Employee from './components/AdminDashboard/Employee';
+// superadmin
+import SuperAdminPage from './pages/SuperAdmin/SuperAdminPage';
+import SuperAdminDashboardPage from './pages/SuperAdmin/Dashboard/DashboardPage';
+import AttendanceDashboard from './pages/SuperAdmin/Attendance/AttendanceDashboard';
+import SuperAdminEmployeeDashboard from './pages/SuperAdmin/Employee/SuperAdminEmployeeDashboard';
+import SuperAdminDepartmentDashboard from './pages/SuperAdmin/Department/SuperAdminDepartmentDashboard';
+
+
+
 
 import './index.css';
 // Theme provider
@@ -95,10 +104,34 @@ const router = createBrowserRouter([
 				path: 'employeelist',
 				element: <Employee />,
 			},
-
 		],
 	},
+	{
+        path: '/superadmin',
+        element: <SuperAdminPage></SuperAdminPage>,
+        children: [
+            {
+                index: true,
+                loader: () => redirect('/superadmin/dashboard'),
+            },
+            {
+                path: 'dashboard',
+                element: <SuperAdminDashboardPage />,
+				 // SuperAdmin Dashboard
+            },
+			{ path: 'schedule', element: <SchedulePage></SchedulePage> },
+			{ path: 'attendance', element: <AttendanceDashboard></AttendanceDashboard> },
+			{ path: 'employee', element: <SuperAdminEmployeeDashboard></SuperAdminEmployeeDashboard> },
+			{ path: 'departments', element: <SuperAdminDepartmentDashboard></SuperAdminDepartmentDashboard> },
+
+
+			
+			// Add more child routes if needed
+        ],
+    },
 ]);
+
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>

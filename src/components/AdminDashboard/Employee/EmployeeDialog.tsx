@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import axios from 'axios';
 
 // Define the Employee type
 type Employee = {
@@ -11,13 +12,15 @@ type Employee = {
   firstName: string;
   middleName?: string;
   status: string;
-  team: string;
+  department: string;
   role?: string;
   email?: string;
   type: 'Fixed' | 'Flexible' | 'Super Flexible';
   username?: string;
-  password?: string;
-  confirmPassword?: string;
+  passwordCredentials?: {
+    password?: string;
+    confirmPassword?: string;
+  };
 };
 
 type EmployeeDialogProps = {
@@ -37,14 +40,42 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
     }
   };
 
+  const handlePasswordChange = (field: 'password' | 'confirmPassword', value: string) => {
+    if (selectedEmployee) {
+      setSelectedEmployee({
+        ...selectedEmployee,
+        passwordCredentials: {
+          ...selectedEmployee.passwordCredentials,
+          [field]: value,
+        },
+      });
+    }
+  };
+
   const handleSave = () => {
-    if (selectedEmployee?.password !== selectedEmployee?.confirmPassword) {
+    if (selectedEmployee?.passwordCredentials?.password !== selectedEmployee?.passwordCredentials?.confirmPassword) {
       setErrorMessage("Passwords do not match.");
       return;
     }
     setErrorMessage(null);
     if (selectedEmployee) {
       handleSaveEmployee(selectedEmployee);
+    }
+    if (selectedEmployee) {
+      axios.post('https://192.168.3.50:8080/api/employee', selectedEmployee)
+        .then(response => {
+          // Handle success
+          console.log(response.data);
+          // Call the handleSaveEmployee function with the updated employee data
+          // Close the dialog
+          setIsDialogOpen(false);
+        })
+        .catch(error => {
+          // Handle error
+          console.error(error);
+          // Set the error message
+          setErrorMessage("Failed to save employee.");
+        });
     }
   };
 
@@ -115,8 +146,8 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
               <Input
                 id="password"
                 type="password"
-                value={selectedEmployee?.password || ''}
-                onChange={(e) => handleInputChange('password', e.target.value)}
+                value={selectedEmployee?.passwordCredentials?.password || ''}
+                onChange={(e) => handlePasswordChange('password', e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
@@ -125,8 +156,8 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
               <Input
                 id="confirmPassword"
                 type="password"
-                value={selectedEmployee?.confirmPassword || ''}
-                onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                value={selectedEmployee?.passwordCredentials?.confirmPassword || ''}
+                onChange={(e) => handlePasswordChange('confirmPassword', e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
@@ -139,11 +170,11 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({ isDialogOpen, setIsDial
           <div className="flex-1">
             <h3 className="text-xl font-semibold mb-4">Job Duties</h3>
             <div className="mb-4">
-              <label htmlFor="team" className="block mb-1">Team</label>
+              <label htmlFor="department" className="block mb-1">Department</label>
               <Input
-                id="team"
-                value={selectedEmployee?.team || ''}
-                onChange={(e) => handleInputChange('team', e.target.value)}
+                id="department"
+                value={selectedEmployee?.department || ''}
+                onChange={(e) => handleInputChange('department', e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded"
               />
             </div>

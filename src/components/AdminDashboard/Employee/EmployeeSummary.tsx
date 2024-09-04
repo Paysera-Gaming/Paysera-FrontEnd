@@ -1,134 +1,66 @@
 import { LogIn, PowerOff, Users } from 'lucide-react';
 
 type EmployeeSummaryProps = {
-  totalActive: number,
-  activeFixed: number,
-  activeFlexible: number,
-  activeSuperFlexible: number,
-  totalOnLunch: number,
-  lunchFixed: number,
-  lunchFlexible: number,
-  lunchSuperFlexible: number,
-  totalOnLeave: number,
-  leaveFixed: number,
-  leaveFlexible: number,
-  leaveSuperFlexible: number,
-  totalOffline: number,
-  offlineFixed: number,
-  offlineFlexible: number,
-  offlineSuperFlexible: number,
-  onStatusFilterChange: (status: string) => void,
+  totalActive: number;
+  totalInactive: number;
+  onStatusFilterChange: (status: string) => void;
 };
 
 const EmployeeSummary = ({
   totalActive,
-  activeFixed,
-  activeFlexible,
-  activeSuperFlexible,
-  totalOnLunch,
-  lunchFixed,
-  lunchFlexible,
-  lunchSuperFlexible,
-  totalOnLeave,
-  leaveFixed,
-  leaveFlexible,
-  leaveSuperFlexible,
-  totalOffline,
-  offlineFixed,
-  offlineFlexible,
-  offlineSuperFlexible,
+  totalInactive,
   onStatusFilterChange,
 }: EmployeeSummaryProps) => {
-  // Calculate the overall total by summing all status counts
-  const totalOverall =
-    totalActive + totalOnLunch + totalOnLeave + totalOffline;
-  const overallFixed =
-    activeFixed + lunchFixed + leaveFixed + offlineFixed;
-  const overallFlexible =
-    activeFlexible + lunchFlexible + leaveFlexible + offlineFlexible;
-  const overallSuperFlexible =
-    activeSuperFlexible +
-    lunchSuperFlexible +
-    leaveSuperFlexible +
-    offlineSuperFlexible;
+
+  const totalOverall = totalActive + totalInactive;
 
   const summaryItems = [
     {
       title: 'Overall Total',
       count: totalOverall,
-      fixed: overallFixed,
-      flexible: overallFlexible,
-      superFlexible: overallSuperFlexible,
       color: 'bg-gray-100',
       borderColor: 'border-gray-300',
       textColor: 'text-gray-600',
       icon: <Users className="w-6 h-6 text-gray-600" />,
-      status: 'all', // Use 'all' for resetting the filter
-      isOverall: true, // Mark this as the "Overall" item
+      status: 'all',
     },
     {
       title: 'Active',
       count: totalActive,
-      fixed: activeFixed,
-      flexible: activeFlexible,
-      superFlexible: activeSuperFlexible,
       color: 'bg-green-100',
       borderColor: 'border-green-300',
       textColor: 'text-green-600',
       icon: <LogIn className="w-6 h-6 text-green-600" />,
-      status: 'Active',
+      status: 'true',
     },
-
     {
-      title: 'Offline',
-      count: totalOffline,
-      fixed: offlineFixed,
-      flexible: offlineFlexible,
-      superFlexible: offlineSuperFlexible,
+      title: 'Inactive',
+      count: totalInactive,
       color: 'bg-gray-100',
       borderColor: 'border-gray-300',
       textColor: 'text-gray-600',
       icon: <PowerOff className="w-6 h-6 text-gray-600" />,
-      status: 'Offline',
+      status: 'false',
     },
   ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-0">
-      {summaryItems.map(
-        ({
-          title,
-          count,
-          fixed,
-          flexible,
-          superFlexible,
-          color,
-          borderColor,
-          textColor,
-          icon,
-          status,
-          isOverall, // Destructure the isOverall property
-        }) => (
-          <div
-            key={title}
-            onClick={() => onStatusFilterChange(isOverall ? "all" : status)}
-            className={`p-4 rounded-lg border ${borderColor} ${color} text-center shadow-md cursor-pointer transform transition-transform duration-200 hover:-translate-y-1`}
-          >
-            <div className="flex flex-col items-center">
-              <div className="flex items-center justify-center mb-2">
-                {icon}
-                <p className="text-3xl font-bold text-black ml-2">{count}</p>
-              </div>
-              <h3 className={`text-lg font-semibold ${textColor}`}>{title}</h3>
-              <div className="text-sm text-gray-800">
-                <p>
-                  Fixed: {fixed}, Flexible: {flexible}, Super Flexible: {superFlexible}
-                </p>
-              </div>
+      {summaryItems.map(({ title, count, color, borderColor, textColor, icon, status }) => (
+        <div
+          key={title}
+          onClick={() => onStatusFilterChange(status)}
+          className={`p-4 rounded-lg border ${borderColor} ${color} text-center shadow-md cursor-pointer transform transition-transform duration-200 hover:-translate-y-1`}
+        >
+          <div className="flex items-center justify-center mb-2">
+            <div className={`p-2 rounded-full ${textColor} mr-2`}>
+              {icon}
             </div>
+            <p className={`font-bold text-3xl text-black`}>{count}</p>
           </div>
-        )
-      )}
+          <h2 className={`font-semibold ${textColor} text-lg`}>{title}</h2>
+        </div>
+      ))}
     </div>
   );
 };
