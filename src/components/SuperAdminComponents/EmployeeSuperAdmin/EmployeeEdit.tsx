@@ -70,7 +70,7 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
         ...updatedFields,
         isActive: true,
       });
-      toast.success('Employee updated successfully!');
+      
       onSubmit(response.data);
       handleClose();
     } catch (error) {
