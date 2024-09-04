@@ -5,6 +5,7 @@ import { SummaryCard } from './SummaryCard';
 import { AttendanceTable } from './AttendanceTable';
 import { Users, UserCheck, Coffee, Clock } from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import * as XLSX from 'xlsx';
 
 // Sample data for demonstration
 const sampleAttendance = [
@@ -111,6 +112,14 @@ export default function AttendanceList() {
         }
     };
 
+    // Export data to Excel
+    const exportToExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(filteredAttendance);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Attendance');
+        XLSX.writeFile(workbook, 'attendance.xlsx');
+    };
+
     return (
         <div className="p-4 space-y-4">
             <div className="flex items-center gap-2 mb-4">
@@ -146,6 +155,12 @@ export default function AttendanceList() {
                 <span className="ml-2 text-gray-700 dark:text-gray-300">
                     Filtered: {typeFilter !== 'all' ? typeFilter : 'All'}
                 </span>
+                <button
+                    onClick={exportToExcel}
+                    className="ml-auto px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none"
+                >
+                    Export as Excel
+                </button>
             </div>
 
             {/* Summary Cards with Filter Functionality */}
