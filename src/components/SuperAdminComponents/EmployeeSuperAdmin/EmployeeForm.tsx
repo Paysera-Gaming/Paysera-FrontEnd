@@ -55,7 +55,7 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
   async function handleSubmit(values: z.infer<typeof formSchema>) {
     if (values.username && values.firstName && values.lastName && values.password && values.confirmPassword) {
       try {
-        const response = await axios.post('https://192.168.110.6:8080/api/employee', {
+        const response = await axios.post(import.meta.env.VITE_BASE_API +'/api/employee', {
           username: values.username, // Added username to the payload
           firstName: values.firstName,
           lastName: values.lastName,

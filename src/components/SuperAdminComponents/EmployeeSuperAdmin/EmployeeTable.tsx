@@ -32,6 +32,8 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
     };
 
     const handleEditClick = (employee: Employee) => {
+        console.log(employee);
+        
         setSelectedEmployee(employee);
         setIsEditDialogOpen(true);
     };
@@ -40,7 +42,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
         if (!selectedEmployee) return;
 
         try {
-            await axios.delete(`https://192.168.110.6:8080/api/employee/${selectedEmployee.id}`);
+            await axios.delete(`${import.meta.env.VITE_BASE_API}/api/employee/${selectedEmployee.id}`);
             toast.success(`Successfully deleted ${selectedEmployee.firstName} ${selectedEmployee.lastName}`);
             setIsDialogOpen(false);
             // Optionally, you can remove the deleted employee from the state to update the UI
@@ -120,6 +122,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
             </Dialog>
             {selectedEmployee && (
                 <EmployeeEdit
+                key={selectedEmployee.id}
                     employee={selectedEmployee}
                     onSubmit={handleEditSubmit}
                     isOpen={isEditDialogOpen}

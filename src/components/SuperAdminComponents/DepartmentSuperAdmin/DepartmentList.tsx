@@ -28,6 +28,8 @@ const sampleDepartments = [
 ];
 
 export default function DepartmentList() {
+    console.log(import.meta.env.VITE_BASE_API);
+    
     const [departments] = useState(sampleDepartments);
     const [searchTerm, setSearchTerm] = useState('');
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);

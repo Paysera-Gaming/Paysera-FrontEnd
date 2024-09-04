@@ -28,7 +28,7 @@ const EmployeeList: React.FC = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get('https://192.168.110.6:8080/api/employee');
+        const response = await axios.get(import.meta.env.VITE_BASE_API + '/api/employee');
         console.log('API Response:', response.data); // Log the response to verify its structure
         if (Array.isArray(response.data)) {
           setEmployees(response.data);

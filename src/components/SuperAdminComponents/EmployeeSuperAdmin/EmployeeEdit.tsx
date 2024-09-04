@@ -66,7 +66,7 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
     if (values.password) updatedFields.passwordCredentials = values.password;
 
     try {
-      const response = await axios.put(`https://192.168.110.6:8080/api/employee/${employee.id}`, {
+      const response = await axios.put(`${import.meta.env.VITE_BASE_API}/api/employee/${employee.id}`, {
         ...updatedFields,
         isActive: true,
       });
