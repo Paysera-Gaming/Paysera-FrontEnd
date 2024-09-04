@@ -26,33 +26,25 @@ export const exportToExcel = (data: AttendanceData[], fileName: string, startDat
         'Super Flexible': data.filter((att) => att.type === 'Super Flexible').length,
     };
 
-    // Create the summary data
-    const summaryData = [
-        { Category: 'Overall', Count: overallCount },
-        { Category: 'On Job', Count: onJobCount },
-        { Category: 'Lunch', Count: lunchCount },
-        { Category: 'Leave', Count: leaveCount },
-        { Category: 'Fixed', Count: typeCounts.Fixed },
-        { Category: 'Flexible', Count: typeCounts.Flexible },
-        { Category: 'Super Flexible', Count: typeCounts['Super Flexible'] },
-    ];
-
-    // Create a combined data array with summary and attendance data
+    // Create the combined data array with the specified structure
     const combinedData = [
-        ...summaryData,
+        { A: 'Overall', B: overallCount, C: '', D: '', E: '' },
+        { A: 'On Job', B: onJobCount, C: '', D: 'Fixed', E: typeCounts.Fixed },
+        { A: 'Lunch', B: lunchCount, C: '', D: 'Flexible', E: typeCounts.Flexible },
+        { A: 'Leave', B: leaveCount, C: '', D: 'Super Flexible', E: typeCounts['Super Flexible'] },
         {},
-        { Category: 'ID', Count: 'Full Name', Type: 'Type', Date: 'Date', StartTime: 'Start Time', EndTime: 'End Time', WorkHours: 'Work Hours', LunchHours: 'Lunch Hours', TotalHours: 'Total Hours', Situation: 'Situation' },
+        { A: 'ID', B: 'Full Name', C: 'Type', D: 'Date', E: 'Start Time', F: 'End Time', G: 'Work Hours', H: 'Lunch Hours', I: 'Total Hours', J: 'Situation' },
         ...data.map(att => ({
-            Category: att.id,
-            Count: att.fullName,
-            Type: att.type,
-            Date: att.date,
-            StartTime: att.startTime,
-            EndTime: att.endTime,
-            WorkHours: att.workHours,
-            LunchHours: att.lunchHours,
-            TotalHours: att.totalHours,
-            Situation: att.situation,
+            A: att.id,
+            B: att.fullName,
+            C: att.type,
+            D: att.date,
+            E: att.startTime,
+            F: att.endTime,
+            G: att.workHours,
+            H: att.lunchHours,
+            I: att.totalHours,
+            J: att.situation,
         }))
     ];
 
