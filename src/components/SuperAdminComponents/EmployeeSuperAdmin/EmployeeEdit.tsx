@@ -192,7 +192,7 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
             </div>
             <DialogFooter>
               <Button type="submit">Update</Button>
-              <Button variant="outline" onClick={handleClose}>Cancel</Button>
+              <Button type="button" variant="outline" onClick={handleClose}>Cancel</Button>
             </DialogFooter>
           </form>
         </Form>
