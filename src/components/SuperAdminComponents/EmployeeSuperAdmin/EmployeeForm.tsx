@@ -77,7 +77,14 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
   }
 
   function handleClose() {
-    form.reset();
+    form.reset({
+      username: "",
+      firstName: "",
+      lastName: "",
+      middleName: "",
+      password: "",
+      confirmPassword: "",
+    });
     onClose();
   }
 
@@ -185,7 +192,7 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
             </div>
             <DialogFooter>
               <Button type="submit">Submit</Button>
-              <Button variant="outline" onClick={handleClose}>Cancel</Button>
+              <Button type="button" variant="outline" onClick={handleClose}>Cancel</Button>
             </DialogFooter>
           </form>
         </Form>
