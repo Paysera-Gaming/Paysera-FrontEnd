@@ -13,7 +13,7 @@ interface AttendanceData {
     situation: string;
 }
 
-export const exportToExcel = (data: AttendanceData[], fileName: string, startDate: Date) => {
+export const exportToExcel = (data: AttendanceData[], fileName: string, startDate: Date, endDate: Date) => {
     // Calculate summary counts
     const overallCount = data.length;
     const onJobCount = data.filter((att) => att.situation === 'On Job').length;
@@ -65,8 +65,8 @@ export const exportToExcel = (data: AttendanceData[], fileName: string, startDat
     // Append the combined sheet to the workbook
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Summary and Attendance');
 
-    // Format the file name with the start date using toLocaleDateString with 'en-CA' locale
-    const formattedFileName = `${fileName}_${startDate.toLocaleDateString('en-CA')}.xlsx`;
+    // Format the file name with the start date and end date using toLocaleDateString with 'en-CA' locale
+    const formattedFileName = `${fileName}_${startDate.toLocaleDateString('en-CA')}_to_${endDate.toLocaleDateString('en-CA')}_attendance.xlsx`;
 
     // Write the workbook to a file
     XLSX.writeFile(workbook, formattedFileName);
