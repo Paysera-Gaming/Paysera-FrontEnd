@@ -37,18 +37,33 @@ export const exportToExcel = (data: AttendanceData[], fileName: string, startDat
         { Category: 'Super Flexible', Count: typeCounts['Super Flexible'] },
     ];
 
-    // Create the worksheet from the summary data
-    const summaryWorksheet = XLSX.utils.json_to_sheet(summaryData, { skipHeader: false });
+    // Create a combined data array with summary and attendance data
+    const combinedData = [
+        ...summaryData,
+        {},
+        { Category: 'ID', Count: 'Full Name', Type: 'Type', Date: 'Date', StartTime: 'Start Time', EndTime: 'End Time', WorkHours: 'Work Hours', LunchHours: 'Lunch Hours', TotalHours: 'Total Hours', Situation: 'Situation' },
+        ...data.map(att => ({
+            Category: att.id,
+            Count: att.fullName,
+            Type: att.type,
+            Date: att.date,
+            StartTime: att.startTime,
+            EndTime: att.endTime,
+            WorkHours: att.workHours,
+            LunchHours: att.lunchHours,
+            TotalHours: att.totalHours,
+            Situation: att.situation,
+        }))
+    ];
 
-    // Create the worksheet from the attendance data
-    const attendanceWorksheet = XLSX.utils.json_to_sheet(data, { skipHeader: false });
+    // Create the worksheet from the combined data
+    const worksheet = XLSX.utils.json_to_sheet(combinedData, { skipHeader: true });
 
     // Create a new workbook
     const workbook = XLSX.utils.book_new();
 
-    // Append the summary and attendance sheets to the workbook
-    XLSX.utils.book_append_sheet(workbook, summaryWorksheet, 'Summary');
-    XLSX.utils.book_append_sheet(workbook, attendanceWorksheet, 'Attendance Data');
+    // Append the combined sheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Summary and Attendance');
 
     // Format the file name with the start date using toLocaleDateString with 'en-CA' locale
     const formattedFileName = `${fileName}_${startDate.toLocaleDateString('en-CA')}.xlsx`;
