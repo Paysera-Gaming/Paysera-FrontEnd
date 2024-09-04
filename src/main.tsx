@@ -13,11 +13,7 @@ import TeamLeadDashboardPage from './pages/TeamLead/Dashboard/DashboardPage';
 import SchedulePage from './pages/TeamLead/Schedule/SchedulePage';
 import AttendancePage from './pages/TeamLead/Attendance/AttendancePage';
 import ManagePage from './pages/TeamLead/Manage/ManagePage';
-// admin (old version of superadmin, this is my reference)
-import AdminPage from './pages/AdminPage/AdminPage';
-import AdminManageTeams from './components/AdminDashboard/ManageTeams/index';
-import Settings from './components/AdminDashboard/AccountPreferences';
-import Employee from './components/AdminDashboard/Employee';
+
 // superadmin
 import SuperAdminPage from './pages/SuperAdmin/SuperAdminPage';
 import SuperAdminDashboardPage from './pages/SuperAdmin/Dashboard/DashboardPage';
@@ -36,7 +32,6 @@ import {
 	createBrowserRouter,
 	RouterProvider,
 	redirect,
-	Outlet,
 } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -81,31 +76,7 @@ const router = createBrowserRouter([
 			{ path: 'attendance', element: <AttendancePage></AttendancePage> },
 		],
 	},
-	{
-		path: '/admin',
-		element: <Outlet></Outlet>,
-		children: [
-			{
-				index: true,
-				loader: () => redirect('/admin/dashboard'),
-			},
-			{ path: 'dashboard', element: <AdminPage></AdminPage> },
-
-			{
-				path: 'manageteams',
-				element: <AdminManageTeams />,
-			},
-
-			{
-				path: 'accountpreferences',
-				element: <Settings />,
-			},
-			{
-				path: 'employeelist',
-				element: <Employee />,
-			},
-		],
-	},
+	
 	{
         path: '/superadmin',
         element: <SuperAdminPage></SuperAdminPage>,
