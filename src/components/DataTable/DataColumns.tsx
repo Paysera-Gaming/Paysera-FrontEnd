@@ -25,7 +25,7 @@ import { MoreHorizontal } from 'lucide-react';
 import EditRole from '../TeamLeadComponents/DialogForms/EditRole';
 import RemoveDialog from '../TeamLeadComponents/DialogForms/RemovalDialog';
 
-function formatDate(date: Date): string {
+export function formatDate(date: Date): string {
 	const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
 	const day = String(date.getDate()).padStart(2, '0');
 	const year = date.getFullYear();

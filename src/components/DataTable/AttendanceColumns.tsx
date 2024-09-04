@@ -1,12 +1,16 @@
 import { ColumnDef } from '@tanstack/react-table';
-export type Payment = {
+import { format } from 'date-fns';
+import { formatDate } from './DataColumns';
+import { ArrowUpDown } from 'lucide-react';
+import { Button } from '../ui/button';
+export type TAttendanceColumn = {
 	userID: string;
 	fName: string;
 	lName: string;
 	mName: string;
 	role: string;
-	timeIn: string;
-	timeOut: string;
+	timeIn: Date;
+	timeOut: Date;
 	lunchTimeIn: Date;
 	lunchTimeOut: Date;
 	lunchTimeTotal: number;
@@ -17,15 +21,39 @@ export type Payment = {
 	updatedAt: Date;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+function dateToHours(date: Date) {
+	return format(date, 'HH:mm');
+}
+
+export const attendanceColumns: ColumnDef<TAttendanceColumn>[] = [
 	{
 		accessorKey: 'userID',
-		header: 'Username',
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+				>
+					Username
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
 	},
 
 	{
 		accessorKey: 'lName',
-		header: 'Last Name',
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+				>
+					Last Name
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
 	},
 	{
 		accessorKey: 'fName',
@@ -38,23 +66,75 @@ export const columns: ColumnDef<Payment>[] = [
 	{ accessorKey: 'role', header: 'role' },
 	{
 		accessorKey: 'timeIn',
-		header: 'Time-In',
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+				>
+					Time-In
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+		cell: ({ row }) => {
+			return dateToHours(row.getValue('timeIn'));
+		},
 	},
 	{
 		accessorKey: 'timeOut',
-		header: 'Time-Out',
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+				>
+					Time-Out
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+		cell: ({ row }) => {
+			return dateToHours(row.getValue('timeOut'));
+		},
 	},
 	{
-		accessorKey: 'TimeTotal',
+		accessorKey: 'timeTotal',
 		header: 'Time Worked total',
 	},
 	{
 		accessorKey: 'lunchTimeIn',
-		header: 'Lunch Time-In',
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+				>
+					Lunch Time In
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+		cell: ({ row }) => {
+			return dateToHours(row.getValue('lunchTimeIn'));
+		},
 	},
 	{
 		accessorKey: 'lunchTimeOut',
-		header: 'Lunch Time-Out',
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+				>
+					Lunch Time Out
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+		cell: ({ row }) => {
+			return dateToHours(row.getValue('lunchTimeOut'));
+		},
 	},
 	{
 		accessorKey: 'lunchTimeTotal',
@@ -65,7 +145,21 @@ export const columns: ColumnDef<Payment>[] = [
 		header: 'Over Time Total',
 	},
 
-	// 	createdAt: Date;
-	// updatedAt: Date;
-	{ accessorKey: 'updatedAt', header: 'Updated At' },
+	{
+		accessorKey: 'updatedAt',
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+				>
+					Updated At
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+		cell: ({ row }) => {
+			return formatDate(row.getValue('updatedAt'));
+		},
+	},
 ];
