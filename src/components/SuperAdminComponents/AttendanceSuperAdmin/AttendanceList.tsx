@@ -163,7 +163,10 @@ export default function AttendanceList() {
                     Filtered: {typeFilter !== 'all' ? typeFilter : 'All'}
                 </span>
                 <button
-                    onClick={() => exportToExcel(filteredAttendance, 'attendance')}
+                    onClick={() => {
+                        const startDate = dateRange?.from || new Date(); // Use the start date from the date range or the current date if not set
+                        exportToExcel(filteredAttendance, 'attendance', startDate);
+                    }}
                     className="ml-auto px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none"
                 >
                     Export as Excel
