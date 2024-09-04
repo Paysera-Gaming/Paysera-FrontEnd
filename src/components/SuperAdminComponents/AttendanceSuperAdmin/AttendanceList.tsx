@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Input } from '@/components/ui/input';
 import { DatePickerDemo } from './DatePickerDemo';
 import { SummaryCard } from './SummaryCard';
 import { AttendanceTable } from './AttendanceTable';
 import { Users, UserCheck, Coffee, Clock } from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import * as XLSX from 'xlsx';
+import SearchBar from './SearchBar'; // Import the new SearchBar component
 
 // Sample data for demonstration
 const sampleAttendance = [
@@ -123,13 +123,7 @@ export default function AttendanceList() {
     return (
         <div className="p-4 space-y-4">
             <div className="flex items-center gap-2 mb-4">
-                <Input
-                    type="text"
-                    placeholder="Search..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full max-w-xs"
-                />
+                <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> {/* Use the new SearchBar component */}
                 <DatePickerDemo /> {/* Calendar Button moved next to the search bar */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
