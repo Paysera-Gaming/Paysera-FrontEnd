@@ -55,6 +55,7 @@ export default function AttendanceList() {
     const [typeFilter, setTypeFilter] = useState('all');
     const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
     const [isFilterEmpty, setIsFilterEmpty] = useState(false);
+    const [isSearchEmpty, setIsSearchEmpty] = useState(false);
 
     // Filter attendance data based on selected filter, search term, and date range
     const filteredAttendance = attendanceData
@@ -93,6 +94,12 @@ export default function AttendanceList() {
     const isEmpty = filteredAttendance.length === 0;
     if (isEmpty !== isFilterEmpty) {
         setIsFilterEmpty(isEmpty);
+    }
+
+    // Check if the search results are empty
+    const isSearchResultEmpty = !!searchTerm && filteredAttendance.length === 0;
+    if (isSearchResultEmpty !== isSearchEmpty) {
+        setIsSearchEmpty(isSearchResultEmpty);
     }
 
     // Calculate summary counts
@@ -210,7 +217,9 @@ export default function AttendanceList() {
             {/* Attendance Table or Error Message */}
             {isFilterEmpty ? (
                 <div className="text-center text-gray-500 dark:text-gray-400">
-                    {dateRange?.from && dateRange?.to
+                    {isSearchEmpty
+                        ? `No results found for "${searchTerm}".`
+                        : dateRange?.from && dateRange?.to
                         ? `No employees are present from ${dateRange.from.toLocaleDateString()} to ${dateRange.to.toLocaleDateString()}.`
                         : dateRange?.from
                         ? `No employees are present on ${dateRange.from.toLocaleDateString()}.`
