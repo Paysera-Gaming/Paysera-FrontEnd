@@ -1,22 +1,26 @@
+'use client';
+
 import {
 	ColumnDef,
-	ColumnFiltersState,
 	flexRender,
+	getCoreRowModel,
+	useReactTable,
 	SortingState,
 	getSortedRowModel,
-	getCoreRowModel,
 	getFilteredRowModel,
+	ColumnFiltersState,
 	getPaginationRowModel,
 	VisibilityState,
-	useReactTable,
 } from '@tanstack/react-table';
-
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
+import { DatePicker } from '../TeamLeadComponents/AttendancePage/DatePicker';
+import React from 'react';
 
 import {
 	Table,
@@ -26,62 +30,69 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
-import { Button } from '../ui/button';
-import { Input } from '@/components/ui/input';
-import React from 'react';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
-import AddEmployee from '../TeamLeadComponents/DialogForms/AddEmployee';
-
+import { Button } from '@/components/ui/button';
+import { Input } from '../ui/input';
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 }
-export function DataTable<TData, TValue>({
+
+export function AttendanceTable<TData, TValue>({
 	columns,
 	data,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
-	const [columnVisibility, setColumnVisibility] =
-		React.useState<VisibilityState>({});
-
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[]
 	);
+	const [selectedDate, setDate] = React.useState<Date>();
+	const [columnVisibility, setColumnVisibility] =
+		React.useState<VisibilityState>({});
 	const table = useReactTable({
 		data,
 		columns,
+		getSortedRowModel: getSortedRowModel(),
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 		onSortingChange: setSorting,
-		getSortedRowModel: getSortedRowModel(),
-		onColumnVisibilityChange: setColumnVisibility,
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
-
+		onColumnVisibilityChange: setColumnVisibility,
 		state: {
 			sorting,
-			columnVisibility,
 			columnFilters,
+			columnVisibility,
 		},
 	});
 
+	function checkDate(date: Date) {
+		setDate(date);
+		alert(date);
+	}
+
 	return (
-		<div className="w-full flex justify-center items-center flex-col">
-			<div className="w-full flex justify-between items-center py-4">
-				<Input
-					placeholder="Filter By EmployeeID"
-					value={(table.getColumn('id')?.getFilterValue() as string) ?? ''}
-					onChange={(event) =>
-						table.getColumn('id')?.setFilterValue(event.target.value)
-					}
-					className="max-w-xs"
-				/>
-				<div>
-					<AddEmployee></AddEmployee>
+		<div className="w-full flex items-center justify-center flex-col gap-4 mt-1">
+			<div className="w-full flex items-center justify-between">
+				<div className="flex items-center justify-center">
+					<DatePicker updateParentState={checkDate}></DatePicker>
+				</div>
+
+				<div className="flex items-center justify-center gap-2">
+					<Input
+						placeholder="Filter Employee via ID..."
+						value={
+							(table.getColumn('userID')?.getFilterValue() as string) ?? ''
+						}
+						onChange={(event) =>
+							table.getColumn('userID')?.setFilterValue(event.target.value)
+						}
+						className="w-[220px]"
+					/>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">
-								Columns
+								View
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end">
@@ -108,7 +119,7 @@ export function DataTable<TData, TValue>({
 			</div>
 
 			<ScrollArea className=" md:w-[500px] lg:w-[950px] lg:h-[300px] md:h-[250px]  whitespace-nowrap rounded-md border">
-				<Table className="relative min-w-full ">
+				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
 							<TableRow key={headerGroup.id}>
@@ -157,14 +168,14 @@ export function DataTable<TData, TValue>({
 						)}
 					</TableBody>
 				</Table>
-				<ScrollBar orientation="horizontal" />
+				<ScrollBar orientation="horizontal"></ScrollBar>
 			</ScrollArea>
-
-			<div className="w-full flex items-center justify-end space-x-2">
+			<div className="w-full flex items-center justify-end space-x-2 py-4">
 				<div className="flex w-[100px] items-center justify-center text-sm font-medium">
 					Page {table.getState().pagination.pageIndex + 1} of{' '}
 					{table.getPageCount()}
 				</div>
+
 				<Button
 					variant="outline"
 					size="sm"

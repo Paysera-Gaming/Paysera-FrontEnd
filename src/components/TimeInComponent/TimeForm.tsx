@@ -41,7 +41,7 @@ import { useState } from 'react';
 
 type UserStatus = 'Clock-In' | 'Lunch-In' | 'Lunch-Out' | 'Clock-Out' | 'None';
 
-interface ChildProps {
+export interface ChildProps {
 	updateParentState: (newValue: UserStatus) => void;
 }
 
