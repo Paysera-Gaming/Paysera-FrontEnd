@@ -102,34 +102,34 @@ export default function AttendanceList() {
         setIsSearchEmpty(isSearchResultEmpty);
     }
 
-    // Calculate summary counts
-    const overallCount = attendanceData.length;
-    const onJobCount = attendanceData.filter((att) => att.situation === 'On Job').length;
-    const lunchCount = attendanceData.filter((att) => att.situation === 'Lunch').length;
-    const leaveCount = attendanceData.filter((att) => att.situation === 'Leave').length;
+    // Calculate summary counts based on filtered attendance data
+    const overallCount = filteredAttendance.length;
+    const onJobCount = filteredAttendance.filter((att) => att.situation === 'On Job').length;
+    const lunchCount = filteredAttendance.filter((att) => att.situation === 'Lunch').length;
+    const leaveCount = filteredAttendance.filter((att) => att.situation === 'Leave').length;
 
     const typeCounts = {
-        Fixed: attendanceData.filter((att) => att.type === 'Fixed').length,
-        Flexible: attendanceData.filter((att) => att.type === 'Flexible').length,
-        'Super Flexible': attendanceData.filter((att) => att.type === 'Super Flexible').length,
+        Fixed: filteredAttendance.filter((att) => att.type === 'Fixed').length,
+        Flexible: filteredAttendance.filter((att) => att.type === 'Flexible').length,
+        'Super Flexible': filteredAttendance.filter((att) => att.type === 'Super Flexible').length,
     };
 
-    // Calculate counts for each situation type
+    // Calculate counts for each situation type based on filtered attendance data
     const situationTypeCounts = {
         onJob: {
-            Fixed: attendanceData.filter((att) => att.situation === 'On Job' && att.type === 'Fixed').length,
-            Flexible: attendanceData.filter((att) => att.situation === 'On Job' && att.type === 'Flexible').length,
-            'Super Flexible': attendanceData.filter((att) => att.situation === 'On Job' && att.type === 'Super Flexible').length,
+            Fixed: filteredAttendance.filter((att) => att.situation === 'On Job' && att.type === 'Fixed').length,
+            Flexible: filteredAttendance.filter((att) => att.situation === 'On Job' && att.type === 'Flexible').length,
+            'Super Flexible': filteredAttendance.filter((att) => att.situation === 'On Job' && att.type === 'Super Flexible').length,
         },
         lunch: {
-            Fixed: attendanceData.filter((att) => att.situation === 'Lunch' && att.type === 'Fixed').length,
-            Flexible: attendanceData.filter((att) => att.situation === 'Lunch' && att.type === 'Flexible').length,
-            'Super Flexible': attendanceData.filter((att) => att.situation === 'Lunch' && att.type === 'Super Flexible').length,
+            Fixed: filteredAttendance.filter((att) => att.situation === 'Lunch' && att.type === 'Fixed').length,
+            Flexible: filteredAttendance.filter((att) => att.situation === 'Lunch' && att.type === 'Flexible').length,
+            'Super Flexible': filteredAttendance.filter((att) => att.situation === 'Lunch' && att.type === 'Super Flexible').length,
         },
         leave: {
-            Fixed: attendanceData.filter((att) => att.situation === 'Leave' && att.type === 'Fixed').length,
-            Flexible: attendanceData.filter((att) => att.situation === 'Leave' && att.type === 'Flexible').length,
-            'Super Flexible': attendanceData.filter((att) => att.situation === 'Leave' && att.type === 'Super Flexible').length,
+            Fixed: filteredAttendance.filter((att) => att.situation === 'Leave' && att.type === 'Fixed').length,
+            Flexible: filteredAttendance.filter((att) => att.situation === 'Leave' && att.type === 'Flexible').length,
+            'Super Flexible': filteredAttendance.filter((att) => att.situation === 'Leave' && att.type === 'Super Flexible').length,
         }
     };
 
