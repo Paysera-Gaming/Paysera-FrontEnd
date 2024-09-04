@@ -39,6 +39,7 @@ export function AttendanceTable<TData, TValue>({
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[]
 	);
+	const [selectedDate, setDate] = React.useState<Date>();
 	const table = useReactTable({
 		data,
 		columns,
@@ -54,12 +55,16 @@ export function AttendanceTable<TData, TValue>({
 		},
 	});
 
+	function checkDate(date: Date) {
+		setDate(date);
+		alert(date);
+	}
+
 	return (
 		<div className="w-full flex items-center justify-center flex-col gap-4 mt-1">
 			<div className="w-full flex items-center justify-between">
 				<div className="flex items-center justify-center">
-					<DatePicker></DatePicker>
-					<Button className="ml-4">Search</Button>
+					<DatePicker updateParentState={checkDate}></DatePicker>
 				</div>
 				<Input
 					placeholder="Filter Employee via ID..."
