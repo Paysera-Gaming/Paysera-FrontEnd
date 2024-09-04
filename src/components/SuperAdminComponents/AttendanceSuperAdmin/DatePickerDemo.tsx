@@ -6,7 +6,11 @@ import { format } from "date-fns";
 import { DayPicker, DateRange } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 
-export function DatePickerDemo() {
+interface DatePickerDemoProps {
+    onSubmit: (dateRange: DateRange | undefined) => void;
+}
+
+export function DatePickerDemo({ onSubmit }: DatePickerDemoProps) {
     const [selected, setSelected] = useState<DateRange | undefined>({ from: new Date(), to: undefined });
     const [month, setMonth] = useState(new Date());
 
@@ -27,6 +31,10 @@ export function DatePickerDemo() {
         const today = new Date();
         setMonth(today);
         setSelected({ from: today, to: undefined });
+    };
+
+    const handleSubmit = () => {
+        onSubmit(selected);
     };
 
     return (
@@ -95,6 +103,11 @@ export function DatePickerDemo() {
                                 day: { height: "1rem", lineHeight: "1rem", padding: "0.1rem", margin: "0.2rem" }, // Adjust the height, padding, and margin of the calendar days
                             }}
                         />
+                        <div className="flex justify-end mt-2">
+                            <Button variant="default" onClick={handleSubmit}>
+                                Submit
+                            </Button>
+                        </div>
                     </div>
                 </PopoverContent>
             </Popover>

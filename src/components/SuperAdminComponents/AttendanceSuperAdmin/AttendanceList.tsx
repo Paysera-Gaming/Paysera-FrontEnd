@@ -6,6 +6,7 @@ import { Users, UserCheck, Coffee, Clock } from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import SearchBar from './SearchBar'; // Import the new SearchBar component
 import { exportToExcel } from './ExcelExport'; // Import the new exportToExcel function
+import { DateRange } from 'react-day-picker';
 
 // Sample data for demonstration
 const sampleAttendance = [
@@ -52,8 +53,10 @@ export default function AttendanceList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [activeFilter, setActiveFilter] = useState('overall');
     const [typeFilter, setTypeFilter] = useState('all');
+    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+    const [isFilterEmpty, setIsFilterEmpty] = useState(false);
 
-    // Filter attendance data based on selected filter and search term
+    // Filter attendance data based on selected filter, search term, and date range
     const filteredAttendance = attendanceData
         .filter((att) => {
             if (activeFilter === 'onJob') {
@@ -79,7 +82,18 @@ export default function AttendanceList() {
             att.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             att.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
             att.situation.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        )
+        .filter((att) => {
+            if (!dateRange?.from) return true;
+            const attDate = new Date(att.date);
+            return attDate >= dateRange.from && (!dateRange.to || attDate <= dateRange.to);
+        });
+
+    // Check if the filtered attendance data is empty
+    const isEmpty = filteredAttendance.length === 0;
+    if (isEmpty !== isFilterEmpty) {
+        setIsFilterEmpty(isEmpty);
+    }
 
     // Calculate summary counts
     const overallCount = attendanceData.length;
@@ -116,7 +130,7 @@ export default function AttendanceList() {
         <div className="p-4 space-y-4">
             <div className="flex items-center gap-2 mb-4">
                 <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> {/* Use the new SearchBar component */}
-                <DatePickerDemo /> {/* Calendar Button moved next to the search bar */}
+                <DatePickerDemo onSubmit={setDateRange} /> {/* Pass the setDateRange function to DatePickerDemo */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none">
@@ -193,15 +207,17 @@ export default function AttendanceList() {
                 />
             </div>
 
-            {/* Attendance Table */}
-            {filteredAttendance.length > 0 ? (
-                <AttendanceTable attendanceData={filteredAttendance} />
-            ) : (
+            {/* Attendance Table or Error Message */}
+            {isFilterEmpty ? (
                 <div className="text-center text-gray-500 dark:text-gray-400">
-                    {searchTerm
-                        ? `No results found for "${searchTerm}".`
-                        : `No ${typeFilter !== 'all' ? typeFilter : 'All'} employees are ${activeFilter !== 'overall' ? activeFilter : 'available'}.`}
+                    {dateRange?.from && dateRange?.to
+                        ? `No employees are present from ${dateRange.from.toLocaleDateString()} to ${dateRange.to.toLocaleDateString()}.`
+                        : dateRange?.from
+                        ? `No employees are present on ${dateRange.from.toLocaleDateString()}.`
+                        : `No employees are present for the selected date range.`}
                 </div>
+            ) : (
+                <AttendanceTable attendanceData={filteredAttendance} />
             )}
         </div>
     );
