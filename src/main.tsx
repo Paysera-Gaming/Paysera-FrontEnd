@@ -21,9 +21,6 @@ import AttendanceDashboard from './pages/SuperAdmin/Attendance/AttendanceDashboa
 import SuperAdminEmployeeDashboard from './pages/SuperAdmin/Employee/SuperAdminEmployeeDashboard';
 import SuperAdminDepartmentDashboard from './pages/SuperAdmin/Department/SuperAdminDepartmentDashboard';
 
-
-
-
 import './index.css';
 // Theme provider
 import { ThemeProvider } from '@/components/ThemeProvider/ThemeProvider';
@@ -76,33 +73,40 @@ const router = createBrowserRouter([
 			{ path: 'attendance', element: <AttendancePage></AttendancePage> },
 		],
 	},
-	
+
 	{
-        path: '/superadmin',
-        element: <SuperAdminPage></SuperAdminPage>,
-        children: [
-            {
-                index: true,
-                loader: () => redirect('/superadmin/dashboard'),
-            },
-            {
-                path: 'dashboard',
-                element: <SuperAdminDashboardPage />,
-				 // SuperAdmin Dashboard
-            },
+		path: '/superadmin',
+		element: <SuperAdminPage></SuperAdminPage>,
+		children: [
+			{
+				index: true,
+				loader: () => redirect('/superadmin/dashboard'),
+			},
+			{
+				path: 'dashboard',
+				element: <SuperAdminDashboardPage />,
+				// SuperAdmin Dashboard
+			},
 			{ path: 'schedule', element: <SchedulePage></SchedulePage> },
-			{ path: 'attendance', element: <AttendanceDashboard></AttendanceDashboard> },
-			{ path: 'employee', element: <SuperAdminEmployeeDashboard></SuperAdminEmployeeDashboard> },
-			{ path: 'departments', element: <SuperAdminDepartmentDashboard></SuperAdminDepartmentDashboard> },
+			{
+				path: 'attendance',
+				element: <AttendanceDashboard></AttendanceDashboard>,
+			},
+			{
+				path: 'employee',
+				element: <SuperAdminEmployeeDashboard></SuperAdminEmployeeDashboard>,
+			},
+			{
+				path: 'departments',
+				element: (
+					<SuperAdminDepartmentDashboard></SuperAdminDepartmentDashboard>
+				),
+			},
 
-
-			
 			// Add more child routes if needed
-        ],
-    },
+		],
+	},
 ]);
-
-
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>

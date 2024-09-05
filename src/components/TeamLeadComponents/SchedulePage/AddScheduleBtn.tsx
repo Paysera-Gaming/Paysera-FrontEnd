@@ -56,7 +56,7 @@ export default function AddScheduleBtn() {
 		<AlertDialog open={openAlert} onOpenChange={setAlert}>
 			<AlertDialogTrigger>
 				<Button variant={'default'} className="mr-3">
-					Add Employee
+					Add Schedule
 				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent>
