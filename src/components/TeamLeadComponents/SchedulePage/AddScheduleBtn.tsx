@@ -34,7 +34,7 @@ const formSchema = z.object({
 	role: z.string().min(5, { message: 'Minimum Charactus must be atleast 5' }),
 });
 
-export default function AddEmployee() {
+export default function AddScheduleBtn() {
 	const [openAlert, setAlert] = useState<boolean>(false);
 	// form schema
 	const form = useForm<z.infer<typeof formSchema>>({
