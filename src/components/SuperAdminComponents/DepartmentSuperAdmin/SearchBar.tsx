@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus } from 'lucide-react';
 import AddDepartmentDialog from './AddDepartmentDialog';
-import AddTeamMembersDialog from './AddTeamMembersDialog';
 
 interface SearchBarProps {
     searchTerm: string;
@@ -12,16 +11,10 @@ interface SearchBarProps {
 
 export default function SearchBar({ searchTerm, setSearchTerm }: SearchBarProps) {
     const [isDepartmentFormOpen, setIsDepartmentFormOpen] = useState(false);
-    const [isTeamMembersFormOpen, setIsTeamMembersFormOpen] = useState(false);
 
-    const handleDepartmentFormSubmit = (_department: { name: string; teamLeader: string; teamMembers: string[] }) => {
+    const handleAddDepartment = () => {
         // Handle department form submission
         setIsDepartmentFormOpen(false);
-    };
-
-    const handleTeamMembersFormSubmit = (_teamMembers: { name: string; department: string }[]) => {
-        // Handle team members form submission
-        setIsTeamMembersFormOpen(false);
     };
 
     return (
@@ -39,21 +32,12 @@ export default function SearchBar({ searchTerm, setSearchTerm }: SearchBarProps)
                         <Plus size={16} />
                         Add Department
                     </Button>
-                    <Button onClick={() => setIsTeamMembersFormOpen(true)}>
-                        <Plus size={16} />
-                        Add Team Members
-                    </Button>
                 </div>
             </div>
             <AddDepartmentDialog
                 isOpen={isDepartmentFormOpen}
                 onClose={() => setIsDepartmentFormOpen(false)}
-                onAdd={handleDepartmentFormSubmit}
-            />
-            <AddTeamMembersDialog
-                isOpen={isTeamMembersFormOpen}
-                onClose={() => setIsTeamMembersFormOpen(false)}
-                onAdd={handleTeamMembersFormSubmit}
+                onAdd={handleAddDepartment}
             />
         </div>
     );

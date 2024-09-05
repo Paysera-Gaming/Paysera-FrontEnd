@@ -27,6 +27,13 @@ const sampleDepartments = [
     },
 ];
 
+type Department = {
+    id: number;
+    name: string;
+    teamLeader: string;
+    teamMembers: string[];
+};
+
 export default function DepartmentList() {
     console.log(import.meta.env.VITE_BASE_API);
     
@@ -34,7 +41,7 @@ export default function DepartmentList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-    const [selectedDepartment, setSelectedDepartment] = useState<{ id: number; name: string; teamLeader: string; teamMembers: string[] } | null>(null);
+    const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
 
     const filteredDepartments = departments.filter(dept =>
         dept.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -43,17 +50,17 @@ export default function DepartmentList() {
     const totalDepartments = departments.length;
     const totalTeams = departments.reduce((sum, dept) => sum + dept.totalTeams, 0);
 
-    const handleAddDepartment = (newDepartment: { name: string; teamLeader: string; teamMembers: string[] }) => {
+    const handleAddDepartment = (newDepartment: { name: string }) => {
         // You can handle the addition logic here if needed
         console.log('New Department:', newDepartment);
     };
 
-    const handleEditDepartment = (updatedDepartment: { id: number; name: string; teamLeader: string; teamMembers: string[] }) => {
+    const handleEditDepartment = (updatedDepartment: Department) => {
         // You can handle the edit logic here if needed
         console.log('Updated Department:', updatedDepartment);
     };
 
-    const handleEditClick = (department: { id: number; name: string; teamLeader: string; teamMembers: string[] }) => {
+    const handleEditClick = (department: Department) => {
         setSelectedDepartment(department);
         setIsEditDialogOpen(true);
     };
