@@ -24,12 +24,12 @@ const generateRandomMembers = (count: number) => {
     return members;
 };
 
-// Sample departments data
+// Sample department data with multiple departments and teams
 const sampleDepartments: Department[] = [
     {
         id: 1,
         name: 'Human Resources',
-        totalTeams: 3,
+        totalTeams: 1,
         teams: [
             {
                 id: 1,
@@ -44,31 +44,24 @@ const sampleDepartments: Department[] = [
                     endMinute: '00',
                     endPeriod: 'PM'
                 }
-            },
+            }
+        ]
+    },
+    {
+        id: 2,
+        name: 'Engineering',
+        totalTeams: 1,
+        teams: [
             {
-                id: 2,
-                name: 'Training',
-                teamLeader: generateRandomName(),
-                members: generateRandomMembers(4),
-                schedule: {
-                    startHour: '8',
-                    startMinute: '00',
-                    startPeriod: 'AM',
-                    endHour: '5',
-                    endMinute: '00',
-                    endPeriod: 'PM'
-                }
-            },
-            {
-                id: 3,
-                name: 'Employee Relations',
+                id: 1,
+                name: 'Development',
                 teamLeader: generateRandomName(),
                 members: generateRandomMembers(6),
                 schedule: {
-                    startHour: '8',
+                    startHour: '9',
                     startMinute: '00',
                     startPeriod: 'AM',
-                    endHour: '5',
+                    endHour: '6',
                     endMinute: '00',
                     endPeriod: 'PM'
                 }
@@ -76,31 +69,59 @@ const sampleDepartments: Department[] = [
         ]
     },
     {
-        id: 2,
-        name: 'Finance',
-        totalTeams: 2,
+        id: 3,
+        name: 'Marketing',
+        totalTeams: 1,
         teams: [
             {
                 id: 1,
-                name: 'Accounts',
-                teamLeader: generateRandomName(),
-                members: generateRandomMembers(3),
-                schedule: {
-                    startHour: '8',
-                    startMinute: '00',
-                    startPeriod: 'AM',
-                    endHour: '5',
-                    endMinute: '00',
-                    endPeriod: 'PM'
-                }
-            },
-            {
-                id: 2,
-                name: 'Payroll',
+                name: 'Content Creation',
                 teamLeader: generateRandomName(),
                 members: generateRandomMembers(4),
                 schedule: {
+                    startHour: '10',
+                    startMinute: '00',
+                    startPeriod: 'AM',
+                    endHour: '7',
+                    endMinute: '00',
+                    endPeriod: 'PM'
+                }
+            }
+        ]
+    },
+    {
+        id: 4,
+        name: 'Sales',
+        totalTeams: 1,
+        teams: [
+            {
+                id: 1,
+                name: 'Lead Generation',
+                teamLeader: generateRandomName(),
+                members: generateRandomMembers(5),
+                schedule: {
                     startHour: '8',
+                    startMinute: '30',
+                    startPeriod: 'AM',
+                    endHour: '5',
+                    endMinute: '30',
+                    endPeriod: 'PM'
+                }
+            }
+        ]
+    },
+    {
+        id: 5,
+        name: 'Finance',
+        totalTeams: 1,
+        teams: [
+            {
+                id: 1,
+                name: 'Accounting',
+                teamLeader: generateRandomName(),
+                members: generateRandomMembers(3),
+                schedule: {
+                    startHour: '9',
                     startMinute: '00',
                     startPeriod: 'AM',
                     endHour: '5',
