@@ -1,32 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-
-interface Team {
-    id: number;
-    name: string;
-    teamLeader?: {
-        firstName: string;
-        lastName: string;
-        middleName?: string;
-    };
-    members: number;
-    schedule: {
-        startHour: string;
-        startMinute: string;
-        startPeriod: string;
-        endHour: string;
-        endMinute: string;
-        endPeriod: string;
-    };
-}
-
-interface Department {
-    id: number;
-    name: string;
-    totalTeams: number;
-    teams: Team[];
-}
+import { Department, Team } from './types'; // Import interfaces from the types file
 
 interface ViewDepartmentProps {
     department: Department;
@@ -60,7 +35,7 @@ export default function ViewDepartment({ department, team, onBack }: ViewDepartm
                                 )}
                             </TableCell>
                             <TableCell>
-                                {team.members > 3 ? `${team.members} members (etc)` : `${team.members} members`}
+                                {team.members.join(', ')}
                             </TableCell>
                             <TableCell>
                                 {`${team.schedule.startHour}:${team.schedule.startMinute} ${team.schedule.startPeriod} - ${team.schedule.endHour}:${team.schedule.endMinute} ${team.schedule.endPeriod}`}

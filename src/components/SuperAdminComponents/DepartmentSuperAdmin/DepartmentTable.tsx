@@ -6,32 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import ViewDepartment from './ViewDepartment';
-
-interface Team {
-    id: number;
-    name: string;
-    teamLeader?: {
-        firstName: string;
-        lastName: string;
-        middleName?: string;
-    };
-    members: number;
-    schedule: {
-        startHour: string;
-        startMinute: string;
-        startPeriod: string;
-        endHour: string;
-        endMinute: string;
-        endPeriod: string;
-    };
-}
-
-interface Department {
-    id: number;
-    name: string;
-    totalTeams: number;
-    teams: Team[];
-}
+import { Department, Team } from './types'; // Import interfaces from the types file
 
 interface DepartmentTableProps {
     departments: Department[];
@@ -89,7 +64,9 @@ export default function DepartmentTable({ departments, onEditClick }: Department
                                             )}
                                         </TableCell>
                                         <TableCell>
-                                            {team.members > 3 ? `${team.members} members (etc)` : `${team.members} members`}
+                                            {team.members.length > 3
+                                                ? `${team.members.slice(0, 3).join(', ')} and ${team.members.length - 3} more`
+                                                : team.members.join(', ')}
                                         </TableCell>
                                         <TableCell>
                                             {`${team.schedule.startHour}:${team.schedule.startMinute} ${team.schedule.startPeriod} - ${team.schedule.endHour}:${team.schedule.endMinute} ${team.schedule.endPeriod}`}
@@ -100,7 +77,7 @@ export default function DepartmentTable({ departments, onEditClick }: Department
                                                     id: dept.id,
                                                     name: dept.name,
                                                     teamLeader: team.teamLeader ? `${team.teamLeader.firstName} ${team.teamLeader.lastName}` : '',
-                                                    teamMembers: dept.teams.map(t => t.name)
+                                                    teamMembers: team.members
                                                 })}>
                                                     <Edit2 size={16} />
                                                     Edit
