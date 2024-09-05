@@ -57,8 +57,8 @@ function ProfileHeader() {
     return (
         <header className="flex items-center justify-between w-full mb-6">
             <div className="flex items-center gap-x-4 px-2">
-                <Icons.logo className="w-12 h-12" /> {/* Increased size */}
-                <h3 className="text-3xl font-semibold tracking-tight"> {/* Increased size */}
+                <Icons.logo className="w-8 h-8" /> {/* Reduced size */}
+                <h3 className="text-xl font-semibold tracking-tight"> {/* Reduced size */}
                     Paysera
                 </h3>
             </div>
@@ -78,7 +78,7 @@ export default function SuperAdminNavigation() {
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
-            <nav className="bg-card border-solid border-border border rounded-md h-[calc(100vh-40px)] w-[300px] p-5 flex flex-col fixed top-5 left-5 z-50">
+            <nav className="bg-card border-solid border-border border rounded-md h-[calc(100vh-40px)] w-[200px] p-5 flex flex-col fixed top-5 left-5 z-50">
                 {/* Profile header at the top */}
                 <ProfileHeader />
 
@@ -97,7 +97,7 @@ export default function SuperAdminNavigation() {
             </nav>
 
             {/* Main Content Area */}
-            <main className="flex-1 ml-[320px] p-5 bg-background">
+            <main className="flex-1 ml-[220px] p-5 bg-background">
                 {/* This is where the routes or content will be rendered */}
                 {/* Add your page content here */}
             </main>
