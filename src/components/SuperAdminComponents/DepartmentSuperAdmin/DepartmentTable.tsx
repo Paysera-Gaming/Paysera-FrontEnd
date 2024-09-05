@@ -15,6 +15,14 @@ interface Team {
         middleName?: string;
     };
     members: number;
+    schedule: {
+        startHour: string;
+        startMinute: string;
+        startPeriod: string;
+        endHour: string;
+        endMinute: string;
+        endPeriod: string;
+    };
 }
 
 interface Department {
@@ -55,6 +63,7 @@ export default function DepartmentTable({ departments, onEditClick }: Department
                             <TableHead>Department</TableHead>
                             <TableHead>Team Leader</TableHead>
                             <TableHead>Team Members</TableHead>
+                            <TableHead>Schedule</TableHead>
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -72,6 +81,9 @@ export default function DepartmentTable({ departments, onEditClick }: Department
                                     </TableCell>
                                     <TableCell>
                                         {team.members > 3 ? `${team.members} members (etc)` : `${team.members} members`}
+                                    </TableCell>
+                                    <TableCell>
+                                        {`${team.schedule.startHour}:${team.schedule.startMinute} ${team.schedule.startPeriod} - ${team.schedule.endHour}:${team.schedule.endMinute} ${team.schedule.endPeriod}`}
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex gap-2">

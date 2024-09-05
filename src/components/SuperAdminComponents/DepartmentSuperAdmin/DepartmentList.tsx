@@ -11,9 +11,9 @@ const sampleDepartments = [
         name: 'Human Resources',
         totalTeams: 3,
         teams: [
-            { id: 1, name: 'Recruitment', teamLeader: { firstName: 'Alice', lastName: 'Brown', middleName: 'T' }, members: 5 },
-            { id: 2, name: 'Training', teamLeader: { firstName: 'Bob', lastName: 'Smith', middleName: 'R' }, members: 4 },
-            { id: 3, name: 'Employee Relations', teamLeader: { firstName: 'Charlie', lastName: 'Davis', middleName: 'L' }, members: 6 },
+            { id: 1, name: 'Recruitment', teamLeader: { firstName: 'Alice', lastName: 'Brown', middleName: 'T' }, members: 5, schedule: { startHour: '8', startMinute: '00', startPeriod: 'AM', endHour: '5', endMinute: '00', endPeriod: 'PM' } },
+            { id: 2, name: 'Training', teamLeader: { firstName: 'Bob', lastName: 'Smith', middleName: 'R' }, members: 4, schedule: { startHour: '8', startMinute: '00', startPeriod: 'AM', endHour: '5', endMinute: '00', endPeriod: 'PM' } },
+            { id: 3, name: 'Employee Relations', teamLeader: { firstName: 'Charlie', lastName: 'Davis', middleName: 'L' }, members: 6, schedule: { startHour: '8', startMinute: '00', startPeriod: 'AM', endHour: '5', endMinute: '00', endPeriod: 'PM' } },
         ],
     },
     {
@@ -21,8 +21,8 @@ const sampleDepartments = [
         name: 'Finance',
         totalTeams: 2,
         teams: [
-            { id: 1, name: 'Accounts', teamLeader: { firstName: 'David', lastName: 'Evans', middleName: 'M' }, members: 3 },
-            { id: 2, name: 'Payroll', teamLeader: { firstName: 'Ella', lastName: 'White', middleName: 'A' }, members: 4 },
+            { id: 1, name: 'Accounts', teamLeader: { firstName: 'David', lastName: 'Evans', middleName: 'M' }, members: 3, schedule: { startHour: '8', startMinute: '00', startPeriod: 'AM', endHour: '5', endMinute: '00', endPeriod: 'PM' } },
+            { id: 2, name: 'Payroll', teamLeader: { firstName: 'Ella', lastName: 'White', middleName: 'A' }, members: 4, schedule: { startHour: '8', startMinute: '00', startPeriod: 'AM', endHour: '5', endMinute: '00', endPeriod: 'PM' } },
         ],
     },
 ];
@@ -32,6 +32,14 @@ type Department = {
     name: string;
     teamLeader: string;
     teamMembers: string[];
+    schedule: {
+        startHour: string;
+        startMinute: string;
+        startPeriod: string;
+        endHour: string;
+        endMinute: string;
+        endPeriod: string;
+    };
 };
 
 export default function DepartmentList() {
@@ -50,7 +58,7 @@ export default function DepartmentList() {
     const totalDepartments = departments.length;
     const totalTeams = departments.reduce((sum, dept) => sum + dept.totalTeams, 0);
 
-    const handleAddDepartment = (newDepartment: { name: string }) => {
+    const handleAddDepartment = (newDepartment: { name: string; teamLeader: string; schedule: string }) => {
         // You can handle the addition logic here if needed
         console.log('New Department:', newDepartment);
     };

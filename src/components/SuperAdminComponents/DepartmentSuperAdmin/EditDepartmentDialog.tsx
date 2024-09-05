@@ -7,28 +7,42 @@ import { toast } from 'sonner';
 interface EditDepartmentDialogProps {
     isOpen: boolean;
     onClose: () => void;
-    onEdit: (department: { id: number; name: string; teamLeader: string; teamMembers: string[] }) => void;
-    department: { id: number; name: string; teamLeader: string; teamMembers: string[] } | null;
+    onEdit: (department: { id: number; name: string; teamLeader: string; schedule: string }) => void;
+    department: { id: number; name: string; teamLeader: string; schedule: string } | null;
 }
 
 export default function EditDepartmentDialog({ isOpen, onClose, onEdit, department }: EditDepartmentDialogProps) {
     const [name, setName] = useState('');
     const [teamLeader, setTeamLeader] = useState('');
-    const [teamMembers, setTeamMembers] = useState<string[]>(['']);
-    const [currentPage, setCurrentPage] = useState(0);
-    const membersPerPage = 3;
+    const [startHour, setStartHour] = useState('8');
+    const [startMinute, setStartMinute] = useState('00');
+    const [startPeriod, setStartPeriod] = useState('AM');
+    const [endHour, setEndHour] = useState('5');
+    const [endMinute, setEndMinute] = useState('00');
+    const [endPeriod, setEndPeriod] = useState('PM');
 
     useEffect(() => {
         if (department) {
             setName(department.name);
             setTeamLeader(department.teamLeader);
-            setTeamMembers(department.teamMembers);
+            if (department.schedule) {
+                const [start, end] = department.schedule.split(' - ');
+                const [startH, startM, startP] = start.split(/[: ]/);
+                const [endH, endM, endP] = end.split(/[: ]/);
+                setStartHour(startH);
+                setStartMinute(startM);
+                setStartPeriod(startP);
+                setEndHour(endH);
+                setEndMinute(endM);
+                setEndPeriod(endP);
+            }
         }
     }, [department]);
 
     const handleEdit = () => {
-        if (name.trim() && teamLeader.trim() && teamMembers.every(member => member.trim())) {
-            onEdit({ id: department!.id, name, teamLeader, teamMembers });
+        const schedule = `${startHour}:${startMinute} ${startPeriod} - ${endHour}:${endMinute} ${endPeriod}`;
+        if (name.trim() && teamLeader.trim()) {
+            onEdit({ id: department!.id, name, teamLeader, schedule });
             toast.success('Department edited successfully!');
             onClose();
         } else {
@@ -36,24 +50,9 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
         }
     };
 
-    const handleAddMember = () => {
-        setTeamMembers([...teamMembers, '']);
-    };
-
-    const handleMemberChange = (index: number, value: string) => {
-        const newTeamMembers = [...teamMembers];
-        newTeamMembers[index] = value;
-        setTeamMembers(newTeamMembers);
-    };
-
-    const handleRemoveMember = (index: number) => {
-        const newTeamMembers = teamMembers.filter((_, i) => i !== index);
-        setTeamMembers(newTeamMembers);
-    };
-
-    const startIndex = currentPage * membersPerPage;
-    const endIndex = startIndex + membersPerPage;
-    const currentMembers = teamMembers.slice(startIndex, endIndex);
+    const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
+    const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
+    const periods = ['AM', 'PM'];
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -81,37 +80,41 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-white">Team Members</label>
-                        {currentMembers.map((member, index) => (
-                            <div key={startIndex + index} className="flex items-center space-x-2 mt-2">
-                                <div className="w-6 text-right">{startIndex + index + 1}.</div>
-                                <Input
-                                    type="text"
-                                    value={member}
-                                    onChange={(e) => handleMemberChange(startIndex + index, e.target.value)}
-                                    className="flex-1"
-                                />
-                                <Button variant="outline" onClick={() => handleRemoveMember(startIndex + index)}>Remove</Button>
-                            </div>
-                        ))}
+                        <label className="block text-sm font-medium text-gray-700 dark:text-white">Schedule</label>
+                        <div className="flex space-x-2 mt-2">
+                            <select value={startHour} onChange={(e) => setStartHour(e.target.value)} className="border rounded p-2 bg-white dark:bg-gray-800 text-black dark:text-white">
+                                {hours.map(hour => (
+                                    <option key={hour} value={hour}>{hour}</option>
+                                ))}
+                            </select>
+                            <select value={startMinute} onChange={(e) => setStartMinute(e.target.value)} className="border rounded p-2 bg-white dark:bg-gray-800 text-black dark:text-white">
+                                {minutes.map(minute => (
+                                    <option key={minute} value={minute}>{minute}</option>
+                                ))}
+                            </select>
+                            <select value={startPeriod} onChange={(e) => setStartPeriod(e.target.value)} className="border rounded p-2 bg-white dark:bg-gray-800 text-black dark:text-white">
+                                {periods.map(period => (
+                                    <option key={period} value={period}>{period}</option>
+                                ))}
+                            </select>
+                            <span className="self-center text-gray-700 dark:text-white">-</span>
+                            <select value={endHour} onChange={(e) => setEndHour(e.target.value)} className="border rounded p-2 bg-white dark:bg-gray-800 text-black dark:text-white">
+                                {hours.map(hour => (
+                                    <option key={hour} value={hour}>{hour}</option>
+                                ))}
+                            </select>
+                            <select value={endMinute} onChange={(e) => setEndMinute(e.target.value)} className="border rounded p-2 bg-white dark:bg-gray-800 text-black dark:text-white">
+                                {minutes.map(minute => (
+                                    <option key={minute} value={minute}>{minute}</option>
+                                ))}
+                            </select>
+                            <select value={endPeriod} onChange={(e) => setEndPeriod(e.target.value)} className="border rounded p-2 bg-white dark:bg-gray-800 text-black dark:text-white">
+                                {periods.map(period => (
+                                    <option key={period} value={period}>{period}</option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
-                    <div className="flex justify-between mt-4">
-                        <Button
-                            variant="outline"
-                            onClick={() => setCurrentPage(currentPage - 1)}
-                            disabled={currentPage === 0}
-                        >
-                            Previous
-                        </Button>
-                        <Button
-                            variant="outline"
-                            onClick={() => setCurrentPage(currentPage + 1)}
-                            disabled={endIndex >= teamMembers.length}
-                        >
-                            Next
-                        </Button>
-                    </div>
-                    <Button variant="outline" onClick={handleAddMember} className="mt-4">Add Team Member</Button>
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={onClose}>Cancel</Button>
