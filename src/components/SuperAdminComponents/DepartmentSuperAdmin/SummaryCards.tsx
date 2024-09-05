@@ -15,7 +15,7 @@ export default function SummaryCards({
                     <Users size={48} className="text-blue-500" />
                     <div className="ml-4 text-right">
                         <p className="text-4xl font-bold">
-                            Departments and Teams: {totalDepartments}
+                            Departments: {totalDepartments}
                         </p>
                     </div>
                 </CardContent>
