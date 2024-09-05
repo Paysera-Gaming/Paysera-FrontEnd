@@ -37,6 +37,7 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
                             'px-3 py-2 rounded-md outline outline-2 transition-all ease-in-out hover:bg-border flex gap-x-3 justify-start items-center text-base text-center capitalize outline-transparent',
                             {
                                 'outline-offset-2 bg-secondary text-ring outline-ring': isActive,
+                                'hover:outline-primary': !isActive,
                             }
                         )
                     }
@@ -97,7 +98,7 @@ export default function SuperAdminNavigation() {
             </nav>
 
             {/* Main Content Area */}
-            <main className="flex-1 ml-[220px] p-5 bg-background">
+            <main className="flex-1 ml-[220px] p-1 bg-background">
                 {/* This is where the routes or content will be rendered */}
                 {/* Add your page content here */}
             </main>
