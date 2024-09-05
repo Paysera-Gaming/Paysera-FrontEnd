@@ -45,7 +45,6 @@ export default function ViewDepartment({ department, team, onBack }: ViewDepartm
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Team Name</TableHead>
                             <TableHead>Team Leader</TableHead>
                             <TableHead>Team Members</TableHead>
                             <TableHead>Schedule</TableHead>
@@ -53,7 +52,6 @@ export default function ViewDepartment({ department, team, onBack }: ViewDepartm
                     </TableHeader>
                     <TableBody>
                         <TableRow key={team.id}>
-                            <TableCell>{team.name}</TableCell>
                             <TableCell>
                                 {team.teamLeader ? (
                                     `${team.teamLeader.lastName}, ${team.teamLeader.firstName} ${team.teamLeader.middleName ?? ''}`
