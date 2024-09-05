@@ -37,8 +37,7 @@ export default function SearchBar({ searchTerm, setSearchTerm }: SearchBarProps)
             <AddDepartmentDialog
                 isOpen={isDepartmentFormOpen}
                 onClose={() => setIsDepartmentFormOpen(false)}
-                onAdd={handleAddDepartment}
-            />
+                onAdd={handleAddDepartment} existingDepartments={[]}            />
         </div>
     );
 }

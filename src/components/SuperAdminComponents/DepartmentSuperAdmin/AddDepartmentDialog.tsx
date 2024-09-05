@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import sampleDepartments from './sampleDepartments';
 
 interface AddDepartmentDialogProps {
     isOpen: boolean;
@@ -23,17 +24,23 @@ export default function AddDepartmentDialog({ isOpen, onClose, onAdd }: AddDepar
     const handleAdd = () => {
         const schedule = `${startHour}:${startMinute} ${startPeriod} - ${endHour}:${endMinute} ${endPeriod}`;
         if (name.trim() && teamLeader.trim() && schedule.trim()) {
-            onAdd({ name, teamLeader, schedule });
-            toast.success('Department added successfully!');
-            setName('');
-            setTeamLeader('');
-            setStartHour('8');
-            setStartMinute('00');
-            setStartPeriod('AM');
-            setEndHour('5');
-            setEndMinute('00');
-            setEndPeriod('PM');
-            onClose();
+            const departmentExists = sampleDepartments.some(dept => dept.name === name);
+
+            if (departmentExists) {
+                toast.error('Department name already exists.');
+            } else {
+                onAdd({ name, teamLeader, schedule });
+                toast.success('Department added successfully!');
+                setName('');
+                setTeamLeader('');
+                setStartHour('8');
+                setStartMinute('00');
+                setStartPeriod('AM');
+                setEndHour('5');
+                setEndMinute('00');
+                setEndPeriod('PM');
+                onClose();
+            }
         } else {
             toast.error('Please fill out all required fields.');
         }
