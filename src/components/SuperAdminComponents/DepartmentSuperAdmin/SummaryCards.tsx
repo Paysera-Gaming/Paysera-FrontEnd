@@ -3,10 +3,12 @@ import { Users } from 'lucide-react';
 
 interface SummaryCardsProps {
     totalDepartments: number;
+    totalTeams: number; // Add this line
 }
 
 export default function SummaryCards({
     totalDepartments,
+    totalTeams, // Add this line
 }: SummaryCardsProps) {
     return (
         <div className="flex gap-6 mb-6">
@@ -16,6 +18,9 @@ export default function SummaryCards({
                     <div className="ml-4 text-right">
                         <p className="text-4xl font-bold">
                             Departments: {totalDepartments}
+                        </p>
+                        <p className="text-4xl font-bold">
+                            Teams: {totalTeams} {/* Add this line */}
                         </p>
                     </div>
                 </CardContent>
