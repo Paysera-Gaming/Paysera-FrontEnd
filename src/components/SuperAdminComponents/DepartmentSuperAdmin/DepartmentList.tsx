@@ -4,28 +4,7 @@ import SummaryCards from './SummaryCards';
 import DepartmentTable from './DepartmentTable';
 import AddDepartmentDialog from './AddDepartmentDialog';
 import EditDepartmentDialog from './EditDepartmentDialog';
-
-const sampleDepartments = [
-    {
-        id: 1,
-        name: 'Human Resources',
-        totalTeams: 3,
-        teams: [
-            { id: 1, name: 'Recruitment', teamLeader: { firstName: 'Alice', lastName: 'Brown', middleName: 'T' }, members: 5, schedule: { startHour: '8', startMinute: '00', startPeriod: 'AM', endHour: '5', endMinute: '00', endPeriod: 'PM' } },
-            { id: 2, name: 'Training', teamLeader: { firstName: 'Bob', lastName: 'Smith', middleName: 'R' }, members: 4, schedule: { startHour: '8', startMinute: '00', startPeriod: 'AM', endHour: '5', endMinute: '00', endPeriod: 'PM' } },
-            { id: 3, name: 'Employee Relations', teamLeader: { firstName: 'Charlie', lastName: 'Davis', middleName: 'L' }, members: 6, schedule: { startHour: '8', startMinute: '00', startPeriod: 'AM', endHour: '5', endMinute: '00', endPeriod: 'PM' } },
-        ],
-    },
-    {
-        id: 2,
-        name: 'Finance',
-        totalTeams: 2,
-        teams: [
-            { id: 1, name: 'Accounts', teamLeader: { firstName: 'David', lastName: 'Evans', middleName: 'M' }, members: 3, schedule: { startHour: '8', startMinute: '00', startPeriod: 'AM', endHour: '5', endMinute: '00', endPeriod: 'PM' } },
-            { id: 2, name: 'Payroll', teamLeader: { firstName: 'Ella', lastName: 'White', middleName: 'A' }, members: 4, schedule: { startHour: '8', startMinute: '00', startPeriod: 'AM', endHour: '5', endMinute: '00', endPeriod: 'PM' } },
-        ],
-    },
-];
+import sampleDepartments from './sampleDepartments';
 
 type Department = {
     id: number;
