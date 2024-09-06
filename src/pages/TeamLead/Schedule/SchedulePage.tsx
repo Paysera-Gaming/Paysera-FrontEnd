@@ -8,6 +8,7 @@ import AddScheduleBtn from '@/components/TeamLeadComponents/SchedulePage/AddSche
 const dummyScheduleData: TSchedule[] = [
 	{
 		id: 1,
+		name: 'JOe',
 		role: 'Manager',
 		scheduleId: 101,
 		departmentId: 10,
@@ -23,6 +24,7 @@ const dummyScheduleData: TSchedule[] = [
 	},
 	{
 		id: 2,
+		name: 'JOe',
 		role: 'Developer',
 		scheduleId: 102,
 		departmentId: 12,
@@ -38,6 +40,7 @@ const dummyScheduleData: TSchedule[] = [
 	},
 	{
 		id: 3,
+		name: 'JOe',
 		role: 'Designer',
 		scheduleId: 103,
 		departmentId: 15,

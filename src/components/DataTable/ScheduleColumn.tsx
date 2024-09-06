@@ -1,6 +1,7 @@
 export interface TSchedule {
 	id: number;
 	role: string;
+	name: string;
 	scheduleId: number;
 	departmentId: number;
 	updatedAt: Date;
@@ -48,7 +49,20 @@ export const scheduleColumns: ColumnDef<TSchedule>[] = [
 			);
 		},
 	},
-
+	{
+		accessorKey: 'name',
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+				>
+					Name
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+	},
 	{
 		accessorKey: 'role',
 		header: ({ column }) => {
