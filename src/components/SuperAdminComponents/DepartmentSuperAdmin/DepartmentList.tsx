@@ -11,15 +11,12 @@ import { Department, Team, TeamMember } from './types'; // Import interfaces fro
 export default function DepartmentList() {
     const [departments] = useState<Department[]>(sampleDepartments);
     const [searchTerm, setSearchTerm] = useState('');
+    const [filteredDepartments, setFilteredDepartments] = useState<Department[]>(departments); // Add state for filtered departments
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
     const [viewData, setViewData] = useState<{ department: Department; team: Team } | null>(null);
     const [isViewing, setIsViewing] = useState(false); // Add state to manage view mode
-
-    const filteredDepartments = departments.filter(dept =>
-        dept.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
     const totalDepartments = departments.length;
     const totalTeams = departments.reduce((sum, dept) => sum + dept.totalTeams, 0);
@@ -65,7 +62,12 @@ export default function DepartmentList() {
                 />
             ) : (
                 <>
-                    <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+                    <SearchBar
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                        departments={departments}
+                        setFilteredDepartments={setFilteredDepartments}
+                    />
                     <SummaryCards
                         totalDepartments={totalDepartments}
                         totalTeams={totalTeams} // Ensure `totalTeams` is correctly typed
