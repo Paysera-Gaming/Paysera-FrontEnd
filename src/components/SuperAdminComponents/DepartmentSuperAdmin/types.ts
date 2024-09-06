@@ -1,21 +1,24 @@
-// types.ts
+export interface TeamMember {
+    firstName: string;
+    middleName?: string;
+    lastName: string;
+}
+
+export interface Schedule {
+    startHour: string;
+    startMinute: string;
+    startPeriod: string;
+    endHour: string;
+    endMinute: string;
+    endPeriod: string;
+}
+
 export interface Team {
     id: number;
     name: string;
-    teamLeader?: {
-        firstName: string;
-        lastName: string;
-        middleName?: string;
-    };
-    members: string[]; // Array of strings to represent member names
-    schedule: {
-        startHour: string;
-        startMinute: string;
-        startPeriod: string;
-        endHour: string;
-        endMinute: string;
-        endPeriod: string;
-    };
+    teamLeader: TeamMember | null;
+    members: TeamMember[];
+    schedule: Schedule;
 }
 
 export interface Department {

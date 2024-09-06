@@ -1,58 +1,43 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { Department, TeamMember, Schedule } from './types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { toast } from 'sonner';
+import { Button } from '@/components/ui/button'; // Correct the import statement for Button
+import { Input } from '@/components/ui/input'; // Correct the import statement for Input
+import { Label } from '@/components/ui/label'; // Correct the import statement for Label
 
 interface EditDepartmentDialogProps {
     isOpen: boolean;
     onClose: () => void;
-    onEdit: (department: { id: number; name: string; teamLeader: string; schedule: string }) => void;
-    department: { id: number; name: string; teamLeader: string; schedule: string } | null;
+    onEdit: (department: Department) => void;
+    department: Department | null;
 }
 
 export default function EditDepartmentDialog({ isOpen, onClose, onEdit, department }: EditDepartmentDialogProps) {
-    const [name, setName] = useState('');
-    const [teamLeader, setTeamLeader] = useState('');
-    const [startHour, setStartHour] = useState('8');
-    const [startMinute, setStartMinute] = useState('00');
-    const [startPeriod, setStartPeriod] = useState('AM');
-    const [endHour, setEndHour] = useState('5');
-    const [endMinute, setEndMinute] = useState('00');
-    const [endPeriod, setEndPeriod] = useState('PM');
+    const [name, setName] = useState(department?.name || '');
+    const [teamLeader, setTeamLeader] = useState<TeamMember | null>(department?.teams[0]?.teamLeader || null);
+    const [schedule, setSchedule] = useState<Schedule>(department?.teams[0]?.schedule || {
+        startHour: '',
+        startMinute: '',
+        startPeriod: '',
+        endHour: '',
+        endMinute: '',
+        endPeriod: ''
+    });
 
-    useEffect(() => {
+    const handleSave = () => {
         if (department) {
-            setName(department.name);
-            setTeamLeader(department.teamLeader);
-            if (department.schedule) {
-                const [start, end] = department.schedule.split(' - ');
-                const [startH, startM, startP] = start.split(/[: ]/);
-                const [endH, endM, endP] = end.split(/[: ]/);
-                setStartHour(startH);
-                setStartMinute(startM);
-                setStartPeriod(startP);
-                setEndHour(endH);
-                setEndMinute(endM);
-                setEndPeriod(endP);
-            }
-        }
-    }, [department]);
-
-    const handleEdit = () => {
-        const schedule = `${startHour}:${startMinute} ${startPeriod} - ${endHour}:${endMinute} ${endPeriod}`;
-        if (name.trim() && teamLeader.trim()) {
-            onEdit({ id: department!.id, name, teamLeader, schedule });
-            toast.success('Department edited successfully!');
-            onClose();
-        } else {
-            toast.error('Please fill out all required fields.');
+            const updatedDepartment: Department = {
+                ...department,
+                name,
+                teams: department.teams.map(team => ({
+                    ...team,
+                    teamLeader,
+                    schedule
+                }))
+            };
+            onEdit(updatedDepartment);
         }
     };
-
-    const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
-    const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
-    const periods = ['AM', 'PM'];
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -60,65 +45,58 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                 <DialogHeader>
                     <DialogTitle>Edit Department</DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-white">Department Name</label>
+                <div>
+                    <div className="mb-4">
+                        <Label htmlFor="name">Department Name</Label>
+                        <Input id="name" value={name} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
+                    </div>
+                    <div className="mb-4">
+                        <Label htmlFor="teamLeader">Team Leader</Label>
                         <Input
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            className="mt-2"
+                            id="teamLeader"
+                            value={teamLeader ? `${teamLeader.firstName} ${teamLeader.lastName}` : ''}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTeamLeader({ ...teamLeader, firstName: e.target.value.split(' ')[0], lastName: e.target.value.split(' ')[1] })}
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-white">Team Leader</label>
-                        <Input
-                            type="text"
-                            value={teamLeader}
-                            onChange={(e) => setTeamLeader(e.target.value)}
-                            className="mt-2"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-white">Schedule</label>
-                        <div className="flex space-x-2 mt-2">
-                            <select value={startHour} onChange={(e) => setStartHour(e.target.value)} className="border rounded p-2 bg-white dark:bg-gray-800 text-black dark:text-white">
-                                {hours.map(hour => (
-                                    <option key={hour} value={hour}>{hour}</option>
-                                ))}
-                            </select>
-                            <select value={startMinute} onChange={(e) => setStartMinute(e.target.value)} className="border rounded p-2 bg-white dark:bg-gray-800 text-black dark:text-white">
-                                {minutes.map(minute => (
-                                    <option key={minute} value={minute}>{minute}</option>
-                                ))}
-                            </select>
-                            <select value={startPeriod} onChange={(e) => setStartPeriod(e.target.value)} className="border rounded p-2 bg-white dark:bg-gray-800 text-black dark:text-white">
-                                {periods.map(period => (
-                                    <option key={period} value={period}>{period}</option>
-                                ))}
-                            </select>
-                            <span className="self-center text-gray-700 dark:text-white">-</span>
-                            <select value={endHour} onChange={(e) => setEndHour(e.target.value)} className="border rounded p-2 bg-white dark:bg-gray-800 text-black dark:text-white">
-                                {hours.map(hour => (
-                                    <option key={hour} value={hour}>{hour}</option>
-                                ))}
-                            </select>
-                            <select value={endMinute} onChange={(e) => setEndMinute(e.target.value)} className="border rounded p-2 bg-white dark:bg-gray-800 text-black dark:text-white">
-                                {minutes.map(minute => (
-                                    <option key={minute} value={minute}>{minute}</option>
-                                ))}
-                            </select>
-                            <select value={endPeriod} onChange={(e) => setEndPeriod(e.target.value)} className="border rounded p-2 bg-white dark:bg-gray-800 text-black dark:text-white">
-                                {periods.map(period => (
-                                    <option key={period} value={period}>{period}</option>
-                                ))}
-                            </select>
+                    <div className="mb-4">
+                        <Label>Schedule</Label>
+                        <div className="flex gap-2">
+                            <Input
+                                placeholder="Start Hour"
+                                value={schedule.startHour}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchedule({ ...schedule, startHour: e.target.value })}
+                            />
+                            <Input
+                                placeholder="Start Minute"
+                                value={schedule.startMinute}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchedule({ ...schedule, startMinute: e.target.value })}
+                            />
+                            <Input
+                                placeholder="Start Period"
+                                value={schedule.startPeriod}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchedule({ ...schedule, startPeriod: e.target.value })}
+                            />
+                            <Input
+                                placeholder="End Hour"
+                                value={schedule.endHour}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchedule({ ...schedule, endHour: e.target.value })}
+                            />
+                            <Input
+                                placeholder="End Minute"
+                                value={schedule.endMinute}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchedule({ ...schedule, endMinute: e.target.value })}
+                            />
+                            <Input
+                                placeholder="End Period"
+                                value={schedule.endPeriod}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchedule({ ...schedule, endPeriod: e.target.value })}
+                            />
                         </div>
                     </div>
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={onClose}>Cancel</Button>
-                    <Button onClick={handleEdit}>Save</Button>
+                    <Button variant="default" onClick={handleSave}>Save</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

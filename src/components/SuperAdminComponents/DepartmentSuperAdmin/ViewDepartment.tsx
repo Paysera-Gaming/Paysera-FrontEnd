@@ -35,7 +35,7 @@ export default function ViewDepartment({ department, team, onBack }: ViewDepartm
                                 )}
                             </TableCell>
                             <TableCell>
-                                {team.members.join(', ')}
+                                {team.members.map(member => `${member.firstName} ${member.lastName}`).join(', ')}
                             </TableCell>
                             <TableCell>
                                 {`${team.schedule.startHour}:${team.schedule.startMinute} ${team.schedule.startPeriod} - ${team.schedule.endHour}:${team.schedule.endMinute} ${team.schedule.endPeriod}`}

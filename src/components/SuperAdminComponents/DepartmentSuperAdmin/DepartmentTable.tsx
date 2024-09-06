@@ -5,12 +5,12 @@ import { Edit2, Trash2, Eye } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Department } from './types'; // Import interfaces from the types file
+import { Department, TeamMember } from './types'; // Import interfaces from the types file
 
 interface DepartmentTableProps {
     departments: Department[];
-    onEditClick: (department: { id: number; name: string; teamLeader: string; teamMembers: string[] }) => void;
-    onViewClick: (departmentId: number, teamId: number) => void; // Add this line
+    onEditClick: (department: { id: number; name: string; teamLeader: TeamMember | null; teamMembers: TeamMember[] }) => void;
+    onViewClick: (departmentId: number, teamId: number) => void;
 }
 
 export default function DepartmentTable({ departments, onEditClick, onViewClick }: DepartmentTableProps) {
@@ -57,8 +57,8 @@ export default function DepartmentTable({ departments, onEditClick, onViewClick 
                                     </TableCell>
                                     <TableCell>
                                         {team.members.length > 3
-                                            ? `${team.members.slice(0, 3).join(', ')} and ${team.members.length - 3} more`
-                                            : team.members.join(', ')}
+                                            ? `${team.members.slice(0, 3).map(member => `${member.firstName} ${member.lastName}`).join(', ')} and ${team.members.length - 3} more`
+                                            : team.members.map(member => `${member.firstName} ${member.lastName}`).join(', ')}
                                     </TableCell>
                                     <TableCell>
                                         {`${team.schedule.startHour}:${team.schedule.startMinute} ${team.schedule.startPeriod} - ${team.schedule.endHour}:${team.schedule.endMinute} ${team.schedule.endPeriod}`}
@@ -68,7 +68,7 @@ export default function DepartmentTable({ departments, onEditClick, onViewClick 
                                             <Button variant="outline" size="sm" onClick={() => onEditClick({
                                                 id: dept.id,
                                                 name: dept.name,
-                                                teamLeader: team.teamLeader ? `${team.teamLeader.firstName} ${team.teamLeader.lastName}` : '',
+                                                teamLeader: team.teamLeader,
                                                 teamMembers: team.members
                                             })}>
                                                 <Edit2 size={16} />

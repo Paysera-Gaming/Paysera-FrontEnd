@@ -6,7 +6,7 @@ import AddDepartmentDialog from './AddDepartmentDialog';
 import EditDepartmentDialog from './EditDepartmentDialog';
 import ViewDepartment from './ViewDepartment'; // Import ViewDepartment component
 import sampleDepartments from './sampleDepartments';
-import { Department, Team } from './types'; // Import interfaces from the types file
+import { Department, Team, TeamMember } from './types'; // Import interfaces from the types file
 
 export default function DepartmentList() {
     const [departments] = useState<Department[]>(sampleDepartments);
@@ -32,7 +32,7 @@ export default function DepartmentList() {
         console.log('Updated Department:', updatedDepartment);
     };
 
-    const handleEditClick = (department: { id: number; name: string; teamLeader: string; teamMembers: string[] }) => {
+    const handleEditClick = (department: { id: number; name: string; teamLeader: TeamMember | null; teamMembers: TeamMember[] }) => {
         const fullDepartment = departments.find(dept => dept.id === department.id);
         if (fullDepartment) {
             setSelectedDepartment(fullDepartment);
@@ -89,8 +89,8 @@ export default function DepartmentList() {
                     <EditDepartmentDialog
                         isOpen={isEditDialogOpen}
                         onClose={() => setIsEditDialogOpen(false)}
-                        onEdit={(department: { id: number; name: string; teamLeader: string; schedule: string }) => handleEditDepartment(department as unknown as Department)} // Ensure `onEdit` matches expected type
-                        department={selectedDepartment as { id: number; name: string; teamLeader: string; schedule: string } | null} // Ensure `selectedDepartment` matches expected type
+                        onEdit={handleEditDepartment} // Ensure `onEdit` matches expected type
+                        department={selectedDepartment} // Ensure `selectedDepartment` matches expected type
                     />
                 </>
             )}
