@@ -58,7 +58,12 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                             value={teamLeader ? `${teamLeader.firstName} ${teamLeader.lastName}` : ''}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 const [firstName, lastName] = e.target.value.split(' ');
-                                setTeamLeader({ ...teamLeader, firstName, lastName });
+                                setTeamLeader({ 
+                                    ...teamLeader, 
+                                    firstName, 
+                                    lastName, 
+                                    role: teamLeader?.role || 'Team Leader' // Ensure role is always defined
+                                });
                             }}
                         />
                     </div>

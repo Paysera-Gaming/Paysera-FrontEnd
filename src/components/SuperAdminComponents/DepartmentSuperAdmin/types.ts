@@ -2,6 +2,7 @@ export interface TeamMember {
     firstName: string;
     middleName?: string;
     lastName: string;
+    role: string; // Added role property
 }
 
 export interface Schedule {
