@@ -15,7 +15,6 @@ export interface Schedule {
 
 export interface Team {
     id: number;
-    name: string;
     teamLeader: TeamMember | null;
     members: TeamMember[];
     schedule: Schedule;

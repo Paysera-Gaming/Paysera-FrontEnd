@@ -48,7 +48,6 @@ const sampleDepartments: Department[] = [
         teams: [
             {
                 id: 1,
-                name: 'Recruitment',
                 teamLeader: sampleTeamMembers['Human Resources'][0],
                 members: sampleTeamMembers['Human Resources'],
                 schedule: {
@@ -69,7 +68,6 @@ const sampleDepartments: Department[] = [
         teams: [
             {
                 id: 1,
-                name: 'Development',
                 teamLeader: sampleTeamMembers['Engineering'][0],
                 members: sampleTeamMembers['Engineering'],
                 schedule: {
@@ -90,7 +88,6 @@ const sampleDepartments: Department[] = [
         teams: [
             {
                 id: 1,
-                name: 'Content Creation',
                 teamLeader: sampleTeamMembers['Marketing'][0],
                 members: sampleTeamMembers['Marketing'],
                 schedule: {
@@ -111,7 +108,6 @@ const sampleDepartments: Department[] = [
         teams: [
             {
                 id: 1,
-                name: 'Lead Generation',
                 teamLeader: sampleTeamMembers['Sales'][0],
                 members: sampleTeamMembers['Sales'],
                 schedule: {
@@ -132,7 +128,6 @@ const sampleDepartments: Department[] = [
         teams: [
             {
                 id: 1,
-                name: 'Accounting',
                 teamLeader: sampleTeamMembers['Finance'][0],
                 members: sampleTeamMembers['Finance'],
                 schedule: {
