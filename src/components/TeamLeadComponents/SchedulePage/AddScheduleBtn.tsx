@@ -5,12 +5,10 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-	AlertDialogFooter,
-	AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
 
 import { Button } from '@/components/ui/button';
-import { AlertDialogAction } from '@radix-ui/react-alert-dialog';
+
 import { useState } from 'react';
 import ScheduleForm from './ScheduleForm';
 
@@ -20,7 +18,7 @@ export default function AddScheduleBtn() {
 
 	return (
 		<AlertDialog open={openAlert} onOpenChange={setAlert}>
-			<AlertDialogTrigger>
+			<AlertDialogTrigger asChild>
 				<Button variant={'default'} className="mr-3">
 					Add Schedule
 				</Button>
@@ -35,20 +33,6 @@ export default function AddScheduleBtn() {
 				{/* form here */}
 
 				<ScheduleForm></ScheduleForm>
-
-				<AlertDialogFooter>
-					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction type="submit">
-						<Button
-							variant={'default'}
-							onClick={() => {
-								setAlert(false);
-							}}
-						>
-							Submit
-						</Button>
-					</AlertDialogAction>
-				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>
 	);

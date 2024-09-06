@@ -59,9 +59,7 @@ const dummyScheduleData: TSchedule[] = [
 export default function SchedulePage() {
 	return (
 		<div className=" w-full h-full border-border border-solid border p-5 rounded-md">
-			{/* search bar sa table with a add employee of the side then after adding empoyee may form na lalagay anong role nya  */}
-			{/* and table of employeees */}
-			{/*  TO DO ADD THE FILTER AND VISIBILITY OPTIOn*/}
+			{/* adjust the bloody cancel and submit button sa add schedule */}
 			<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0">
 				Manage Schedule
 			</h2>
