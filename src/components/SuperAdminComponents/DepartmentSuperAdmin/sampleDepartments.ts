@@ -1,4 +1,4 @@
-import type { Department } from './DepartmentList';
+import type { Department } from './types';
 
 // Sample team members
 const sampleTeamMembers = {
