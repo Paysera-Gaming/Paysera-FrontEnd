@@ -5,20 +5,10 @@ export interface TeamMember {
     role: string; // Added role property
 }
 
-export interface Schedule {
-    startHour: string;
-    startMinute: string;
-    startPeriod: string;
-    endHour: string;
-    endMinute: string;
-    endPeriod: string;
-}
-
 export interface Team {
     id: number;
     teamLeader: TeamMember | null;
     members: TeamMember[];
-    schedule: Schedule;
 }
 
 export interface Department {
