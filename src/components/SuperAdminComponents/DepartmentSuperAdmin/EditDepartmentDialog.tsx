@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Department, TeamMember } from './types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button'; // Correct the import statement for Button
@@ -15,7 +15,14 @@ interface EditDepartmentDialogProps {
 
 export default function EditDepartmentDialog({ isOpen, onClose, onEdit, department }: EditDepartmentDialogProps) {
     const [name, setName] = useState(department?.name || '');
-    const [teamLeader, setTeamLeader] = useState<TeamMember | null>(department?.teams[0]?.teamLeader || null);
+    const [teamLeader, setTeamLeader] = useState<TeamMember | null>(null);
+
+    useEffect(() => {
+        if (department) {
+            setName(department.name);
+            setTeamLeader(department.teams[0]?.teamLeader || null);
+        }
+    }, [department]);
 
     const handleSave = () => {
         if (department) {
@@ -49,7 +56,10 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                         <Input
                             id="teamLeader"
                             value={teamLeader ? `${teamLeader.firstName} ${teamLeader.lastName}` : ''}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTeamLeader({ ...teamLeader, firstName: e.target.value.split(' ')[0], lastName: e.target.value.split(' ')[1] })}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                const [firstName, lastName] = e.target.value.split(' ');
+                                setTeamLeader({ ...teamLeader, firstName, lastName });
+                            }}
                         />
                     </div>
                 </div>
