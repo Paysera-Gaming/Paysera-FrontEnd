@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-
+import { TimePicker } from '@/components/ui/time-picker';
 import {
 	Form,
 	FormControl,
@@ -14,17 +14,25 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from '@/components/ui/tooltip';
+
 import { Checkbox } from '@/components/ui/checkbox';
+import { Info } from 'lucide-react';
 
 const formSchema = z.object({
 	// first
 	name: z.string().min(2).max(50),
 	role: z.string().min(2).max(50),
 	// second
-	timeIn: z.string(),
-	timeOut: z.string(),
-	lunchTimeIn: z.string(),
-	lunchTimeOut: z.string(),
+	timeIn: z.date(),
+	timeOut: z.date(),
+	lunchTimeIn: z.date(),
+	lunchTimeOut: z.date(),
 	// third
 	timeHoursWorked: z.number(),
 	allowedOverTime: z.boolean(),
@@ -56,13 +64,23 @@ export default function ScheduleForm() {
 					name="name"
 					render={({ field }) => (
 						<FormItem className="">
-							<FormLabel>Schedule Name</FormLabel>
+							<div className="flex items-center justify-start gap-2">
+								<FormLabel>Schedule Name</FormLabel>
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<Info className="w-4 h-4"></Info>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p> This is the name of the schedule</p>
+										</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
+							</div>
 							<FormControl>
 								<Input placeholder="E.g. 'Morning Schedule'" {...field} />
 							</FormControl>
-							<FormDescription>
-								This is the name of the schedule
-							</FormDescription>
+
 							<FormMessage />
 						</FormItem>
 					)}
@@ -73,13 +91,23 @@ export default function ScheduleForm() {
 					name="role"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Role</FormLabel>
+							<div className="flex items-center justify-start gap-2">
+								<FormLabel>Role</FormLabel>
+
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<Info className="w-4 h-4"></Info>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p>Applies the schedule to the employee with this role</p>
+										</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
+							</div>
 							<FormControl>
 								<Input placeholder="E.g. 'Manager' " {...field} />
 							</FormControl>
-							<FormDescription>
-								This is to apply the schedule to the employee with the role
-							</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -90,30 +118,33 @@ export default function ScheduleForm() {
 					control={form.control}
 					name="timeIn"
 					render={({ field }) => (
-						<FormItem>
+						<FormItem className="border border-border border-solid rounded-md p-3">
 							<FormLabel>Time-In Start</FormLabel>
 							<FormControl>
-								<Input placeholder="" {...field} />
+								<TimePicker
+									date={field.value}
+									setDate={field.onChange}
+								></TimePicker>
 							</FormControl>
-							<FormDescription>
-								What time should the Schedule Start
-							</FormDescription>
+							<FormDescription>*In military time</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
 				/>
-
 				<FormField
 					control={form.control}
 					name="timeOut"
 					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Time-out Start</FormLabel>
+						<FormItem className="border border-border border-solid rounded-md p-3">
+							<FormLabel>Time-In Start</FormLabel>
 							<FormControl>
-								<Input placeholder=" " {...field} />
+								<TimePicker
+									date={field.value}
+									setDate={field.onChange}
+								></TimePicker>
 							</FormControl>
 							<FormDescription>
-								What time should the Schedule End
+								<FormDescription>*In military time</FormDescription>
 							</FormDescription>
 							<FormMessage />
 						</FormItem>
@@ -124,13 +155,16 @@ export default function ScheduleForm() {
 					control={form.control}
 					name="lunchTimeIn"
 					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Lunchreak Start</FormLabel>
+						<FormItem className="border border-border border-solid rounded-md p-3">
+							<FormLabel>Lunchbreak Start</FormLabel>
 							<FormControl>
-								<Input placeholder="" {...field} />
+								<TimePicker
+									date={field.value}
+									setDate={field.onChange}
+								></TimePicker>
 							</FormControl>
 							<FormDescription>
-								What time should the lunchbreak start
+								<FormDescription>*In military Time</FormDescription>
 							</FormDescription>
 							<FormMessage />
 						</FormItem>
@@ -140,13 +174,16 @@ export default function ScheduleForm() {
 					control={form.control}
 					name="lunchTimeOut"
 					render={({ field }) => (
-						<FormItem>
+						<FormItem className="border border-border border-solid rounded-md p-3">
 							<FormLabel>Lunchbreak End</FormLabel>
 							<FormControl>
-								<Input placeholder="" {...field} />
+								<TimePicker
+									date={field.value}
+									setDate={field.onChange}
+								></TimePicker>
 							</FormControl>
 							<FormDescription>
-								What time should the lunchbreak End
+								<FormDescription>*In military Time</FormDescription>
 							</FormDescription>
 							<FormMessage />
 						</FormItem>
@@ -164,15 +201,12 @@ export default function ScheduleForm() {
 									onCheckedChange={field.onChange}
 								/>
 							</FormControl>
-
 							<div className="space-y-1 leading-none">
 								<FormLabel>Allowed To Overtime?</FormLabel>
 								<FormDescription>
-									This will allow the employee to exceed from their maximum work
-									hours
+									Allows the employee to exceed from their maximum work hours
 								</FormDescription>
 							</div>
-
 							<FormMessage />
 						</FormItem>
 					)}
