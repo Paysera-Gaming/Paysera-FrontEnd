@@ -24,7 +24,7 @@ export default function DepartmentList() {
     const totalDepartments = departments.length;
     const totalTeams = departments.reduce((sum, dept) => sum + dept.totalTeams, 0);
 
-    const handleAddDepartment = (newDepartment: { name: string; teamLeader: string; schedule: string }) => {
+    const handleAddDepartment = (newDepartment: { name: string; teamLeader: string }) => {
         console.log('New Department:', newDepartment);
     };
 

@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Department, TeamMember, Schedule } from './types';
+import { Department, TeamMember } from './types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button'; // Correct the import statement for Button
 import { Input } from '@/components/ui/input'; // Correct the import statement for Input
 import { Label } from '@/components/ui/label'; // Correct the import statement for Label
+import { toast } from 'sonner'; // Import the toast function
 
 interface EditDepartmentDialogProps {
     isOpen: boolean;
@@ -15,14 +16,6 @@ interface EditDepartmentDialogProps {
 export default function EditDepartmentDialog({ isOpen, onClose, onEdit, department }: EditDepartmentDialogProps) {
     const [name, setName] = useState(department?.name || '');
     const [teamLeader, setTeamLeader] = useState<TeamMember | null>(department?.teams[0]?.teamLeader || null);
-    const [schedule, setSchedule] = useState<Schedule>(department?.teams[0]?.schedule || {
-        startHour: '',
-        startMinute: '',
-        startPeriod: '',
-        endHour: '',
-        endMinute: '',
-        endPeriod: ''
-    });
 
     const handleSave = () => {
         if (department) {
@@ -31,11 +24,12 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                 name,
                 teams: department.teams.map(team => ({
                     ...team,
-                    teamLeader,
-                    schedule
+                    teamLeader
                 }))
             };
             onEdit(updatedDepartment);
+            toast.success('Department edited successfully!');
+            onClose(); // Close the dialog after showing the success message
         }
     };
 
@@ -57,41 +51,6 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                             value={teamLeader ? `${teamLeader.firstName} ${teamLeader.lastName}` : ''}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTeamLeader({ ...teamLeader, firstName: e.target.value.split(' ')[0], lastName: e.target.value.split(' ')[1] })}
                         />
-                    </div>
-                    <div className="mb-4">
-                        <Label>Schedule</Label>
-                        <div className="flex gap-2">
-                            <Input
-                                placeholder="Start Hour"
-                                value={schedule.startHour}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchedule({ ...schedule, startHour: e.target.value })}
-                            />
-                            <Input
-                                placeholder="Start Minute"
-                                value={schedule.startMinute}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchedule({ ...schedule, startMinute: e.target.value })}
-                            />
-                            <Input
-                                placeholder="Start Period"
-                                value={schedule.startPeriod}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchedule({ ...schedule, startPeriod: e.target.value })}
-                            />
-                            <Input
-                                placeholder="End Hour"
-                                value={schedule.endHour}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchedule({ ...schedule, endHour: e.target.value })}
-                            />
-                            <Input
-                                placeholder="End Minute"
-                                value={schedule.endMinute}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchedule({ ...schedule, endMinute: e.target.value })}
-                            />
-                            <Input
-                                placeholder="End Period"
-                                value={schedule.endPeriod}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSchedule({ ...schedule, endPeriod: e.target.value })}
-                            />
-                        </div>
                     </div>
                 </div>
                 <DialogFooter>
