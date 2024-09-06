@@ -36,7 +36,8 @@ export default function ViewDepartment({ department, team, onBack }: ViewDepartm
                         {team.members.map((member, index) => (
                             <TableRow key={index}>
                                 <TableCell>{renderFullName(member)}</TableCell>
-                                <TableCell>Team Member</TableCell>
+                                {/* Render the actual role from the member object */}
+                                <TableCell>{member.role}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
