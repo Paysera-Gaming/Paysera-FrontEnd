@@ -28,11 +28,11 @@ export default function AddDepartmentDialog({ isOpen, onClose, onAdd }: AddDepar
     useEffect(() => {
         const fetchEmployees = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_API}/api/employee`);
+                const response = await axios.get(`${import.meta.env.VITE_BASE_API}/api/employee/team-leader`);
                 setEmployees(response.data);
             } catch (error) {
-                toast.error('Error fetching employees.');
-                console.error('Error fetching employees:', error);
+                toast.error('Error fetching team leaders.');
+                console.error('Error fetching team leaders:', error);
             }
         };
 
