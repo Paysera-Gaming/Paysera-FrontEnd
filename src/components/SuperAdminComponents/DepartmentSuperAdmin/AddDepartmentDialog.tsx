@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import sampleDepartments from './sampleDepartments';
+import axios from 'axios'; // Import axios
 
 interface AddDepartmentDialogProps {
     isOpen: boolean;
@@ -15,18 +15,18 @@ export default function AddDepartmentDialog({ isOpen, onClose, onAdd }: AddDepar
     const [name, setName] = useState('');
     const [teamLeader, setTeamLeader] = useState('');
 
-    const handleAdd = () => {
+    const handleAdd = async () => {
         if (name.trim() && teamLeader.trim()) {
-            const departmentExists = sampleDepartments.some(dept => dept.name === name);
-
-            if (departmentExists) {
-                toast.error('Department name already exists.');
-            } else {
-                onAdd({ name, teamLeader });
+            try {
+                const response = await axios.post(`${import.meta.env.VITE_BASE_API}/api/department`, { name, teamLeader });
+                onAdd(response.data);
                 toast.success('Department added successfully!');
                 setName('');
                 setTeamLeader('');
                 onClose();
+            } catch (error) {
+                toast.error('Failed to add department.');
+                console.error('Error adding department:', error);
             }
         } else {
             toast.error('Please fill out all required fields.');

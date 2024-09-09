@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios'; // Import axios
 import { Department, TeamMember } from './types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button'; // Correct the import statement for Button
@@ -24,7 +25,7 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
         }
     }, [department]);
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (department) {
             const updatedDepartment: Department = {
                 ...department,
@@ -34,9 +35,15 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                     teamLeader
                 }))
             };
-            onEdit(updatedDepartment);
-            toast.success('Department edited successfully!');
-            onClose(); // Close the dialog after showing the success message
+            try {
+                await axios.put(`${import.meta.env.VITE_BASE_API}/api/department/${department.id}`, updatedDepartment);
+                onEdit(updatedDepartment);
+                toast.success('Department edited successfully!');
+                onClose(); // Close the dialog after showing the success message
+            } catch (error) {
+                toast.error('Failed to edit department.');
+                console.error('Error editing department:', error);
+            }
         }
     };
 

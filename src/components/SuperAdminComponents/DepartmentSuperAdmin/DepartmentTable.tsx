@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Edit2, Trash2, Eye } from 'lucide-react';
@@ -11,9 +12,10 @@ interface DepartmentTableProps {
     departments: Department[];
     onEditClick: (department: { id: number; name: string; teamLeader: TeamMember | null; teamMembers: TeamMember[] }) => void;
     onViewClick: (departmentId: number, teamId: number) => void;
+    onDeleteClick: (departmentId: number) => void; // Add this line
 }
 
-export default function DepartmentTable({ departments, onEditClick, onViewClick }: DepartmentTableProps) {
+export default function DepartmentTable({ departments, onEditClick, onViewClick, onDeleteClick }: DepartmentTableProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
 
@@ -22,9 +24,18 @@ export default function DepartmentTable({ departments, onEditClick, onViewClick 
         setIsDialogOpen(true);
     };
 
-    const handleConfirmDelete = () => {
+    const handleConfirmDelete = async () => {
+        if (selectedDepartment) {
+            try {
+                await axios.delete(`${import.meta.env.VITE_BASE_API}/api/department/${selectedDepartment.id}`);
+                onDeleteClick(selectedDepartment.id);
+                toast.success(`Successfully deleted ${selectedDepartment.name}`);
+            } catch (error) {
+                toast.error(`Failed to delete ${selectedDepartment.name}`);
+                console.error('Error deleting department:', error);
+            }
+        }
         setIsDialogOpen(false);
-        toast.success(`Successfully deleted ${selectedDepartment?.name}`);
     };
 
     return (
@@ -44,7 +55,7 @@ export default function DepartmentTable({ departments, onEditClick, onViewClick 
                     </TableHeader>
                     <TableBody>
                         {departments.map((dept) =>
-                            dept.teams.map((team) => (
+                            (dept.teams || []).map((team) => (
                                 <TableRow key={team.id}>
                                     <TableCell>{dept.name}</TableCell>
                                     <TableCell>

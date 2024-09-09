@@ -1,32 +1,70 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import SearchBar from './SearchBar';
 import SummaryCards from './SummaryCards';
 import DepartmentTable from './DepartmentTable';
 import AddDepartmentDialog from './AddDepartmentDialog';
 import EditDepartmentDialog from './EditDepartmentDialog';
-import ViewDepartment from './ViewDepartment'; // Import ViewDepartment component
-import sampleDepartments from './sampleDepartments';
-import { Department, Team, TeamMember } from './types'; // Import interfaces from the types file
+import ViewDepartment from './ViewDepartment';
+import { Department, Team, TeamMember } from './types';
 
 export default function DepartmentList() {
-    const [departments] = useState<Department[]>(sampleDepartments);
+    const [departments, setDepartments] = useState<Department[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredDepartments, setFilteredDepartments] = useState<Department[]>(departments); // Add state for filtered departments
+    const [filteredDepartments, setFilteredDepartments] = useState<Department[]>([]);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
     const [viewData, setViewData] = useState<{ department: Department; team: Team } | null>(null);
-    const [isViewing, setIsViewing] = useState(false); // Add state to manage view mode
+    const [isViewing, setIsViewing] = useState(false);
+
+    useEffect(() => {
+        const fetchDepartments = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_BASE_API}/api/department`);
+                setDepartments(response.data);
+                setFilteredDepartments(response.data);
+            } catch (error) {
+                console.error('Error fetching departments:', error);
+            }
+        };
+
+        fetchDepartments();
+    }, []);
 
     const totalDepartments = departments.length;
     const totalTeams = departments.reduce((sum, dept) => sum + dept.totalTeams, 0);
 
-    const handleAddDepartment = (newDepartment: { name: string; teamLeader: string }) => {
-        console.log('New Department:', newDepartment);
+    const handleAddDepartment = async (newDepartment: { name: string; teamLeader: string }) => {
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BASE_API}/api/department`, newDepartment);
+            setDepartments([...departments, response.data]);
+            setFilteredDepartments([...departments, response.data]);
+        } catch (error) {
+            console.error('Error adding department:', error);
+        }
     };
 
-    const handleEditDepartment = (updatedDepartment: Department) => {
-        console.log('Updated Department:', updatedDepartment);
+    const handleEditDepartment = async (updatedDepartment: Department) => {
+        try {
+            const response = await axios.put(`${import.meta.env.VITE_BASE_API}/api/department/${updatedDepartment.id}`, updatedDepartment);
+            const updatedDepartments = departments.map(dept => dept.id === updatedDepartment.id ? response.data : dept);
+            setDepartments(updatedDepartments);
+            setFilteredDepartments(updatedDepartments);
+        } catch (error) {
+            console.error('Error editing department:', error);
+        }
+    };
+
+    const handleDeleteDepartment = async (departmentId: number) => {
+        try {
+            await axios.delete(`${import.meta.env.VITE_BASE_API}/api/department/${departmentId}`);
+            const updatedDepartments = departments.filter(dept => dept.id !== departmentId);
+            setDepartments(updatedDepartments);
+            setFilteredDepartments(updatedDepartments);
+        } catch (error) {
+            console.error('Error deleting department:', error);
+        }
     };
 
     const handleEditClick = (department: { id: number; name: string; teamLeader: TeamMember | null; teamMembers: TeamMember[] }) => {
@@ -37,19 +75,19 @@ export default function DepartmentList() {
         }
     };
 
-    const handleViewClick = (departmentId: number, teamId: number) => {
-        const department = departments.find(dept => dept.id === departmentId);
-        if (department) {
-            const team = department.teams.find((team: Team) => team.id === teamId); // Explicitly type `team`
-            if (team) {
-                setViewData({ department, team });
-                setIsViewing(true); // Set view mode to true
-            }
+    const handleViewClick = async (departmentId: number, teamId: number) => {
+        try {
+            const departmentResponse = await axios.get(`${import.meta.env.VITE_BASE_API}/api/department/${departmentId}`);
+            const teamResponse = await axios.get(`${import.meta.env.VITE_BASE_API}/api/team/${teamId}`);
+            setViewData({ department: departmentResponse.data, team: teamResponse.data });
+            setIsViewing(true);
+        } catch (error) {
+            console.error('Error fetching department and team:', error);
         }
     };
 
     const handleBack = () => {
-        setIsViewing(false); // Set view mode to false
+        setIsViewing(false);
     };
 
     return (
@@ -70,13 +108,14 @@ export default function DepartmentList() {
                     />
                     <SummaryCards
                         totalDepartments={totalDepartments}
-                        totalTeams={totalTeams} // Ensure `totalTeams` is correctly typed
+                        totalTeams={totalTeams}
                     />
                     {filteredDepartments.length > 0 ? (
                         <DepartmentTable
                             departments={filteredDepartments}
                             onEditClick={handleEditClick}
-                            onViewClick={handleViewClick} // Ensure `onViewClick` is correctly typed
+                            onViewClick={handleViewClick}
+                            onDeleteClick={handleDeleteDepartment} // Add delete click handler
                         />
                     ) : (
                         <div className="text-center text-gray-500 dark:text-gray-400">
@@ -91,8 +130,8 @@ export default function DepartmentList() {
                     <EditDepartmentDialog
                         isOpen={isEditDialogOpen}
                         onClose={() => setIsEditDialogOpen(false)}
-                        onEdit={handleEditDepartment} // Ensure `onEdit` matches expected type
-                        department={selectedDepartment} // Ensure `selectedDepartment` matches expected type
+                        onEdit={handleEditDepartment}
+                        department={selectedDepartment}
                     />
                 </>
             )}
