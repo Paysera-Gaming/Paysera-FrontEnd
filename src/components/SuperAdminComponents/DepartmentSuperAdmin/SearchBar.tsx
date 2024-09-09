@@ -1,59 +1,31 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Plus } from 'lucide-react';
-import AddDepartmentDialog from './AddDepartmentDialog';
-import AddTeamMembersDialog from './AddTeamMembersDialog';
+import { Dispatch, SetStateAction } from 'react';
+import { Department } from './types';
 
 interface SearchBarProps {
     searchTerm: string;
-    setSearchTerm: (term: string) => void;
+    setSearchTerm: Dispatch<SetStateAction<string>>;
+    departments: Department[];
+    setFilteredDepartments: Dispatch<SetStateAction<Department[]>>;
 }
 
-export default function SearchBar({ searchTerm, setSearchTerm }: SearchBarProps) {
-    const [isDepartmentFormOpen, setIsDepartmentFormOpen] = useState(false);
-    const [isTeamMembersFormOpen, setIsTeamMembersFormOpen] = useState(false);
-
-    const handleDepartmentFormSubmit = (_department: { name: string; teamLeader: string; teamMembers: string[] }) => {
-        // Handle department form submission
-        setIsDepartmentFormOpen(false);
-    };
-
-    const handleTeamMembersFormSubmit = (_teamMembers: { name: string; department: string }[]) => {
-        // Handle team members form submission
-        setIsTeamMembersFormOpen(false);
+export default function SearchBar({ searchTerm, setSearchTerm, departments, setFilteredDepartments }: SearchBarProps) {
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setSearchTerm(value);
+        const filtered = departments.filter(department =>
+            department.name.toLowerCase().includes(value.toLowerCase())
+        );
+        setFilteredDepartments(filtered);
     };
 
     return (
-        <div className="flex flex-col space-y-4 mb-4">
-            <div className="flex justify-between items-center">
-                <Input
-                    type="text"
-                    placeholder="Search..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full max-w-xs"
-                />
-                <div className="flex gap-2">
-                    <Button onClick={() => setIsDepartmentFormOpen(true)}>
-                        <Plus size={16} />
-                        Add Department
-                    </Button>
-                    <Button onClick={() => setIsTeamMembersFormOpen(true)}>
-                        <Plus size={16} />
-                        Add Team Members
-                    </Button>
-                </div>
-            </div>
-            <AddDepartmentDialog
-                isOpen={isDepartmentFormOpen}
-                onClose={() => setIsDepartmentFormOpen(false)}
-                onAdd={handleDepartmentFormSubmit}
-            />
-            <AddTeamMembersDialog
-                isOpen={isTeamMembersFormOpen}
-                onClose={() => setIsTeamMembersFormOpen(false)}
-                onAdd={handleTeamMembersFormSubmit}
+        <div className="mb-4">
+            <input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder="Search departments..."
+                className="w-full p-2 border border-gray-300 rounded"
             />
         </div>
     );

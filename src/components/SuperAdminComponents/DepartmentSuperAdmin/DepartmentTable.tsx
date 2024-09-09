@@ -1,35 +1,21 @@
 import { useState } from 'react';
+import axios from 'axios';
+import { Department, Employee } from './types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, Eye } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
-interface Team {
-    id: number;
-    name: string;
-    teamLeader?: {
-        firstName: string;
-        lastName: string;
-        middleName?: string;
-    };
-    members: number;
-}
-
-interface Department {
-    id: number;
-    name: string;
-    totalTeams: number;
-    teams: Team[];
-}
-
 interface DepartmentTableProps {
     departments: Department[];
-    onEditClick: (department: { id: number; name: string; teamLeader: string; teamMembers: string[] }) => void;
+    onEditClick: (department: { id: number; name: string; teamLeader: Employee | null; teamMembers: Employee[] }) => void;
+    onViewClick: (departmentId: number, teamId: number) => void;
+    onDeleteClick: (departmentId: number) => void;
 }
 
-export default function DepartmentTable({ departments, onEditClick }: DepartmentTableProps) {
+export default function DepartmentTable({ departments, onEditClick, onViewClick, onDeleteClick }: DepartmentTableProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
 
@@ -38,9 +24,18 @@ export default function DepartmentTable({ departments, onEditClick }: Department
         setIsDialogOpen(true);
     };
 
-    const handleConfirmDelete = () => {
+    const handleConfirmDelete = async () => {
+        if (selectedDepartment) {
+            try {
+                await axios.delete(`${import.meta.env.VITE_BASE_API}/api/department/${selectedDepartment.id}`);
+                onDeleteClick(selectedDepartment.id);
+                toast.success(`Successfully deleted ${selectedDepartment.name}`);
+            } catch (error) {
+                toast.error(`Failed to delete ${selectedDepartment.name}`);
+                console.error('Error deleting department:', error);
+            }
+        }
         setIsDialogOpen(false);
-        toast.success(`Successfully deleted ${selectedDepartment?.name}`);
     };
 
     return (
@@ -60,26 +55,28 @@ export default function DepartmentTable({ departments, onEditClick }: Department
                     </TableHeader>
                     <TableBody>
                         {departments.map((dept) =>
-                            dept.teams.map((team) => (
+                            (dept.DepartmentSchedule || []).map((team) => (
                                 <TableRow key={team.id}>
                                     <TableCell>{dept.name}</TableCell>
                                     <TableCell>
-                                        {team.teamLeader ? (
-                                            `${team.teamLeader.lastName}, ${team.teamLeader.firstName} ${team.teamLeader.middleName ?? ''}`
+                                        {dept.Leader ? (
+                                            `${dept.Leader.lastName}, ${dept.Leader.firstName} ${dept.Leader.middleName ?? ''}`
                                         ) : (
                                             'No Leader'
                                         )}
                                     </TableCell>
                                     <TableCell>
-                                        {team.members > 3 ? `${team.members} members (etc)` : `${team.members} members`}
+                                        {dept.Employees.length > 3
+                                            ? `${dept.Employees.slice(0, 3).map(member => `${member.firstName} ${member.lastName}`).join(', ')} and ${dept.Employees.length - 3} more`
+                                            : dept.Employees.map(member => `${member.firstName} ${member.lastName}`).join(', ')}
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex gap-2">
                                             <Button variant="outline" size="sm" onClick={() => onEditClick({
                                                 id: dept.id,
                                                 name: dept.name,
-                                                teamLeader: team.teamLeader ? `${team.teamLeader.firstName} ${team.teamLeader.lastName}` : '',
-                                                teamMembers: dept.teams.map(t => t.name)
+                                                teamLeader: dept.Leader,
+                                                teamMembers: dept.Employees
                                             })}>
                                                 <Edit2 size={16} />
                                                 Edit
@@ -87,6 +84,10 @@ export default function DepartmentTable({ departments, onEditClick }: Department
                                             <Button variant="outline" size="sm" color="red" onClick={() => handleDeleteClick(dept)}>
                                                 <Trash2 size={16} />
                                                 Delete
+                                            </Button>
+                                            <Button variant="outline" size="sm" onClick={() => onViewClick(dept.id, team.id)}>
+                                                <Eye size={16} />
+                                                View
                                             </Button>
                                         </div>
                                     </TableCell>

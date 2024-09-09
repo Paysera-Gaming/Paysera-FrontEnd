@@ -5,8 +5,8 @@ import { AttendanceTable } from './AttendanceTable';
 import { Users, UserCheck, Coffee, Clock } from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import SearchBar from './SearchBar'; // Import the new SearchBar component
-import { exportToExcel } from './ExcelExport'; // Import the new exportToExcel function
 import { DateRange } from 'react-day-picker';
+import Papa from 'papaparse';
 
 // Sample data for demonstration
 const sampleAttendance = [
@@ -133,6 +133,51 @@ export default function AttendanceList() {
         }
     };
 
+    // Function to export data to CSV
+    const exportToCSV = (data: any[], fileName: string, startDate: Date, endDate: Date) => {
+        // Create the combined data array with the specified structure
+        const combinedData = [
+            { A: `Attendance Report: ${startDate.toLocaleDateString('en-CA')} to ${endDate.toLocaleDateString('en-CA')}`, B: '', C: '', D: '', E: '', F: '', G: '', H: '', I: '', J: '' },
+            {},
+            { A: 'Summary', B: '', C: '', D: '', E: '' },
+            { A: 'Overall', B: overallCount, C: '', D: '', E: '' },
+            { A: 'On Job', B: onJobCount, C: '', D: 'Fixed', E: typeCounts.Fixed },
+            { A: 'Lunch', B: lunchCount, C: '', D: 'Flexible', E: typeCounts.Flexible },
+            { A: 'Leave', B: leaveCount, C: '', D: 'Super Flexible', E: typeCounts['Super Flexible'] },
+            {},
+            { A: 'Details', B: '', C: '', D: '', E: '' },
+            { A: 'ID', B: 'Full Name', C: 'Type', D: 'Date', E: 'Start Time', F: 'End Time', G: 'Work Hours', H: 'Lunch Hours', I: 'Total Hours', J: 'Situation' },
+            ...data.map(att => ({
+                A: att.id,
+                B: att.fullName,
+                C: att.type,
+                D: att.date,
+                E: att.startTime,
+                F: att.endTime,
+                G: att.workHours,
+                H: att.lunchHours,
+                I: att.totalHours,
+                J: att.situation,
+            }))
+        ];
+
+        // Convert the combined data to CSV
+        const csv = Papa.unparse(combinedData);
+
+        // Create a blob from the CSV data
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+        // Create a link element to download the CSV file
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `${fileName}_${startDate.toLocaleDateString('en-CA')}_to_${endDate.toLocaleDateString('en-CA')}_attendance.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className="p-4 space-y-4">
             <div className="flex items-center gap-2 mb-4">
@@ -166,11 +211,11 @@ export default function AttendanceList() {
                     onClick={() => {
                         const startDate = dateRange?.from || new Date(); // Use the start date from the date range or the current date if not set
                         const endDate = dateRange?.to || new Date(); // Use the end date from the date range or the current date if not set
-                        exportToExcel(filteredAttendance, 'paysera', startDate, endDate);
+                        exportToCSV(filteredAttendance, 'paysera', startDate, endDate);
                     }}
                     className="ml-auto px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none"
                 >
-                    Export as Excel
+                    Export as CSV
                 </button>
             </div>
 
