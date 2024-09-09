@@ -6,7 +6,8 @@ import DepartmentTable from './DepartmentTable';
 import AddDepartmentDialog from './AddDepartmentDialog';
 import EditDepartmentDialog from './EditDepartmentDialog';
 import ViewDepartment from './ViewDepartment';
-import { Department, Team, TeamMember } from './types';
+import { Department, Employee, Team } from './types';
+import { Button } from '@/components/ui/button'; // Adjust the import path based on your project structure
 
 export default function DepartmentList() {
     const [departments, setDepartments] = useState<Department[]>([]);
@@ -33,7 +34,7 @@ export default function DepartmentList() {
     }, []);
 
     const totalDepartments = departments.length;
-    const totalTeams = departments.reduce((sum, dept) => sum + dept.totalTeams, 0);
+    const totalTeams = departments.reduce((sum, dept) => sum + (dept.teams?.length || 0), 0);
 
     const handleAddDepartment = async (newDepartment: { name: string; teamLeader: string }) => {
         try {
@@ -67,7 +68,7 @@ export default function DepartmentList() {
         }
     };
 
-    const handleEditClick = (department: { id: number; name: string; teamLeader: TeamMember | null; teamMembers: TeamMember[] }) => {
+    const handleEditClick = (department: { id: number; name: string; teamLeader: Employee | null; teamMembers: Employee[] }) => {
         const fullDepartment = departments.find(dept => dept.id === department.id);
         if (fullDepartment) {
             setSelectedDepartment(fullDepartment);
@@ -122,6 +123,7 @@ export default function DepartmentList() {
                             {`No results found for "${searchTerm}"`}
                         </div>
                     )}
+                    <Button onClick={() => setIsAddDialogOpen(true)}>Add Department</Button>
                     <AddDepartmentDialog
                         isOpen={isAddDialogOpen}
                         onClose={() => setIsAddDialogOpen(false)}

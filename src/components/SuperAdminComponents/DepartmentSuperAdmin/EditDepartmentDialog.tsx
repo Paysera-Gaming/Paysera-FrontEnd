@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios'; // Import axios
-import { Department, TeamMember } from './types';
+import axios from 'axios';
+import { Department, TeamMember, Team } from './types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button'; // Correct the import statement for Button
-import { Input } from '@/components/ui/input'; // Correct the import statement for Input
-import { Label } from '@/components/ui/label'; // Correct the import statement for Label
-import { toast } from 'sonner'; // Import the toast function
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { toast } from 'sonner';
 
 interface EditDepartmentDialogProps {
     isOpen: boolean;
@@ -21,7 +21,7 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
     useEffect(() => {
         if (department) {
             setName(department.name);
-            setTeamLeader(department.teams[0]?.teamLeader || null);
+            setTeamLeader(department.teams?.[0]?.teamLeader || null);
         }
     }, [department]);
 
@@ -30,16 +30,16 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
             const updatedDepartment: Department = {
                 ...department,
                 name,
-                teams: department.teams.map(team => ({
+                teams: department.teams?.map((team: Team) => ({
                     ...team,
                     teamLeader
-                }))
+                })) || []
             };
             try {
                 await axios.put(`${import.meta.env.VITE_BASE_API}/api/department/${department.id}`, updatedDepartment);
                 onEdit(updatedDepartment);
                 toast.success('Department edited successfully!');
-                onClose(); // Close the dialog after showing the success message
+                onClose();
             } catch (error) {
                 toast.error('Failed to edit department.');
                 console.error('Error editing department:', error);
@@ -66,10 +66,11 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 const [firstName, lastName] = e.target.value.split(' ');
                                 setTeamLeader({ 
-                                    ...teamLeader, 
+                                    id: teamLeader?.id || 0, // Ensure id is defined
                                     firstName, 
                                     lastName, 
-                                    role: teamLeader?.role || 'Team Leader' // Ensure role is always defined
+                                    role: teamLeader?.role || 'Team Leader',
+                                    middleName: teamLeader?.middleName
                                 });
                             }}
                         />

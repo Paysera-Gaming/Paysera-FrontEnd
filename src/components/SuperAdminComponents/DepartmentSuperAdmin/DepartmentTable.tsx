@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { Department, Employee } from './types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Edit2, Trash2, Eye } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Department, TeamMember } from './types'; // Import interfaces from the types file
 
 interface DepartmentTableProps {
     departments: Department[];
-    onEditClick: (department: { id: number; name: string; teamLeader: TeamMember | null; teamMembers: TeamMember[] }) => void;
+    onEditClick: (department: { id: number; name: string; teamLeader: Employee | null; teamMembers: Employee[] }) => void;
     onViewClick: (departmentId: number, teamId: number) => void;
-    onDeleteClick: (departmentId: number) => void; // Add this line
+    onDeleteClick: (departmentId: number) => void;
 }
 
 export default function DepartmentTable({ departments, onEditClick, onViewClick, onDeleteClick }: DepartmentTableProps) {
@@ -55,28 +55,28 @@ export default function DepartmentTable({ departments, onEditClick, onViewClick,
                     </TableHeader>
                     <TableBody>
                         {departments.map((dept) =>
-                            (dept.teams || []).map((team) => (
+                            (dept.DepartmentSchedule || []).map((team) => (
                                 <TableRow key={team.id}>
                                     <TableCell>{dept.name}</TableCell>
                                     <TableCell>
-                                        {team.teamLeader ? (
-                                            `${team.teamLeader.lastName}, ${team.teamLeader.firstName} ${team.teamLeader.middleName ?? ''}`
+                                        {dept.Leader ? (
+                                            `${dept.Leader.lastName}, ${dept.Leader.firstName} ${dept.Leader.middleName ?? ''}`
                                         ) : (
                                             'No Leader'
                                         )}
                                     </TableCell>
                                     <TableCell>
-                                        {team.members.length > 3
-                                            ? `${team.members.slice(0, 3).map(member => `${member.firstName} ${member.lastName}`).join(', ')} and ${team.members.length - 3} more`
-                                            : team.members.map(member => `${member.firstName} ${member.lastName}`).join(', ')}
+                                        {dept.Employees.length > 3
+                                            ? `${dept.Employees.slice(0, 3).map(member => `${member.firstName} ${member.lastName}`).join(', ')} and ${dept.Employees.length - 3} more`
+                                            : dept.Employees.map(member => `${member.firstName} ${member.lastName}`).join(', ')}
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex gap-2">
                                             <Button variant="outline" size="sm" onClick={() => onEditClick({
                                                 id: dept.id,
                                                 name: dept.name,
-                                                teamLeader: team.teamLeader,
-                                                teamMembers: team.members
+                                                teamLeader: dept.Leader,
+                                                teamMembers: dept.Employees
                                             })}>
                                                 <Edit2 size={16} />
                                                 Edit
