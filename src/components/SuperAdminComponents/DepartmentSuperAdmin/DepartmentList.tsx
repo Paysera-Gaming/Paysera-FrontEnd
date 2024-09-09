@@ -6,7 +6,7 @@ import DepartmentTable from './DepartmentTable';
 import AddDepartmentDialog from './AddDepartmentDialog';
 import EditDepartmentDialog from './EditDepartmentDialog';
 import ViewDepartment from './ViewDepartment';
-import { Department, Employee, Team } from './types';
+import { Department } from './types';
 
 export default function DepartmentList() {
     const [departments, setDepartments] = useState<Department[]>([]);
@@ -15,7 +15,7 @@ export default function DepartmentList() {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
-    const [viewData, setViewData] = useState<{ department: Department} | null>(null);
+    const [viewData, setViewData] = useState<{ department: Department } | null>(null);
     const [isViewing, setIsViewing] = useState(false);
 
     useEffect(() => {
@@ -33,7 +33,6 @@ export default function DepartmentList() {
     }, []);
 
     const totalDepartments = departments.length;
-    const totalTeams = departments.reduce((sum, dept) => sum + (dept.teams?.length || 0), 0);
 
     const handleAddDepartment = async (newDepartment: { name: string; teamLeader: string }) => {
         try {
@@ -68,7 +67,7 @@ export default function DepartmentList() {
         }
     };
 
-    const handleEditClick = (department: { id: number; name: string; teamLeader: Employee | null; teamMembers: Employee[] }) => {
+    const handleEditClick = (department: { id: number; name: string }) => {
         const fullDepartment = departments.find(dept => dept.id === department.id);
         if (fullDepartment) {
             setSelectedDepartment(fullDepartment);
@@ -107,7 +106,6 @@ export default function DepartmentList() {
                     />
                     <SummaryCards
                         totalDepartments={totalDepartments}
-                        totalTeams={totalTeams}
                     />
                     {filteredDepartments.length > 0 ? (
                         <DepartmentTable

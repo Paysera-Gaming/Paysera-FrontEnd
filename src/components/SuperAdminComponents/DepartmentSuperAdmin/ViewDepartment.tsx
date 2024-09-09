@@ -1,31 +1,26 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Department, Team, TeamMember } from './types'; // Import interfaces from the types file
+import { Department, Employee } from './types'; // Import interfaces from the types file
 import ViewSummaryCards from './ViewSummaryCards'; // Import the ViewSummaryCards component
 
 interface ViewDepartmentProps {
     department: Department;
-    team: Team;
     onBack: () => void;
 }
 
 export default function ViewDepartment({ department, onBack }: ViewDepartmentProps) {
-    const renderFullName = (member: TeamMember) => {
-        return `${member.lastName}, ${member.firstName} ${member.middleName ?? ''}`;
+    const renderFullName = (employee: Employee) => {
+        return `${employee.lastName}, ${employee.firstName} ${employee.middleName ?? ''}`;
     };
 
     return (
         <>
             {/* Use the ViewSummaryCards component */}
-            <ViewSummaryCards team={department} />
+            <ViewSummaryCards />
             <Card>
                 <CardHeader>
                     <CardTitle>{department.name}</CardTitle>
-                    {/* Display the team leader's name under the department name */}
-                    {team.teamLeader && (
-                        <p className="text-sm text-muted-foreground">Team Leader: {renderFullName(team.teamLeader)}</p>
-                    )}
                     <Button variant="outline" onClick={onBack}>Back</Button>
                 </CardHeader>
                 <CardContent>
@@ -37,11 +32,11 @@ export default function ViewDepartment({ department, onBack }: ViewDepartmentPro
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {team.members.map((member, index) => (
+                            {department.Employees.map((employee: Employee, index: number) => (
                                 <TableRow key={index}>
-                                    <TableCell>{renderFullName(member)}</TableCell>
-                                    {/* Render the actual role from the member object */}
-                                    <TableCell>{member.role}</TableCell>
+                                    <TableCell>{renderFullName(employee)}</TableCell>
+                                    {/* Render the actual role from the employee object */}
+                                    <TableCell>{employee.role}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

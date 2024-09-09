@@ -39,20 +39,6 @@ export interface DepartmentSchedule {
     createdAt: string;
 }
 
-export interface TeamMember {
-    id: number;
-    firstName: string;
-    middleName?: string;
-    lastName: string;
-    role: string;
-}
-
-export interface Team {
-    id: number;
-    teamLeader: TeamMember | null;
-    members: TeamMember[];
-}
-
 export interface Department {
     id: number;
     name: string;
@@ -61,7 +47,6 @@ export interface Department {
     Leader: Employee;
     DepartmentSchedule: DepartmentSchedule[];
     Employees: Employee[];
-    teams?: Team[]; // Add this if teams are optional
     updatedAt: string;
     createdAt: string;
 }

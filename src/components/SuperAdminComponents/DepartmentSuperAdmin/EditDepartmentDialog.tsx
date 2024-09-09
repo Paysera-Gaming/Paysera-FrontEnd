@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Department, TeamMember, Team } from './types';
+import { Department } from './types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,12 +16,10 @@ interface EditDepartmentDialogProps {
 
 export default function EditDepartmentDialog({ isOpen, onClose, onEdit, department }: EditDepartmentDialogProps) {
     const [name, setName] = useState(department?.name || '');
-    const [teamLeader, setTeamLeader] = useState<TeamMember | null>(null);
 
     useEffect(() => {
         if (department) {
             setName(department.name);
-            setTeamLeader(department.teams?.[0]?.teamLeader || null);
         }
     }, [department]);
 
@@ -30,10 +28,6 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
             const updatedDepartment: Department = {
                 ...department,
                 name,
-                teams: department.teams?.map((team: Team) => ({
-                    ...team,
-                    teamLeader
-                })) || []
             };
             try {
                 await axios.put(`${import.meta.env.VITE_BASE_API}/api/department/${department.id}`, updatedDepartment);
@@ -57,23 +51,6 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                     <div className="mb-4">
                         <Label htmlFor="name">Department Name</Label>
                         <Input id="name" value={name} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
-                    </div>
-                    <div className="mb-4">
-                        <Label htmlFor="teamLeader">Team Leader</Label>
-                        <Input
-                            id="teamLeader"
-                            value={teamLeader ? `${teamLeader.firstName} ${teamLeader.lastName}` : ''}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                const [firstName, lastName] = e.target.value.split(' ');
-                                setTeamLeader({ 
-                                    id: teamLeader?.id || 0, // Ensure id is defined
-                                    firstName, 
-                                    lastName, 
-                                    role: teamLeader?.role || 'Team Leader',
-                                    middleName: teamLeader?.middleName
-                                });
-                            }}
-                        />
                     </div>
                 </div>
                 <DialogFooter>
