@@ -28,8 +28,8 @@ interface DataProps {
 }
 
 function RecentActivitiesTable({ tableData }: { tableData: DataProps[] }) {
-	const renderedList = tableData.map((data) => (
-		<TableRow>
+	const renderedList = tableData.map((data, index) => (
+		<TableRow key={index}>
 			<TableCell>{data.name}</TableCell>
 			<TableCell>{data.role}</TableCell>
 			<TableCell>{data.activity}</TableCell>

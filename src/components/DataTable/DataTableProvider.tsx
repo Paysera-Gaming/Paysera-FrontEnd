@@ -30,15 +30,18 @@ import { Button } from '../ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
-import AddEmployee from '../TeamLeadComponents/DialogForms/AddEmployee';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
+	addButton: React.ReactNode;
+	searchQuery: string;
 }
 export function DataTable<TData, TValue>({
 	columns,
 	data,
+	addButton,
+	searchQuery,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnVisibility, setColumnVisibility] =
@@ -69,19 +72,22 @@ export function DataTable<TData, TValue>({
 		<div className="w-full flex justify-center items-center flex-col">
 			<div className="w-full flex justify-between items-center py-4">
 				<Input
-					placeholder="Filter By EmployeeID"
-					value={(table.getColumn('id')?.getFilterValue() as string) ?? ''}
+					placeholder="Filter By ID"
+					value={
+						(table.getColumn(searchQuery)?.getFilterValue() as string) ?? ''
+					}
 					onChange={(event) =>
-						table.getColumn('id')?.setFilterValue(event.target.value)
+						table.getColumn(searchQuery)?.setFilterValue(event.target.value)
 					}
 					className="max-w-xs"
 				/>
 				<div>
-					<AddEmployee></AddEmployee>
+					{/* <AddEmployee></AddEmployee> */}
+					{addButton}
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">
-								Columns
+								View
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end">
@@ -107,7 +113,7 @@ export function DataTable<TData, TValue>({
 				</div>
 			</div>
 
-			<ScrollArea className=" md:w-[500px] lg:w-[950px] lg:h-[300px] md:h-[250px]  whitespace-nowrap rounded-md border">
+			<ScrollArea className=" 2xl:w-[1600px] md:w-[500px] lg:w-[950px] lg:h-[300px] md:h-[250px]  whitespace-nowrap rounded-md border">
 				<Table className="relative min-w-full ">
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (

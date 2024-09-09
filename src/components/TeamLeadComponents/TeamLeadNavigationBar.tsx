@@ -62,7 +62,7 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
 
 function ProfileHeader() {
 	return (
-		<header className="flex items-start justify-between w-full">
+		<header className="min-w-[210px] w-[210px] flex items-start justify-between">
 			<div className="flex items-center justify-start gap-x-1 px-2 ">
 				<Icons.logo className="w-10 h-10"></Icons.logo>
 				<h3 className="scroll-m-20 text-2xl font-semibold mb-1 tracking-tight">

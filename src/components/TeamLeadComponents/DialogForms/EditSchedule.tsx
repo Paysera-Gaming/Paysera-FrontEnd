@@ -12,7 +12,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 
-export default function EditRole({ employeeRole }: { employeeRole: string }) {
+export default function EditSchedule({
+	employeeRole,
+}: {
+	employeeRole: string;
+}) {
 	const [isOpen, setOpen] = useState<boolean>(false);
 
 	return (
@@ -23,13 +27,13 @@ export default function EditRole({ employeeRole }: { employeeRole: string }) {
 					setOpen(true);
 				}}
 			>
-				<p>Edit Role</p>
+				<p>Edit Schedule</p>
 			</div>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>Edit Role</DialogTitle>
+					<DialogTitle>Edit Schedule</DialogTitle>
 					<DialogDescription>
-						Make changes to Employee's role here. Click save when you're done.
+						Make changes to schedule. Click save when you're done.
 					</DialogDescription>
 				</DialogHeader>
 				<div className="grid gap-4 py-4">
