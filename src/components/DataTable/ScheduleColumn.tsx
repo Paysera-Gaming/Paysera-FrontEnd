@@ -1,21 +1,5 @@
-export interface TSchedule {
-	id: number;
-	role: string;
-	name: string;
-	scheduleId: number;
-	departmentId: number;
-	updatedAt: Date;
-	createdAt: Date;
-	scheduleType: 'FIXED' | 'SUPER_FLEXI' | 'FLEXI';
-	startTime: Date;
-	endTime: Date;
-	limitWorkHoursDay: number;
-	allowedOvertime: boolean;
-	lunchStartTime: Date;
-	lunchEndTime: Date;
-}
 import { ArrowUpDown } from 'lucide-react';
-
+import { createContext } from 'react';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -33,6 +17,25 @@ import EditSchedule from '../TeamLeadComponents/DialogForms/EditSchedule';
 import RemoveScheduleDialog from '../TeamLeadComponents/DialogForms/RemoveSchedule';
 import { formatDate } from './DataColumns';
 import { Badge } from '../ui/badge';
+
+export const ScheduleContext = createContext<TSchedule | undefined>(undefined);
+
+export interface TSchedule {
+	id: number;
+	role: string;
+	name: string;
+	scheduleId: number;
+	departmentId: number;
+	updatedAt: Date;
+	createdAt: Date;
+	scheduleType: 'FIXED' | 'SUPER_FLEXI' | 'FLEXI';
+	startTime: Date;
+	endTime: Date;
+	limitWorkHoursDay: number;
+	allowedOvertime: boolean;
+	lunchStartTime: Date;
+	lunchEndTime: Date;
+}
 
 export const scheduleColumns: ColumnDef<TSchedule>[] = [
 	{
@@ -155,8 +158,6 @@ export const scheduleColumns: ColumnDef<TSchedule>[] = [
 	{
 		id: 'actions',
 		cell: ({ row }) => {
-			const employee = row.original;
-
 			return (
 				// try to make this drop down into a stupid standalone
 				<DropdownMenu>
@@ -172,7 +173,9 @@ export const scheduleColumns: ColumnDef<TSchedule>[] = [
 						<DropdownMenuSeparator />
 
 						<DropdownMenu>
-							<EditSchedule employeeRole={employee.role}></EditSchedule>
+							<ScheduleContext.Provider value={row.original}>
+								<EditSchedule></EditSchedule>
+							</ScheduleContext.Provider>
 						</DropdownMenu>
 
 						<DropdownMenuItem asChild>

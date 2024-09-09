@@ -24,7 +24,8 @@ import {
 
 import { Checkbox } from '@/components/ui/checkbox';
 import { Info } from 'lucide-react';
-
+import { useContext } from 'react';
+import { ScheduleContext } from '@/components/DataTable/ScheduleColumn';
 const formSchema = z.object({
 	// first
 	name: z.string().min(2).max(50),
@@ -45,18 +46,27 @@ interface IScheduleFormProps {
 export default function ScheduleForm({
 	updateParentState,
 }: IScheduleFormProps) {
+	const ScheduleSub = useContext(ScheduleContext);
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			// dito lagay ung mga shet
-			allowedOverTime: false,
+
+			name: ScheduleSub?.name ? ScheduleSub?.name : '',
+			role: ScheduleSub?.role ? ScheduleSub?.role : '',
+			timeIn: ScheduleSub?.startTime,
+			timeOut: ScheduleSub?.endTime,
+			lunchTimeIn: ScheduleSub?.lunchStartTime,
+			lunchTimeOut: ScheduleSub?.lunchEndTime,
+			allowedOverTime: ScheduleSub?.allowedOvertime || false,
 		},
 	});
 
-	// 2. Define a submit handler.
+	// context if any
+
+	// do them submit shits here
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
 		console.log(values);
 		updateParentState(false);
 	}
