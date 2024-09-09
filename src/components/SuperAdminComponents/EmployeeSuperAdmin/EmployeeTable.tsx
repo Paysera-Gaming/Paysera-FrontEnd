@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { toast } from 'sonner';
 import axios from 'axios';
 import EmployeeEdit from './EmployeeEdit';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Employee {
     id: number;
@@ -22,6 +23,7 @@ interface EmployeeTableProps {
 }
 
 const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
+    const queryClient = useQueryClient();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
@@ -32,8 +34,6 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
     };
 
     const handleEditClick = (employee: Employee) => {
-        console.log(employee);
-        
         setSelectedEmployee(employee);
         setIsEditDialogOpen(true);
     };
@@ -45,18 +45,25 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
             await axios.delete(`${import.meta.env.VITE_BASE_API}/api/employee/${selectedEmployee.id}`);
             toast.success(`Successfully deleted ${selectedEmployee.firstName} ${selectedEmployee.lastName}`);
             setIsDialogOpen(false);
-            // Optionally, you can remove the deleted employee from the state to update the UI
+            queryClient.invalidateQueries(['employees']); // Invalidate the employee query
         } catch (error) {
             toast.error('Error deleting the employee.');
             console.error('Error deleting the employee:', error);
         }
     };
 
-    const handleEditSubmit = (values: any) => {
-        // Handle the edit form submission
-        console.log('Edited values:', values);
-        setIsEditDialogOpen(false);
-        toast.success(`Successfully edited ${selectedEmployee?.firstName} ${selectedEmployee?.lastName}`);
+    const handleEditSubmit = async (values: any) => {
+        if (!selectedEmployee) return;
+
+        try {
+            await axios.put(`${import.meta.env.VITE_BASE_API}/api/employee/${selectedEmployee.id}`, values);
+            toast.success(`Successfully edited ${selectedEmployee.firstName} ${selectedEmployee.lastName}`);
+            setIsEditDialogOpen(false);
+            queryClient.invalidateQueries(['employees']); // Invalidate the employee query
+        } catch (error) {
+            toast.error('Error editing the employee.');
+            console.error('Error editing the employee:', error);
+        }
     };
 
     return (
@@ -122,7 +129,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
             </Dialog>
             {selectedEmployee && (
                 <EmployeeEdit
-                key={selectedEmployee.id}
+                    key={selectedEmployee.id}
                     employee={selectedEmployee}
                     onSubmit={handleEditSubmit}
                     isOpen={isEditDialogOpen}
@@ -133,4 +140,5 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
     );
 };
 
+export default EmployeeTable;
 export default EmployeeTable;

@@ -25,6 +25,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 
+// TanStack Query
+import { useQueryClient } from '@tanstack/react-query';
+
 // schema for the form
 const formSchema = z.object({
   username: z.string().min(8, { message: "Username must be at least 8 characters." }), // Added username field
@@ -39,6 +42,8 @@ const formSchema = z.object({
 });
 
 export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: (values: any) => void, isOpen: boolean, onClose: () => void }) {
+
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -66,6 +71,7 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
         });
         toast.success('Form submitted successfully!');
         onSubmit(response.data);
+        queryClient.invalidateQueries(['employees']); // Invalidate the employee query
         handleClose();
       } catch (error) {
         toast.error('Error submitting the form.');

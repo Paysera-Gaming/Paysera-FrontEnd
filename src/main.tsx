@@ -26,92 +26,99 @@ import './index.css';
 import { ThemeProvider } from '@/components/ThemeProvider/ThemeProvider';
 
 import {
-	createBrowserRouter,
-	RouterProvider,
-	redirect,
+    createBrowserRouter,
+    RouterProvider,
+    redirect,
 } from 'react-router-dom';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// Create a client
+const queryClient = new QueryClient();
+
 const router = createBrowserRouter([
-	{
-		path: '/',
-		element: <></>,
-		children: [{ index: true, loader: () => redirect('/login') }],
-	},
-	{
-		path: '/login',
-		element: <LoginPage></LoginPage>,
-	},
-	{
-		path: '/employee',
-		element: <EmployeePage></EmployeePage>,
-		children: [
-			{
-				index: true,
-				loader: () => redirect('/employee/dashboard'),
-			},
-			{
-				path: 'dashboard',
-				element: <EmployeeDashboardPage></EmployeeDashboardPage>,
-			},
-			{ path: 'request', element: <RequestPage></RequestPage> },
-		],
-	},
-	{
-		path: '/teamlead',
-		element: <TeamLeadPage></TeamLeadPage>,
-		children: [
-			{
-				index: true,
-				loader: () => redirect('/teamlead/dashboard'),
-			},
-			{
-				path: 'dashboard',
-				element: <TeamLeadDashboardPage></TeamLeadDashboardPage>,
-			},
-			{ path: 'manage', element: <ManagePage></ManagePage> },
-			{ path: 'schedule', element: <SchedulePage></SchedulePage> },
-			{ path: 'attendance', element: <AttendancePage></AttendancePage> },
-		],
-	},
+    {
+        path: '/',
+        element: <></>,
+        children: [{ index: true, loader: () => redirect('/login') }],
+    },
+    {
+        path: '/login',
+        element: <LoginPage></LoginPage>,
+    },
+    {
+        path: '/employee',
+        element: <EmployeePage></EmployeePage>,
+        children: [
+            {
+                index: true,
+                loader: () => redirect('/employee/dashboard'),
+            },
+            {
+                path: 'dashboard',
+                element: <EmployeeDashboardPage></EmployeeDashboardPage>,
+            },
+            { path: 'request', element: <RequestPage></RequestPage> },
+        ],
+    },
+    {
+        path: '/teamlead',
+        element: <TeamLeadPage></TeamLeadPage>,
+        children: [
+            {
+                index: true,
+                loader: () => redirect('/teamlead/dashboard'),
+            },
+            {
+                path: 'dashboard',
+                element: <TeamLeadDashboardPage></TeamLeadDashboardPage>,
+            },
+            { path: 'manage', element: <ManagePage></ManagePage> },
+            { path: 'schedule', element: <SchedulePage></SchedulePage> },
+            { path: 'attendance', element: <AttendancePage></AttendancePage> },
+        ],
+    },
 
-	{
-		path: '/superadmin',
-		element: <SuperAdminPage></SuperAdminPage>,
-		children: [
-			{
-				index: true,
-				loader: () => redirect('/superadmin/dashboard'),
-			},
-			{
-				path: 'dashboard',
-				element: <SuperAdminDashboardPage />,
-				// SuperAdmin Dashboard
-			},
-			{ path: 'schedule', element: <SchedulePage></SchedulePage> },
-			{
-				path: 'attendance',
-				element: <AttendanceDashboard></AttendanceDashboard>,
-			},
-			{
-				path: 'employee',
-				element: <SuperAdminEmployeeDashboard></SuperAdminEmployeeDashboard>,
-			},
-			{
-				path: 'departments',
-				element: (
-					<SuperAdminDepartmentDashboard></SuperAdminDepartmentDashboard>
-				),
-			},
+    {
+        path: '/superadmin',
+        element: <SuperAdminPage></SuperAdminPage>,
+        children: [
+            {
+                index: true,
+                loader: () => redirect('/superadmin/dashboard'),
+            },
+            {
+                path: 'dashboard',
+                element: <SuperAdminDashboardPage />,
+                // SuperAdmin Dashboard
+            },
+            { path: 'schedule', element: <SchedulePage></SchedulePage> },
+            {
+                path: 'attendance',
+                element: <AttendanceDashboard></AttendanceDashboard>,
+            },
+            {
+                path: 'employee',
+                element: <SuperAdminEmployeeDashboard></SuperAdminEmployeeDashboard>,
+            },
+            {
+                path: 'departments',
+                element: (
+                    <SuperAdminDepartmentDashboard></SuperAdminDepartmentDashboard>
+                ),
+            },
 
-			// Add more child routes if needed
-		],
-	},
+            // Add more child routes if needed
+        ],
+    },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	<React.StrictMode>
-		<ThemeProvider>
-			<RouterProvider router={router} />
-		</ThemeProvider>
-	</React.StrictMode>
+    <React.StrictMode>
+        <QueryClientProvider client={queryClient}>
+            <ThemeProvider>
+                <RouterProvider router={router} />
+            </ThemeProvider>
+        </QueryClientProvider>
+    </React.StrictMode>
 );

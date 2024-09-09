@@ -1,10 +1,11 @@
-import React, { useEffect, useState, SetStateAction } from 'react';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import SearchBar from './SearchBar';
 import SummaryCards from './SummaryCards';
 import EmployeeTable from './EmployeeTable';
-import EmployeeForm from './EmployeeForm'; // Import EmployeeForm
-import EmployeeEdit from './EmployeeEdit'; // Import EmployeeEdit
+import EmployeeForm from './EmployeeForm';
+import EmployeeEdit from './EmployeeEdit';
 
 interface Employee {
   id: number;
@@ -16,71 +17,70 @@ interface Employee {
   isActive: boolean;
 }
 
+const fetchEmployees = async (): Promise<Employee[]> => {
+  const response = await axios.get(import.meta.env.VITE_BASE_API + '/api/employee');
+  return response.data;
+};
+
 const EmployeeList: React.FC = () => {
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const { data: employees = [], error } = useQuery<Employee[], Error>({
+    queryKey: ['employees'],
+    queryFn: fetchEmployees,
+  });
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('overall');
-  const [isFormOpen, setIsFormOpen] = useState(false); // State to control form visibility
-  const [isEditOpen, setIsEditOpen] = useState(false); // State to control edit form visibility
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null); // State to hold the selected employee for editing
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
 
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await axios.get(import.meta.env.VITE_BASE_API + '/api/employee');
-        console.log('API Response:', response.data); // Log the response to verify its structure
-        if (Array.isArray(response.data)) {
-          setEmployees(response.data);
-        } else {
-          console.error('Unexpected response format:', response.data);
-          setError('Unexpected response format');
-        }
-      } catch (error) {
-        console.error('Error fetching employee data:', error);
-        setError('Error fetching employee data');
-      }
-    };
+  const addEmployeeMutation = useMutation({
+    mutationFn: (newEmployee: Employee) => axios.post(import.meta.env.VITE_BASE_API + '/api/employee', newEmployee),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+    },
+  });
 
-    fetchEmployees();
-  }, []);
+  const editEmployeeMutation = useMutation({
+    mutationFn: (updatedEmployee: Employee) => axios.put(`${import.meta.env.VITE_BASE_API}/api/employee/${updatedEmployee.id}`, updatedEmployee),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+    },
+  });
 
-  const handleFilterClick = (filter: SetStateAction<string>) => {
+  const handleFilterClick = (filter: string) => {
     setActiveFilter(filter);
   };
 
   const handleFormSubmit = (newEmployee: Employee) => {
-    setEmployees((prevEmployees) => [...prevEmployees, newEmployee]);
+    addEmployeeMutation.mutate(newEmployee);
     setIsFormOpen(false);
   };
 
-
   const handleEditSubmit = (updatedEmployee: Employee) => {
-    setEmployees((prevEmployees) =>
-      prevEmployees.map((emp) => (emp.id === updatedEmployee.id ? updatedEmployee : emp))
-    );
+    editEmployeeMutation.mutate(updatedEmployee);
     setIsEditOpen(false);
     setSelectedEmployee(null);
   };
 
   const filteredEmployees = employees
-    .filter((emp) => {
+    .filter((emp: Employee) => {
       if (activeFilter === 'online') {
         return emp.isActive;
       } else if (activeFilter === 'offline') {
         return !emp.isActive;
       }
-      return true; // 'overall' filter shows all employees
+      return true;
     })
-    .filter((emp) =>
+    .filter((emp: Employee) =>
       emp.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       emp.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       emp.middleName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      emp.username.toLowerCase().includes(searchTerm.toLowerCase()) // Added username to search filter
+      emp.username.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   const overallCount = employees.length;
-  const onlineCount = employees.filter((emp) => emp.isActive).length;
+  const onlineCount = employees.filter((emp: Employee) => emp.isActive).length;
   const offlineCount = overallCount - onlineCount;
 
   return (
@@ -94,9 +94,9 @@ const EmployeeList: React.FC = () => {
         handleFilterClick={handleFilterClick}
       />
       {error ? (
-        <p>{error}</p>
+        <p>{error.message}</p>
       ) : filteredEmployees.length > 0 ? (
-        <EmployeeTable employees={filteredEmployees}  />
+        <EmployeeTable employees={filteredEmployees} />
       ) : (
         <div className="text-center text-gray-500 dark:text-gray-400">
           {searchTerm
