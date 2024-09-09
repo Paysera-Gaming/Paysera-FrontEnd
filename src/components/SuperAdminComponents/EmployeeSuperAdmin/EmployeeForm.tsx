@@ -71,7 +71,7 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
         });
         toast.success('Form submitted successfully!');
         onSubmit(response.data);
-        queryClient.invalidateQueries(['employees']); // Invalidate the employee query
+        queryClient.invalidateQueries({ queryKey: ['employees'] }); // Invalidate the employee query
         handleClose();
       } catch (error) {
         toast.error('Error submitting the form.');

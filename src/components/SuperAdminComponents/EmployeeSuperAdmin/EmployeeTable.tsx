@@ -45,7 +45,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
             await axios.delete(`${import.meta.env.VITE_BASE_API}/api/employee/${selectedEmployee.id}`);
             toast.success(`Successfully deleted ${selectedEmployee.firstName} ${selectedEmployee.lastName}`);
             setIsDialogOpen(false);
-            queryClient.invalidateQueries(['employees']); // Invalidate the employee query
+            queryClient.invalidateQueries({ queryKey: ['employees'] }); // Invalidate the employee query
         } catch (error) {
             toast.error('Error deleting the employee.');
             console.error('Error deleting the employee:', error);
@@ -59,7 +59,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
             await axios.put(`${import.meta.env.VITE_BASE_API}/api/employee/${selectedEmployee.id}`, values);
             toast.success(`Successfully edited ${selectedEmployee.firstName} ${selectedEmployee.lastName}`);
             setIsEditDialogOpen(false);
-            queryClient.invalidateQueries(['employees']); // Invalidate the employee query
+            queryClient.invalidateQueries({ queryKey: ['employees'] }); // Invalidate the employee query
         } catch (error) {
             toast.error('Error editing the employee.');
             console.error('Error editing the employee:', error);
@@ -140,5 +140,4 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
     );
 };
 
-export default EmployeeTable;
 export default EmployeeTable;

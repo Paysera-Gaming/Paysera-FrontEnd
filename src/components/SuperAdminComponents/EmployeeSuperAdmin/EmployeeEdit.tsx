@@ -1,7 +1,5 @@
 "use client"
 
-// react router
-
 // zod
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -77,7 +75,7 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
       });
       
       onSubmit(response.data);
-      queryClient.invalidateQueries(['employees']); // Invalidate the employee query
+      queryClient.invalidateQueries({ queryKey: ['employees'] }); // Invalidate the employee query
       handleClose();
     } catch (error) {
       if ((error as any).response && (error as any).response.status === 400) {
