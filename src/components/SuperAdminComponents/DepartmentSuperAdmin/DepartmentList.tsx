@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SearchBar from './SearchBar';
 import SummaryCards from './SummaryCards';
 import DepartmentTable from './DepartmentTable';
@@ -8,63 +9,63 @@ import EditDepartmentDialog from './EditDepartmentDialog';
 import ViewDepartment from './ViewDepartment';
 import { Department } from './types';
 
+const fetchDepartments = async (): Promise<Department[]> => {
+    const response = await axios.get(`${import.meta.env.VITE_BASE_API}/api/department`);
+    return response.data;
+};
+
 export default function DepartmentList() {
-    const [departments, setDepartments] = useState<Department[]>([]);
+    const queryClient = useQueryClient();
+    const { data: departments = [] } = useQuery<Department[]>({
+        queryKey: ['departments'],
+        queryFn: fetchDepartments,
+    });
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredDepartments, setFilteredDepartments] = useState<Department[]>([]);
+    const [filteredDepartments, setFilteredDepartments] = useState<Department[]>(departments);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
     const [viewData, setViewData] = useState<{ department: Department } | null>(null);
     const [isViewing, setIsViewing] = useState(false);
 
-    useEffect(() => {
-        const fetchDepartments = async () => {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_API}/api/department`);
-                setDepartments(response.data);
-                setFilteredDepartments(response.data);
-            } catch (error) {
-                console.error('Error fetching departments:', error);
-            }
-        };
+    const addDepartmentMutation = useMutation({
+        mutationFn: (newDepartment: { name: string; teamLeader: string }) => 
+            axios.post(`${import.meta.env.VITE_BASE_API}/api/department`, newDepartment),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['departments'] });
+        },
+    });
 
-        fetchDepartments();
-    }, []);
+    const editDepartmentMutation = useMutation({
+        mutationFn: (updatedDepartment: Department) => 
+            axios.put(`${import.meta.env.VITE_BASE_API}/api/department/${updatedDepartment.id}`, updatedDepartment),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['departments'] });
+        },
+    });
+
+    const deleteDepartmentMutation = useMutation({
+        mutationFn: (departmentId: number) => 
+            axios.delete(`${import.meta.env.VITE_BASE_API}/api/department/${departmentId}`),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['departments'] });
+        },
+    });
 
     const totalDepartments = departments.length;
 
-    const handleAddDepartment = async (newDepartment: { name: string; teamLeader: string }) => {
-        try {
-            const response = await axios.post(`${import.meta.env.VITE_BASE_API}/api/department`, newDepartment);
-            const addedDepartment = response.data;
-            setDepartments(prevDepartments => [...prevDepartments, addedDepartment]);
-            setFilteredDepartments(prevDepartments => [...prevDepartments, addedDepartment]);
-        } catch (error) {
-            console.error('Error adding department:', error);
-        }
+    const handleAddDepartment = (newDepartment: { name: string; teamLeader: string }) => {
+        addDepartmentMutation.mutate(newDepartment);
+        setIsAddDialogOpen(false);
     };
 
-    const handleEditDepartment = async (updatedDepartment: Department) => {
-        try {
-            const response = await axios.put(`${import.meta.env.VITE_BASE_API}/api/department/${updatedDepartment.id}`, updatedDepartment);
-            const updatedDepartments = departments.map(dept => dept.id === updatedDepartment.id ? response.data : dept);
-            setDepartments(updatedDepartments);
-            setFilteredDepartments(updatedDepartments);
-        } catch (error) {
-            console.error('Error editing department:', error);
-        }
+    const handleEditDepartment = (updatedDepartment: Department) => {
+        editDepartmentMutation.mutate(updatedDepartment);
+        setIsEditDialogOpen(false);
     };
 
-    const handleDeleteDepartment = async (departmentId: number) => {
-        try {
-            await axios.delete(`${import.meta.env.VITE_BASE_API}/api/department/${departmentId}`);
-            const updatedDepartments = departments.filter(dept => dept.id !== departmentId);
-            setDepartments(updatedDepartments);
-            setFilteredDepartments(updatedDepartments);
-        } catch (error) {
-            console.error('Error deleting department:', error);
-        }
+    const handleDeleteDepartment = (departmentId: number) => {
+        deleteDepartmentMutation.mutate(departmentId);
     };
 
     const handleEditClick = (department: { id: number; name: string }) => {
@@ -93,7 +94,7 @@ export default function DepartmentList() {
         <div className="p-4 space-y-4">
             {isViewing && viewData ? (
                 <ViewDepartment
-                    department={viewData.department}
+                    departmentId={viewData.department.id}
                     onBack={handleBack}
                 />
             ) : (

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import axios from 'axios'; // Import axios
+import { useQueryClient } from '@tanstack/react-query'; // Import useQueryClient
 
 interface AddDepartmentDialogProps {
     isOpen: boolean;
@@ -14,6 +15,7 @@ interface AddDepartmentDialogProps {
 export default function AddDepartmentDialog({ isOpen, onClose, onAdd }: AddDepartmentDialogProps) {
     const [name, setName] = useState('');
     const [teamLeader, setTeamLeader] = useState('');
+    const queryClient = useQueryClient(); // Initialize queryClient
 
     const handleAdd = async () => {
         if (name.trim() && teamLeader.trim()) {
@@ -23,13 +25,14 @@ export default function AddDepartmentDialog({ isOpen, onClose, onAdd }: AddDepar
                 toast.success('Department added successfully!');
                 setName('');
                 setTeamLeader('');
+                queryClient.invalidateQueries({ queryKey: ['departments'] }); // Invalidate the department query
                 onClose();
             } catch (error) {
-                toast.error('Failed to add department.');
+                toast.error('Error adding department.');
                 console.error('Error adding department:', error);
             }
         } else {
-            toast.error('Please fill out all required fields.');
+            toast.error('Please fill out all fields.');
         }
     };
 
@@ -40,28 +43,20 @@ export default function AddDepartmentDialog({ isOpen, onClose, onAdd }: AddDepar
                     <DialogTitle>Add Department</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-white">Department Name</label>
-                        <Input
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            className="mt-2"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-white">Team Leader</label>
-                        <Input
-                            type="text"
-                            value={teamLeader}
-                            onChange={(e) => setTeamLeader(e.target.value)}
-                            className="mt-2"
-                        />
-                    </div>
+                    <Input
+                        placeholder="Department Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                    <Input
+                        placeholder="Team Leader"
+                        value={teamLeader}
+                        onChange={(e) => setTeamLeader(e.target.value)}
+                    />
                 </div>
                 <DialogFooter>
-                    <Button variant="outline" onClick={onClose}>Cancel</Button>
                     <Button onClick={handleAdd}>Add</Button>
+                    <Button variant="outline" onClick={onClose}>Cancel</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

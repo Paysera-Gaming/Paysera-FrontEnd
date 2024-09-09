@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Department } from './types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,13 +15,23 @@ interface SearchBarProps {
 export default function SearchBar({ searchTerm, setSearchTerm, departments, setFilteredDepartments }: SearchBarProps) {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
+    useEffect(() => {
+        setFilteredDepartments(departments);
+    }, [departments, setFilteredDepartments]);
+
+    useEffect(() => {
+        if (searchTerm === '') {
+            setFilteredDepartments(departments);
+        } else {
+            const filtered = departments.filter(department =>
+                department.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setFilteredDepartments(filtered);
+        }
+    }, [searchTerm, departments, setFilteredDepartments]);
+
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setSearchTerm(value);
-        const filtered = departments.filter(department =>
-            department.name.toLowerCase().includes(value.toLowerCase())
-        );
-        setFilteredDepartments(filtered);
+        setSearchTerm(event.target.value);
     };
 
     const handleAddDepartment = () => {

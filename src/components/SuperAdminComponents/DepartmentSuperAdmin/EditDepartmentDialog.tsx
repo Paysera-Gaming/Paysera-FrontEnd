@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query'; // Import useQueryClient
 
 interface EditDepartmentDialogProps {
     isOpen: boolean;
@@ -16,6 +17,7 @@ interface EditDepartmentDialogProps {
 
 export default function EditDepartmentDialog({ isOpen, onClose, onEdit, department }: EditDepartmentDialogProps) {
     const [name, setName] = useState(department?.name || '');
+    const queryClient = useQueryClient(); // Initialize queryClient
 
     useEffect(() => {
         if (department) {
@@ -33,6 +35,7 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                 await axios.put(`${import.meta.env.VITE_BASE_API}/api/department/${department.id}`, updatedDepartment);
                 onEdit(updatedDepartment);
                 toast.success('Department edited successfully!');
+                queryClient.invalidateQueries({ queryKey: ['departments'] }); // Invalidate the department query
                 onClose();
             } catch (error) {
                 toast.error('Failed to edit department.');
