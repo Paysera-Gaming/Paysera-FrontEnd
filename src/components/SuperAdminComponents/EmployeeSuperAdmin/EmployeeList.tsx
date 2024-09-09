@@ -12,7 +12,7 @@ interface Employee {
   username: string;
   firstName: string;
   lastName: string;
-  middleName: string;
+  middleName?: string; // Make middleName optional
   accessLevel: string;
   isActive: boolean;
 }
@@ -35,14 +35,20 @@ const EmployeeList: React.FC = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
 
   const addEmployeeMutation = useMutation({
-    mutationFn: (newEmployee: Employee) => axios.post(import.meta.env.VITE_BASE_API + '/api/employee', newEmployee),
+    mutationFn: (newEmployee: Employee) => axios.post(import.meta.env.VITE_BASE_API + '/api/employee', {
+      ...newEmployee,
+      middleName: newEmployee.middleName || "", // Handle optional middle name
+    }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
     },
   });
 
   const editEmployeeMutation = useMutation({
-    mutationFn: (updatedEmployee: Employee) => axios.put(`${import.meta.env.VITE_BASE_API}/api/employee/${updatedEmployee.id}`, updatedEmployee),
+    mutationFn: (updatedEmployee: Employee) => axios.put(`${import.meta.env.VITE_BASE_API}/api/employee/${updatedEmployee.id}`, {
+      ...updatedEmployee,
+      middleName: updatedEmployee.middleName || "", // Handle optional middle name
+    }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
     },
@@ -75,7 +81,7 @@ const EmployeeList: React.FC = () => {
     .filter((emp: Employee) =>
       emp.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       emp.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      emp.middleName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (emp.middleName && emp.middleName.toLowerCase().includes(searchTerm.toLowerCase())) ||
       emp.username.toLowerCase().includes(searchTerm.toLowerCase())
     );
 

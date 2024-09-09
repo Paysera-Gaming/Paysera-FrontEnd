@@ -54,7 +54,7 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
       username: employee.username,
       firstName: employee.firstName,
       lastName: employee.lastName,
-      middleName: employee.middleName,
+      middleName: employee.middleName || "", // Handle optional middle name
       password: "",
       confirmPassword: "",
     },
@@ -65,7 +65,7 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
     if (values.username) updatedFields.username = values.username;
     if (values.firstName) updatedFields.firstName = values.firstName;
     if (values.lastName) updatedFields.lastName = values.lastName;
-    if (values.middleName) updatedFields.middleName = values.middleName;
+    updatedFields.middleName = values.middleName || ""; // Handle optional middle name
     if (values.password) updatedFields.passwordCredentials = values.password;
 
     try {

@@ -53,7 +53,7 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
       username: "", // Added default value for username
       firstName: "",
       lastName: "",
-      middleName: "",
+      middleName: "", // Default value for middle name
       password: "",
       confirmPassword: "",
       accessLevel: "EMPLOYEE", // Default access level
@@ -67,7 +67,7 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
           username: values.username, // Added username to the payload
           firstName: values.firstName,
           lastName: values.lastName,
-          middleName: values.middleName || "",
+          middleName: values.middleName || "N/A", // Set middle name to "N/A" if not provided
           passwordCredentials: values.password,
           accessLevel: values.accessLevel, // Added access level to the payload
           isActive: true, // Assuming the employee is active by default
@@ -90,7 +90,7 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
       username: "",
       firstName: "",
       lastName: "",
-      middleName: "",
+      middleName: "", // Reset middle name to default
       password: "",
       confirmPassword: "",
       accessLevel: "EMPLOYEE", // Reset access level to default

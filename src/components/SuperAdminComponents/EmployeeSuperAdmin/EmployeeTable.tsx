@@ -14,7 +14,7 @@ interface Employee {
     username: string; // Added username field
     firstName: string;
     lastName: string;
-    middleName: string;
+    middleName?: string; // Make middleName optional
     isActive: boolean;
 }
 
@@ -56,7 +56,10 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
         if (!selectedEmployee) return;
 
         try {
-            await axios.put(`${import.meta.env.VITE_BASE_API}/api/employee/${selectedEmployee.id}`, values);
+            await axios.put(`${import.meta.env.VITE_BASE_API}/api/employee/${selectedEmployee.id}`, {
+                ...values,
+                middleName: values.middleName || "", // Handle optional middle name
+            });
             toast.success(`Successfully edited ${selectedEmployee.firstName} ${selectedEmployee.lastName}`);
             setIsEditDialogOpen(false);
             queryClient.invalidateQueries({ queryKey: ['employees'] }); // Invalidate the employee query
@@ -91,7 +94,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                                             color={emp.isActive ? 'green' : 'red'}
                                             fill={emp.isActive ? 'green' : 'red'}
                                         />
-                                        {`${emp.lastName}, ${emp.firstName} ${emp.middleName}`}
+                                        {`${emp.lastName}, ${emp.firstName} ${emp.middleName || ""}`} {/* Handle optional middle name */}
                                     </div>
                                 </TableCell>
                                 <TableCell>{emp.username}</TableCell> {/* Display Username */}
