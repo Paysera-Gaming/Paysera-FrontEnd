@@ -16,6 +16,7 @@ interface Employee {
     lastName: string;
     middleName?: string; // Make middleName optional
     isActive: boolean;
+    accessLevel: 'EMPLOYEE' | 'TEAM_LEADER' | 'ADMIN'; // Added accessLevel field
 }
 
 interface EmployeeTableProps {
@@ -80,6 +81,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                             <TableHead>Full Name</TableHead>
                             <TableHead>Username</TableHead> {/* Added Username column */}
                             <TableHead>Status</TableHead>
+                            <TableHead>Access Level</TableHead> {/* Added Access Level column */}
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -98,6 +100,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                                 </TableCell>
                                 <TableCell>{emp.username}</TableCell> {/* Display Username */}
                                 <TableCell>{emp.isActive ? 'Online' : 'Offline'}</TableCell>
+                                <TableCell>{emp.accessLevel}</TableCell> {/* Display Access Level */}
                                 <TableCell>
                                     <div className="flex gap-2">
                                         <Button variant="outline" size="sm" onClick={() => handleEditClick(emp)}>

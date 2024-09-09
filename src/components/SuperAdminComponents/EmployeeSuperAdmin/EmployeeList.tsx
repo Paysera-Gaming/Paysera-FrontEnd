@@ -6,16 +6,7 @@ import SummaryCards from './SummaryCards';
 import EmployeeTable from './EmployeeTable';
 import EmployeeForm from './EmployeeForm';
 import EmployeeEdit from './EmployeeEdit';
-
-interface Employee {
-  id: number;
-  username: string;
-  firstName: string;
-  lastName: string;
-  middleName?: string; // Make middleName optional
-  accessLevel: string;
-  isActive: boolean;
-}
+import { Employee } from './types'; // Import the shared Employee type
 
 const fetchEmployees = async (): Promise<Employee[]> => {
   const response = await axios.get(import.meta.env.VITE_BASE_API + '/api/employee');
