@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { useQueryClient } from '@tanstack/react-query'; // Import useQueryClient
+import { useQueryClient } from '@tanstack/react-query';
 
 interface EditDepartmentDialogProps {
     isOpen: boolean;
@@ -17,7 +17,7 @@ interface EditDepartmentDialogProps {
 
 export default function EditDepartmentDialog({ isOpen, onClose, onEdit, department }: EditDepartmentDialogProps) {
     const [name, setName] = useState(department?.name || '');
-    const queryClient = useQueryClient(); // Initialize queryClient
+    const queryClient = useQueryClient();
 
     useEffect(() => {
         if (department) {
@@ -32,11 +32,16 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                 name,
             };
             try {
-                await axios.put(`${import.meta.env.VITE_BASE_API}/api/department/${department.id}`, updatedDepartment);
-                onEdit(updatedDepartment);
-                toast.success('Department edited successfully!');
-                queryClient.invalidateQueries({ queryKey: ['departments'] }); // Invalidate the department query
-                onClose();
+                const response = await axios.put(`${import.meta.env.VITE_BASE_API}/api/department/${department.id}`, updatedDepartment);
+                if (response.status === 200) {
+                    onEdit(updatedDepartment);
+                    toast.success('Department edited successfully!');
+                    queryClient.invalidateQueries({ queryKey: ['departments'] });
+                    onClose();
+                } else {
+                    toast.error('Failed to edit department.');
+                    console.error('Error editing department:', response);
+                }
             } catch (error) {
                 toast.error('Failed to edit department.');
                 console.error('Error editing department:', error);
@@ -53,7 +58,11 @@ export default function EditDepartmentDialog({ isOpen, onClose, onEdit, departme
                 <div>
                     <div className="mb-4">
                         <Label htmlFor="name">Department Name</Label>
-                        <Input id="name" value={name} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
+                        <Input
+                            id="name"
+                            value={name}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                        />
                     </div>
                 </div>
                 <DialogFooter>
