@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 interface DepartmentTableProps {
     departments: Department[];
     onEditClick: (department: { id: number; name: string; teamLeader: Employee | null; teamMembers: Employee[] }) => void;
-    onViewClick: (departmentId: number, teamId: number) => void;
+    onViewClick: (departmentId: number) => void;
     onDeleteClick: (departmentId: number) => void;
 }
 
@@ -55,8 +55,8 @@ export default function DepartmentTable({ departments, onEditClick, onViewClick,
                     </TableHeader>
                     <TableBody>
                         {departments.map((dept) =>
-                            (dept.DepartmentSchedule || []).map((team) => (
-                                <TableRow key={team.id}>
+                            (
+                                <TableRow key={dept.id}>
                                     <TableCell>{dept.name}</TableCell>
                                     <TableCell>
                                         {dept.Leader ? (
@@ -85,14 +85,14 @@ export default function DepartmentTable({ departments, onEditClick, onViewClick,
                                                 <Trash2 size={16} />
                                                 Delete
                                             </Button>
-                                            <Button variant="outline" size="sm" onClick={() => onViewClick(dept.id, team.id)}>
+                                            <Button variant="outline" size="sm" onClick={() => onViewClick(dept.id)}>
                                                 <Eye size={16} />
                                                 View
                                             </Button>
                                         </div>
                                     </TableCell>
                                 </TableRow>
-                            ))
+                            )
                         )}
                     </TableBody>
                 </Table>

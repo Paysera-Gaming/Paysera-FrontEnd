@@ -10,7 +10,7 @@ interface ViewDepartmentProps {
     onBack: () => void;
 }
 
-export default function ViewDepartment({ department, team, onBack }: ViewDepartmentProps) {
+export default function ViewDepartment({ department, onBack }: ViewDepartmentProps) {
     const renderFullName = (member: TeamMember) => {
         return `${member.lastName}, ${member.firstName} ${member.middleName ?? ''}`;
     };
@@ -18,7 +18,7 @@ export default function ViewDepartment({ department, team, onBack }: ViewDepartm
     return (
         <>
             {/* Use the ViewSummaryCards component */}
-            <ViewSummaryCards team={team} />
+            <ViewSummaryCards team={department} />
             <Card>
                 <CardHeader>
                     <CardTitle>{department.name}</CardTitle>

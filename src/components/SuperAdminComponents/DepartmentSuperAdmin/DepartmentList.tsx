@@ -7,7 +7,6 @@ import AddDepartmentDialog from './AddDepartmentDialog';
 import EditDepartmentDialog from './EditDepartmentDialog';
 import ViewDepartment from './ViewDepartment';
 import { Department, Employee, Team } from './types';
-import { Button } from '@/components/ui/button'; // Adjust the import path based on your project structure
 
 export default function DepartmentList() {
     const [departments, setDepartments] = useState<Department[]>([]);
@@ -16,7 +15,7 @@ export default function DepartmentList() {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
-    const [viewData, setViewData] = useState<{ department: Department; team: Team } | null>(null);
+    const [viewData, setViewData] = useState<{ department: Department} | null>(null);
     const [isViewing, setIsViewing] = useState(false);
 
     useEffect(() => {
@@ -39,8 +38,9 @@ export default function DepartmentList() {
     const handleAddDepartment = async (newDepartment: { name: string; teamLeader: string }) => {
         try {
             const response = await axios.post(`${import.meta.env.VITE_BASE_API}/api/department`, newDepartment);
-            setDepartments([...departments, response.data]);
-            setFilteredDepartments([...departments, response.data]);
+            const addedDepartment = response.data;
+            setDepartments(prevDepartments => [...prevDepartments, addedDepartment]);
+            setFilteredDepartments(prevDepartments => [...prevDepartments, addedDepartment]);
         } catch (error) {
             console.error('Error adding department:', error);
         }
@@ -76,11 +76,10 @@ export default function DepartmentList() {
         }
     };
 
-    const handleViewClick = async (departmentId: number, teamId: number) => {
+    const handleViewClick = async (departmentId: number) => {
         try {
             const departmentResponse = await axios.get(`${import.meta.env.VITE_BASE_API}/api/department/${departmentId}`);
-            const teamResponse = await axios.get(`${import.meta.env.VITE_BASE_API}/api/team/${teamId}`);
-            setViewData({ department: departmentResponse.data, team: teamResponse.data });
+            setViewData({ department: departmentResponse.data });
             setIsViewing(true);
         } catch (error) {
             console.error('Error fetching department and team:', error);
@@ -96,7 +95,6 @@ export default function DepartmentList() {
             {isViewing && viewData ? (
                 <ViewDepartment
                     department={viewData.department}
-                    team={viewData.team}
                     onBack={handleBack}
                 />
             ) : (
@@ -116,14 +114,13 @@ export default function DepartmentList() {
                             departments={filteredDepartments}
                             onEditClick={handleEditClick}
                             onViewClick={handleViewClick}
-                            onDeleteClick={handleDeleteDepartment} // Add delete click handler
+                            onDeleteClick={handleDeleteDepartment}
                         />
                     ) : (
                         <div className="text-center text-gray-500 dark:text-gray-400">
                             {`No results found for "${searchTerm}"`}
                         </div>
                     )}
-                    <Button onClick={() => setIsAddDialogOpen(true)}>Add Department</Button>
                     <AddDepartmentDialog
                         isOpen={isAddDialogOpen}
                         onClose={() => setIsAddDialogOpen(false)}
