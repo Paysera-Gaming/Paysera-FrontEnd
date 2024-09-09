@@ -27,6 +27,7 @@ export default function DepartmentTable({ departments, onEditClick, onViewClick,
                 await axios.delete(`${import.meta.env.VITE_BASE_API}/api/department/${selectedDepartment.id}`);
                 toast.success(`Successfully deleted ${selectedDepartment.name}`);
                 queryClient.invalidateQueries({ queryKey: ['departments'] }); // Invalidate the department query
+                onDeleteClick(selectedDepartment.id);
             } catch (error) {
                 toast.error(`Failed to delete ${selectedDepartment.name}`);
                 console.error('Error deleting department:', error);
@@ -80,7 +81,6 @@ export default function DepartmentTable({ departments, onEditClick, onViewClick,
                                         <Button variant="outline" size="sm" color="red" onClick={() => {
                                             setSelectedDepartment(dept);
                                             setIsDialogOpen(true);
-                                            onDeleteClick(dept.id);
                                         }}>
                                             <Trash2 size={16} />
                                             Delete
