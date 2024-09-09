@@ -1,10 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import axios from 'axios'; // Import axios
-import { useQueryClient } from '@tanstack/react-query'; // Import useQueryClient
+import axios from 'axios';
+import { useQueryClient } from '@tanstack/react-query';
+
+interface Employee {
+    id: number;
+    firstName: string;
+    lastName: string;
+    middleName?: string;
+}
 
 interface AddDepartmentDialogProps {
     isOpen: boolean;
@@ -15,7 +22,22 @@ interface AddDepartmentDialogProps {
 export default function AddDepartmentDialog({ isOpen, onClose, onAdd }: AddDepartmentDialogProps) {
     const [name, setName] = useState('');
     const [teamLeader, setTeamLeader] = useState('');
-    const queryClient = useQueryClient(); // Initialize queryClient
+    const [employees, setEmployees] = useState<Employee[]>([]);
+    const queryClient = useQueryClient();
+
+    useEffect(() => {
+        const fetchEmployees = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_BASE_API}/api/employee`);
+                setEmployees(response.data);
+            } catch (error) {
+                toast.error('Error fetching employees.');
+                console.error('Error fetching employees:', error);
+            }
+        };
+
+        fetchEmployees();
+    }, []);
 
     const handleAdd = async () => {
         if (name.trim() && teamLeader.trim()) {
@@ -25,7 +47,7 @@ export default function AddDepartmentDialog({ isOpen, onClose, onAdd }: AddDepar
                 toast.success('Department added successfully!');
                 setName('');
                 setTeamLeader('');
-                queryClient.invalidateQueries({ queryKey: ['departments'] }); // Invalidate the department query
+                queryClient.invalidateQueries({ queryKey: ['departments'] });
                 onClose();
             } catch (error) {
                 toast.error('Error adding department.');
@@ -38,25 +60,33 @@ export default function AddDepartmentDialog({ isOpen, onClose, onAdd }: AddDepar
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent>
+            <DialogContent className="bg-white dark:bg-gray-800">
                 <DialogHeader>
-                    <DialogTitle>Add Department</DialogTitle>
+                    <DialogTitle className="text-gray-900 dark:text-gray-100">Add Department</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                     <Input
                         placeholder="Department Name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        className="w-full p-2 border rounded dark:bg-gray-700 dark:text-gray-100"
                     />
-                    <Input
-                        placeholder="Team Leader"
+                    <select
                         value={teamLeader}
-                        onChange={(e) => setTeamLeader(e.target.value)}
-                    />
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTeamLeader(e.target.value)}
+                        className="w-full p-2 border rounded dark:bg-gray-700 dark:text-gray-100"
+                    >
+                        <option value="" disabled>Select Team Leader</option>
+                        {employees.map((employee) => (
+                            <option key={employee.id} value={employee.id.toString()}>
+                                {`${employee.lastName}, ${employee.firstName} ${employee.middleName ?? ''}`}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <DialogFooter>
-                    <Button onClick={handleAdd}>Add</Button>
-                    <Button variant="outline" onClick={onClose}>Cancel</Button>
+                    <Button onClick={handleAdd} className="bg-blue-500 text-white dark:bg-blue-700">Add</Button>
+                    <Button variant="outline" onClick={onClose} className="border-gray-300 text-gray-700 dark:border-gray-600 dark:text-gray-300">Cancel</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
