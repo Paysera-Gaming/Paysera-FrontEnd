@@ -72,7 +72,7 @@ export function AttendanceTable<TData, TValue>({
 	}
 
 	return (
-		<div className="w-full flex items-center justify-center flex-col gap-4 mt-1">
+		<div className=" w-full flex items-center justify-center flex-col gap-4 mt-1">
 			<div className="w-full flex items-center justify-between">
 				<div className="flex items-center justify-center">
 					<DatePicker updateParentState={checkDate}></DatePicker>
@@ -118,7 +118,7 @@ export function AttendanceTable<TData, TValue>({
 				</div>
 			</div>
 
-			<ScrollArea className=" md:w-[500px] lg:w-[950px] lg:h-[300px] md:h-[250px]  whitespace-nowrap rounded-md border">
+			<ScrollArea className="2xl:w-[1600px] md:w-[500px] lg:w-[950px] lg:h-[300px] md:h-[250px]  whitespace-nowrap rounded-md border">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (

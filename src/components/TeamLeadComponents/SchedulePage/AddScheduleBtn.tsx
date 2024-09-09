@@ -32,7 +32,7 @@ export default function AddScheduleBtn() {
 				</AlertDialogHeader>
 				{/* form here */}
 
-				<ScheduleForm></ScheduleForm>
+				<ScheduleForm updateParentState={setAlert}></ScheduleForm>
 			</AlertDialogContent>
 		</AlertDialog>
 	);

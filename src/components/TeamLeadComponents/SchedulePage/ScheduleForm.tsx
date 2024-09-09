@@ -38,7 +38,13 @@ const formSchema = z.object({
 	allowedOverTime: z.boolean(),
 });
 
-export default function ScheduleForm() {
+interface IScheduleFormProps {
+	updateParentState: (value: boolean) => void;
+}
+
+export default function ScheduleForm({
+	updateParentState,
+}: IScheduleFormProps) {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -52,6 +58,7 @@ export default function ScheduleForm() {
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
 		console.log(values);
+		updateParentState(false);
 	}
 
 	return (
@@ -215,7 +222,13 @@ export default function ScheduleForm() {
 					/>
 
 					<div className="col-span-2 flex items-center justify-end gap-2">
-						<Button variant={'outline'} type="button">
+						<Button
+							onClick={() => {
+								updateParentState(false);
+							}}
+							variant={'outline'}
+							type="button"
+						>
 							Cancel
 						</Button>
 						<Button type="submit">Submit</Button>

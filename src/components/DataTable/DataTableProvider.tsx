@@ -113,7 +113,7 @@ export function DataTable<TData, TValue>({
 				</div>
 			</div>
 
-			<ScrollArea className=" md:w-[500px] lg:w-[950px] lg:h-[300px] md:h-[250px]  whitespace-nowrap rounded-md border">
+			<ScrollArea className=" 2xl:w-[1600px] md:w-[500px] lg:w-[950px] lg:h-[300px] md:h-[250px]  whitespace-nowrap rounded-md border">
 				<Table className="relative min-w-full ">
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
