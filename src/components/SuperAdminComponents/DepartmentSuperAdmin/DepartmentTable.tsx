@@ -42,32 +42,32 @@ export default function DepartmentTable({ departments, onEditClick, onViewClick,
                 <CardTitle>Department List</CardTitle>
             </CardHeader>
             <CardContent>
-                <Table className="min-w-full divide-y divide-gray-200">
-                    <TableHeader className="bg-gray-50">
+                <Table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <TableHeader className="bg-gray-50 dark:bg-transparent">
                         <TableRow>
-                            <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</TableHead>
-                            <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team Leader</TableHead>
-                            <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team Members</TableHead>
-                            <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</TableHead>
+                            <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Department</TableHead>
+                            <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Team Leader</TableHead>
+                            <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Team Members</TableHead>
+                            <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TableBody className="bg-white divide-y divide-gray-200">
+                    <TableBody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-gray-700">
                         {departments.map((dept) => (
-                            <TableRow key={dept.id}>
-                                <TableCell className="px-6 py-4 whitespace-nowrap">{dept.name}</TableCell>
-                                <TableCell className="px-6 py-4 whitespace-nowrap">
+                            <TableRow key={dept.id} className="hover:bg-gray-100 dark:hover:bg-gray-800">
+                                <TableCell className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{dept.name}</TableCell>
+                                <TableCell className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">
                                     {dept.Leader ? (
                                         `${dept.Leader.lastName}, ${dept.Leader.firstName} ${dept.Leader.middleName ?? ''}`
                                     ) : (
                                         'No Leader'
                                     )}
                                 </TableCell>
-                                <TableCell className="px-6 py-4 whitespace-nowrap">
+                                <TableCell className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">
                                     {dept.Employees.length > 3
                                         ? `${dept.Employees.slice(0, 3).map(member => `${member.firstName} ${member.lastName}`).join(', ')} and ${dept.Employees.length - 3} more`
                                         : dept.Employees.map(member => `${member.firstName} ${member.lastName}`).join(', ')}
                                 </TableCell>
-                                <TableCell className="px-6 py-4 whitespace-nowrap">
+                                <TableCell className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">
                                     <div className="flex gap-2">
                                         <Button variant="outline" size="sm" onClick={() => onEditClick({
                                             id: dept.id,
