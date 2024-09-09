@@ -2,7 +2,7 @@
 
 // zod
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import axios from 'axios';
 
@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
 
 // TanStack Query
 import { useQueryClient } from '@tanstack/react-query';
@@ -38,6 +39,7 @@ const formSchema = z.object({
   confirmPassword: z.string().optional().refine((val) => (val ?? "") === "" || (val ?? "").length >= 8, {
     message: "Confirm password must be at least 8 characters.",
   }),
+  accessLevel: z.enum(["TEAM_LEADER", "EMPLOYEE", "ADMIN"], { required_error: "Access level is required." }).optional(), // Added access level field
 }).refine((data) => data.password === data.confirmPassword || data.password === "" || data.confirmPassword === "", {
   message: "Passwords don't match",
   path: ["confirmPassword"],
@@ -57,6 +59,7 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
       middleName: employee.middleName || "N/A", // Handle optional middle name
       password: "",
       confirmPassword: "",
+      accessLevel: employee.accessLevel || "EMPLOYEE", // Default access level
     },
   });
 
@@ -67,6 +70,7 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
     if (values.lastName) updatedFields.lastName = values.lastName;
     updatedFields.middleName = values.middleName || "N/A"; // Handle optional middle name
     if (values.password) updatedFields.passwordCredentials = values.password;
+    if (values.accessLevel) updatedFields.accessLevel = values.accessLevel; // Handle access level
 
     try {
       const response = await axios.put(`${import.meta.env.VITE_BASE_API}/api/employee/${employee.id}`, {
@@ -187,6 +191,40 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
                         <FormLabel>Confirm Password</FormLabel>
                         <FormControl>
                           <Input type="password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col space-y-2">
+                <h2 className="text-lg font-semibold">Part 3: Access Level</h2>
+                <div className="flex space-x-4">
+                  <FormField
+                    control={form.control}
+                    name="accessLevel"
+                    render={() => (
+                      <FormItem>
+                        <FormLabel>Access Level</FormLabel>
+                        <FormControl>
+                          <Controller
+                            control={form.control}
+                            name="accessLevel"
+                            render={({ field }) => (
+                              <Select onValueChange={field.onChange} value={field.value}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select Access Level" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="EMPLOYEE">Employee</SelectItem>
+                                  <SelectItem value="TEAM_LEADER">Team Leader</SelectItem>
+                                  <SelectItem value="ADMIN">Admin</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            )}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
