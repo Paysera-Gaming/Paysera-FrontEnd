@@ -64,7 +64,6 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
             setIsEditDialogOpen(false);
             queryClient.invalidateQueries({ queryKey: ['employees'] }); // Invalidate the employee query
         } catch (error) {
-            toast.error('Error editing the employee.');
             console.error('Error editing the employee:', error);
         }
     };

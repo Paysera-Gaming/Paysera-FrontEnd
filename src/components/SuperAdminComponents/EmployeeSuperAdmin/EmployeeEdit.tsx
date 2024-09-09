@@ -54,7 +54,7 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
       username: employee.username,
       firstName: employee.firstName,
       lastName: employee.lastName,
-      middleName: employee.middleName || "", // Handle optional middle name
+      middleName: employee.middleName || "N/A", // Handle optional middle name
       password: "",
       confirmPassword: "",
     },
@@ -65,7 +65,7 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
     if (values.username) updatedFields.username = values.username;
     if (values.firstName) updatedFields.firstName = values.firstName;
     if (values.lastName) updatedFields.lastName = values.lastName;
-    updatedFields.middleName = values.middleName || ""; // Handle optional middle name
+    updatedFields.middleName = values.middleName || "N/A"; // Handle optional middle name
     if (values.password) updatedFields.passwordCredentials = values.password;
 
     try {
@@ -73,17 +73,18 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
         ...updatedFields,
         isActive: true,
       });
-      
-      onSubmit(response.data);
-      queryClient.invalidateQueries({ queryKey: ['employees'] }); // Invalidate the employee query
-      handleClose();
+
+      if (response.status === 200) {
+        toast.success(`Successfully edited ${employee.firstName} ${employee.lastName}`);
+        onSubmit(response.data);
+        queryClient.invalidateQueries({ queryKey: ['employees'] }); // Invalidate the employee query
+        handleClose();
+      }
     } catch (error) {
       if ((error as any).response && (error as any).response.status === 400) {
         toast.error('Invalid employee ID.');
-      } else {
-        toast.error('Error updating the employee.');
       }
-      console.error('Error updating the employee:', error);
+      console.error('Error editing the employee:', error);
     }
   }
 
