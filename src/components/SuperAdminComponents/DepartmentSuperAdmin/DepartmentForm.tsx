@@ -83,18 +83,18 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
           placeholder="Department Name"
           value={departmentName}
           onChange={(e) => setDepartmentName(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+          className="w-full p-2 border border-gray-300 rounded dark:bg-transparent dark:border-gray-700 dark:text-white"
         />
       </div>
       <div className="mb-2">
         <select
           value={departmentLeaderId ?? ''}
           onChange={(e) => setDepartmentLeaderId(Number(e.target.value))}
-          className="w-full p-2 border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+          className="w-full p-2 border border-gray-300 rounded dark:bg-transparent dark:border-gray-700 dark:text-white"
         >
-          <option value="" disabled>Select Team Leader</option>
+          <option value="" disabled className="dark:bg-transparent dark:text-white">Select Team Leader</option>
           {availableTeamLeaders.map((leader: Leader) => (
-            <option key={leader.id} value={leader.id}>
+            <option key={leader.id} value={leader.id} className="dark:bg-transparent dark:text-white">
               {leader.firstName} {leader.lastName}
             </option>
           ))}
