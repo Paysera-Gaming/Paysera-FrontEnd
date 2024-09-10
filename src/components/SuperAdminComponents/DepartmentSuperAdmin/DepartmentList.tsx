@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import { Eye, Edit, Trash } from 'lucide-react';
 
 const DepartmentList: React.FC = () => {
   const queryClient = useQueryClient();
@@ -132,7 +133,7 @@ const DepartmentList: React.FC = () => {
                               <>
                                 {department.Employees.slice(0, 3).map((employee) => (
                                   <span key={employee.id} className="block">
-                                    {employee.firstName} {employee.lastName} - {employee.role === 'Team Leader' ? 'Team Leader' : employee.role}
+                                    {employee.firstName} {employee.lastName}
                                   </span>
                                 ))}
                                 {department.Employees.length > 3 && <span>etc.</span>}
@@ -147,20 +148,20 @@ const DepartmentList: React.FC = () => {
                               variant="outline"
                               className="mr-2"
                             >
-                              View
+                              <Eye className="w-4 h-4 mr-1" /> View
                             </Button>
                             <Button
                               onClick={() => handleEditDepartment(department)}
                               variant="outline"
                               className="mr-2"
                             >
-                              Edit
+                              <Edit className="w-4 h-4 mr-1" /> Edit
                             </Button>
                             <Button
                               onClick={() => handleDeleteDepartment(department)}
                               variant="outline"
                             >
-                              Delete
+                              <Trash className="w-4 h-4 mr-1" /> Delete
                             </Button>
                           </td>
                         </tr>
