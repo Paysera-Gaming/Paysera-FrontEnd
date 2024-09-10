@@ -48,10 +48,31 @@ const DepartmentList: React.FC = () => {
 
   const [newDepartmentName, setNewDepartmentName] = useState('');
   const [newDepartmentLeaderId, setNewDepartmentLeaderId] = useState<number | null>(null);
+  const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
 
   const addDepartmentMutation = useMutation({
     mutationFn: async (newDepartment: { name: string; leaderId: number }) => {
       const response = await axios.post(`${import.meta.env.VITE_BASE_API}/api/department`, newDepartment);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['departments'] });
+    },
+  });
+
+  const updateDepartmentMutation = useMutation({
+    mutationFn: async (updatedDepartment: { id: number; name: string }) => {
+      const response = await axios.put(`${import.meta.env.VITE_BASE_API}/api/department/${updatedDepartment.id}`, { name: updatedDepartment.name });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['departments'] });
+    },
+  });
+
+  const updateDepartmentLeaderMutation = useMutation({
+    mutationFn: async (updatedLeader: { id: number; leaderId: number }) => {
+      const response = await axios.put(`${import.meta.env.VITE_BASE_API}/api/department/${updatedLeader.id}/leader`, { leaderId: updatedLeader.leaderId });
       return response.data;
     },
     onSuccess: () => {
@@ -80,6 +101,29 @@ const DepartmentList: React.FC = () => {
     setNewDepartmentLeaderId(null);
   };
 
+  const handleEditDepartment = (department: Department) => {
+    setEditingDepartment(department);
+    setNewDepartmentName(department.name);
+    setNewDepartmentLeaderId(department.leaderId);
+  };
+
+  const handleUpdateDepartment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editingDepartment && newDepartmentName && newDepartmentLeaderId !== null) {
+      updateDepartmentMutation.mutate({
+        id: editingDepartment.id,
+        name: newDepartmentName,
+      });
+      updateDepartmentLeaderMutation.mutate({
+        id: editingDepartment.id,
+        leaderId: newDepartmentLeaderId,
+      });
+      setEditingDepartment(null);
+      setNewDepartmentName('');
+      setNewDepartmentLeaderId(null);
+    }
+  };
+
   const handleDeleteDepartment = (id: number) => {
     deleteDepartmentMutation.mutate(id);
   };
@@ -87,7 +131,7 @@ const DepartmentList: React.FC = () => {
   return (
     <div className="container mx-auto p-4 dark:text-white">
       <h1 className="text-2xl font-bold mb-4">Department List</h1>
-      <form onSubmit={handleAddDepartment} className="mb-4">
+      <form onSubmit={editingDepartment ? handleUpdateDepartment : handleAddDepartment} className="mb-4">
         <div className="mb-2">
           <input
             type="text"
@@ -112,8 +156,21 @@ const DepartmentList: React.FC = () => {
           </select>
         </div>
         <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800">
-          Add Department
+          {editingDepartment ? 'Update Department' : 'Add Department'}
         </button>
+        {editingDepartment && (
+          <button
+            type="button"
+            onClick={() => {
+              setEditingDepartment(null);
+              setNewDepartmentName('');
+              setNewDepartmentLeaderId(null);
+            }}
+            className="ml-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-800"
+          >
+            Cancel
+          </button>
+        )}
       </form>
       <ul>
         {departments.map((department: Department) => (
@@ -126,7 +183,7 @@ const DepartmentList: React.FC = () => {
               {department.Employees && department.Employees.length > 0 ? (
                 department.Employees.map((employee: Employee) => (
                   <li key={employee.id}>
-                    {employee.firstName} {employee.lastName} - {employee.role}
+                    {employee.firstName} {employee.lastName} - {employee.role === 'Team Leader' ? 'Team Leader' : employee.role}
                   </li>
                 ))
               ) : (
@@ -134,10 +191,16 @@ const DepartmentList: React.FC = () => {
               )}
             </ul>
             <button
-              onClick={() => handleDeleteDepartment(department.id)}
-              className="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800"
+              onClick={() => handleEditDepartment(department)}
+              className="mt-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 dark:bg-yellow-700 dark:hover:bg-yellow-800"
             >
-              Delete Department
+              Edit
+            </button>
+            <button
+              onClick={() => handleDeleteDepartment(department.id)}
+              className="mt-2 ml-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800"
+            >
+              Delete
             </button>
           </li>
         ))}
