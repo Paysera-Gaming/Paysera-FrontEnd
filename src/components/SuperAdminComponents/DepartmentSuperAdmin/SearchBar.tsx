@@ -60,6 +60,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, departments, setF
                 isOpen={isAddDialogOpen}
                 onClose={() => setIsAddDialogOpen(false)}
                 onAdd={handleAddDepartment}
+                departmentId={0} // Provide a default value
             />
         </div>
     );

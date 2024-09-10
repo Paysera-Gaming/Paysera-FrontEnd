@@ -124,6 +124,7 @@ export default function DepartmentList() {
                         isOpen={isAddDialogOpen}
                         onClose={() => setIsAddDialogOpen(false)}
                         onAdd={handleAddDepartment}
+                        departmentId={selectedDepartment?.id ?? 0} // Provide a default value
                     />
                     <EditDepartmentDialog
                         isOpen={isEditDialogOpen}

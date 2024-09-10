@@ -17,14 +17,16 @@ interface AddDepartmentDialogProps {
     isOpen: boolean;
     onClose: () => void;
     onAdd: (department: { name: string; teamLeader: string }) => void;
+    departmentId?: number; // Make departmentId optional
 }
 
-export default function AddDepartmentDialog({ isOpen, onClose, onAdd }: AddDepartmentDialogProps) {
+export default function AddDepartmentDialog({ isOpen, onClose, onAdd, departmentId }: AddDepartmentDialogProps) {
     const [name, setName] = useState('');
     const [teamLeader, setTeamLeader] = useState('');
     const [employees, setEmployees] = useState<Employee[]>([]);
     const queryClient = useQueryClient();
-
+    console.log(employees);
+    console.log(teamLeader);
     useEffect(() => {
         const fetchEmployees = async () => {
             try {
@@ -42,16 +44,19 @@ export default function AddDepartmentDialog({ isOpen, onClose, onAdd }: AddDepar
     const handleAdd = async () => {
         if (name.trim() && teamLeader.trim()) {
             try {
-                const response = await axios.post(`${import.meta.env.VITE_BASE_API}/api/department`, { name, teamLeader });
-                onAdd(response.data);
-                toast.success('Department added successfully!');
+            //    console.log('teamLeader:', teamLeader);
+            //    console.log('departmentId:', departmentId);
+                    const response = await axios.post(`${import.meta.env.VITE_BASE_API}/api/department`, { name, leaderId: teamLeader });
+                    onAdd(response.data);
+                    toast.success('Department created successfully!');
+                
                 setName('');
                 setTeamLeader('');
                 queryClient.invalidateQueries({ queryKey: ['departments'] });
                 onClose();
             } catch (error) {
-                toast.error('Error adding department.');
-                console.error('Error adding department:', error);
+                toast.error('Error updating department leader.');
+                console.error('Error updating department leader:', error);
             }
         } else {
             toast.error('Please fill out all fields.');
@@ -62,7 +67,7 @@ export default function AddDepartmentDialog({ isOpen, onClose, onAdd }: AddDepar
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="bg-white dark:bg-gray-800">
                 <DialogHeader>
-                    <DialogTitle className="text-gray-900 dark:text-gray-100">Add Department</DialogTitle>
+                    <DialogTitle className="text-gray-900 dark:text-gray-100">{departmentId ? 'Update Department Leader' : 'Add Department'}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                     <Input
@@ -85,7 +90,7 @@ export default function AddDepartmentDialog({ isOpen, onClose, onAdd }: AddDepar
                     </select>
                 </div>
                 <DialogFooter>
-                    <Button onClick={handleAdd} className="bg-blue-500 text-white dark:bg-blue-700">Add</Button>
+                    <Button onClick={handleAdd} className="bg-blue-500 text-white dark:bg-blue-700">{departmentId ? 'Update' : 'Add'}</Button>
                     <Button variant="outline" onClick={onClose} className="border-gray-300 text-gray-700 dark:border-gray-600 dark:text-gray-300">Cancel</Button>
                 </DialogFooter>
             </DialogContent>

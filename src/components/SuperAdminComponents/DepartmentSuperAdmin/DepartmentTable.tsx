@@ -56,24 +56,24 @@ export default function DepartmentTable({ departments, onEditClick, onViewClick,
                             <TableRow key={dept.id} className="hover:bg-gray-100 dark:hover:bg-gray-800">
                                 <TableCell className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{dept.name}</TableCell>
                                 <TableCell className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">
-                                    {dept.Leader ? (
-                                        `${dept.Leader.lastName}, ${dept.Leader.firstName} ${dept.Leader.middleName ?? ''}`
+                                    {dept.teamLeader ? (
+                                        `${dept.teamLeader.lastName}, ${dept.teamLeader.firstName} ${dept.teamLeader.middleName ?? ''}`
                                     ) : (
                                         'No Leader'
                                     )}
                                 </TableCell>
                                 <TableCell className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">
-                                    {dept.Employees.length > 3
-                                        ? `${dept.Employees.slice(0, 3).map(member => `${member.firstName} ${member.lastName}`).join(', ')} and ${dept.Employees.length - 3} more`
-                                        : dept.Employees.map(member => `${member.firstName} ${member.lastName}`).join(', ')}
+                                    {dept.teamMembers && dept.teamMembers.length > 3
+                                        ? `${dept.teamMembers.slice(0, 3).map((member: Employee) => `${member.firstName} ${member.lastName}`).join(', ')} and ${dept.teamMembers.length - 3} more`
+                                        : dept.teamMembers && dept.teamMembers.map((member: Employee) => `${member.firstName} ${member.lastName}`).join(', ')}
                                 </TableCell>
                                 <TableCell className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">
                                     <div className="flex gap-2">
                                         <Button variant="outline" size="sm" onClick={() => onEditClick({
                                             id: dept.id,
                                             name: dept.name,
-                                            teamLeader: dept.Leader,
-                                            teamMembers: dept.Employees
+                                            teamLeader: dept.teamLeader,
+                                            teamMembers: dept.teamMembers
                                         })}>
                                             <Edit2 size={16} />
                                             Edit

@@ -49,4 +49,8 @@ export interface Department {
     Employees: Employee[];
     updatedAt: string;
     createdAt: string;
+    
+    // Adding teamLeader and teamMembers properties
+    teamLeader: Employee | null;
+    teamMembers: Employee[];
 }
