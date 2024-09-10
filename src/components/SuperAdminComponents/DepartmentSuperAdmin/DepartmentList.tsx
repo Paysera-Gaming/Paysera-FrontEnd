@@ -16,6 +16,7 @@ const DepartmentList: React.FC = () => {
 
   const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
   const [viewingDepartment, setViewingDepartment] = useState<Department | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const deleteDepartmentMutation = useMutation({
     mutationFn: deleteDepartment,
@@ -39,6 +40,24 @@ const DepartmentList: React.FC = () => {
   const handleBackToList = () => {
     setViewingDepartment(null);
   };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredDepartments = departments.filter((department) => {
+    const searchLower = searchQuery.toLowerCase();
+    const departmentNameMatch = department.name.toLowerCase().includes(searchLower);
+    const leaderMatch = department.Leader
+      ? `${department.Leader.firstName} ${department.Leader.lastName}`.toLowerCase().includes(searchLower)
+      : false;
+    const membersMatch = department.Employees
+      ? department.Employees.some((employee) =>
+          `${employee.firstName} ${employee.lastName}`.toLowerCase().includes(searchLower)
+        )
+      : false;
+    return departmentNameMatch || leaderMatch || membersMatch;
+  });
 
   if (viewingDepartment) {
     return (
@@ -77,8 +96,17 @@ const DepartmentList: React.FC = () => {
         teamLeaders={teamLeaders}
         departments={departments}
       />
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search by department name, leader, or members"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className="w-full p-2 border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+        />
+      </div>
       <ul>
-        {departments.map((department: Department) => (
+        {filteredDepartments.map((department: Department) => (
           <li key={department.id} className="mb-4 p-4 border border-gray-300 rounded dark:border-gray-700">
             <h2 className="text-xl font-semibold">{department.name}</h2>
             <p className="mb-2">
