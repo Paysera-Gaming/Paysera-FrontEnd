@@ -130,7 +130,7 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 						<DropdownMenuSeparator />
 
 						<DropdownMenu>
-							<EditRole employeeRole={employee.role}></EditRole>
+							<EditRole employeeInfo={employee}></EditRole>
 						</DropdownMenu>
 
 						<DropdownMenuItem asChild>

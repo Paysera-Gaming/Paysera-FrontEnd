@@ -1,3 +1,4 @@
+import { TEmployee } from '@/components/DataTable/DataColumns';
 import { Button } from '@/components/ui/button';
 import {
 	Dialog,
@@ -11,9 +12,28 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { updateEmployee } from '@/api/EmployeeAPI';
 
-export default function EditRole({ employeeRole }: { employeeRole: string }) {
+export default function EditRole({
+	employeeInfo,
+}: {
+	employeeInfo: TEmployee;
+}) {
+	// dear lue please add a form hook and zod edit in here ty!
 	const [isOpen, setOpen] = useState<boolean>(false);
+	const mutation = useMutation({
+		mutationFn: () => {
+			return updateEmployee(employeeInfo);
+		},
+		onError: () => {
+			toast.error('An error happened!');
+		},
+		onSuccess: () => {
+			toast.success('Employee Added!');
+		},
+	});
 
 	return (
 		<Dialog open={isOpen} onOpenChange={setOpen}>
@@ -38,7 +58,7 @@ export default function EditRole({ employeeRole }: { employeeRole: string }) {
 							Role
 						</Label>
 						<Input
-							placeholder={employeeRole}
+							placeholder={employeeInfo.role}
 							id="name"
 							className="col-span-3"
 						/>

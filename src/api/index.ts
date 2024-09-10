@@ -14,16 +14,12 @@ export const axiosInstance = axios.create({
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
 	function (config) {
-		console.log('this should work');
-
 		// Do something before request is sent
 		return config;
 	},
 	function (error) {
 		// Do something with request error
-
 		toast.error('ERROR HAS OCCURED CHECK THE LOGS FOR MORE INFO');
-
 		return Promise.reject(error);
 	}
 );

@@ -8,7 +8,7 @@ import { getAllEmployeesInDepartment } from '../../../api/EmployeeAPI';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // todo's
-// need to add edit employee in department
+// need to add edit employee in department - doing
 // remove employee in department
 
 export default function ManagePage() {
@@ -20,7 +20,7 @@ export default function ManagePage() {
 	const dataEmployees: TEmployee[] = data ?? [];
 
 	if (isError) {
-		return <>TITEEEE</>;
+		return <>An Error has occured</>;
 	}
 
 	if (isLoading) {
