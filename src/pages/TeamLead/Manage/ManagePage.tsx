@@ -6,6 +6,11 @@ import AddEmployee from '@/components/TeamLeadComponents/DialogForms/AddEmployee
 import { useQuery } from '@tanstack/react-query';
 import { getAllEmployeesInDepartment } from '../../../api/EmployeeAPI';
 import { Skeleton } from '@/components/ui/skeleton';
+
+// todo's
+// need to add edit employee in department
+// remove employee in department
+
 export default function ManagePage() {
 	const { data, isError, isLoading } = useQuery({
 		queryKey: ['repoData'],
