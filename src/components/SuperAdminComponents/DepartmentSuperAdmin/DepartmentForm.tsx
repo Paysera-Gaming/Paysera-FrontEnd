@@ -13,14 +13,17 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
   const queryClient = useQueryClient();
   const [departmentName, setDepartmentName] = useState('');
   const [departmentLeaderId, setDepartmentLeaderId] = useState<number | null>(null);
+  const [isFormVisible, setIsFormVisible] = useState(false);
 
   useEffect(() => {
     if (editingDepartment) {
       setDepartmentName(editingDepartment.name);
       setDepartmentLeaderId(editingDepartment.leaderId);
+      setIsFormVisible(true);
     } else {
       setDepartmentName('');
       setDepartmentLeaderId(null);
+      setIsFormVisible(false);
     }
   }, [editingDepartment]);
 
@@ -68,6 +71,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
 
     setDepartmentName('');
     setDepartmentLeaderId(null);
+    setIsFormVisible(false);
   };
 
   // Filter out team leaders who are already assigned to other departments
@@ -76,43 +80,56 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
   });
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4">
-      <div className="mb-2">
-        <input
-          type="text"
-          placeholder="Department Name"
-          value={departmentName}
-          onChange={(e) => setDepartmentName(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded dark:bg-transparent dark:border-gray-700 dark:text-white"
-        />
-      </div>
-      <div className="mb-2">
-        <select
-          value={departmentLeaderId ?? ''}
-          onChange={(e) => setDepartmentLeaderId(Number(e.target.value))}
-          className="w-full p-2 border border-gray-300 rounded dark:bg-transparent dark:border-gray-700 dark:text-white"
-        >
-          <option value="" disabled className="dark:bg-transparent dark:text-white">Select Team Leader</option>
-          {availableTeamLeaders.map((leader: Leader) => (
-            <option key={leader.id} value={leader.id} className="dark:bg-transparent dark:text-white">
-              {leader.firstName} {leader.lastName}
-            </option>
-          ))}
-        </select>
-      </div>
-      <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800">
-        {editingDepartment ? 'Update Department' : 'Add Department'}
-      </button>
-      {editingDepartment && (
+    <div className="mb-4">
+      {!isFormVisible && (
         <button
-          type="button"
-          onClick={() => setEditingDepartment(null)}
-          className="ml-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-800"
+          onClick={() => setIsFormVisible(true)}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800"
         >
-          Cancel
+          Add Department
         </button>
       )}
-    </form>
+      {isFormVisible && (
+        <form onSubmit={handleSubmit} className="mt-4">
+          <div className="mb-2">
+            <input
+              type="text"
+              placeholder="Department Name"
+              value={departmentName}
+              onChange={(e) => setDepartmentName(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded dark:bg-transparent dark:border-gray-700 dark:text-white"
+            />
+          </div>
+          <div className="mb-2">
+            <select
+              value={departmentLeaderId ?? ''}
+              onChange={(e) => setDepartmentLeaderId(Number(e.target.value))}
+              className="w-full p-2 border border-gray-300 rounded dark:bg-transparent dark:border-gray-700 dark:text-white"
+            >
+              <option value="" disabled className="dark:bg-transparent dark:text-white">Select Team Leader</option>
+              {availableTeamLeaders.map((leader: Leader) => (
+                <option key={leader.id} value={leader.id} className="dark:bg-transparent dark:text-white">
+                  {leader.firstName} {leader.lastName}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800">
+            {editingDepartment ? 'Update Department' : 'Add Department'}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setEditingDepartment(null);
+              setIsFormVisible(false);
+            }}
+            className="ml-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-800"
+          >
+            Cancel
+          </button>
+        </form>
+      )}
+    </div>
   );
 };
 

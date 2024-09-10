@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Edit2, Trash2, Circle } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card'; // Removed CardHeader and CardTitle
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import axios from 'axios';
@@ -71,9 +71,6 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
 
     return (
         <Card>
-            <CardHeader>
-                <CardTitle>Employee List</CardTitle>
-            </CardHeader>
             <CardContent>
                 <Table>
                     <TableHeader>

@@ -73,18 +73,17 @@ const DepartmentList: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 dark:text-white">
-      <h1 className="text-2xl font-bold mb-4">Department List</h1>
       <div className="flex justify-between items-center mb-4">
         <div style={{ width: '33%' }}>
           <SearchBar searchQuery={searchQuery} onSearchChange={handleSearchChange} />
         </div>
+        <DepartmentForm
+          editingDepartment={editingDepartment}
+          setEditingDepartment={setEditingDepartment}
+          teamLeaders={teamLeaders}
+          departments={departments}
+        />
       </div>
-      <DepartmentForm
-        editingDepartment={editingDepartment}
-        setEditingDepartment={setEditingDepartment}
-        teamLeaders={teamLeaders}
-        departments={departments}
-      />
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white dark:bg-transparent">
           <thead>
