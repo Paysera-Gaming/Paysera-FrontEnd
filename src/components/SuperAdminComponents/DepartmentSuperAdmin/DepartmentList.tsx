@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchDepartments, fetchTeamLeaders, deleteDepartment, Department, Leader } from './api';
 import DepartmentForm from './DepartmentForm';
-import DepartmentItem from './DepartmentItem';
 import DepartmentDetails from './DepartmentDetails';
 import SearchBar from './SearchBar';
+import { Button } from '@/components/ui/button';
 
 const DepartmentList: React.FC = () => {
   const queryClient = useQueryClient();
@@ -81,17 +81,64 @@ const DepartmentList: React.FC = () => {
         departments={departments}
       />
       <SearchBar searchQuery={searchQuery} onSearchChange={handleSearchChange} />
-      <ul>
-        {filteredDepartments.map((department: Department) => (
-          <DepartmentItem
-            key={department.id}
-            department={department}
-            onView={handleViewDepartment}
-            onEdit={handleEditDepartment}
-            onDelete={handleDeleteDepartment}
-          />
-        ))}
-      </ul>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white dark:bg-transparent">
+          <thead>
+            <tr>
+              <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">Name</th>
+              <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">Leader</th>
+              <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">Members</th>
+              <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredDepartments.map((department: Department) => (
+              <tr key={department.id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent">{department.name}</td>
+                <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent">
+                  {department.Leader ? `${department.Leader.firstName} ${department.Leader.lastName}` : 'No Leader Assigned'}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent">
+                  {department.Employees && department.Employees.length > 0 ? (
+                    <>
+                      {department.Employees.slice(0, 3).map((employee) => (
+                        <span key={employee.id} className="block">
+                          {employee.firstName} {employee.lastName} - {employee.role === 'Team Leader' ? 'Team Leader' : employee.role}
+                        </span>
+                      ))}
+                      {department.Employees.length > 3 && <span>etc.</span>}
+                    </>
+                  ) : (
+                    <span>No Employees</span>
+                  )}
+                </td>
+                <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent">
+                  <Button
+                    onClick={() => handleViewDepartment(department)}
+                    variant="outline"
+                    className="mr-2"
+                  >
+                    View
+                  </Button>
+                  <Button
+                    onClick={() => handleEditDepartment(department)}
+                    variant="outline"
+                    className="mr-2"
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    onClick={() => handleDeleteDepartment(department.id)}
+                    variant="outline"
+                  >
+                    Delete
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
