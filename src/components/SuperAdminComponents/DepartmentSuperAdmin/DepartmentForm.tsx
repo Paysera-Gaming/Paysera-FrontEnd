@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Leader, addDepartment, updateDepartment, updateDepartmentLeader, Department } from './api';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Plus } from 'lucide-react';
 
 interface DepartmentFormProps {
   editingDepartment: Department | null;
@@ -13,17 +19,17 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
   const queryClient = useQueryClient();
   const [departmentName, setDepartmentName] = useState('');
   const [departmentLeaderId, setDepartmentLeaderId] = useState<number | null>(null);
-  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     if (editingDepartment) {
       setDepartmentName(editingDepartment.name);
       setDepartmentLeaderId(editingDepartment.leaderId);
-      setIsFormVisible(true);
+      setIsDialogOpen(true);
     } else {
       setDepartmentName('');
       setDepartmentLeaderId(null);
-      setIsFormVisible(false);
     }
   }, [editingDepartment]);
 
@@ -51,7 +57,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!departmentName || departmentLeaderId === null) {
-      alert('Please provide both department name and leader ID.');
+      setErrorMessage('Please provide both department name and leader ID.');
       return;
     }
 
@@ -71,7 +77,8 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
 
     setDepartmentName('');
     setDepartmentLeaderId(null);
-    setIsFormVisible(false);
+    setErrorMessage('');
+    setIsDialogOpen(false);
   };
 
   // Filter out team leaders who are already assigned to other departments
@@ -79,57 +86,96 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
     return !departments.some((department) => department.leaderId === leader.id && department.id !== editingDepartment?.id);
   });
 
+  const handleCancel = () => {
+    setEditingDepartment(null);
+    setErrorMessage('');
+    setIsDialogOpen(false);
+  };
+
+  const handleDialogChange = (isOpen: boolean) => {
+    setIsDialogOpen(isOpen);
+    if (!isOpen) {
+      setErrorMessage('');
+    }
+  };
+
   return (
-    <div className="mb-4">
-      {!isFormVisible && (
-        <button
-          onClick={() => setIsFormVisible(true)}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800"
-        >
-          Add Department
-        </button>
-      )}
-      {isFormVisible && (
-        <form onSubmit={handleSubmit} className="mt-4">
-          <div className="mb-2">
-            <input
-              type="text"
-              placeholder="Department Name"
-              value={departmentName}
-              onChange={(e) => setDepartmentName(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded dark:bg-transparent dark:border-gray-700 dark:text-white"
-            />
-          </div>
-          <div className="mb-2">
-            <select
-              value={departmentLeaderId ?? ''}
-              onChange={(e) => setDepartmentLeaderId(Number(e.target.value))}
-              className="w-full p-2 border border-gray-300 rounded dark:bg-transparent dark:border-gray-700 dark:text-white"
-            >
-              <option value="" disabled className="dark:bg-transparent dark:text-white">Select Team Leader</option>
-              {availableTeamLeaders.map((leader: Leader) => (
-                <option key={leader.id} value={leader.id} className="dark:bg-transparent dark:text-white">
-                  {leader.firstName} {leader.lastName}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800">
-            {editingDepartment ? 'Update Department' : 'Add Department'}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setEditingDepartment(null);
-              setIsFormVisible(false);
-            }}
-            className="ml-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-800"
-          >
-            Cancel
-          </button>
-        </form>
-      )}
-    </div>
+    <>
+      <Button
+        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800 flex items-center"
+        onClick={() => setIsDialogOpen(true)}
+      >
+        <Plus className="mr-2" />
+        {editingDepartment ? 'Edit Department' : 'Add Department'}
+      </Button>
+      <Dialog open={isDialogOpen} onOpenChange={handleDialogChange}>
+        <DialogTrigger asChild>
+          <Button className="hidden">Trigger</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{editingDepartment ? 'Edit Department' : 'Add Department'}</DialogTitle>
+            <DialogDescription>
+              {editingDepartment ? 'Update the department details.' : 'Create a new department.'}
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-4 py-4">
+              {errorMessage && (
+                <div className="col-span-4 text-red-500">
+                  {errorMessage}
+                </div>
+              )}
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="departmentName" className="text-right">
+                  Department Name
+                </Label>
+                <Input
+                  id="departmentName"
+                  placeholder="Department Name"
+                  value={departmentName}
+                  onChange={(e) => setDepartmentName(e.target.value)}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="departmentLeader" className="text-right">
+                  Team Leader
+                </Label>
+                {availableTeamLeaders.length > 0 ? (
+                  <Select onValueChange={(value) => setDepartmentLeaderId(Number(value))}>
+                    <SelectTrigger id="departmentLeader" className="col-span-3">
+                      <SelectValue placeholder="Select Team Leader" />
+                    </SelectTrigger>
+                    <SelectContent position="popper">
+                      {availableTeamLeaders.map((leader: Leader) => (
+                        <SelectItem key={leader.id} value={leader.id.toString()}>
+                          {leader.firstName} {leader.lastName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <div className="col-span-3 text-gray-500">No team leader is available</div>
+                )}
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">
+                {editingDepartment ? 'Update Department' : 'Add Department'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
