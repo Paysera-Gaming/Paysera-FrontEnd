@@ -5,6 +5,9 @@ import DepartmentForm from './DepartmentForm';
 import DepartmentDetails from './DepartmentDetails';
 import SearchBar from './SearchBar';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { toast } from 'sonner';
 
 const DepartmentList: React.FC = () => {
   const queryClient = useQueryClient();
@@ -20,11 +23,17 @@ const DepartmentList: React.FC = () => {
   const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
   const [viewingDepartment, setViewingDepartment] = useState<Department | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
 
   const deleteDepartmentMutation = useMutation({
     mutationFn: deleteDepartment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['departments'] });
+      toast.success('Successfully deleted the department');
+    },
+    onError: () => {
+      toast.error('Error deleting the department');
     },
   });
 
@@ -32,8 +41,16 @@ const DepartmentList: React.FC = () => {
     setEditingDepartment(department);
   };
 
-  const handleDeleteDepartment = (id: number) => {
-    deleteDepartmentMutation.mutate(id);
+  const handleDeleteDepartment = (department: Department) => {
+    setSelectedDepartment(department);
+    setIsDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedDepartment) {
+      deleteDepartmentMutation.mutate(selectedDepartment.id);
+      setIsDialogOpen(false);
+    }
   };
 
   const handleViewDepartment = (department: Department) => {
@@ -72,77 +89,95 @@ const DepartmentList: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto p-4 dark:text-white">
-      <div className="flex justify-between items-center mb-4">
-        <div style={{ width: '33%' }}>
-          <SearchBar searchQuery={searchQuery} onSearchChange={handleSearchChange} />
+    <Card>
+      <CardContent>
+        <div className="container mx-auto p-4 dark:text-white">
+          <div className="flex justify-between items-center mb-4">
+            <div style={{ width: '33%' }}>
+              <SearchBar searchQuery={searchQuery} onSearchChange={handleSearchChange} />
+            </div>
+            <DepartmentForm
+              editingDepartment={editingDepartment}
+              setEditingDepartment={setEditingDepartment}
+              teamLeaders={teamLeaders}
+              departments={departments}
+            />
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white dark:bg-transparent">
+              <thead>
+                <tr>
+                  <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">Name</th>
+                  <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">Leader</th>
+                  <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">Members</th>
+                  <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredDepartments.map((department: Department) => (
+                  <tr key={department.id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent">{department.name}</td>
+                    <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent">
+                      {department.Leader ? `${department.Leader.firstName} ${department.Leader.lastName}` : 'No Leader Assigned'}
+                    </td>
+                    <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent">
+                      {department.Employees && department.Employees.length > 0 ? (
+                        <>
+                          {department.Employees.slice(0, 3).map((employee) => (
+                            <span key={employee.id} className="block">
+                              {employee.firstName} {employee.lastName} - {employee.role === 'Team Leader' ? 'Team Leader' : employee.role}
+                            </span>
+                          ))}
+                          {department.Employees.length > 3 && <span>etc.</span>}
+                        </>
+                      ) : (
+                        <span>No Employees</span>
+                      )}
+                    </td>
+                    <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent">
+                      <Button
+                        onClick={() => handleViewDepartment(department)}
+                        variant="outline"
+                        className="mr-2"
+                      >
+                        View
+                      </Button>
+                      <Button
+                        onClick={() => handleEditDepartment(department)}
+                        variant="outline"
+                        className="mr-2"
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        onClick={() => handleDeleteDepartment(department)}
+                        variant="outline"
+                      >
+                        Delete
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <DepartmentForm
-          editingDepartment={editingDepartment}
-          setEditingDepartment={setEditingDepartment}
-          teamLeaders={teamLeaders}
-          departments={departments}
-        />
-      </div>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white dark:bg-transparent">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">Name</th>
-              <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">Leader</th>
-              <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">Members</th>
-              <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredDepartments.map((department: Department) => (
-              <tr key={department.id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent">{department.name}</td>
-                <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent">
-                  {department.Leader ? `${department.Leader.firstName} ${department.Leader.lastName}` : 'No Leader Assigned'}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent">
-                  {department.Employees && department.Employees.length > 0 ? (
-                    <>
-                      {department.Employees.slice(0, 3).map((employee) => (
-                        <span key={employee.id} className="block">
-                          {employee.firstName} {employee.lastName} - {employee.role === 'Team Leader' ? 'Team Leader' : employee.role}
-                        </span>
-                      ))}
-                      {department.Employees.length > 3 && <span>etc.</span>}
-                    </>
-                  ) : (
-                    <span>No Employees</span>
-                  )}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent">
-                  <Button
-                    onClick={() => handleViewDepartment(department)}
-                    variant="outline"
-                    className="mr-2"
-                  >
-                    View
-                  </Button>
-                  <Button
-                    onClick={() => handleEditDepartment(department)}
-                    variant="outline"
-                    className="mr-2"
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    onClick={() => handleDeleteDepartment(department.id)}
-                    variant="outline"
-                  >
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+      </CardContent>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete {selectedDepartment?.name}?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleConfirmDelete}>Confirm</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </Card>
   );
 };
 
