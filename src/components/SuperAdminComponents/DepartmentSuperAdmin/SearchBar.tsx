@@ -10,7 +10,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, onSearchChange }) =>
     <div className="mb-4">
       <input
         type="text"
-        placeholder="Search by department name, leader, or members"
+        placeholder="Search..."
         value={searchQuery}
         onChange={onSearchChange}
         className="w-full p-2 border border-gray-300 rounded dark:border-gray-700 dark:text-white dark:bg-transparent"
