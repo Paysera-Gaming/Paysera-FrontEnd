@@ -1,11 +1,13 @@
 export interface TEmployee {
-	id: string;
-	fName: string;
-	lName: string;
-	mName: string;
+	id: number;
+	departmentId: string | null;
+	accessLevel: string;
+	isActive: boolean;
+	username: string;
+	firstName: string;
+	lastName: string;
+	middleName: string;
 	role: string;
-	createdAt: Date;
-	updatedAt: Date;
 }
 import { ArrowUpDown } from 'lucide-react';
 
@@ -42,14 +44,29 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 					variant="ghost"
 					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
 				>
-					Employee ID
+					ID
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+	},
+
+	{
+		accessorKey: 'username',
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+				>
+					Username
 					<ArrowUpDown className="ml-2 h-4 w-4" />
 				</Button>
 			);
 		},
 	},
 	{
-		accessorKey: 'lName',
+		accessorKey: 'lastName',
 		header: ({ column }) => {
 			return (
 				<Button
@@ -63,7 +80,7 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 		},
 	},
 	{
-		accessorKey: 'fName',
+		accessorKey: 'firstName',
 
 		header: ({ column }) => {
 			return (
@@ -78,7 +95,7 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 		},
 	},
 	{
-		accessorKey: 'mName',
+		accessorKey: 'middleName',
 		header: ({ column }) => {
 			return (
 				<Button
@@ -92,41 +109,7 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 		},
 	},
 	{ accessorKey: 'role', header: 'Role' },
-	{
-		accessorKey: 'createdAt',
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-				>
-					Created At
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
-		cell: ({ row }) => {
-			return formatDate(row.getValue('createdAt'));
-		},
-	},
-	{
-		accessorKey: 'updatedAt',
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-				>
-					Updated At
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
-		cell: ({ row }) => {
-			return formatDate(row.getValue('updatedAt'));
-		},
-	},
-	// action
+
 	{
 		id: 'actions',
 		cell: ({ row }) => {

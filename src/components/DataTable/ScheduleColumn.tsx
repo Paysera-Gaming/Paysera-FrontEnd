@@ -1,5 +1,5 @@
 import { ArrowUpDown } from 'lucide-react';
-import { createContext } from 'react';
+import { createContext, forwardRef } from 'react';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -37,6 +37,7 @@ export interface TSchedule {
 	lunchEndTime: Date;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const scheduleColumns: ColumnDef<TSchedule>[] = [
 	{
 		accessorKey: 'id',
@@ -158,6 +159,8 @@ export const scheduleColumns: ColumnDef<TSchedule>[] = [
 	{
 		id: 'actions',
 		cell: ({ row }) => {
+			const RefRemoveDialog = forwardRef(RemoveScheduleDialog);
+
 			return (
 				// try to make this drop down into a stupid standalone
 				<DropdownMenu>
@@ -179,7 +182,7 @@ export const scheduleColumns: ColumnDef<TSchedule>[] = [
 						</DropdownMenu>
 
 						<DropdownMenuItem asChild>
-							<RemoveScheduleDialog></RemoveScheduleDialog>
+							<RefRemoveDialog></RefRemoveDialog>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
