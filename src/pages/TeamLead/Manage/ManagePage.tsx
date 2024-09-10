@@ -4,12 +4,12 @@ import { DataTable } from '@/components/DataTable/DataTableProvider';
 import { TEmployee } from '@/components/DataTable/DataColumns';
 import AddEmployee from '@/components/TeamLeadComponents/DialogForms/AddEmployee';
 import { useQuery } from '@tanstack/react-query';
-import { getAllEmployees } from '../../../api/EmployeeAPI';
+import { getAllEmployeesInDepartment } from '../../../api/EmployeeAPI';
 import { Skeleton } from '@/components/ui/skeleton';
 export default function ManagePage() {
 	const { data, isError, isLoading } = useQuery({
 		queryKey: ['repoData'],
-		queryFn: getAllEmployees,
+		queryFn: () => getAllEmployeesInDepartment('95'),
 	});
 
 	const dataEmployees: TEmployee[] = data ?? [];
@@ -20,11 +20,17 @@ export default function ManagePage() {
 
 	if (isLoading) {
 		return (
-			<div className=" w-full h-full border-border border-solid border p-5 rounded-md">
+			<div className=" w-full h-full border-border border-solid border p-5 rounded-md ">
 				<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0">
 					Manage Employees In Department
 				</h2>
-				<Skeleton className="h-4 w-full flex-1" />
+				<div className="grid grid-cols-5 w-full mt-2 gap-2">
+					<Skeleton className="col-span-5 h-10" />
+					<Skeleton className="col-span-5 h-72" />
+					<div className="col-span-3"></div>
+					<Skeleton className="col-span-1 h-10" />
+					<Skeleton className="col-span-1 h-10" />
+				</div>
 			</div>
 		);
 	}

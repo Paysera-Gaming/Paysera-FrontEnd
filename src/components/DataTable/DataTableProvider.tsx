@@ -113,7 +113,7 @@ export function DataTable<TData, TValue>({
 				</div>
 			</div>
 
-			<ScrollArea className=" 2xl:w-[1600px] md:w-[500px] lg:w-[950px] lg:h-[300px] md:h-[250px]  whitespace-nowrap rounded-md border">
+			<ScrollArea className=" 2xl:w-[1600px] md:w-[500px] lg:w-[950px] xl:h-auto lg:h-[300px] md:h-[250px]  whitespace-nowrap rounded-md border">
 				<Table className="relative min-w-full ">
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -166,7 +166,7 @@ export function DataTable<TData, TValue>({
 				<ScrollBar orientation="horizontal" />
 			</ScrollArea>
 
-			<div className="w-full flex items-center justify-end space-x-2">
+			<div className="w-full flex items-center justify-end space-x-2 mt-5">
 				<div className="flex w-[100px] items-center justify-center text-sm font-medium">
 					Page {table.getState().pagination.pageIndex + 1} of{' '}
 					{table.getPageCount()}

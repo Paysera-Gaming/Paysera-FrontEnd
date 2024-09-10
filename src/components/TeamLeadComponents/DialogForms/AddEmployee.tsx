@@ -25,30 +25,38 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { AlertDialogAction } from '@radix-ui/react-alert-dialog';
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { addEmployeeInDepartment } from '@/api/EmployeeAPI';
+import { toast } from 'sonner';
 
-const formSchema = z.object({
-	userID: z
-		.string()
-		.min(5, { message: 'Minimum Characters must be atleast 5' })
-		.max(8, { message: 'Maximum Characters are 8' }),
+export const formSchemaAddEmployee = z.object({
+	id: z.coerce.number().gte(18, 'Must be 18 and above'),
 	role: z.string().min(5, { message: 'Minimum Charactus must be atleast 5' }),
 });
 
 export default function AddEmployee() {
 	const [openAlert, setAlert] = useState<boolean>(false);
 	// form schema
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			userID: '',
+	const form = useForm<z.infer<typeof formSchemaAddEmployee>>({
+		resolver: zodResolver(formSchemaAddEmployee),
+		defaultValues: {},
+	});
+
+	const mutation = useMutation({
+		mutationFn: () => addEmployeeInDepartment(form.getValues(), '95'),
+		onError: () => {
+			toast.error(form.getValues().id + ' ' + form.getValues().role);
+			// toast.error('An error happened!');
+		},
+		onSuccess: () => {
+			toast.success('Employee Added!');
 		},
 	});
 
 	//  submit handler do your magic here
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	function onSubmit() {
 		// Do something with the form values.
-
-		console.log(values.userID);
+		mutation.mutate();
 		setAlert(false);
 	}
 
@@ -71,12 +79,16 @@ export default function AddEmployee() {
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 						<FormField
 							control={form.control}
-							name="userID"
+							name="id"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>EmployeeID</FormLabel>
 									<FormControl>
-										<Input placeholder="Enter Employee ID" {...field} />
+										<Input
+											type="number"
+											placeholder="Enter Employee id"
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -89,7 +101,7 @@ export default function AddEmployee() {
 								<FormItem>
 									<FormLabel>Designated Role</FormLabel>
 									<FormControl>
-										<Input placeholder="Enter Role" {...field} />
+										<Input type="text" placeholder="Enter Role" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

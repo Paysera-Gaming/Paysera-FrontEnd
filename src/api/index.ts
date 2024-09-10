@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { toast } from 'sonner';
 
-const url = 'https://192.168.110.68:8080/api';
+const url = import.meta.env.VITE_APP_API_URL;
 
 export const axiosInstance = axios.create({
 	baseURL: url,
