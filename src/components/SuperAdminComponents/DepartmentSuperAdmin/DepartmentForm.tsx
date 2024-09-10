@@ -102,7 +102,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
   return (
     <>
       <Button
-        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 dark:bg-green-500 dark:hover:bg-green-600 flex items-center"
+        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 dark:bg-green-500 dark:hover:bg-green-600 dark:text-white flex items-center"
         onClick={() => setIsDialogOpen(true)}
       >
         <Plus className="mr-2" />
@@ -168,7 +168,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
               >
                 Cancel
               </Button>
-              <Button type="submit">
+              <Button type="submit" className="dark:text-white">
                 {editingDepartment ? 'Update Department' : 'Add Department'}
               </Button>
             </DialogFooter>

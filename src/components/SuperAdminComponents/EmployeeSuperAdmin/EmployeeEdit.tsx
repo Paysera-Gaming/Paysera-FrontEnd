@@ -234,7 +234,7 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Update</Button>
+              <Button type="submit" className="dark:text-white">Update</Button>
               <Button type="button" variant="outline" onClick={handleClose}>Cancel</Button>
             </DialogFooter>
           </form>

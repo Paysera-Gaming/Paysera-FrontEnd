@@ -234,7 +234,7 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" className="dark:text-white">Submit</Button>
               <Button type="button" variant="outline" onClick={handleClose}>Cancel</Button>
             </DialogFooter>
           </form>
