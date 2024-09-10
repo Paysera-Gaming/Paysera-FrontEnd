@@ -1,139 +1,149 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import SearchBar from './SearchBar';
-import SummaryCards from './SummaryCards';
-import DepartmentTable from './DepartmentTable';
-import AddDepartmentDialog from './AddDepartmentDialog';
-import EditDepartmentDialog from './EditDepartmentDialog';
-import ViewDepartment from './ViewDepartment';
-import { Department } from './types';
+
+interface Employee {
+  id: number;
+  username: string;
+  firstName: string;
+  lastName: string;
+  middleName: string;
+  accessLevel: string;
+  isActive: boolean;
+  role: string;
+}
+
+interface Leader extends Employee {}
+
+interface Department {
+  id: number;
+  name: string;
+  leaderId: number;
+  updatedAt: string;
+  createdAt: string;
+  Employees?: Employee[];
+  Leader: Leader | null;
+}
 
 const fetchDepartments = async (): Promise<Department[]> => {
-    const response = await axios.get(`${import.meta.env.VITE_BASE_API}/api/department`);
-    return response.data;
+  const response = await axios.get(`${import.meta.env.VITE_BASE_API}/api/department`);
+  return response.data;
 };
 
-export default function DepartmentList() {
-    const queryClient = useQueryClient();
-    const { data: departments = [] } = useQuery<Department[]>({
-        queryKey: ['departments'],
-        queryFn: fetchDepartments,
-    });
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filteredDepartments, setFilteredDepartments] = useState<Department[]>(departments);
-    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-    const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
-    const [viewData, setViewData] = useState<{ department: Department } | null>(null);
-    const [isViewing, setIsViewing] = useState(false);
+const fetchTeamLeaders = async (): Promise<Leader[]> => {
+  const response = await axios.get(`${import.meta.env.VITE_BASE_API}/api/employee/team-leader`);
+  return response.data;
+};
 
-    const addDepartmentMutation = useMutation({
-        mutationFn: (newDepartment: { name: string; teamLeader: string }) => 
-            axios.post(`${import.meta.env.VITE_BASE_API}/api/department`, newDepartment),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['departments'] });
-        },
-    });
+const DepartmentList: React.FC = () => {
+  const queryClient = useQueryClient();
+  const { data: departments = [] } = useQuery<Department[]>({
+    queryKey: ['departments'],
+    queryFn: fetchDepartments,
+  });
+  const { data: teamLeaders = [] } = useQuery<Leader[]>({
+    queryKey: ['teamLeaders'],
+    queryFn: fetchTeamLeaders,
+  });
 
-    const editDepartmentMutation = useMutation({
-        mutationFn: (updatedDepartment: Department) => 
-            axios.put(`${import.meta.env.VITE_BASE_API}/api/department/${updatedDepartment.id}`, updatedDepartment),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['departments'] });
-        },
-    });
+  const [newDepartmentName, setNewDepartmentName] = useState('');
+  const [newDepartmentLeaderId, setNewDepartmentLeaderId] = useState<number | null>(null);
 
-    const deleteDepartmentMutation = useMutation({
-        mutationFn: (departmentId: number) => 
-            axios.delete(`${import.meta.env.VITE_BASE_API}/api/department/${departmentId}`),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['departments'] });
-        },
-    });
+  const addDepartmentMutation = useMutation({
+    mutationFn: async (newDepartment: { name: string; leaderId: number }) => {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_API}/api/department`, newDepartment);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['departments'] });
+    },
+  });
 
-    const totalDepartments = departments.length;
+  const deleteDepartmentMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await axios.delete(`${import.meta.env.VITE_BASE_API}/api/department/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['departments'] });
+    },
+  });
 
-    const handleAddDepartment = (newDepartment: { name: string; teamLeader: string }) => {
-        addDepartmentMutation.mutate(newDepartment);
-        setIsAddDialogOpen(false);
-    };
+  const handleAddDepartment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newDepartmentName || newDepartmentLeaderId === null) {
+      alert('Please provide both department name and leader ID.');
+      return;
+    }
 
-    const handleEditDepartment = (updatedDepartment: Department) => {
-        editDepartmentMutation.mutate(updatedDepartment);
-        setIsEditDialogOpen(false);
-    };
+    addDepartmentMutation.mutate({ name: newDepartmentName, leaderId: newDepartmentLeaderId });
+    setNewDepartmentName('');
+    setNewDepartmentLeaderId(null);
+  };
 
-    const handleDeleteDepartment = (departmentId: number) => {
-        deleteDepartmentMutation.mutate(departmentId);
-    };
+  const handleDeleteDepartment = (id: number) => {
+    deleteDepartmentMutation.mutate(id);
+  };
 
-    const handleEditClick = (department: { id: number; name: string }) => {
-        const fullDepartment = departments.find(dept => dept.id === department.id);
-        if (fullDepartment) {
-            setSelectedDepartment(fullDepartment);
-            setIsEditDialogOpen(true);
-        }
-    };
-
-    const handleViewClick = async (departmentId: number) => {
-        try {
-            const departmentResponse = await axios.get(`${import.meta.env.VITE_BASE_API}/api/department/${departmentId}`);
-            setViewData({ department: departmentResponse.data });
-            setIsViewing(true);
-        } catch (error) {
-            console.error('Error fetching department and team:', error);
-        }
-    };
-
-    const handleBack = () => {
-        setIsViewing(false);
-    };
-
-    return (
-        <div className="p-4 space-y-4">
-            {isViewing && viewData ? (
-                <ViewDepartment
-                    departmentId={viewData.department.id}
-                    onBack={handleBack}
-                />
-            ) : (
-                <>
-                    <SearchBar
-                        searchTerm={searchTerm}
-                        setSearchTerm={setSearchTerm}
-                        departments={departments}
-                        setFilteredDepartments={setFilteredDepartments}
-                    />
-                    <SummaryCards
-                        totalDepartments={totalDepartments}
-                    />
-                    {filteredDepartments.length > 0 ? (
-                        <DepartmentTable
-                            departments={filteredDepartments}
-                            onEditClick={handleEditClick}
-                            onViewClick={handleViewClick}
-                            onDeleteClick={handleDeleteDepartment}
-                        />
-                    ) : (
-                        <div className="text-center text-gray-500 dark:text-gray-400">
-                            {`No results found for "${searchTerm}"`}
-                        </div>
-                    )}
-                    <AddDepartmentDialog
-                        isOpen={isAddDialogOpen}
-                        onClose={() => setIsAddDialogOpen(false)}
-                        onAdd={handleAddDepartment}
-                        departmentId={selectedDepartment?.id ?? 0} // Provide a default value
-                    />
-                    <EditDepartmentDialog
-                        isOpen={isEditDialogOpen}
-                        onClose={() => setIsEditDialogOpen(false)}
-                        onEdit={handleEditDepartment}
-                        department={selectedDepartment}
-                    />
-                </>
-            )}
+  return (
+    <div className="container mx-auto p-4 dark:text-white">
+      <h1 className="text-2xl font-bold mb-4">Department List</h1>
+      <form onSubmit={handleAddDepartment} className="mb-4">
+        <div className="mb-2">
+          <input
+            type="text"
+            placeholder="Department Name"
+            value={newDepartmentName}
+            onChange={(e) => setNewDepartmentName(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+          />
         </div>
-    );
-}
+        <div className="mb-2">
+          <select
+            value={newDepartmentLeaderId ?? ''}
+            onChange={(e) => setNewDepartmentLeaderId(Number(e.target.value))}
+            className="w-full p-2 border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+          >
+            <option value="" disabled>Select Team Leader</option>
+            {teamLeaders.map((leader: Leader) => (
+              <option key={leader.id} value={leader.id}>
+                {leader.firstName} {leader.lastName}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800">
+          Add Department
+        </button>
+      </form>
+      <ul>
+        {departments.map((department: Department) => (
+          <li key={department.id} className="mb-4 p-4 border border-gray-300 rounded dark:border-gray-700">
+            <h2 className="text-xl font-semibold">{department.name}</h2>
+            <p className="mb-2">
+              Leader: {department.Leader ? `${department.Leader.firstName} ${department.Leader.lastName}` : 'No Leader Assigned'}
+            </p>
+            <ul className="list-disc pl-5">
+              {department.Employees && department.Employees.length > 0 ? (
+                department.Employees.map((employee: Employee) => (
+                  <li key={employee.id}>
+                    {employee.firstName} {employee.lastName} - {employee.role}
+                  </li>
+                ))
+              ) : (
+                <li>No Employees</li>
+              )}
+            </ul>
+            <button
+              onClick={() => handleDeleteDepartment(department.id)}
+              className="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800"
+            >
+              Delete Department
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default DepartmentList;
