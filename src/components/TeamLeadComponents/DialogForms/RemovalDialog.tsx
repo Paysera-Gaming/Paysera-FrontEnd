@@ -1,5 +1,5 @@
 import React, { forwardRef, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -22,14 +22,18 @@ const RemoveDialog = forwardRef<HTMLDivElement, RemoveDialogProps>(
 	({ deleteRequest, employeeID, departmentId }, ref) => {
 		const [openWarn, setOpenWarn] = useState<boolean>(false);
 
+		// const queryClient = useQueryClient();
+
 		const mutation = useMutation<number>({
 			mutationFn: () => deleteRequest(employeeID, departmentId),
 			onSuccess: () => {
 				toast.success('Employee removed successfully');
+				// queryClient.invalidateQueries({ queryKey: ['EmployeeRole'] });
 			},
 			onError: () => {
 				toast.error('An error happened!');
 			},
+			mutationKey: ['EmployeeRole'],
 		});
 
 		const handleOpenWarn = () => {

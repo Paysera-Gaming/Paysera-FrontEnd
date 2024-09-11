@@ -11,13 +11,14 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { updateEmployee } from '@/api/EmployeeAPI';
 
 const EditRole = forwardRef<HTMLDivElement, { employeeInfo: TEmployee }>(
 	({ employeeInfo }, ref) => {
 		// dear lue please add a form hook and zod edit in here ty!
+		// const queryClient = useQueryClient();
 		const [isOpen, setOpen] = useState<boolean>(false);
 		const [roleInput, setRole] = useState<string>('');
 		const mutation = useMutation({
@@ -30,7 +31,9 @@ const EditRole = forwardRef<HTMLDivElement, { employeeInfo: TEmployee }>(
 			},
 			onSuccess: () => {
 				toast.success('The Role has been changed');
+				// queryClient.invalidateQueries({ queryKey: ['EmployeeRole'] });
 			},
+			mutationKey: ['EmployeeRole'],
 		});
 
 		return (

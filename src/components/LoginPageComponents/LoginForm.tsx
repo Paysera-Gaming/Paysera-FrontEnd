@@ -49,11 +49,9 @@ export default function LoginForm() {
 	const mutatationLogIn = useMutation({
 		mutationFn: () =>
 			login(form.getValues().username, form.getValues().password),
-		onSuccess: async () => {
-			await toast.success('Login Success');
-			await getUserInfo().then((data) => {
-				console.log(data);
-			});
+		onSuccess: (data) => {
+			toast.success('Login Success');
+			navigate('/dashboard');
 		},
 		onError: (error) => {
 			toast.error(error.message);

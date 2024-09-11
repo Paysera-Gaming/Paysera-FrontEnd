@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ManagePage() {
 	const { data, isError, isLoading } = useQuery({
-		queryKey: ['repoData'],
+		queryKey: ['EmployeesInfo'],
 		queryFn: () => getAllEmployeesInDepartment('1'),
 	});
 
