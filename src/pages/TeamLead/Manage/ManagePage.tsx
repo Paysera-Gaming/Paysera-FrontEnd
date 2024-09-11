@@ -14,7 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function ManagePage() {
 	const { data, isError, isLoading } = useQuery({
 		queryKey: ['repoData'],
-		queryFn: () => getAllEmployeesInDepartment('95'),
+		queryFn: () => getAllEmployeesInDepartment('1'),
 	});
 
 	const dataEmployees: TEmployee[] = data ?? [];
@@ -49,7 +49,7 @@ export default function ManagePage() {
 				addButton={<AddEmployee />}
 				columns={employeeColumns}
 				data={dataEmployees}
-				searchQuery="id"
+				searchQuery="lastName"
 			></DataTable>
 		</div>
 	);

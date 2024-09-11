@@ -3,7 +3,6 @@ import { axiosInstance } from '.';
 import { AxiosResponse } from 'axios';
 import { z } from 'zod';
 import { formSchemaAddEmployee } from '@/components/TeamLeadComponents/DialogForms/AddEmployee';
-import { access } from 'fs';
 
 export async function getAllEmployees(): Promise<TEmployee[]> {
 	const response: AxiosResponse<TEmployee[]> = await axiosInstance.get(
@@ -19,6 +18,7 @@ export async function getAllEmployeesInDepartment(
 	const response: AxiosResponse<TEmployee[]> = await axiosInstance.get(
 		`/api/department/${department}/employee`
 	);
+	console.log(response.data);
 	return response.data;
 }
 

@@ -23,7 +23,6 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { AlertDialogAction } from '@radix-ui/react-alert-dialog';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { addEmployeeInDepartment } from '@/api/EmployeeAPI';
@@ -62,7 +61,7 @@ export default function AddEmployee() {
 
 	return (
 		<AlertDialog open={openAlert} onOpenChange={setAlert}>
-			<AlertDialogTrigger>
+			<AlertDialogTrigger asChild>
 				<Button variant={'default'} className="mr-3">
 					Add Employee
 				</Button>
@@ -111,11 +110,13 @@ export default function AddEmployee() {
 				</Form>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction type="submit">
-						<Button variant={'default'} onClick={form.handleSubmit(onSubmit)}>
-							Submit
-						</Button>
-					</AlertDialogAction>
+					<Button
+						type="submit"
+						variant={'default'}
+						onClick={form.handleSubmit(onSubmit)}
+					>
+						Submit
+					</Button>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

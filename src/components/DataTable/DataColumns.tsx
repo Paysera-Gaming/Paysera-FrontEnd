@@ -129,9 +129,9 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 
 						<DropdownMenuSeparator />
 
-						<DropdownMenu>
+						<DropdownMenuItem asChild>
 							<EditRole employeeInfo={employee}></EditRole>
-						</DropdownMenu>
+						</DropdownMenuItem>
 
 						<DropdownMenuItem asChild>
 							<RemoveDialog></RemoveDialog>

@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({
 		<div className="w-full flex justify-center items-center flex-col">
 			<div className="w-full flex justify-between items-center py-4">
 				<Input
-					placeholder="Filter By ID"
+					placeholder={`Filter By ${searchQuery}`}
 					value={
 						(table.getColumn(searchQuery)?.getFilterValue() as string) ?? ''
 					}
@@ -82,7 +82,6 @@ export function DataTable<TData, TValue>({
 					className="max-w-xs"
 				/>
 				<div>
-					{/* <AddEmployee></AddEmployee> */}
 					{addButton}
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>

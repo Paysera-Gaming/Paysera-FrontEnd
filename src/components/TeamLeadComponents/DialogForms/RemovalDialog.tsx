@@ -1,3 +1,4 @@
+import React, { forwardRef, useState } from 'react';
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -8,15 +9,15 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useState } from 'react';
 
-export default function RemoveDialog() {
+const RemoveDialog = forwardRef<HTMLDivElement>((props, ref) => {
 	const [openWarn, setWarn] = useState<boolean>(false);
 
 	return (
 		<AlertDialog open={openWarn} onOpenChange={setWarn}>
 			<div
-				className="p-2 w-full text-sm text-destructive hover:bg-secondary cursor-pointer select-none "
+				ref={ref}
+				className="p-2 w-full text-sm text-destructive hover:bg-secondary cursor-pointer select-none"
 				onClick={() => {
 					setWarn(true);
 				}}
@@ -29,7 +30,7 @@ export default function RemoveDialog() {
 					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 					<AlertDialogDescription>
 						This action cannot be undone. This will remove the employee from the
-						department
+						department.
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
@@ -39,4 +40,6 @@ export default function RemoveDialog() {
 			</AlertDialogContent>
 		</AlertDialog>
 	);
-}
+});
+
+export default RemoveDialog;
