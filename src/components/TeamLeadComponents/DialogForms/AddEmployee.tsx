@@ -29,7 +29,7 @@ import { addEmployeeInDepartment } from '@/api/EmployeeAPI';
 import { toast } from 'sonner';
 
 export const formSchemaAddEmployee = z.object({
-	id: z.coerce.number().gte(18, 'Must be 18 and above'),
+	id: z.coerce.number(),
 	role: z.string().min(5, { message: 'Minimum Charactus must be atleast 5' }),
 });
 
@@ -38,11 +38,14 @@ export default function AddEmployee() {
 	// form schema
 	const form = useForm<z.infer<typeof formSchemaAddEmployee>>({
 		resolver: zodResolver(formSchemaAddEmployee),
-		defaultValues: {},
+		defaultValues: {
+			id: undefined,
+			role: '',
+		},
 	});
 
 	const mutation = useMutation({
-		mutationFn: () => addEmployeeInDepartment(form.getValues(), '95'),
+		mutationFn: () => addEmployeeInDepartment(form.getValues(), '1'),
 		onError: () => {
 			toast.error(form.getValues().id + ' ' + form.getValues().role);
 			// toast.error('An error happened!');

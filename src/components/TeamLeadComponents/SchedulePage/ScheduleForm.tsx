@@ -162,9 +162,7 @@ export default function ScheduleForm({
 										setDate={field.onChange}
 									></TimePicker>
 								</FormControl>
-								<FormDescription>
-									<FormDescription>*In military time</FormDescription>
-								</FormDescription>
+								<FormDescription>*In military Time</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -182,9 +180,7 @@ export default function ScheduleForm({
 										setDate={field.onChange}
 									></TimePicker>
 								</FormControl>
-								<FormDescription>
-									<FormDescription>*In military Time</FormDescription>
-								</FormDescription>
+								<FormDescription>*In military Time</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -201,9 +197,7 @@ export default function ScheduleForm({
 										setDate={field.onChange}
 									></TimePicker>
 								</FormControl>
-								<FormDescription>
-									<FormDescription>*In military Time</FormDescription>
-								</FormDescription>
+								<FormDescription>In military Time</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}

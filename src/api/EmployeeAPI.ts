@@ -67,3 +67,15 @@ export async function updateEmployee(
 
 	return response.data;
 }
+
+export async function deleteEmployee(
+	employeeId: number,
+	departmentId: number
+): Promise<number> {
+	const response: AxiosResponse<void> = await axiosInstance.put(
+		`/api/department/${departmentId}/employee`,
+		{ employeeId: employeeId }
+	);
+
+	return response.status;
+}
