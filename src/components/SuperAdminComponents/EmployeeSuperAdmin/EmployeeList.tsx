@@ -21,6 +21,7 @@ const EmployeeList: React.FC = () => {
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('overall');
+  const [accessLevel, setAccessLevel] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
@@ -74,7 +75,13 @@ const EmployeeList: React.FC = () => {
       emp.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (emp.middleName && emp.middleName.toLowerCase().includes(searchTerm.toLowerCase())) ||
       emp.username.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    )
+    .filter((emp: Employee) => {
+      if (accessLevel) {
+        return emp.accessLevel === accessLevel;
+      }
+      return true;
+    });
 
   const overallCount = employees.length;
   const onlineCount = employees.filter((emp: Employee) => emp.isActive).length;
@@ -82,7 +89,7 @@ const EmployeeList: React.FC = () => {
 
   return (
     <div className="p-4 space-y-4">
-      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} accessLevel={accessLevel} setAccessLevel={setAccessLevel} />
       <SummaryCards
         overallCount={overallCount}
         onlineCount={onlineCount}
