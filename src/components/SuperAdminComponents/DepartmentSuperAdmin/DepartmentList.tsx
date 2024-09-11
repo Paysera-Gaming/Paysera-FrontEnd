@@ -115,20 +115,20 @@ const DepartmentList: React.FC = () => {
                   <table className="min-w-full bg-white dark:bg-transparent">
                     <thead>
                       <tr>
-                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left">Name</th>
-                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left">Leader</th>
-                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left">Members</th>
-                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left">Actions</th>
+                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-black dark:text-gray-300">Name</th>
+                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-black dark:text-gray-300">Leader</th>
+                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-black dark:text-gray-300">Members</th>
+                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-black dark:text-gray-300">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredDepartments.map((department: Department) => (
                         <tr key={department.id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left">{department.name}</td>
-                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left">
+                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">{department.name}</td>
+                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
                             {department.Leader ? `${department.Leader.firstName} ${department.Leader.lastName}` : 'No Leader Assigned'}
                           </td>
-                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left">
+                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
                             {department.Employees && department.Employees.length > 0 ? (
                               <>
                                 {department.Employees.slice(0, 3).map((employee) => (
@@ -142,7 +142,7 @@ const DepartmentList: React.FC = () => {
                               <span>No Employees</span>
                             )}
                           </td>
-                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left">
+                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
                             <Button
                               onClick={() => handleViewDepartment(department)}
                               variant="outline"

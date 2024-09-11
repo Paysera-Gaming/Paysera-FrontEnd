@@ -3,7 +3,6 @@
 import * as React from "react"
 import {
   ColumnDef,
-  ColumnFiltersState,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -11,6 +10,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  filterFns,
 } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 
@@ -33,7 +33,7 @@ interface DepartmentDetailsProps {
 
 const DepartmentDetails: React.FC<DepartmentDetailsProps> = ({ department, onBack }) => {
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [globalFilter, setGlobalFilter] = React.useState<string>("")
 
   const columns: ColumnDef<Employee>[] = [
     {
@@ -73,26 +73,24 @@ const DepartmentDetails: React.FC<DepartmentDetailsProps> = ({ department, onBac
     data: department.Employees || [],
     columns,
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
-      columnFilters,
+      globalFilter,
     },
+    globalFilterFn: filterFns.includesString,
   });
 
   return (
     <div className="container mx-auto p-4 dark:text-white">
       <div className="flex justify-start items-center mb-4 space-x-4">
         <Input
-          placeholder="Filter by first name..."
-          value={(table.getColumn("firstName")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("firstName")?.setFilterValue(String(event.target.value))
-          }
+          placeholder="Filter by first name, last name, or role..."
+          value={globalFilter}
+          onChange={(event) => setGlobalFilter(event.target.value)}
           className="max-w-sm"
         />
         <Button
