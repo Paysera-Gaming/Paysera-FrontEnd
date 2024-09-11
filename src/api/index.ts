@@ -5,10 +5,7 @@ const url = import.meta.env.VITE_APP_API_URL;
 
 export const axiosInstance = axios.create({
 	baseURL: url,
-	headers: {
-		// token here
-		// Authorization: `Bearer `,
-	},
+	withCredentials: true,
 });
 
 // Add a request interceptor

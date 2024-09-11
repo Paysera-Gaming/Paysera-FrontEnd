@@ -22,6 +22,8 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useMutation } from '@tanstack/react-query';
+import { getUserInfo, login } from '@/api/LoginAPI';
 
 // schema for the form
 const formSchema = z.object({
@@ -44,17 +46,22 @@ export default function LoginForm() {
 		resolver: zodResolver(formSchema),
 		defaultValues: { username: '', password: '' },
 	});
+	const mutatationLogIn = useMutation({
+		mutationFn: () =>
+			login(form.getValues().username, form.getValues().password),
+		onSuccess: async () => {
+			await toast.success('Login Success');
+			await getUserInfo().then((data) => {
+				console.log(data);
+			});
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// submit your shit here
-		if (values.username && values.password) {
-			toast.success('login succesful');
-			return setTimeout(() => {
-				return navigate('/teamlead');
-			}, 500);
-		} else {
-			toast.error('please try again');
-		}
+	function onSubmit() {
+		mutatationLogIn.mutate();
 	}
 
 	return (
