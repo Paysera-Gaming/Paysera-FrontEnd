@@ -1,4 +1,5 @@
 import React from 'react';
+import { Input } from '@/components/ui/input'; // Adjust the import path as necessary
 
 interface SearchBarProps {
   searchQuery: string;
@@ -7,13 +8,12 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, onSearchChange }) => {
   return (
-    <div className="mb-4">
-      <input
-        type="text"
+    <div className="flex justify-start items-center mb-4 space-x-4">
+      <Input
         placeholder="Search..."
         value={searchQuery}
         onChange={onSearchChange}
-        className="w-full p-2 border border-gray-300 rounded dark:border-gray-700 dark:text-white dark:bg-transparent"
+        className="max-w-sm dark:text-white"
       />
     </div>
   );

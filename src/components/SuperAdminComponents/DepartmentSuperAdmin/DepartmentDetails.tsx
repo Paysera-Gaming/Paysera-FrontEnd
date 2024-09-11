@@ -88,7 +88,7 @@ const DepartmentDetails: React.FC<DepartmentDetailsProps> = ({ department, onBac
     <div className="container mx-auto p-4 dark:text-white">
       <div className="flex justify-start items-center mb-4 space-x-4">
         <Input
-          placeholder="Filter by first name, last name, or role..."
+          placeholder="Search..."
           value={globalFilter}
           onChange={(event) => setGlobalFilter(event.target.value)}
           className="max-w-sm"
