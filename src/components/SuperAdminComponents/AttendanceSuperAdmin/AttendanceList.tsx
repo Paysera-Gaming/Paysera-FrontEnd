@@ -130,7 +130,7 @@
         if (!attendanceList) return attendanceList;
         return attendanceList.filter((attendance) => {
           const attendanceDate = new Date(attendance.date);
-          const matchesDateRange = dateRange?.from && dateRange?.to ? attendanceDate >= dateRange.from && attendanceDate <= dateRange.to : true;
+          const matchesDateRange = dateRange?.from && dateRange?.to ? attendanceDate >= dateRange.from && attendanceDate <= addDays(dateRange.to, 1) : true;
           const matchesYear = selectedYear && !dateRange ? attendanceDate.getFullYear() === selectedYear : true;
           return matchesDateRange && matchesYear;
         });
