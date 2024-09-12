@@ -5,23 +5,46 @@
     import { getAttendanceList } from './api';
     import { formatDate, formatTime, calculateWorkTimeTotal } from './utils';
     import { Attendance } from './types';
-    import { addDays, format } from 'date-fns';
+    import { addDays, format, setYear } from 'date-fns';
     import { Calendar as CalendarIcon } from 'lucide-react';
     import { DateRange } from 'react-day-picker';
     import { cn } from '@/lib/utils';
     import { Button } from '@/components/ui/button';
     import { Calendar } from '@/components/ui/calendar';
     import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+    import {
+      DropdownMenu,
+      DropdownMenuCheckboxItem,
+      DropdownMenuContent,
+      DropdownMenuLabel,
+      DropdownMenuSeparator,
+      DropdownMenuTrigger,
+    } from '@/components/ui/dropdown-menu';
     
-    const DatePickerWithRange: React.FC<{ className?: string; onChange: (date: DateRange | undefined) => void }> = ({ className, onChange }) => {
+    type Checked = boolean | 'indeterminate';
+    
+    const DatePickerWithRangeAndYear: React.FC<{ className?: string; onChange: (date: DateRange | undefined, year: number | undefined) => void }> = ({ className, onChange }) => {
       const [date, setDate] = useState<DateRange | undefined>({
         from: new Date(2022, 0, 20),
         to: addDays(new Date(2022, 0, 20), 20),
       });
+      const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
     
       const handleSelect = (selectedDate: DateRange | undefined) => {
         setDate(selectedDate);
-        onChange(selectedDate);
+        onChange(selectedDate, selectedYear);
+      };
+    
+      const handleYearChange = (checked: Checked, year: number) => {
+        if (checked) {
+          setSelectedYear(year);
+          const newDate = date ? { from: setYear(date.from!, year), to: setYear(date.to!, year) } : undefined;
+          setDate(newDate);
+          onChange(newDate, year);
+        } else {
+          setSelectedYear(undefined);
+          onChange(date, undefined);
+        }
       };
     
       return (
@@ -60,6 +83,24 @@
                 onSelect={handleSelect}
                 numberOfMonths={2}
               />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="mt-2">Filter by Year</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuLabel>Years</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {[2022, 2023, 2024, 2025, 2026].map((year) => (
+                    <DropdownMenuCheckboxItem
+                      key={year}
+                      checked={selectedYear === year}
+                      onCheckedChange={(checked) => handleYearChange(checked, year)}
+                    >
+                      {year}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </PopoverContent>
           </Popover>
         </div>
@@ -78,13 +119,29 @@
         to: addDays(new Date(2022, 0, 20), 20),
       });
     
+      const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
+    
+      const handleDateRangeAndYearChange = (date: DateRange | undefined, year: number | undefined) => {
+        setDateRange(date);
+        setSelectedYear(year);
+      };
+    
       const filteredAttendanceList = useMemo(() => {
-        if (!attendanceList || !dateRange?.from || !dateRange?.to) return attendanceList;
-        return attendanceList.filter((attendance) => {
-          const attendanceDate = new Date(attendance.date);
-          return attendanceDate >= dateRange.from! && attendanceDate <= dateRange.to!;
-        });
-      }, [attendanceList, dateRange]);
+        if (!attendanceList) return attendanceList;
+        if (selectedYear) {
+          return attendanceList.filter((attendance) => {
+            const attendanceDate = new Date(attendance.date);
+            return attendanceDate.getFullYear() === selectedYear;
+          });
+        }
+        if (dateRange?.from && dateRange?.to) {
+          return attendanceList.filter((attendance) => {
+            const attendanceDate = new Date(attendance.date);
+            return attendanceDate >= dateRange.from! && attendanceDate <= dateRange.to!;
+          });
+        }
+        return attendanceList;
+      }, [attendanceList, dateRange, selectedYear]);
     
       const columns: ColumnDef<Attendance>[] = [
         {
@@ -158,7 +215,7 @@
     
       return (
         <div className="w-full">
-          <DatePickerWithRange className="mb-4" onChange={setDateRange} />
+          <DatePickerWithRangeAndYear className="mb-4" onChange={handleDateRangeAndYearChange} />
           <div className="rounded-md border">
             <Table>
               <TableHeader>
