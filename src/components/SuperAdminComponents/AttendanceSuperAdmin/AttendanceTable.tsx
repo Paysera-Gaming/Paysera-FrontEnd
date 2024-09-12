@@ -56,9 +56,18 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
-                {searchQuery && `No results found for "${searchQuery}".`}<br />
-                No employee attendance records found for {formattedFromDate} to {formattedToDate} for {activeFilter} schedule type.<br />
-                Please select a different date range to view previous attendance records.
+                {searchQuery ? (
+                  <>
+                    No results found for "{searchQuery}".<br />
+                    No employee attendance records found for {formattedFromDate} to {formattedToDate} for {activeFilter} schedule type.<br />
+                    Please select a different date range to view previous attendance records.
+                  </>
+                ) : (
+                  <>
+                    No employee attendance records found for {formattedFromDate} to {formattedToDate} for {activeFilter} schedule type.<br />
+                    Please select a different date range to view previous attendance records.
+                  </>
+                )}
               </TableCell>
             </TableRow>
           )}
