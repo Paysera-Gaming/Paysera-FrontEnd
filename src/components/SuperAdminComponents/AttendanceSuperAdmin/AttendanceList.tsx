@@ -25,8 +25,8 @@
     
     const DatePickerWithRangeAndYear: React.FC<{ className?: string; onChange: (date: DateRange | undefined, year: number | undefined) => void }> = ({ className, onChange }) => {
       const [date, setDate] = useState<DateRange | undefined>({
-        from: new Date(2022, 0, 20),
-        to: addDays(new Date(2022, 0, 20), 20),
+        from: new Date(),
+        to: new Date(),
       });
       const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
     
@@ -45,6 +45,13 @@
           setSelectedYear(undefined);
           onChange(date, undefined);
         }
+      };
+    
+      const handleTodayClick = () => {
+        const today = new Date();
+        const todayRange = { from: today, to: today };
+        setDate(todayRange);
+        onChange(todayRange, selectedYear);
       };
     
       return (
@@ -78,29 +85,34 @@
               <Calendar
                 initialFocus
                 mode="range"
-                defaultMonth={date?.from}
+                defaultMonth={date?.from || new Date()}
                 selected={date}
                 onSelect={handleSelect}
                 numberOfMonths={2}
               />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="mt-2">Filter by Year</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
-                  <DropdownMenuLabel>Years</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {[2022, 2023, 2024, 2025, 2026].map((year) => (
-                    <DropdownMenuCheckboxItem
-                      key={year}
-                      checked={selectedYear === year}
-                      onCheckedChange={(checked) => handleYearChange(checked, year)}
-                    >
-                      {year}
-                    </DropdownMenuCheckboxItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="flex justify-between p-2">
+                <Button variant="outline" onClick={handleTodayClick}>
+                  Today
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">Filter by Year</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuLabel>Years</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {[2022, 2023, 2024, 2025, 2026].map((year) => (
+                      <DropdownMenuCheckboxItem
+                        key={year}
+                        checked={selectedYear === year}
+                        onCheckedChange={(checked) => handleYearChange(checked, year)}
+                      >
+                        {year}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </PopoverContent>
           </Popover>
         </div>
@@ -115,8 +127,8 @@
       });
     
       const [dateRange, setDateRange] = useState<DateRange | undefined>({
-        from: new Date(2022, 0, 20),
-        to: addDays(new Date(2022, 0, 20), 20),
+        from: new Date(),
+        to: new Date(),
       });
     
       const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
@@ -228,7 +240,13 @@
                 ))}
               </TableHeader>
               <TableBody>
-                {table.getRowModel().rows?.length ? (
+                {!dateRange?.from || !dateRange?.to ? (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
+                      Please select a start date and end date to view attendance records.
+                    </TableCell>
+                  </TableRow>
+                ) : table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
                     <TableRow key={row.id}>
                       {row.getVisibleCells().map((cell) => (
@@ -240,8 +258,8 @@
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center">
-                      No employee attendance from {formattedFromDate} to {formattedToDate}.
+                    <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
+                      No employee attendance records found for {formattedFromDate} to {formattedToDate}. Please select a different date range to view previous attendance records.
                     </TableCell>
                   </TableRow>
                 )}
