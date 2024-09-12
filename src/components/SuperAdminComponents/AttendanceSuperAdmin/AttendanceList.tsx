@@ -158,7 +158,7 @@
             activeFilter={activeFilter}
             handleFilterClick={handleFilterClick}
           />
-          <AttendanceTable data={filteredAttendanceList || []} columns={columns} dateRange={dateRange} activeFilter={activeFilter} />
+          <AttendanceTable data={filteredAttendanceList || []} columns={columns} dateRange={dateRange} activeFilter={activeFilter} searchQuery={searchQuery} />
         </div>
       );
     };
