@@ -29,6 +29,7 @@
         to: new Date(),
       });
       const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
+      const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
     
       const handleSelect = (selectedDate: DateRange | undefined) => {
         setDate(selectedDate);
@@ -51,6 +52,7 @@
         const today = new Date();
         const todayRange = { from: today, to: today };
         setDate(todayRange);
+        setCurrentMonth(today);
         onChange(todayRange, selectedYear);
       };
     
@@ -82,14 +84,6 @@
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                initialFocus
-                mode="range"
-                defaultMonth={date?.from || new Date()}
-                selected={date}
-                onSelect={handleSelect}
-                numberOfMonths={2}
-              />
               <div className="flex justify-between p-2">
                 <Button variant="outline" onClick={handleTodayClick}>
                   Today
@@ -113,6 +107,14 @@
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
+              <Calendar
+                initialFocus
+                mode="range"
+                defaultMonth={currentMonth}
+                selected={date}
+                onSelect={handleSelect}
+                numberOfMonths={2}
+              />
             </PopoverContent>
           </Popover>
         </div>
@@ -259,7 +261,8 @@
                 ) : (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
-                      No employee attendance records found for {formattedFromDate} to {formattedToDate}. Please select a different date range to view previous attendance records.
+                      No employee attendance records found for {formattedFromDate} to {formattedToDate}.<br />
+                      Please select a different date range to view previous attendance records.
                     </TableCell>
                   </TableRow>
                 )}
