@@ -19,6 +19,38 @@ import { formatDate } from './DataColumns';
 import { Badge } from '../ui/badge';
 
 export const ScheduleContext = createContext<TSchedule | undefined>(undefined);
+// overhaul the schedule interface
+
+// {
+//   "id": 0,
+//   "scheduleId": 0,
+//   "name": "IT Department Schedule AM",
+//   "Schedule": {
+//     "id": 0,
+//     "day": "MONDAY",
+//     "name": "string",
+//     "description": "string",
+//     "scheduleType": "FIXED",
+//     "fixedStartTime": "2024-09-12T09:57:54.680Z",
+//     "fixedEndTime": "2024-09-12T09:57:54.680Z",
+//     "flexStartTime": "2024-09-12T09:57:54.680Z",
+//     "flexEndTime": "2024-09-12T09:57:54.680Z",
+//     "limitWorkHoursDay": 0,
+//     "allowedOvertime": true,
+//     "lunchStartTime": "2024-09-12T09:57:54.680Z",
+//     "lunchEndTime": "2024-09-12T09:57:54.680Z",
+//     "isDepartmentSchedule": true,
+//     "isTemplateBased": true,
+//     "DepartmentSchedule": [
+//       "string"
+//     ],
+//     "updatedAt": "2024-09-12T09:57:54.680Z",
+//     "createdAt": "2024-09-12T09:57:54.680Z"
+//   },
+//   "departmentId": 0,
+//   "updatedAt": "2024-09-12T09:57:54.680Z",
+//   "createdAt": "2024-09-12T09:57:54.680Z"
+// }
 
 export interface TSchedule {
 	id: number;
@@ -35,6 +67,8 @@ export interface TSchedule {
 	allowedOvertime: boolean;
 	lunchStartTime: Date;
 	lunchEndTime: Date;
+
+	joe: { name: string; age: number };
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

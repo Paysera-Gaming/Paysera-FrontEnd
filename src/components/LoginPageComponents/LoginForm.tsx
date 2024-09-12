@@ -77,6 +77,7 @@ export default function LoginForm() {
 	});
 
 	function onSubmit() {
+		toast.loading('Logging in...');
 		setDisable(true);
 		mutatationLogIn.mutate();
 	}

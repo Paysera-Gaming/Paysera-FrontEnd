@@ -82,10 +82,14 @@ export function AttendanceTable<TData, TValue>({
 					<Input
 						placeholder="Filter Employee via ID..."
 						value={
-							(table.getColumn('userID')?.getFilterValue() as string) ?? ''
+							(table
+								.getColumn('employee.lastName')
+								?.getFilterValue() as string) ?? ''
 						}
 						onChange={(event) =>
-							table.getColumn('userID')?.setFilterValue(event.target.value)
+							table
+								.getColumn('employee.lastName')
+								?.setFilterValue(event.target.value)
 						}
 						className="w-[220px]"
 					/>
