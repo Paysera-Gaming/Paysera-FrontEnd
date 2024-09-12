@@ -26,6 +26,7 @@
     
       const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
       const [activeFilter, setActiveFilter] = useState<string>('overall');
+      const [searchQuery, setSearchQuery] = useState<string>('');
     
       const handleDateRangeAndYearChange = (date: DateRange | undefined, year: number | undefined) => {
         setDateRange({ from: date?.from, to: date?.to });
@@ -36,6 +37,10 @@
         setActiveFilter(filter);
       };
     
+      const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(event.target.value);
+      };
+    
       const filteredAttendanceList = useMemo(() => {
         if (!attendanceList) return attendanceList;
         return attendanceList.filter((attendance) => {
@@ -43,9 +48,16 @@
           const matchesDateRange = dateRange?.from && dateRange?.to ? attendanceDate >= dateRange.from && attendanceDate <= addDays(dateRange.to, 1) : true;
           const matchesYear = selectedYear && !dateRange ? attendanceDate.getFullYear() === selectedYear : true;
           const matchesFilter = activeFilter === 'overall' || attendance.scheduleType === activeFilter.toUpperCase();
-          return matchesDateRange && matchesYear && matchesFilter;
+          const matchesSearchQuery = searchQuery
+            ? attendance.employee.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              attendance.employee.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              formatDate(attendance.date).toLowerCase().includes(searchQuery.toLowerCase()) ||
+              attendance.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              attendance.scheduleType.toLowerCase().includes(searchQuery.toLowerCase())
+            : true;
+          return matchesDateRange && matchesYear && matchesFilter && matchesSearchQuery;
         });
-      }, [attendanceList, dateRange, selectedYear, activeFilter]);
+      }, [attendanceList, dateRange, selectedYear, activeFilter, searchQuery]);
     
       const overallCount = filteredAttendanceList?.length || 0;
       const fixedCount = filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED').length || 0;
@@ -119,7 +131,16 @@
       return (
         <div className="w-full">
           <div className="flex justify-between items-center mb-4">
-            <DateRangePicker onChange={handleDateRangeAndYearChange} />
+            <div className="flex items-center">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="border p-2 rounded mr-4"
+              />
+              <DateRangePicker onChange={handleDateRangeAndYearChange} />
+            </div>
             <Button onClick={() => {
               if (dateRange.from && dateRange.to) {
                 exportToCSV(filteredAttendanceList || [], dateRange as { from: Date; to: Date });
