@@ -137,7 +137,7 @@
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="border p-2 rounded mr-4"
+                className="border p-2 rounded mr-4 bg-white dark:bg-transparent dark:text-white dark:border-gray-700"
               />
               <DateRangePicker onChange={handleDateRangeAndYearChange} />
             </div>
@@ -158,7 +158,7 @@
             activeFilter={activeFilter}
             handleFilterClick={handleFilterClick}
           />
-          <AttendanceTable data={filteredAttendanceList || []} columns={columns} dateRange={dateRange} />
+          <AttendanceTable data={filteredAttendanceList || []} columns={columns} dateRange={dateRange} activeFilter={activeFilter} />
         </div>
       );
     };

@@ -8,9 +8,10 @@ interface AttendanceTableProps {
   data: Attendance[];
   columns: ColumnDef<Attendance>[];
   dateRange: { from: Date | undefined; to: Date | undefined } | undefined;
+  activeFilter: string; // Add activeFilter to props
 }
 
-const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRange }) => {
+const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRange, activeFilter }) => {
   const table = useReactTable({
     data,
     columns,
@@ -54,7 +55,7 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
-                No employee attendance records found for {formattedFromDate} to {formattedToDate}.<br />
+                No employee attendance records found for {formattedFromDate} to {formattedToDate} for {activeFilter} schedule type.<br />
                 Please select a different date range to view previous attendance records.
               </TableCell>
             </TableRow>
