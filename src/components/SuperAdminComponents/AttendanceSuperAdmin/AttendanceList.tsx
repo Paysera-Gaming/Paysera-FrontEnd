@@ -8,6 +8,8 @@
     import { addDays, format } from 'date-fns';
     import { DateRange } from 'react-day-picker';
     import DatePickerWithRangeAndYear from './DatePickerWithRangeAndYear';
+    import { Button } from '@/components/ui/button';
+    import Papa from 'papaparse';
     
     const AttendanceList: React.FC = () => {
       const { data: attendanceList, isLoading, error }: UseQueryResult<Attendance[], Error> = useQuery({
@@ -105,6 +107,37 @@
         getCoreRowModel: getCoreRowModel(),
       });
     
+      const exportToCSV = () => {
+        const csvData = filteredAttendanceList?.map((attendance) => ({
+          'First Name': attendance.employee.firstName,
+          'Last Name': attendance.employee.lastName,
+          'Date': formatDate(attendance.date),
+          'Status': attendance.status,
+          'Schedule Type': attendance.scheduleType,
+          'Time In': formatTime(attendance.timeIn),
+          'Lunch Time In': formatTime(attendance.lunchTimeIn),
+          'Lunch Time Out': formatTime(attendance.lunchTimeOut),
+          'Work Time Total': calculateWorkTimeTotal(attendance.timeIn, attendance.timeOut, attendance.lunchTimeTotal),
+          'Lunch Time Total': attendance.lunchTimeTotal,
+          'Time Out': formatTime(attendance.timeOut),
+          'Overtime Total': attendance.overTimeTotal,
+          'Total Time': attendance.timeTotal,
+        }));
+    
+        const csv = Papa.unparse(csvData || []);
+        const formattedFromDate = dateRange?.from ? format(dateRange.from, "yyyy-MM-dd") : "N/A";
+        const formattedToDate = dateRange?.to ? format(dateRange.to, "yyyy-MM-dd") : "N/A";
+        const fileName = `attendance_${formattedFromDate}_to_${formattedToDate}.csv`;
+    
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+    
       if (isLoading) return <div>Loading...</div>;
       if (error) return <div>Error loading attendance list</div>;
     
@@ -114,6 +147,7 @@
       return (
         <div className="w-full">
           <DatePickerWithRangeAndYear className="mb-4" onChange={handleDateRangeAndYearChange} />
+          <Button onClick={exportToCSV} className="mb-4">Export to CSV</Button>
           <div className="rounded-md border">
             <Table>
               <TableHeader>
