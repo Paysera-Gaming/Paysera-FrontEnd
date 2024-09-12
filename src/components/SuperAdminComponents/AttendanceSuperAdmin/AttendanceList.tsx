@@ -146,8 +146,10 @@
     
       return (
         <div className="w-full">
-          <DatePickerWithRangeAndYear className="mb-4" onChange={handleDateRangeAndYearChange} />
-          <Button onClick={exportToCSV} className="mb-4">Export to CSV</Button>
+          <div className="flex justify-between items-center mb-4">
+            <DatePickerWithRangeAndYear onChange={handleDateRangeAndYearChange} />
+            <Button onClick={exportToCSV}>Export to CSV</Button>
+          </div>
           <div className="rounded-md border">
             <Table>
               <TableHeader>
