@@ -1,30 +1,17 @@
-    import React, { useState } from 'react';
+    import React from 'react';
     import { useQuery, UseQueryResult } from '@tanstack/react-query';
     import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
     import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
     import { getAttendanceList } from './api';
     import { formatDate, formatTime, calculateWorkTimeTotal } from './utils';
     import { Attendance } from './types';
-    import { DatePickerDemo } from './DatePickerDemo'; // Adjust the import path as needed
-    import { DateRange } from 'react-day-picker'; // Import DateRange from react-day-picker
     
     const AttendanceList: React.FC = () => {
-      const [dateRange, setDateRange] = useState<DateRange | undefined>({ from: new Date(), to: undefined });
-    
       const { data: attendanceList, isLoading, error }: UseQueryResult<Attendance[], Error> = useQuery({
         queryKey: ['attendanceList'],
         queryFn: getAttendanceList,
         refetchInterval: 5000,
       });
-    
-      const filteredAttendanceList = attendanceList?.filter((attendance) => {
-        if (!dateRange?.from) return true;
-        const attendanceDate = new Date(attendance.date);
-        return (
-          attendanceDate >= dateRange.from &&
-          (!dateRange.to || attendanceDate <= dateRange.to)
-        );
-      }) || [];
     
       const columns: ColumnDef<Attendance>[] = [
         {
@@ -88,7 +75,7 @@
       ];
     
       const table = useReactTable({
-        data: filteredAttendanceList,
+        data: attendanceList || [],
         columns,
         getCoreRowModel: getCoreRowModel(),
       });
@@ -98,7 +85,6 @@
     
       return (
         <div className="w-full">
-          <DatePickerDemo onSubmit={setDateRange} />
           <div className="rounded-md border">
             <Table>
               <TableHeader>
