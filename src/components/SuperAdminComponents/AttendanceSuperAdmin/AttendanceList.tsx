@@ -94,7 +94,7 @@
       const superFlexiCount = filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI').length || 0;
       const flexiCount = filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI').length || 0;
     
-           const columns: ColumnDef<Attendance>[] = [
+      const columns: ColumnDef<Attendance>[] = [
         {
           accessorKey: 'employee.firstName',
           header: 'First Name',
@@ -155,6 +155,11 @@
         },
       ];
     
+      const handlePaidLeaveClick = () => {
+        console.log("Paid Leave button clicked");
+        // Implement the logic for the Paid Leave button click event here
+      };
+    
       if (isLoading) return <div>Loading...</div>;
       if (error) return <div>Error loading attendance list</div>;
     
@@ -171,18 +176,26 @@
               />
               <DateRangePicker onChange={handleDateRangeAndYearChange} />
             </div>
-            <Button
-              onClick={() => {
-                if (dateRange.from && dateRange.to) {
-                  exportToCSV(filteredAttendanceList || [], dateRange as { from: Date; to: Date });
-                } else {
-                  console.error("Date range is not fully defined");
-                }
-              }}
-              className="bg-green-500 text-white"
-            >
-              Export to CSV
-            </Button>
+            <div className="flex items-center">
+              <Button
+                onClick={() => {
+                  if (dateRange.from && dateRange.to) {
+                    exportToCSV(filteredAttendanceList || [], dateRange as { from: Date; to: Date });
+                  } else {
+                    console.error("Date range is not fully defined");
+                  }
+                }}
+                className="bg-green-500 text-white mr-2"
+              >
+                Export to CSV
+              </Button>
+              <Button
+                onClick={handlePaidLeaveClick}
+                className="bg-blue-500 text-white"
+              >
+                Paid Leave
+              </Button>
+            </div>
           </div>
           <AttendanceSummaryCards
             key={activeFilter} // Add key to force re-render
