@@ -94,7 +94,7 @@
       const superFlexiCount = filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI').length || 0;
       const flexiCount = filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI').length || 0;
     
-      const columns: ColumnDef<Attendance>[] = [
+           const columns: ColumnDef<Attendance>[] = [
         {
           accessorKey: 'employee.firstName',
           header: 'First Name',
@@ -132,18 +132,18 @@
           cell: ({ row }) => formatTime(row.original.lunchTimeOut),
         },
         {
-          accessorKey: 'timeHoursWorked',
-          header: 'Work Time Total',
-          cell: ({ row }) => calculateWorkTimeTotal(row.original.timeIn, row.original.timeOut, row.original.lunchTimeTotal),
+          accessorKey: 'timeOut',
+          header: 'Time Out',
+          cell: ({ row }) => formatTime(row.original.timeOut),
         },
         {
           accessorKey: 'lunchTimeTotal',
           header: 'Lunch Time Total',
         },
         {
-          accessorKey: 'timeOut',
-          header: 'Time Out',
-          cell: ({ row }) => formatTime(row.original.timeOut),
+          accessorKey: 'timeHoursWorked',
+          header: 'Work Time Total',
+          cell: ({ row }) => calculateWorkTimeTotal(row.original.timeIn, row.original.timeOut, row.original.lunchTimeTotal),
         },
         {
           accessorKey: 'overTimeTotal',

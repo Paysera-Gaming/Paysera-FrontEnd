@@ -13,9 +13,9 @@ export const exportToCSV = (data: Attendance[], dateRange: { from: Date; to: Dat
     'Time In': formatTime(attendance.timeIn),
     'Lunch Time In': formatTime(attendance.lunchTimeIn),
     'Lunch Time Out': formatTime(attendance.lunchTimeOut),
-    'Work Time Total': calculateWorkTimeTotal(attendance.timeIn, attendance.timeOut, attendance.lunchTimeTotal),
-    'Lunch Time Total': attendance.lunchTimeTotal,
     'Time Out': formatTime(attendance.timeOut),
+    'Lunch Time Total': attendance.lunchTimeTotal,
+    'Work Time Total': calculateWorkTimeTotal(attendance.timeIn, attendance.timeOut, attendance.lunchTimeTotal),
     'Overtime Total': attendance.overTimeTotal,
     'Total Time': attendance.timeTotal,
   }));
