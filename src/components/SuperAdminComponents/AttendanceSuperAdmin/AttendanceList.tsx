@@ -62,35 +62,31 @@
       const countStatus = (list: Attendance[], status: string) => list.filter(a => a.status === status).length;
     
       const overallCounts = {
+        ongoing: countStatus(filteredAttendanceList || [], 'ONGOING'),
         break: countStatus(filteredAttendanceList || [], 'BREAK'),
         done: countStatus(filteredAttendanceList || [], 'DONE'),
-        unpaidLeave: countStatus(filteredAttendanceList || [], 'UNPAID_LEAVE'),
         paidLeave: countStatus(filteredAttendanceList || [], 'PAID_LEAVE'),
-        ongoing: countStatus(filteredAttendanceList || [], 'ONGOING'),
       };
     
       const fixedCounts = {
+        ongoing: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED') || [], 'ONGOING'),
         break: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED') || [], 'BREAK'),
         done: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED') || [], 'DONE'),
-        unpaidLeave: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED') || [], 'UNPAID_LEAVE'),
         paidLeave: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED') || [], 'PAID_LEAVE'),
-        ongoing: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED') || [], 'ONGOING'),
       };
     
       const superFlexiCounts = {
+        ongoing: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'ONGOING'),
         break: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'BREAK'),
         done: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'DONE'),
-        unpaidLeave: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'UNPAID_LEAVE'),
         paidLeave: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'PAID_LEAVE'),
-        ongoing: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'ONGOING'),
       };
     
       const flexiCounts = {
+        ongoing: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI') || [], 'ONGOING'),
         break: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI') || [], 'BREAK'),
         done: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI') || [], 'DONE'),
-        unpaidLeave: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI') || [], 'UNPAID_LEAVE'),
         paidLeave: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI') || [], 'PAID_LEAVE'),
-        ongoing: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI') || [], 'ONGOING'),
       };
     
       const overallCount = filteredAttendanceList?.length || 0;
