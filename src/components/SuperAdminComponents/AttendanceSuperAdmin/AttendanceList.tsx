@@ -171,13 +171,18 @@
               />
               <DateRangePicker onChange={handleDateRangeAndYearChange} />
             </div>
-            <Button onClick={() => {
-              if (dateRange.from && dateRange.to) {
-                exportToCSV(filteredAttendanceList || [], dateRange as { from: Date; to: Date });
-              } else {
-                console.error("Date range is not fully defined");
-              }
-            }}>Export to CSV</Button>
+            <Button
+              onClick={() => {
+                if (dateRange.from && dateRange.to) {
+                  exportToCSV(filteredAttendanceList || [], dateRange as { from: Date; to: Date });
+                } else {
+                  console.error("Date range is not fully defined");
+                }
+              }}
+              className="bg-green-500 text-white"
+            >
+              Export to CSV
+            </Button>
           </div>
           <AttendanceSummaryCards
             key={activeFilter} // Add key to force re-render
