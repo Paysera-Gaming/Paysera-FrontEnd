@@ -72,9 +72,13 @@ export async function deleteEmployee(
 	employeeId: number,
 	departmentId: number
 ): Promise<number> {
-	const response: AxiosResponse<void> = await axiosInstance.put(
+	const response: AxiosResponse<void> = await axiosInstance.delete(
 		`/api/department/${departmentId}/employee`,
-		{ employeeId: employeeId }
+		{
+			data: {
+				employeeId,
+			},
+		}
 	);
 
 	return response.status;

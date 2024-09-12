@@ -22,18 +22,19 @@ const RemoveDialog = forwardRef<HTMLDivElement, RemoveDialogProps>(
 	({ deleteRequest, employeeID, departmentId }, ref) => {
 		const [openWarn, setOpenWarn] = useState<boolean>(false);
 
-		// const queryClient = useQueryClient();
+		const queryClient = useQueryClient();
 
 		const mutation = useMutation<number>({
 			mutationFn: () => deleteRequest(employeeID, departmentId),
 			onSuccess: () => {
 				toast.success('Employee removed successfully');
-				// queryClient.invalidateQueries({ queryKey: ['EmployeeRole'] });
+				queryClient.invalidateQueries({ queryKey: ['EmployeesInfo'] });
 			},
-			onError: () => {
+			onError: (data) => {
+				console.log(data.message);
+
 				toast.error('An error happened!');
 			},
-			mutationKey: ['EmployeeRole'],
 		});
 
 		const handleOpenWarn = () => {

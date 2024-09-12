@@ -6,6 +6,7 @@ import AddEmployee from '@/components/TeamLeadComponents/DialogForms/AddEmployee
 import { useQuery } from '@tanstack/react-query';
 import { getAllEmployeesInDepartment } from '../../../api/EmployeeAPI';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useUserStore } from '@/stores/userStore';
 
 // todo's
 // need to add edit employee in department - doing
@@ -14,7 +15,16 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function ManagePage() {
 	const { data, isError, isLoading } = useQuery({
 		queryKey: ['EmployeesInfo'],
-		queryFn: () => getAllEmployeesInDepartment('1'),
+		queryFn: () => {
+			const user = useUserStore.getState().getUser();
+			const departmentId = user?.departmentId;
+
+			if (departmentId !== undefined) {
+				return getAllEmployeesInDepartment(departmentId.toString());
+			} else {
+				throw new Error('No Department Id Found');
+			}
+		},
 	});
 
 	const dataEmployees: TEmployee[] = data ?? [];

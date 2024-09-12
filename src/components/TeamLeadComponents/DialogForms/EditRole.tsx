@@ -17,8 +17,7 @@ import { updateEmployee } from '@/api/EmployeeAPI';
 
 const EditRole = forwardRef<HTMLDivElement, { employeeInfo: TEmployee }>(
 	({ employeeInfo }, ref) => {
-		// dear lue please add a form hook and zod edit in here ty!
-		// const queryClient = useQueryClient();
+		const queryClient = useQueryClient();
 		const [isOpen, setOpen] = useState<boolean>(false);
 		const [roleInput, setRole] = useState<string>('');
 		const mutation = useMutation({
@@ -31,9 +30,8 @@ const EditRole = forwardRef<HTMLDivElement, { employeeInfo: TEmployee }>(
 			},
 			onSuccess: () => {
 				toast.success('The Role has been changed');
-				// queryClient.invalidateQueries({ queryKey: ['EmployeeRole'] });
+				queryClient.invalidateQueries({ queryKey: ['EmployeesInfo'] });
 			},
-			mutationKey: ['EmployeeRole'],
 		});
 
 		return (

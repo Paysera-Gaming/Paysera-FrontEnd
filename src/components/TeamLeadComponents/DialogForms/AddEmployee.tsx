@@ -24,9 +24,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addEmployeeInDepartment } from '@/api/EmployeeAPI';
 import { toast } from 'sonner';
+import { useUserStore } from '@/stores/userStore';
 
 export const formSchemaAddEmployee = z.object({
 	id: z.coerce.number(),
@@ -43,16 +44,33 @@ export default function AddEmployee() {
 			role: '',
 		},
 	});
+	const queryClient = useQueryClient();
 
 	const mutation = useMutation({
-		mutationFn: () => addEmployeeInDepartment(form.getValues(), '1'),
+		mutationFn: () => {
+			const user = useUserStore.getState().getUser();
+			const departmentId = user?.departmentId;
+
+			if (departmentId !== undefined) {
+				return addEmployeeInDepartment(
+					form.getValues(),
+					departmentId.toString()
+				);
+			} else {
+				toast.error('No Department Id Found');
+				throw new Error('No Department Id Found');
+			}
+		},
 		onError: () => {
 			toast.error(form.getValues().id + ' ' + form.getValues().role);
 			// toast.error('An error happened!');
 		},
 		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['EmployeesInfo'] });
+
 			toast.success('Employee Added!');
 		},
+		mutationKey: ['EmployeeInfo'],
 	});
 
 	//  submit handler do your magic here

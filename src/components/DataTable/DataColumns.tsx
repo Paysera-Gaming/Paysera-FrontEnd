@@ -27,6 +27,7 @@ import { MoreHorizontal } from 'lucide-react';
 import EditRole from '../TeamLeadComponents/DialogForms/EditRole';
 import RemoveDialog from '../TeamLeadComponents/DialogForms/RemovalDialog';
 import { deleteEmployee } from '@/api/EmployeeAPI';
+import { useUserStore } from '@/stores/userStore';
 
 export function formatDate(date: Date): string {
 	const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
@@ -115,7 +116,12 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 		id: 'actions',
 		cell: ({ row }) => {
 			const employee = row.original;
+			const user = useUserStore.getState().getUser();
+			const departmentId = user?.departmentId;
 
+			if (departmentId == undefined) {
+				throw new Error('No Department Id Found');
+			}
 			return (
 				// try to make this drop down into a stupid standalone
 				<DropdownMenu>
@@ -138,7 +144,7 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 							<RemoveDialog
 								deleteRequest={deleteEmployee}
 								employeeID={row.original.id}
-								departmentId={1}
+								departmentId={departmentId}
 							></RemoveDialog>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
