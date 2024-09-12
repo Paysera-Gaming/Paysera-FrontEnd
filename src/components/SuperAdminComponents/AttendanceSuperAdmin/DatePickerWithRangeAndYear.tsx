@@ -30,6 +30,9 @@ const DatePickerWithRangeAndYear: React.FC<DatePickerWithRangeAndYearProps> = ({
   const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
 
+  const currentYear = new Date().getFullYear();
+  const years = [2022, 2023, 2024, 2025, 2026].filter(year => year <= currentYear);
+
   const handleSelect = (selectedDate: DateRange | undefined) => {
     setDate(selectedDate);
     onChange(selectedDate, selectedYear);
@@ -94,7 +97,7 @@ const DatePickerWithRangeAndYear: React.FC<DatePickerWithRangeAndYearProps> = ({
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>Years</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {[2022, 2023, 2024, 2025, 2026].map((year) => (
+                {years.map((year) => (
                   <DropdownMenuCheckboxItem
                     key={year}
                     checked={selectedYear === year}
