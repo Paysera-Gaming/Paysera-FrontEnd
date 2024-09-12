@@ -61,9 +61,8 @@ export default function AddEmployee() {
 				throw new Error('No Department Id Found');
 			}
 		},
-		onError: () => {
-			toast.error(form.getValues().id + ' ' + form.getValues().role);
-			// toast.error('An error happened!');
+		onError: (error) => {
+			toast.error(error.message);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['EmployeesInfo'] });
@@ -75,7 +74,6 @@ export default function AddEmployee() {
 
 	//  submit handler do your magic here
 	function onSubmit() {
-		// Do something with the form values.
 		mutation.mutate();
 		setAlert(false);
 	}

@@ -43,7 +43,7 @@ function UserInfo() {
 				{returnRole(info.accessLevel)}
 			</li>
 			<li>
-				<b>Department Name:&nbsp;</b>
+				<b>Department :&nbsp;</b>
 				{info.departmentName}
 			</li>
 		</ul>

@@ -25,6 +25,7 @@ import { Input } from '@/components/ui/input';
 import { useMutation } from '@tanstack/react-query';
 import { login } from '@/api/LoginAPI';
 import { useUserStore } from '@/stores/userStore';
+import { useState } from 'react';
 // schema for the form
 const formSchema = z.object({
 	username: z
@@ -41,18 +42,18 @@ const formSchema = z.object({
 
 export default function LoginForm() {
 	const navigate = useNavigate();
-
+	const [disableSend, setDisable] = useState(false);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: { username: '', password: '' },
 	});
 	const mutatationLogIn = useMutation({
-		mutationFn: () =>
-			login(form.getValues().username, form.getValues().password),
-		onSuccess: (data) => {
-			toast('Login Success');
-			console.log(data);
+		mutationFn: () => {
+			return login(form.getValues().username, form.getValues().password);
+		},
 
+		onSuccess: (data) => {
+			toast.success('Login Success');
 			useUserStore.getState().setUser(data);
 			setTimeout(() => {
 				switch (useUserStore.getState().user?.accessLevel) {
@@ -66,16 +67,17 @@ export default function LoginForm() {
 						navigate('/employee/dashboard');
 						break;
 				}
-			}, 800);
+			}, 500);
 		},
 
-		onSettled: () => {},
 		onError: (error) => {
+			setDisable(false);
 			toast.error(error.message);
 		},
 	});
 
 	function onSubmit() {
+		setDisable(true);
 		mutatationLogIn.mutate();
 	}
 
@@ -110,7 +112,9 @@ export default function LoginForm() {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">Login</Button>
+				<Button disabled={disableSend} type="submit">
+					Login
+				</Button>
 			</form>
 			<Toaster></Toaster>
 		</Form>

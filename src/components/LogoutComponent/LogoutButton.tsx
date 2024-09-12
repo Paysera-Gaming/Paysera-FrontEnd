@@ -13,6 +13,7 @@ import {
 
 // button
 import { Button } from '@/components/ui/button';
+import { useUserStore } from '@/stores/userStore';
 import { useMutation } from '@tanstack/react-query';
 // logout
 import { LogOut } from 'lucide-react';
@@ -40,8 +41,9 @@ export default function LogOutButton() {
 		},
 	});
 	function logOutUser() {
-		navigate('/login');
+		useUserStore.getState().clearUser();
 		mutateLogout.mutate();
+		navigate('/login');
 	}
 
 	return (

@@ -1,5 +1,4 @@
 import { TUserInfo } from '@/api/LoginAPI';
-
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
@@ -14,10 +13,13 @@ type TUserState = {
 const useUserStore = create<TUserState>()(
 	persist(
 		(set, get) => ({
-			user: undefined,
+			user: undefined as TUserInfo | undefined,
 			setUser: (user: TUserInfo) => set({ user }),
 			getUser: () => get().user,
-			clearUser: () => set({ user: undefined }),
+			clearUser: () => {
+				set({ user: undefined });
+				sessionStorage.clear();
+			},
 			getUserIsActive: () => get().user?.isActive ?? false,
 		}),
 		{
