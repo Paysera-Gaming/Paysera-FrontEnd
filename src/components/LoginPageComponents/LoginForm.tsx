@@ -50,10 +50,26 @@ export default function LoginForm() {
 		mutationFn: () =>
 			login(form.getValues().username, form.getValues().password),
 		onSuccess: (data) => {
-			toast.success('Login Success');
+			toast('Login Success');
+			console.log(data);
+
 			useUserStore.getState().setUser(data);
-			navigate('/teamlead/dashboard');
+			setTimeout(() => {
+				switch (useUserStore.getState().user?.accessLevel) {
+					case 'ADMIN':
+						navigate('/superadmin/dashboard');
+						break;
+					case 'TEAM_LEADER':
+						navigate('/teamlead/dashboard');
+						break;
+					case 'EMPLOYEE':
+						navigate('/employee/dashboard');
+						break;
+				}
+			}, 800);
 		},
+
+		onSettled: () => {},
 		onError: (error) => {
 			toast.error(error.message);
 		},

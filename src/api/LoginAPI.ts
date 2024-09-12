@@ -12,6 +12,7 @@ export type TUserInfo = {
 	lastName: string;
 	middleName: string;
 	role: string;
+	departmentName: string;
 };
 
 export async function login(
