@@ -206,6 +206,9 @@
       if (isLoading) return <div>Loading...</div>;
       if (error) return <div>Error loading attendance list</div>;
     
+      const formattedFromDate = dateRange?.from ? format(dateRange.from, "LLL dd, y") : "N/A";
+      const formattedToDate = dateRange?.to ? format(dateRange.to, "LLL dd, y") : "N/A";
+    
       return (
         <div className="w-full">
           <DatePickerWithRangeAndYear className="mb-4" onChange={handleDateRangeAndYearChange} />
@@ -238,7 +241,7 @@
                 ) : (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center">
-                      No employee attendance.
+                      No employee attendance from {formattedFromDate} to {formattedToDate}.
                     </TableCell>
                   </TableRow>
                 )}
