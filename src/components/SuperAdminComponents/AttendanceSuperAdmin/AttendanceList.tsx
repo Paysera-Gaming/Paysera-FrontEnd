@@ -167,7 +167,7 @@
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="border p-2 rounded mr-4 bg-white dark:bg-transparent dark:text-white dark:border-gray-700"
+                className="border p-1 rounded mr-2 text-sm bg-white dark:bg-transparent dark:text-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
               />
               <DateRangePicker onChange={handleDateRangeAndYearChange} />
             </div>

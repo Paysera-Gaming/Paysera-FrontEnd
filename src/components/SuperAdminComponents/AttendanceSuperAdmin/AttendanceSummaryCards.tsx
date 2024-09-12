@@ -1,5 +1,5 @@
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
-import { Clock } from 'lucide-react';
+import { Clock, Calendar, Activity, Shuffle } from 'lucide-react';
 
 interface AttendanceSummaryCardsProps {
     overallCount: number;
@@ -58,7 +58,7 @@ export default function AttendanceSummaryCards({
                 style={{ minHeight: '100px' }} // Set a smaller height for the cards
             >
                 <CardContent className="flex items-center justify-between">
-                    <Clock size={32} className="text-blue-500" />
+                    <Calendar size={32} className="text-blue-500" />
                     <div className="ml-2 text-right">
                         <CardTitle className="text-xl">Fixed</CardTitle>
                         <p className="text-2xl font-bold">{fixedCount}</p>
@@ -80,7 +80,7 @@ export default function AttendanceSummaryCards({
                 style={{ minHeight: '100px' }} // Set a smaller height for the cards
             >
                 <CardContent className="flex items-center justify-between">
-                    <Clock size={32} className="text-green-500" />
+                    <Activity size={32} className="text-green-500" />
                     <div className="ml-2 text-right">
                         <CardTitle className="text-xl">Super Flexi</CardTitle>
                         <p className="text-2xl font-bold">{superFlexiCount}</p>
@@ -102,7 +102,7 @@ export default function AttendanceSummaryCards({
                 style={{ minHeight: '100px' }} // Set a smaller height for the cards
             >
                 <CardContent className="flex items-center justify-between">
-                    <Clock size={32} className="text-yellow-500" />
+                    <Shuffle size={32} className="text-yellow-500" />
                     <div className="ml-2 text-right">
                         <CardTitle className="text-xl">Flexi</CardTitle>
                         <p className="text-2xl font-bold">{flexiCount}</p>
