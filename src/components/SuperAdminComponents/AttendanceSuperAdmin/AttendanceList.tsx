@@ -10,6 +10,7 @@
     import { exportToCSV } from './exportToCSV';
     import { Button } from '@/components/ui/button';
     import { formatDate, formatTime, calculateWorkTimeTotal } from './utils';
+    import AttendanceSummaryCards from './AttendanceSummaryCards';
     
     const AttendanceList: React.FC = () => {
       const { data: attendanceList, isLoading, error }: UseQueryResult<Attendance[], Error> = useQuery({
@@ -24,10 +25,15 @@
       });
     
       const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
+      const [activeFilter, setActiveFilter] = useState<string>('overall');
     
       const handleDateRangeAndYearChange = (date: DateRange | undefined, year: number | undefined) => {
         setDateRange({ from: date?.from, to: date?.to });
         setSelectedYear(year);
+      };
+    
+      const handleFilterClick = (filter: string) => {
+        setActiveFilter(filter);
       };
     
       const filteredAttendanceList = useMemo(() => {
@@ -36,9 +42,15 @@
           const attendanceDate = new Date(attendance.date);
           const matchesDateRange = dateRange?.from && dateRange?.to ? attendanceDate >= dateRange.from && attendanceDate <= addDays(dateRange.to, 1) : true;
           const matchesYear = selectedYear && !dateRange ? attendanceDate.getFullYear() === selectedYear : true;
-          return matchesDateRange && matchesYear;
+          const matchesFilter = activeFilter === 'overall' || attendance.scheduleType === activeFilter.toUpperCase();
+          return matchesDateRange && matchesYear && matchesFilter;
         });
-      }, [attendanceList, dateRange, selectedYear]);
+      }, [attendanceList, dateRange, selectedYear, activeFilter]);
+    
+      const overallCount = filteredAttendanceList?.length || 0;
+      const fixedCount = filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED').length || 0;
+      const superFlexiCount = filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI').length || 0;
+      const flexiCount = filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI').length || 0;
     
       const columns: ColumnDef<Attendance>[] = [
         {
@@ -116,6 +128,15 @@
               }
             }}>Export to CSV</Button>
           </div>
+          <AttendanceSummaryCards
+            key={activeFilter} // Add key to force re-render
+            overallCount={overallCount}
+            fixedCount={fixedCount}
+            superFlexiCount={superFlexiCount}
+            flexiCount={flexiCount}
+            activeFilter={activeFilter}
+            handleFilterClick={handleFilterClick}
+          />
           <AttendanceTable data={filteredAttendanceList || []} columns={columns} dateRange={dateRange} />
         </div>
       );
