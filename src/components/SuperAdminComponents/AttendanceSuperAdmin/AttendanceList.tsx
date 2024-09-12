@@ -128,19 +128,12 @@
     
       const filteredAttendanceList = useMemo(() => {
         if (!attendanceList) return attendanceList;
-        if (selectedYear) {
-          return attendanceList.filter((attendance) => {
-            const attendanceDate = new Date(attendance.date);
-            return attendanceDate.getFullYear() === selectedYear;
-          });
-        }
-        if (dateRange?.from && dateRange?.to) {
-          return attendanceList.filter((attendance) => {
-            const attendanceDate = new Date(attendance.date);
-            return attendanceDate >= dateRange.from! && attendanceDate <= dateRange.to!;
-          });
-        }
-        return attendanceList;
+        return attendanceList.filter((attendance) => {
+          const attendanceDate = new Date(attendance.date);
+          const matchesYear = selectedYear ? attendanceDate.getFullYear() === selectedYear : true;
+          const matchesDateRange = dateRange?.from && dateRange?.to ? attendanceDate >= dateRange.from && attendanceDate <= dateRange.to : true;
+          return matchesYear && matchesDateRange;
+        });
       }, [attendanceList, dateRange, selectedYear]);
     
       const columns: ColumnDef<Attendance>[] = [
@@ -245,7 +238,7 @@
                 ) : (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center">
-                      No results.
+                      No employee attendance.
                     </TableCell>
                   </TableRow>
                 )}
