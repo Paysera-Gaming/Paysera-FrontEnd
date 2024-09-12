@@ -59,6 +59,40 @@
         });
       }, [attendanceList, dateRange, selectedYear, activeFilter, searchQuery]);
     
+      const countStatus = (list: Attendance[], status: string) => list.filter(a => a.status === status).length;
+    
+      const overallCounts = {
+        break: countStatus(filteredAttendanceList || [], 'BREAK'),
+        done: countStatus(filteredAttendanceList || [], 'DONE'),
+        unpaidLeave: countStatus(filteredAttendanceList || [], 'UNPAID_LEAVE'),
+        paidLeave: countStatus(filteredAttendanceList || [], 'PAID_LEAVE'),
+        ongoing: countStatus(filteredAttendanceList || [], 'ONGOING'),
+      };
+    
+      const fixedCounts = {
+        break: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED') || [], 'BREAK'),
+        done: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED') || [], 'DONE'),
+        unpaidLeave: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED') || [], 'UNPAID_LEAVE'),
+        paidLeave: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED') || [], 'PAID_LEAVE'),
+        ongoing: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED') || [], 'ONGOING'),
+      };
+    
+      const superFlexiCounts = {
+        break: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'BREAK'),
+        done: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'DONE'),
+        unpaidLeave: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'UNPAID_LEAVE'),
+        paidLeave: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'PAID_LEAVE'),
+        ongoing: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'ONGOING'),
+      };
+    
+      const flexiCounts = {
+        break: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI') || [], 'BREAK'),
+        done: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI') || [], 'DONE'),
+        unpaidLeave: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI') || [], 'UNPAID_LEAVE'),
+        paidLeave: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI') || [], 'PAID_LEAVE'),
+        ongoing: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI') || [], 'ONGOING'),
+      };
+    
       const overallCount = filteredAttendanceList?.length || 0;
       const fixedCount = filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED').length || 0;
       const superFlexiCount = filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI').length || 0;
@@ -155,6 +189,10 @@
             fixedCount={fixedCount}
             superFlexiCount={superFlexiCount}
             flexiCount={flexiCount}
+            overallCounts={overallCounts}
+            fixedCounts={fixedCounts}
+            superFlexiCounts={superFlexiCounts}
+            flexiCounts={flexiCounts}
             activeFilter={activeFilter}
             handleFilterClick={handleFilterClick}
           />
