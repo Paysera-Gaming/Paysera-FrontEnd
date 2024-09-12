@@ -1,68 +1,10 @@
     import React from 'react';
-    import axios from 'axios';
     import { useQuery, UseQueryResult } from '@tanstack/react-query';
     import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
     import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-    
-    const apiBase = import.meta.env.VITE_BASE_API;
-    
-    interface Attendance {
-      id: number;
-      employeeId: number;
-      date: string;
-      status: string;
-      scheduleType: string;
-      timeIn: string;
-      timeOut: string;
-      timeHoursWorked: number | null;
-      overTimeTotal: number | null;
-      timeTotal: number;
-      lunchTimeIn: string;
-      lunchTimeOut: string;
-      lunchTimeTotal: number;
-      createdAt: string;
-      updatedAt: string;
-      employee: {
-        id: number;
-        username: string;
-        firstName: string;
-        lastName: string;
-        middleName: string;
-        role: string;
-        accessLevel: string;
-        isActive: boolean;
-      };
-    }
-    
-    const getAttendanceList = async (): Promise<Attendance[]> => {
-      const response = await axios.get(`${apiBase}/api/attendance`);
-      return response.data;
-    };
-    
-    const formatDate = (dateString: string) => {
-      const options: Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      };
-      return new Intl.DateTimeFormat('en-US', options).format(new Date(dateString));
-    };
-    
-    const formatTime = (timeString: string) => {
-      const options: Intl.DateTimeFormatOptions = {
-        hour: '2-digit',
-        minute: '2-digit',
-      };
-      return new Intl.DateTimeFormat('en-US', options).format(new Date(timeString));
-    };
-    
-    const calculateWorkTimeTotal = (timeIn: string, timeOut: string, lunchTimeTotal: number) => {
-      const timeInDate = new Date(timeIn);
-      const timeOutDate = new Date(timeOut);
-      const workTimeMs = timeOutDate.getTime() - timeInDate.getTime() - lunchTimeTotal * 60 * 60 * 1000;
-      const workTimeHours = workTimeMs / (1000 * 60 * 60);
-      return workTimeHours.toFixed(2); // Format to 2 decimal places
-    };
+    import { getAttendanceList } from './api';
+    import { formatDate, formatTime, calculateWorkTimeTotal } from './utils';
+    import { Attendance } from './types';
     
     const AttendanceList: React.FC = () => {
       const { data: attendanceList, isLoading, error }: UseQueryResult<Attendance[], Error> = useQuery({
