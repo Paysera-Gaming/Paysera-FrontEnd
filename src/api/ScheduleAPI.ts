@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 
 import { z } from 'zod';
 
-const formSchema = z.object({
+export const formSchema = z.object({
 	// first
 	name: z.string().min(2).max(50),
 	role: z.string().min(2).max(50),

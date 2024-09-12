@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { toast } from 'sonner';
-
+import { redirect } from 'react-router-dom';
 const url = import.meta.env.VITE_APP_API_URL;
 
 export const axiosInstance = axios.create({
@@ -8,16 +8,22 @@ export const axiosInstance = axios.create({
 	withCredentials: true,
 });
 
-// Add a request interceptor
-axiosInstance.interceptors.request.use(
-	function (config) {
-		// Do something before request is sent
-
-		return config;
+// Add a response interceptor
+axios.interceptors.response.use(
+	function (response) {
+		// Any status code that lie within the range of 2xx cause this function to trigger
+		// Do something with response data
+		return response;
 	},
 	function (error) {
-		// Do something with request error
-		toast.error('ERROR HAS OCCURED CHECK THE LOGS FOR MORE INFO');
+		// Any status codes that falls outside the range of 2xx cause this function to trigger
+		// Do something with response error
+
+		if (error.response.status === 401) {
+			toast.error('Unauthorized Redirecting to login page');
+			redirect('/login');
+		}
+
 		return Promise.reject(error);
 	}
 );

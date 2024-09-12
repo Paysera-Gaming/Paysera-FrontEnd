@@ -23,8 +23,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useMutation } from '@tanstack/react-query';
-import { getUserInfo, login } from '@/api/LoginAPI';
-
+import { login } from '@/api/LoginAPI';
+import { useUserStore } from '@/stores/userStore';
 // schema for the form
 const formSchema = z.object({
 	username: z
@@ -51,7 +51,8 @@ export default function LoginForm() {
 			login(form.getValues().username, form.getValues().password),
 		onSuccess: (data) => {
 			toast.success('Login Success');
-			navigate('/dashboard');
+			useUserStore.getState().setUser(data);
+			navigate('/teamlead/dashboard');
 		},
 		onError: (error) => {
 			toast.error(error.message);
