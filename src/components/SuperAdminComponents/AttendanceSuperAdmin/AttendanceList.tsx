@@ -6,7 +6,7 @@
     import { ColumnDef } from '@tanstack/react-table';
     import { getAttendanceList } from './api';
     import { Attendance } from './types';
-    import { addDays, startOfDay, endOfDay } from 'date-fns';
+    import { startOfDay, endOfDay } from 'date-fns';
     import { DateRange } from 'react-day-picker';
     import DateRangePicker from './DateRangePicker';
     import AttendanceTable from './AttendanceTable';
@@ -21,7 +21,8 @@
       DropdownMenuContent,
       DropdownMenuLabel,
       DropdownMenuSeparator,
-      DropdownMenuTrigger    } from "@/components/ui/dropdown-menu"
+      DropdownMenuTrigger
+    } from "@/components/ui/dropdown-menu"
     
     const AttendanceList: React.FC = () => {
       const { data: attendanceList, isLoading, error }: UseQueryResult<Attendance[], Error> = useQuery({
@@ -67,7 +68,7 @@
         if (!attendanceList) return attendanceList;
         let filteredList = attendanceList.filter((attendance) => {
           const attendanceDate = new Date(attendance.date);
-          const matchesDateRange = dateRange?.from && dateRange?.to ? attendanceDate >= dateRange.from && attendanceDate <= addDays(dateRange.to, 1) : true;
+          const matchesDateRange = dateRange?.from && dateRange?.to ? attendanceDate >= dateRange.from && attendanceDate <= dateRange.to : true;
           const matchesYear = selectedYear && !dateRange ? attendanceDate.getFullYear() === selectedYear : true;
           const matchesFilter = activeFilter === 'overall' || attendance.scheduleType === activeFilter.toUpperCase();
           const matchesSearchQuery = searchQuery
