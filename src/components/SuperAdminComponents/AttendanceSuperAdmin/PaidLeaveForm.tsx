@@ -32,22 +32,35 @@ const PaidLeaveForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    if (!selectedDate) {
+      alert("Please select a date.");
+      return;
+    }
+
+    const employee = employees.find(emp => emp.username === selectedEmployee);
+    if (!employee) {
+      alert("Please select a valid employee.");
+      return;
+    }
+
+    const date = selectedDate.toISOString().split('T')[0]; // Get the date part only
+
     const payload = {
-      employeeId: employees.find(emp => emp.username === selectedEmployee)?.id,
-      date: selectedDate?.toISOString(),
+      employeeId: employee.id,
+      date: selectedDate.toISOString(),
       status: "DONE",
       scheduleType,
-      timeIn: "08:00:00",
-      timeOut: "17:00:00",
-      lunchTimeIn: "12:00:00",
-      lunchTimeOut: "13:00:00",
+      timeIn: new Date(`${date}T08:00:00`),
+      timeOut: new Date(`${date}T17:00:00`),
+      lunchTimeIn: new Date(`${date}T12:00:00`),
+      lunchTimeOut: new Date(`${date}T13:00:00`),
       timeHoursWorked: 8,
       lunchTimeTotal: 1,
       timeTotal: 9,
     };
 
     try {
-      await axios.put(import.meta.env.VITE_BASE_API + "/api/attendance", payload);
+      await axios.post(import.meta.env.VITE_BASE_API + "/api/attendance", payload);
       alert("Paid leave submitted successfully!");
     } catch (error) {
       console.error("Error submitting paid leave:", error);
