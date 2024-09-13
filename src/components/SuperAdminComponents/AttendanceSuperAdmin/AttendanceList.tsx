@@ -11,6 +11,7 @@
     import { Button } from '@/components/ui/button';
     import { formatDate, formatTime, calculateWorkTimeTotal } from './utils';
     import AttendanceSummaryCards from './AttendanceSummaryCards';
+    import PaidLeaveForm from './PaidLeaveForm'; // Import the PaidLeaveForm
     
     const AttendanceList: React.FC = () => {
       const { data: attendanceList, isLoading, error }: UseQueryResult<Attendance[], Error> = useQuery({
@@ -155,11 +156,6 @@
         },
       ];
     
-      const handlePaidLeaveClick = () => {
-        console.log("Paid Leave button clicked");
-        // Implement the logic for the Paid Leave button click event here
-      };
-    
       if (isLoading) return <div>Loading...</div>;
       if (error) return <div>Error loading attendance list</div>;
     
@@ -189,12 +185,7 @@
               >
                 Export to CSV
               </Button>
-              <Button
-                onClick={handlePaidLeaveClick}
-                className="bg-blue-500 text-white"
-              >
-                Paid Leave
-              </Button>
+              <PaidLeaveForm /> {/* Use the PaidLeaveForm component */}
             </div>
           </div>
           <AttendanceSummaryCards
