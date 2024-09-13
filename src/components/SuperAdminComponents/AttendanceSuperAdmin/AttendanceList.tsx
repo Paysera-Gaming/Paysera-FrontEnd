@@ -29,6 +29,8 @@
       const [selectedYear, setSelectedYear] = useState<number | undefined>(today.getFullYear());
       const [activeFilter, setActiveFilter] = useState<string>('overall');
       const [searchQuery, setSearchQuery] = useState<string>('');
+      const [sortOrder, setSortOrder] = useState<'oldest' | 'latest'>('latest');
+      const [statusFilter, setStatusFilter] = useState<string>('all');
     
       const handleDateRangeAndYearChange = (date: DateRange | undefined, year: number | undefined) => {
         setDateRange({ from: date?.from, to: date?.to });
@@ -43,9 +45,17 @@
         setSearchQuery(event.target.value);
       };
     
+      const handleSortOrderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSortOrder(event.target.value as 'oldest' | 'latest');
+      };
+    
+      const handleStatusFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setStatusFilter(event.target.value);
+      };
+    
       const filteredAttendanceList = useMemo(() => {
         if (!attendanceList) return attendanceList;
-        return attendanceList.filter((attendance) => {
+        let filteredList = attendanceList.filter((attendance) => {
           const attendanceDate = new Date(attendance.date);
           const matchesDateRange = dateRange?.from && dateRange?.to ? attendanceDate >= dateRange.from && attendanceDate <= addDays(dateRange.to, 1) : true;
           const matchesYear = selectedYear && !dateRange ? attendanceDate.getFullYear() === selectedYear : true;
@@ -57,9 +67,18 @@
               attendance.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
               attendance.scheduleType.toLowerCase().includes(searchQuery.toLowerCase())
             : true;
-          return matchesDateRange && matchesYear && matchesFilter && matchesSearchQuery;
+          const matchesStatusFilter = statusFilter === 'all' || attendance.status === statusFilter.toUpperCase();
+          return matchesDateRange && matchesYear && matchesFilter && matchesSearchQuery && matchesStatusFilter;
         });
-      }, [attendanceList, dateRange, selectedYear, activeFilter, searchQuery]);
+    
+        if (sortOrder === 'oldest') {
+          filteredList = filteredList.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        } else {
+          filteredList = filteredList.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        }
+    
+        return filteredList;
+      }, [attendanceList, dateRange, selectedYear, activeFilter, searchQuery, sortOrder, statusFilter]);
     
       const countStatus = (list: Attendance[], status: string) => list.filter(a => a.status === status).length;
     
@@ -186,6 +205,25 @@
               >
                 Export to CSV
               </Button>
+              <select
+                value={sortOrder}
+                onChange={handleSortOrderChange}
+                className="mr-2 border p-1 rounded text-sm bg-white dark:bg-transparent dark:text-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+              >
+                <option value="latest">Latest</option>
+                <option value="oldest">Oldest</option>
+              </select>
+              <select
+                value={statusFilter}
+                onChange={handleStatusFilterChange}
+                className="mr-2 border p-1 rounded text-sm bg-white dark:bg-transparent dark:text-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+              >
+                <option value="all">All</option>
+                <option value="ONGOING">Ongoing</option>
+                <option value="BREAK">Break</option>
+                <option value="DONE">Done</option>
+                <option value="PAID_LEAVE">Paid Leave</option>
+              </select>
               <PaidLeaveForm /> {/* Use the PaidLeaveForm component */}
             </div>
           </div>
