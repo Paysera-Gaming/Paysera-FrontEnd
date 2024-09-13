@@ -1,4 +1,7 @@
-    import React, { useState, useMemo } from 'react';
+    "use client"
+    
+    import * as React from "react"
+    import { useState, useMemo } from 'react';
     import { useQuery, UseQueryResult } from '@tanstack/react-query';
     import { ColumnDef } from '@tanstack/react-table';
     import { getAttendanceList } from './api';
@@ -12,6 +15,13 @@
     import { formatDate, formatTime, calculateWorkTimeTotal } from './utils';
     import AttendanceSummaryCards from './AttendanceSummaryCards';
     import PaidLeaveForm from './PaidLeaveForm'; // Import the PaidLeaveForm
+    import {
+      DropdownMenu,
+      DropdownMenuCheckboxItem,
+      DropdownMenuContent,
+      DropdownMenuLabel,
+      DropdownMenuSeparator,
+      DropdownMenuTrigger    } from "@/components/ui/dropdown-menu"
     
     const AttendanceList: React.FC = () => {
       const { data: attendanceList, isLoading, error }: UseQueryResult<Attendance[], Error> = useQuery({
@@ -45,12 +55,12 @@
         setSearchQuery(event.target.value);
       };
     
-      const handleSortOrderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSortOrder(event.target.value as 'oldest' | 'latest');
+      const handleSortOrderChange = (value: 'oldest' | 'latest') => {
+        setSortOrder(value);
       };
     
-      const handleStatusFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setStatusFilter(event.target.value);
+      const handleStatusFilterChange = (value: string) => {
+        setStatusFilter(value);
       };
     
       const filteredAttendanceList = useMemo(() => {
@@ -205,25 +215,60 @@
               >
                 Export to CSV
               </Button>
-              <select
-                value={sortOrder}
-                onChange={handleSortOrderChange}
-                className="mr-2 border p-1 rounded text-sm bg-white dark:bg-transparent dark:text-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                <option value="latest">Latest</option>
-                <option value="oldest">Oldest</option>
-              </select>
-              <select
-                value={statusFilter}
-                onChange={handleStatusFilterChange}
-                className="mr-2 border p-1 rounded text-sm bg-white dark:bg-transparent dark:text-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                <option value="all">All</option>
-                <option value="ONGOING">Ongoing</option>
-                <option value="BREAK">Break</option>
-                <option value="DONE">Done</option>
-                <option value="PAID_LEAVE">Paid Leave</option>
-              </select>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">Filters</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuLabel>Sort Order</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuCheckboxItem
+                    checked={sortOrder === 'latest'}
+                    onCheckedChange={() => handleSortOrderChange('latest')}
+                  >
+                    Latest
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={sortOrder === 'oldest'}
+                    onCheckedChange={() => handleSortOrderChange('oldest')}
+                  >
+                    Oldest
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel>Status Filter</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuCheckboxItem
+                    checked={statusFilter === 'all'}
+                    onCheckedChange={() => handleStatusFilterChange('all')}
+                  >
+                    All
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={statusFilter === 'ONGOING'}
+                    onCheckedChange={() => handleStatusFilterChange('ONGOING')}
+                  >
+                    Ongoing
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={statusFilter === 'BREAK'}
+                    onCheckedChange={() => handleStatusFilterChange('BREAK')}
+                  >
+                    Break
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={statusFilter === 'DONE'}
+                    onCheckedChange={() => handleStatusFilterChange('DONE')}
+                  >
+                    Done
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={statusFilter === 'PAID_LEAVE'}
+                    onCheckedChange={() => handleStatusFilterChange('PAID_LEAVE')}
+                  >
+                    Paid Leave
+                  </DropdownMenuCheckboxItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <PaidLeaveForm /> {/* Use the PaidLeaveForm component */}
             </div>
           </div>
