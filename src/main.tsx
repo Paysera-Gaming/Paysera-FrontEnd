@@ -69,7 +69,7 @@ const router = createBrowserRouter([
 		element: (
 			<ProtectedRoute
 				page={<TeamLeadPage></TeamLeadPage>}
-				requiredLevel="TEAM_LEAD"
+				requiredLevel="TEAM_LEADER"
 			></ProtectedRoute>
 		),
 		children: [
