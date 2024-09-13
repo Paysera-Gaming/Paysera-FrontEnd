@@ -4,26 +4,26 @@ import { Clock, Calendar, Activity, Shuffle } from 'lucide-react';
 interface AttendanceSummaryCardsProps {
     overallCount: number;
     fixedCount: number;
-    superFlexiCount: number;
+    SUPER_FLEXICount: number;
     flexiCount: number;
     activeFilter: string;
     handleFilterClick: (filter: string) => void;
     overallCounts: { ongoing: number; break: number; done: number; paidLeave: number };
     fixedCounts: { ongoing: number; break: number; done: number; paidLeave: number };
-    superFlexiCounts: { ongoing: number; break: number; done: number; paidLeave: number };
+    SUPER_FLEXICounts: { ongoing: number; break: number; done: number; paidLeave: number };
     flexiCounts: { ongoing: number; break: number; done: number; paidLeave: number };
 }
 
 export default function AttendanceSummaryCards({
     overallCount,
     fixedCount,
-    superFlexiCount,
+    SUPER_FLEXICount,
     flexiCount,
     activeFilter,
     handleFilterClick,
     overallCounts,
     fixedCounts,
-    superFlexiCounts,
+    SUPER_FLEXICounts,
     flexiCounts,
 }: AttendanceSummaryCardsProps) {
     return (
@@ -73,9 +73,9 @@ export default function AttendanceSummaryCards({
             </Card>
 
             <Card
-                onClick={() => handleFilterClick('superFlexi')}
+                onClick={() => handleFilterClick('SUPER_FLEXI')}
                 className={`flex-1 p-2 cursor-pointer border-2 border-green-500 transition-transform transform hover:scale-105 ${
-                    activeFilter === 'superFlexi' ? 'bg-green-100 dark:bg-green-900' : ''
+                    activeFilter === 'SUPER_FLEXI' ? 'bg-green-100 dark:bg-green-900' : ''
                 }`}
                 style={{ minHeight: '80px' }} // Set a smaller height for the cards
             >
@@ -83,12 +83,12 @@ export default function AttendanceSummaryCards({
                     <Activity size={24} className="text-green-500" />
                     <div className="ml-1 text-right">
                         <CardTitle className="text-sm">Super Flexi</CardTitle>
-                        <p className="text-lg font-bold">{superFlexiCount}</p>
+                        <p className="text-lg font-bold">{SUPER_FLEXICount}</p>
                         <div className="text-xs">
-                            <p>ONGOING: {superFlexiCounts.ongoing}</p>
-                            <p>BREAK: {superFlexiCounts.break}</p>
-                            <p>DONE: {superFlexiCounts.done}</p>
-                            <p>PAID_LEAVE: {superFlexiCounts.paidLeave}</p>
+                            <p>ONGOING: {SUPER_FLEXICounts.ongoing}</p>
+                            <p>BREAK: {SUPER_FLEXICounts.break}</p>
+                            <p>DONE: {SUPER_FLEXICounts.done}</p>
+                            <p>PAID_LEAVE: {SUPER_FLEXICounts.paidLeave}</p>
                         </div>
                     </div>
                 </CardContent>

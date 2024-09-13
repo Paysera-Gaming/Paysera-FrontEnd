@@ -76,7 +76,7 @@
         paidLeave: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED') || [], 'PAID_LEAVE'),
       };
     
-      const superFlexiCounts = {
+      const SUPER_FLEXICounts = {
         ongoing: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'ONGOING'),
         break: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'BREAK'),
         done: countStatus(filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI') || [], 'DONE'),
@@ -92,7 +92,7 @@
     
       const overallCount = filteredAttendanceList?.length || 0;
       const fixedCount = filteredAttendanceList?.filter(a => a.scheduleType === 'FIXED').length || 0;
-      const superFlexiCount = filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI').length || 0;
+      const SUPER_FLEXICount = filteredAttendanceList?.filter(a => a.scheduleType === 'SUPER_FLEXI').length || 0;
       const flexiCount = filteredAttendanceList?.filter(a => a.scheduleType === 'FLEXI').length || 0;
     
       const columns: ColumnDef<Attendance>[] = [
@@ -192,11 +192,11 @@
             key={activeFilter} // Add key to force re-render
             overallCount={overallCount}
             fixedCount={fixedCount}
-            superFlexiCount={superFlexiCount}
+            SUPER_FLEXICount={SUPER_FLEXICount} // Updated this line
             flexiCount={flexiCount}
             overallCounts={overallCounts}
             fixedCounts={fixedCounts}
-            superFlexiCounts={superFlexiCounts}
+            SUPER_FLEXICounts={SUPER_FLEXICounts} // Updated this line
             flexiCounts={flexiCounts}
             activeFilter={activeFilter}
             handleFilterClick={handleFilterClick}
