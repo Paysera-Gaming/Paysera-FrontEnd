@@ -14,6 +14,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Employee } from "../EmployeeSuperAdmin/types";
 import { DatePickerDemo } from "./DatePickerDemo"; // Ensure the correct path
+import { Toaster, toast } from 'sonner';
 
 const fetchEmployees = async (): Promise<Employee[]> => {
   const response = await axios.get(import.meta.env.VITE_BASE_API + "/api/employee");
@@ -33,13 +34,13 @@ const PaidLeaveForm: React.FC = () => {
     event.preventDefault();
 
     if (!selectedDate) {
-      alert("Please select a date.");
+      toast.error("Please select a date.");
       return;
     }
 
     const employee = employees.find(emp => emp.username === selectedEmployee);
     if (!employee) {
-      alert("Please select a valid employee.");
+      toast.error("Please select a valid employee.");
       return;
     }
 
@@ -61,76 +62,79 @@ const PaidLeaveForm: React.FC = () => {
 
     try {
       await axios.post(import.meta.env.VITE_BASE_API + "/api/attendance", payload);
-      alert("Paid leave submitted successfully!");
+      toast.success("Paid leave submitted successfully!");
     } catch (error) {
       console.error("Error submitting paid leave:", error);
-      alert("Failed to submit paid leave.");
+      toast.error("Failed to submit paid leave.");
     }
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Paid Leave</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Paid Leave</DialogTitle>
-          <DialogDescription>
-            Fill out the form to apply for paid leave.
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="employee" className="text-right">
-                Employee
-              </Label>
-              <select
-                id="employee"
-                className="col-span-3"
-                value={selectedEmployee}
-                onChange={(e) => setSelectedEmployee(e.target.value)}
-              >
-                <option value="" disabled>Select an employee</option>
-                {employees.map((employee) => (
-                  <option key={employee.id} value={employee.username}>
-                    {employee.firstName} {employee.lastName}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="leaveDates" className="text-right">
-                Leave Dates
-              </Label>
-              <div className="col-span-3">
-                <DatePickerDemo date={selectedDate} setDate={setSelectedDate} />
+    <>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant="outline">Paid Leave</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Paid Leave</DialogTitle>
+            <DialogDescription>
+              Fill out the form to apply for paid leave.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="employee" className="text-right">
+                  Employee
+                </Label>
+                <select
+                  id="employee"
+                  className="col-span-3"
+                  value={selectedEmployee}
+                  onChange={(e) => setSelectedEmployee(e.target.value)}
+                >
+                  <option value="" disabled>Select an employee</option>
+                  {employees.map((employee) => (
+                    <option key={employee.id} value={employee.username}>
+                      {employee.firstName} {employee.lastName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="leaveDates" className="text-right">
+                  Leave Dates
+                </Label>
+                <div className="col-span-3">
+                  <DatePickerDemo date={selectedDate} setDate={setSelectedDate} />
+                </div>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="scheduleType" className="text-right">
+                  Schedule Type
+                </Label>
+                <select
+                  id="scheduleType"
+                  className="col-span-3"
+                  value={scheduleType}
+                  onChange={(e) => setScheduleType(e.target.value)}
+                >
+                  <option value="" disabled>Select a schedule type</option>
+                  <option value="FIXED">FIXED</option>
+                  <option value="FLEXI">FLEXI</option>
+                  <option value="SUPER_FLEXI">SUPER_FLEXI</option>
+                </select>
               </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="scheduleType" className="text-right">
-                Schedule Type
-              </Label>
-              <select
-                id="scheduleType"
-                className="col-span-3"
-                value={scheduleType}
-                onChange={(e) => setScheduleType(e.target.value)}
-              >
-                <option value="" disabled>Select a schedule type</option>
-                <option value="FIXED">FIXED</option>
-                <option value="FLEXI">FLEXI</option>
-                <option value="SUPER_FLEXI">SUPER_FLEXI</option>
-              </select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="submit">Submit</Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+            <DialogFooter>
+              <Button type="submit">Submit</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+      <Toaster />
+    </>
   );
 };
 
