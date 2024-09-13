@@ -29,6 +29,7 @@ const PaidLeaveForm: React.FC = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [scheduleType, setScheduleType] = useState<string>("");
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -63,6 +64,7 @@ const PaidLeaveForm: React.FC = () => {
     try {
       await axios.post(import.meta.env.VITE_BASE_API + "/api/attendance", payload);
       toast.success("Paid leave submitted successfully!");
+      setIsDialogOpen(false); // Close the dialog
     } catch (error) {
       console.error("Error submitting paid leave:", error);
       toast.error("Failed to submit paid leave.");
@@ -71,9 +73,9 @@ const PaidLeaveForm: React.FC = () => {
 
   return (
     <>
-      <Dialog>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">Paid Leave</Button>
+          <Button variant="outline" onClick={() => setIsDialogOpen(true)}>Paid Leave</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
