@@ -67,6 +67,8 @@ export function AttendanceTable<TData, TValue>({
 	});
 
 	function checkDate(date: Date) {
+		console.log(table.getAllColumns());
+
 		setDate(date);
 		alert(date);
 	}
@@ -80,15 +82,15 @@ export function AttendanceTable<TData, TValue>({
 
 				<div className="flex items-center justify-center gap-2">
 					<Input
-						placeholder="Filter Employee via ID..."
+						placeholder="Filter Employee via Last Name"
 						value={
 							(table
-								.getColumn('employee.lastName')
+								.getColumn('employee_lastName')
 								?.getFilterValue() as string) ?? ''
 						}
 						onChange={(event) =>
 							table
-								.getColumn('employee.lastName')
+								.getColumn('employee_lastName')
 								?.setFilterValue(event.target.value)
 						}
 						className="w-[220px]"
