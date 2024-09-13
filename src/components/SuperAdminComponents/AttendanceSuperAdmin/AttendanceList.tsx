@@ -3,7 +3,7 @@
     import { ColumnDef } from '@tanstack/react-table';
     import { getAttendanceList } from './api';
     import { Attendance } from './types';
-    import { addDays } from 'date-fns';
+    import { addDays, startOfDay, endOfDay } from 'date-fns';
     import { DateRange } from 'react-day-picker';
     import DateRangePicker from './DateRangePicker';
     import AttendanceTable from './AttendanceTable';
@@ -20,12 +20,13 @@
         refetchInterval: 5000,
       });
     
+      const today = new Date();
       const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
-        from: new Date(),
-        to: new Date(),
+        from: startOfDay(today),
+        to: endOfDay(today),
       });
     
-      const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
+      const [selectedYear, setSelectedYear] = useState<number | undefined>(today.getFullYear());
       const [activeFilter, setActiveFilter] = useState<string>('overall');
       const [searchQuery, setSearchQuery] = useState<string>('');
     
