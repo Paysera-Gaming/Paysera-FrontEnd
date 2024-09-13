@@ -32,6 +32,7 @@ import {
 	RouterProvider,
 	redirect,
 } from 'react-router-dom';
+import ProtectedRoute from './lib/AccessLevelUtils';
 
 const router = createBrowserRouter([
 	{
@@ -45,7 +46,12 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/employee',
-		element: <EmployeePage></EmployeePage>,
+		element: (
+			<ProtectedRoute
+				page={<EmployeePage></EmployeePage>}
+				requiredLevel="EMPLOYEE"
+			></ProtectedRoute>
+		),
 		children: [
 			{
 				index: true,
@@ -60,7 +66,12 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/teamlead',
-		element: <TeamLeadPage></TeamLeadPage>,
+		element: (
+			<ProtectedRoute
+				page={<TeamLeadPage></TeamLeadPage>}
+				requiredLevel="TEAM_LEAD"
+			></ProtectedRoute>
+		),
 		children: [
 			{
 				index: true,
@@ -78,7 +89,12 @@ const router = createBrowserRouter([
 
 	{
 		path: '/superadmin',
-		element: <SuperAdminPage></SuperAdminPage>,
+		element: (
+			<ProtectedRoute
+				page={<SuperAdminPage></SuperAdminPage>}
+				requiredLevel="ADMIN"
+			></ProtectedRoute>
+		),
 		children: [
 			{
 				index: true,
