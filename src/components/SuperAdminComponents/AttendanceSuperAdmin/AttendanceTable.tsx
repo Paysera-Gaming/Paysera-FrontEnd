@@ -3,13 +3,14 @@ import { flexRender, useReactTable, ColumnDef, getCoreRowModel } from '@tanstack
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Attendance } from './types';
 import { format } from 'date-fns';
+import AttendanceActions from './AttendanceActions';
 
 interface AttendanceTableProps {
   data: Attendance[];
   columns: ColumnDef<Attendance>[];
   dateRange: { from: Date | undefined; to: Date | undefined } | undefined;
-  activeFilter: string; // Add activeFilter to props
-  searchQuery: string; // Add searchQuery to props
+  activeFilter: string;
+  searchQuery: string;
 }
 
 const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRange, activeFilter, searchQuery }) => {
@@ -51,6 +52,9 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
+                <TableCell>
+                  <AttendanceActions attendance={row.original} />
+                </TableCell>
               </TableRow>
             ))
           ) : (

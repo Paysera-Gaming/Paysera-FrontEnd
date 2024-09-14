@@ -24,4 +24,5 @@ export interface Attendance {
     accessLevel: string;
     isActive: boolean;
   };
+  employeeName: string; // Added employeeName property
 }
