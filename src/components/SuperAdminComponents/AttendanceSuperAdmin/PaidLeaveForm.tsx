@@ -77,22 +77,22 @@ const PaidLeaveForm: React.FC = () => {
         <DialogTrigger asChild>
           <Button variant="outline" onClick={() => setIsDialogOpen(true)}>Paid Leave</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] p-6">
           <DialogHeader>
-            <DialogTitle>Paid Leave</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-lg font-semibold">Paid Leave</DialogTitle>
+            <DialogDescription className="text-sm text-gray-500">
               Fill out the form to apply for paid leave.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="employee" className="text-right">
+                <Label htmlFor="employee" className="text-right text-sm font-medium text-gray-700">
                   Employee
                 </Label>
                 <select
                   id="employee"
-                  className="col-span-3"
+                  className="col-span-3 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={selectedEmployee}
                   onChange={(e) => setSelectedEmployee(e.target.value)}
                 >
@@ -105,7 +105,7 @@ const PaidLeaveForm: React.FC = () => {
                 </select>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="leaveDates" className="text-right">
+                <Label htmlFor="leaveDates" className="text-right text-sm font-medium text-gray-700">
                   Leave Dates
                 </Label>
                 <div className="col-span-3">
@@ -113,12 +113,12 @@ const PaidLeaveForm: React.FC = () => {
                 </div>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="scheduleType" className="text-right">
+                <Label htmlFor="scheduleType" className="text-right text-sm font-medium text-gray-700">
                   Schedule Type
                 </Label>
                 <select
                   id="scheduleType"
-                  className="col-span-3"
+                  className="col-span-3 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={scheduleType}
                   onChange={(e) => setScheduleType(e.target.value)}
                 >
@@ -130,7 +130,9 @@ const PaidLeaveForm: React.FC = () => {
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" className="w-full bg-blue-500 text-white hover:bg-blue-600">
+                Submit
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
