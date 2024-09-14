@@ -1,19 +1,13 @@
 import {
-	ScheduleContext,
-	TSchedule,
-} from '@/components/DataTable/ScheduleColumn';
-import { Button } from '@/components/ui/button';
-import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
-	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from '@/components/ui/dialog';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import ScheduleForm from '../SchedulePage/ScheduleForm';
+import { updateSchedule } from '@/api/ScheduleAPI';
 
 export default function EditSchedule() {
 	const [isOpen, setOpen] = useState<boolean>(false);
@@ -35,7 +29,11 @@ export default function EditSchedule() {
 						Make changes to schedule. Click save when you're done.
 					</DialogDescription>
 				</DialogHeader>
-				<ScheduleForm updateParentState={setOpen}></ScheduleForm>
+				<ScheduleForm
+					isPost={false}
+					fetchRequest={updateSchedule}
+					updateParentState={setOpen}
+				></ScheduleForm>
 			</DialogContent>
 		</Dialog>
 	);
