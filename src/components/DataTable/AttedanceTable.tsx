@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { DatePicker } from '../TeamLeadComponents/AttendancePage/DatePicker';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
 	Table,
@@ -46,7 +46,7 @@ export function AttendanceTable<TData, TValue>({
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[]
 	);
-	const [selectedDate, setDate] = React.useState<Date>();
+	const [selectedDate, setDate] = React.useState<string>();
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
 	const table = useReactTable({
@@ -66,12 +66,16 @@ export function AttendanceTable<TData, TValue>({
 		},
 	});
 
-	function checkDate(date: Date) {
+	function checkDate(date: string) {
 		console.log(table.getAllColumns());
 
 		setDate(date);
 		alert(date);
 	}
+
+	useEffect(() => {
+		table.getColumn('createdAt')?.setFilterValue(selectedDate);
+	}, [selectedDate]);
 
 	return (
 		<div className=" w-full flex items-center justify-center flex-col gap-4 mt-1">

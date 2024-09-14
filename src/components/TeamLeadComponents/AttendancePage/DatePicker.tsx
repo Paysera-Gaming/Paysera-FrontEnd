@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/popover';
 
 export interface ChildProps {
-	updateParentState: (newValue: Date) => void;
+	updateParentState: (newValue: string) => void;
 }
 
 export function DatePicker({ updateParentState }: ChildProps) {
@@ -47,7 +47,7 @@ export function DatePicker({ updateParentState }: ChildProps) {
 			<Button
 				onClick={() => {
 					if (date != undefined) {
-						updateParentState(date);
+						updateParentState(date.toDateString());
 					}
 				}}
 				disabled={noDateSelected}
