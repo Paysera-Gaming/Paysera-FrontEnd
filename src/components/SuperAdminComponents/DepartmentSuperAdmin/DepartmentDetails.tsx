@@ -25,6 +25,14 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Department, Employee } from './api';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface DepartmentDetailsProps {
   department: Department;
@@ -132,13 +140,30 @@ const DepartmentDetails: React.FC<DepartmentDetailsProps> = ({ department, onBac
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-300">
-                  No Employees
+                  No Employees on this page
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" onClick={() => table.previousPage()} />
+          </PaginationItem>
+          {Array.from({ length: table.getPageCount() }, (_, index) => (
+            <PaginationItem key={index}>
+              <PaginationLink href="#" isActive={table.getState().pagination.pageIndex === index} onClick={() => table.setPageIndex(index)}>
+                {index + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <PaginationNext href="#" onClick={() => table.nextPage()} />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 };

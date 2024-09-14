@@ -9,6 +9,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { Eye, Edit, Trash } from 'lucide-react';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const DepartmentList: React.FC = () => {
   const queryClient = useQueryClient();
@@ -26,6 +34,8 @@ const DepartmentList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const departmentsPerPage = 10;
 
   const deleteDepartmentMutation = useMutation({
     mutationFn: deleteDepartment,
@@ -80,6 +90,15 @@ const DepartmentList: React.FC = () => {
     return departmentNameMatch || leaderMatch || membersMatch;
   });
 
+  const indexOfLastDepartment = currentPage * departmentsPerPage;
+  const indexOfFirstDepartment = indexOfLastDepartment - departmentsPerPage;
+  const currentDepartments = filteredDepartments.slice(indexOfFirstDepartment, indexOfLastDepartment);
+  const totalPages = Math.ceil(filteredDepartments.length / departmentsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
   if (viewingDepartment) {
     return (
       <DepartmentDetails
@@ -122,7 +141,7 @@ const DepartmentList: React.FC = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredDepartments.map((department: Department) => (
+                      {currentDepartments.map((department: Department) => (
                         <tr key={department.id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
                           <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">{department.name}</td>
                           <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
@@ -178,6 +197,23 @@ const DepartmentList: React.FC = () => {
           )}
         </>
       )}
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" onClick={() => handlePageChange(currentPage - 1)} />
+          </PaginationItem>
+          {[...Array(totalPages)].map((_, index) => (
+            <PaginationItem key={index}>
+              <PaginationLink href="#" isActive={index + 1 === currentPage} onClick={() => handlePageChange(index + 1)}>
+                {index + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <PaginationNext href="#" onClick={() => handlePageChange(currentPage + 1)} />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
