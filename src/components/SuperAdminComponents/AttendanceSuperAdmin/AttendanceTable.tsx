@@ -13,6 +13,10 @@ interface AttendanceTableProps {
   searchQuery: string;
 }
 
+const formatNumber = (value: number) => {
+  return value.toFixed(2);
+};
+
 const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRange, activeFilter, searchQuery }) => {
   const table = useReactTable({
     data,
@@ -49,7 +53,7 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {typeof cell.getValue() === 'number' ? formatNumber(cell.getValue() as number) : flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
                 <TableCell>
