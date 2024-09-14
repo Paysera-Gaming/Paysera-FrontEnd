@@ -36,18 +36,6 @@ export async function addEmployeeInDepartment(
 	return response.data;
 }
 
-// reference
-// {
-//   "id": 1,
-//   "accessLevel": "ADMIN",
-//   "isActive": false,
-//   "username": "pangilinan2002",
-//   "firstName": "Ervin",
-//   "lastName": "Pangilinan",
-//   "middleName": "Capili",
-//   "role": "Software Engineer"
-// }
-
 export async function updateEmployee(
 	employeeInfo: TEmployee
 ): Promise<TAddEmployee> {
