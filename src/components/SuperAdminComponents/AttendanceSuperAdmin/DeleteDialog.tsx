@@ -1,15 +1,13 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Attendance } from './types';
 
 interface DeleteDialogProps {
     isOpen: boolean;
     onClose: () => void;
     onConfirm: () => void;
-    attendance: {
-        employeeName: string;
-        date: string;
-    };
+    attendance: Attendance;
 }
 
 const DeleteDialog: React.FC<DeleteDialogProps> = ({ isOpen, onClose, onConfirm, attendance }) => {

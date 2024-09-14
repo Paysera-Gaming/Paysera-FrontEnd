@@ -6,13 +6,14 @@ import { parseTime, timeDifferenceInHours, formatDateTime } from './timeUtils';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
+import { Attendance } from './types';
 
 interface EditDialogProps {
     isOpen: boolean;
     onClose: () => void;
-    editData: any;
-    setEditData: (data: any) => void;
-    attendance: any;
+    editData: Attendance;
+    setEditData: (data: Attendance) => void;
+    attendance: Attendance;
 }
 
 const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setEditData, attendance }) => {
@@ -44,7 +45,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
             timeOut: formatDateTime(editData.date, timeOut),
             timeHoursWorked: validWorkTimeTotal,
             overTimeTotal: editData.overTimeTotal,
-            timeTotal: totalTime.toFixed(2),
+            timeTotal: totalTime.toFixed(2), // Format total time to two decimal places
             lunchTimeIn: formatDateTime(editData.date, lunchTimeIn),
             lunchTimeOut: formatDateTime(editData.date, lunchTimeOut),
             lunchTimeTotal: validLunchTimeTotal,

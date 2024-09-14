@@ -7,32 +7,7 @@ import axios from 'axios';
 import { useQueryClient } from '@tanstack/react-query';
 import DeleteDialog from './DeleteDialog';
 import EditDialog from './EditDialog';
-
-interface Employee {
-    id: number;
-    username: string;
-    firstName: string;
-    lastName: string;
-    middleName: string;
-    role: string;
-    accessLevel: string;
-    isActive: boolean;
-}
-
-interface Attendance {
-    id: number;
-    date: string;
-    employeeName: string;
-    status: string;
-    scheduleType: string;
-    timeIn: string;
-    timeOut: string;
-    lunchTimeIn: string;
-    lunchTimeOut: string;
-    overTimeTotal: number | null;
-    timeTotal: number;
-    employee: Employee;
-}
+import { Attendance } from './types';
 
 interface AttendanceActionsProps {
     attendance: Attendance;
