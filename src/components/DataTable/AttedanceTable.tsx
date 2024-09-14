@@ -68,7 +68,6 @@ export function AttendanceTable<TData, TValue>({
 
 	function checkDate(date: string) {
 		setDate(date);
-		alert(date);
 	}
 
 	useEffect(() => {
@@ -83,6 +82,15 @@ export function AttendanceTable<TData, TValue>({
 			<div className="w-full flex items-center justify-between">
 				<div className="flex items-center justify-center">
 					<DatePicker updateParentState={checkDate}></DatePicker>
+					<Button
+						variant="outline"
+						onClick={() => {
+							table.getColumn('createdAt')?.setFilterValue('');
+						}}
+						className="ml-3"
+					>
+						Reset
+					</Button>
 				</div>
 
 				<div className="flex items-center justify-center gap-2">
