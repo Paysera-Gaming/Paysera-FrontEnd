@@ -12,7 +12,7 @@ export const Icons = {
 			{...props}
 		>
 			<g
-				clip-path="url(#clip0_210_867)"
+				clipPath="url(#clip0_210_867)"
 				id="g10"
 				transform="matrix(0.54488389,0,0,0.54488389,11.712712,-26.313366)"
 			>

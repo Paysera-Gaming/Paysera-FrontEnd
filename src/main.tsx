@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+const queryClient = new QueryClient();
 // login
 import LoginPage from './pages/Login/LoginPage';
 // employee pages
@@ -30,6 +32,7 @@ import {
 	RouterProvider,
 	redirect,
 } from 'react-router-dom';
+import ProtectedRoute from './lib/AccessLevelUtils';
 
 const router = createBrowserRouter([
 	{
@@ -43,7 +46,12 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/employee',
-		element: <EmployeePage></EmployeePage>,
+		element: (
+			<ProtectedRoute
+				page={<EmployeePage></EmployeePage>}
+				requiredLevel="EMPLOYEE"
+			></ProtectedRoute>
+		),
 		children: [
 			{
 				index: true,
@@ -58,7 +66,12 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/teamlead',
-		element: <TeamLeadPage></TeamLeadPage>,
+		element: (
+			<ProtectedRoute
+				page={<TeamLeadPage></TeamLeadPage>}
+				requiredLevel="TEAM_LEADER"
+			></ProtectedRoute>
+		),
 		children: [
 			{
 				index: true,
@@ -76,7 +89,12 @@ const router = createBrowserRouter([
 
 	{
 		path: '/superadmin',
-		element: <SuperAdminPage></SuperAdminPage>,
+		element: (
+			<ProtectedRoute
+				page={<SuperAdminPage></SuperAdminPage>}
+				requiredLevel="ADMIN"
+			></ProtectedRoute>
+		),
 		children: [
 			{
 				index: true,
@@ -110,8 +128,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
-		<ThemeProvider>
-			<RouterProvider router={router} />
-		</ThemeProvider>
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider>
+				<RouterProvider router={router} />
+			</ThemeProvider>
+		</QueryClientProvider>
 	</React.StrictMode>
 );

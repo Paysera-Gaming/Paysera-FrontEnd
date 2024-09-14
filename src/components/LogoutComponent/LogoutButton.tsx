@@ -1,3 +1,4 @@
+import { logout } from '@/api/LoginAPI';
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -12,10 +13,13 @@ import {
 
 // button
 import { Button } from '@/components/ui/button';
+import { useUserStore } from '@/stores/userStore';
+import { useMutation } from '@tanstack/react-query';
 // logout
 import { LogOut } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 // function TimeIn(){}
 
@@ -26,7 +30,19 @@ import { useNavigate } from 'react-router-dom';
 export default function LogOutButton() {
 	const navigate = useNavigate();
 
+	const mutateLogout = useMutation({
+		mutationFn: logout,
+		onSuccess: () => {
+			toast.success('Logged out successfully');
+			navigate('/login');
+		},
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
 	function logOutUser() {
+		useUserStore.getState().clearUser();
+		mutateLogout.mutate();
 		navigate('/login');
 	}
 

@@ -1,11 +1,13 @@
 export interface TEmployee {
-	id: string;
-	fName: string;
-	lName: string;
-	mName: string;
+	id: number;
+	departmentId: string | null;
+	accessLevel: string;
+	isActive: boolean;
+	username: string;
+	firstName: string;
+	lastName: string;
+	middleName: string;
 	role: string;
-	createdAt: Date;
-	updatedAt: Date;
 }
 import { ArrowUpDown } from 'lucide-react';
 
@@ -24,6 +26,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import EditRole from '../TeamLeadComponents/DialogForms/EditRole';
 import RemoveDialog from '../TeamLeadComponents/DialogForms/RemovalDialog';
+import { deleteEmployee } from '@/api/EmployeeAPI';
+import { useUserStore } from '@/stores/userStore';
 
 export function formatDate(date: Date): string {
 	const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
@@ -42,14 +46,29 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 					variant="ghost"
 					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
 				>
-					Employee ID
+					ID
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+	},
+
+	{
+		accessorKey: 'username',
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+				>
+					Username
 					<ArrowUpDown className="ml-2 h-4 w-4" />
 				</Button>
 			);
 		},
 	},
 	{
-		accessorKey: 'lName',
+		accessorKey: 'lastName',
 		header: ({ column }) => {
 			return (
 				<Button
@@ -63,7 +82,7 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 		},
 	},
 	{
-		accessorKey: 'fName',
+		accessorKey: 'firstName',
 
 		header: ({ column }) => {
 			return (
@@ -78,7 +97,7 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 		},
 	},
 	{
-		accessorKey: 'mName',
+		accessorKey: 'middleName',
 		header: ({ column }) => {
 			return (
 				<Button
@@ -92,46 +111,17 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 		},
 	},
 	{ accessorKey: 'role', header: 'Role' },
-	{
-		accessorKey: 'createdAt',
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-				>
-					Created At
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
-		cell: ({ row }) => {
-			return formatDate(row.getValue('createdAt'));
-		},
-	},
-	{
-		accessorKey: 'updatedAt',
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-				>
-					Updated At
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
-		cell: ({ row }) => {
-			return formatDate(row.getValue('updatedAt'));
-		},
-	},
-	// action
+
 	{
 		id: 'actions',
 		cell: ({ row }) => {
 			const employee = row.original;
+			const user = useUserStore.getState().getUser();
+			const departmentId = user?.departmentId;
 
+			if (departmentId == undefined) {
+				throw new Error('No Department Id Found');
+			}
 			return (
 				// try to make this drop down into a stupid standalone
 				<DropdownMenu>
@@ -146,12 +136,16 @@ export const employeeColumns: ColumnDef<TEmployee>[] = [
 
 						<DropdownMenuSeparator />
 
-						<DropdownMenu>
-							<EditRole employeeRole={employee.role}></EditRole>
-						</DropdownMenu>
+						<DropdownMenuItem asChild>
+							<EditRole employeeInfo={employee}></EditRole>
+						</DropdownMenuItem>
 
 						<DropdownMenuItem asChild>
-							<RemoveDialog></RemoveDialog>
+							<RemoveDialog
+								deleteRequest={deleteEmployee}
+								employeeID={row.original.id}
+								departmentId={departmentId}
+							></RemoveDialog>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
