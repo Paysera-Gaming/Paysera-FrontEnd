@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const queryClient = new QueryClient();
 // login
 import LoginPage from './pages/Login/LoginPage';
 // employee pages
@@ -28,16 +26,10 @@ import './index.css';
 import { ThemeProvider } from '@/components/ThemeProvider/ThemeProvider';
 
 import {
-    createBrowserRouter,
-    RouterProvider,
-    redirect,
+	createBrowserRouter,
+	RouterProvider,
+	redirect,
 } from 'react-router-dom';
-import ProtectedRoute from './lib/AccessLevelUtils';
-
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-// Create a client
-const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
 	{
@@ -51,12 +43,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/employee',
-		element: (
-			<ProtectedRoute
-				page={<EmployeePage></EmployeePage>}
-				requiredLevel="EMPLOYEE"
-			></ProtectedRoute>
-		),
+		element: <EmployeePage></EmployeePage>,
 		children: [
 			{
 				index: true,
@@ -71,12 +58,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/teamlead',
-		element: (
-			<ProtectedRoute
-				page={<TeamLeadPage></TeamLeadPage>}
-				requiredLevel="TEAM_LEADER"
-			></ProtectedRoute>
-		),
+		element: <TeamLeadPage></TeamLeadPage>,
 		children: [
 			{
 				index: true,
@@ -94,12 +76,7 @@ const router = createBrowserRouter([
 
 	{
 		path: '/superadmin',
-		element: (
-			<ProtectedRoute
-				page={<SuperAdminPage></SuperAdminPage>}
-				requiredLevel="ADMIN"
-			></ProtectedRoute>
-		),
+		element: <SuperAdminPage></SuperAdminPage>,
 		children: [
 			{
 				index: true,
@@ -126,19 +103,15 @@ const router = createBrowserRouter([
 				),
 			},
 
-            // Add more child routes if needed
-        ],
-    },
+			// Add more child routes if needed
+		],
+	},
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-
 	<React.StrictMode>
-		<QueryClientProvider client={queryClient}>
-			<ThemeProvider>
-				<RouterProvider router={router} />
-			</ThemeProvider>
-		</QueryClientProvider>
+		<ThemeProvider>
+			<RouterProvider router={router} />
+		</ThemeProvider>
 	</React.StrictMode>
 );
-

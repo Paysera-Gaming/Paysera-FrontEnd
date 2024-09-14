@@ -98,7 +98,7 @@ export default function SuperAdminNavigation() {
             </nav>
 
             {/* Main Content Area */}
-            <main className="flex-1 ml-[220px] p-1 bg-background">
+            <main className="flex-1 ml-[200px] p-1 bg-background">
                 {/* This is where the routes or content will be rendered */}
                 {/* Add your page content here */}
             </main>

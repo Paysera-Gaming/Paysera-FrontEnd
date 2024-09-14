@@ -4,7 +4,7 @@
 
 // zod
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import axios from 'axios';
 
@@ -24,6 +24,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
+
+// TanStack Query
+import { useQueryClient } from '@tanstack/react-query';
 
 // schema for the form
 const formSchema = z.object({
@@ -33,6 +37,7 @@ const formSchema = z.object({
   middleName: z.string().optional(),
   password: z.string().min(6, { message: "Password must be at least 6 characters." }),
   confirmPassword: z.string().min(6, { message: "Confirm password must be at least 6 characters." }),
+  accessLevel: z.enum(["TEAM_LEADER", "EMPLOYEE"], { required_error: "Access level is required." }), // Added access level field
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
@@ -40,32 +45,36 @@ const formSchema = z.object({
 
 export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: (values: any) => void, isOpen: boolean, onClose: () => void }) {
 
+  const queryClient = useQueryClient();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "", // Added default value for username
       firstName: "",
       lastName: "",
-      middleName: "",
+      middleName: "", // Default value for middle name
       password: "",
       confirmPassword: "",
+      accessLevel: "EMPLOYEE", // Default access level
     },
   });
 
   async function handleSubmit(values: z.infer<typeof formSchema>) {
-    if (values.username && values.firstName && values.lastName && values.password && values.confirmPassword) {
+    if (values.username && values.firstName && values.lastName && values.password && values.confirmPassword && values.accessLevel) {
       try {
         const response = await axios.post(import.meta.env.VITE_BASE_API +'/api/employee', {
           username: values.username, // Added username to the payload
           firstName: values.firstName,
           lastName: values.lastName,
-          middleName: values.middleName || "",
+          middleName: values.middleName || "N/A", // Set middle name to "N/A" if not provided
           passwordCredentials: values.password,
-          accessLevel: "EMPLOYEE", // Changed to a valid access level
+          accessLevel: values.accessLevel, // Added access level to the payload
           isActive: true, // Assuming the employee is active by default
         });
         toast.success('Form submitted successfully!');
         onSubmit(response.data);
+        queryClient.invalidateQueries({ queryKey: ['employees'] }); // Invalidate the employee query
         handleClose();
       } catch (error) {
         toast.error('Error submitting the form.');
@@ -81,9 +90,10 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
       username: "",
       firstName: "",
       lastName: "",
-      middleName: "",
+      middleName: "", // Reset middle name to default
       password: "",
       confirmPassword: "",
+      accessLevel: "EMPLOYEE", // Reset access level to default
     });
     onClose();
   }
@@ -189,9 +199,42 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
                   />
                 </div>
               </div>
+
+              <div className="flex flex-col space-y-2">
+                <h2 className="text-lg font-semibold">Part 3: Access Level</h2>
+                <div className="flex space-x-4">
+                  <FormField
+                    control={form.control}
+                    name="accessLevel"
+                    render={() => (
+                      <FormItem>
+                        <FormLabel>Access Level</FormLabel>
+                        <FormControl>
+                          <Controller
+                            control={form.control}
+                            name="accessLevel"
+                            render={({ field }) => (
+                              <Select onValueChange={field.onChange} value={field.value}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select Access Level" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="EMPLOYEE">Employee</SelectItem>
+                                  <SelectItem value="TEAM_LEADER">Team Leader</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" className="dark:text-white">Submit</Button>
               <Button type="button" variant="outline" onClick={handleClose}>Cancel</Button>
             </DialogFooter>
           </form>

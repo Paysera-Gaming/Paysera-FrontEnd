@@ -1,142 +1,235 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchDepartments, fetchTeamLeaders, deleteDepartment, Department, Leader } from './api';
+import DepartmentForm from './DepartmentForm';
+import DepartmentDetails from './DepartmentDetails';
 import SearchBar from './SearchBar';
-import SummaryCards from './SummaryCards';
-import DepartmentTable from './DepartmentTable';
-import AddDepartmentDialog from './AddDepartmentDialog';
-import EditDepartmentDialog from './EditDepartmentDialog';
-import ViewDepartment from './ViewDepartment';
-import { Department, Employee, Team } from './types';
-import { Button } from '@/components/ui/button'; // Adjust the import path based on your project structure
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { toast } from 'sonner';
+import { Eye, Edit, Trash } from 'lucide-react';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
-export default function DepartmentList() {
-    const [departments, setDepartments] = useState<Department[]>([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filteredDepartments, setFilteredDepartments] = useState<Department[]>([]);
-    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-    const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
-    const [viewData, setViewData] = useState<{ department: Department; team: Team } | null>(null);
-    const [isViewing, setIsViewing] = useState(false);
+const DepartmentList: React.FC = () => {
+  const queryClient = useQueryClient();
+  const { data: departments = [] } = useQuery<Department[]>({
+    queryKey: ['departments'],
+    queryFn: fetchDepartments,
+  });
+  const { data: teamLeaders = [] } = useQuery<Leader[]>({
+    queryKey: ['teamLeaders'],
+    queryFn: fetchTeamLeaders,
+  });
 
-    useEffect(() => {
-        const fetchDepartments = async () => {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_API}/api/department`);
-                setDepartments(response.data);
-                setFilteredDepartments(response.data);
-            } catch (error) {
-                console.error('Error fetching departments:', error);
-            }
-        };
+  const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
+  const [viewingDepartment, setViewingDepartment] = useState<Department | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const departmentsPerPage = 10;
 
-        fetchDepartments();
-    }, []);
+  const deleteDepartmentMutation = useMutation({
+    mutationFn: deleteDepartment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['departments'] });
+      toast.success('Successfully deleted the department');
+    },
+    onError: () => {
+      toast.error('Error deleting the department');
+    },
+  });
 
-    const totalDepartments = departments.length;
-    const totalTeams = departments.reduce((sum, dept) => sum + (dept.teams?.length || 0), 0);
+  const handleEditDepartment = (department: Department) => {
+    setEditingDepartment(department);
+  };
 
-    const handleAddDepartment = async (newDepartment: { name: string; teamLeader: string }) => {
-        try {
-            const response = await axios.post(`${import.meta.env.VITE_BASE_API}/api/department`, newDepartment);
-            setDepartments([...departments, response.data]);
-            setFilteredDepartments([...departments, response.data]);
-        } catch (error) {
-            console.error('Error adding department:', error);
-        }
-    };
+  const handleDeleteDepartment = (department: Department) => {
+    setSelectedDepartment(department);
+    setIsDialogOpen(true);
+  };
 
-    const handleEditDepartment = async (updatedDepartment: Department) => {
-        try {
-            const response = await axios.put(`${import.meta.env.VITE_BASE_API}/api/department/${updatedDepartment.id}`, updatedDepartment);
-            const updatedDepartments = departments.map(dept => dept.id === updatedDepartment.id ? response.data : dept);
-            setDepartments(updatedDepartments);
-            setFilteredDepartments(updatedDepartments);
-        } catch (error) {
-            console.error('Error editing department:', error);
-        }
-    };
+  const handleConfirmDelete = () => {
+    if (selectedDepartment) {
+      deleteDepartmentMutation.mutate(selectedDepartment.id);
+      setIsDialogOpen(false);
+    }
+  };
 
-    const handleDeleteDepartment = async (departmentId: number) => {
-        try {
-            await axios.delete(`${import.meta.env.VITE_BASE_API}/api/department/${departmentId}`);
-            const updatedDepartments = departments.filter(dept => dept.id !== departmentId);
-            setDepartments(updatedDepartments);
-            setFilteredDepartments(updatedDepartments);
-        } catch (error) {
-            console.error('Error deleting department:', error);
-        }
-    };
+  const handleViewDepartment = (department: Department) => {
+    setViewingDepartment(department);
+  };
 
-    const handleEditClick = (department: { id: number; name: string; teamLeader: Employee | null; teamMembers: Employee[] }) => {
-        const fullDepartment = departments.find(dept => dept.id === department.id);
-        if (fullDepartment) {
-            setSelectedDepartment(fullDepartment);
-            setIsEditDialogOpen(true);
-        }
-    };
+  const handleBackToList = () => {
+    setViewingDepartment(null);
+  };
 
-    const handleViewClick = async (departmentId: number, teamId: number) => {
-        try {
-            const departmentResponse = await axios.get(`${import.meta.env.VITE_BASE_API}/api/department/${departmentId}`);
-            const teamResponse = await axios.get(`${import.meta.env.VITE_BASE_API}/api/team/${teamId}`);
-            setViewData({ department: departmentResponse.data, team: teamResponse.data });
-            setIsViewing(true);
-        } catch (error) {
-            console.error('Error fetching department and team:', error);
-        }
-    };
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
 
-    const handleBack = () => {
-        setIsViewing(false);
-    };
+  const filteredDepartments = departments.filter((department) => {
+    const searchLower = searchQuery.toLowerCase();
+    const departmentNameMatch = department.name.toLowerCase().includes(searchLower);
+    const leaderMatch = department.Leader
+      ? `${department.Leader.firstName} ${department.Leader.lastName}`.toLowerCase().includes(searchLower)
+      : false;
+    const membersMatch = department.Employees
+      ? department.Employees.some((employee) =>
+          `${employee.firstName} ${employee.lastName}`.toLowerCase().includes(searchLower)
+        )
+      : false;
+    return departmentNameMatch || leaderMatch || membersMatch;
+  });
 
+  const indexOfLastDepartment = currentPage * departmentsPerPage;
+  const indexOfFirstDepartment = indexOfLastDepartment - departmentsPerPage;
+  const currentDepartments = filteredDepartments.slice(indexOfFirstDepartment, indexOfLastDepartment);
+  const totalPages = Math.ceil(filteredDepartments.length / departmentsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  if (viewingDepartment) {
     return (
-        <div className="p-4 space-y-4">
-            {isViewing && viewData ? (
-                <ViewDepartment
-                    department={viewData.department}
-                    team={viewData.team}
-                    onBack={handleBack}
-                />
-            ) : (
-                <>
-                    <SearchBar
-                        searchTerm={searchTerm}
-                        setSearchTerm={setSearchTerm}
-                        departments={departments}
-                        setFilteredDepartments={setFilteredDepartments}
-                    />
-                    <SummaryCards
-                        totalDepartments={totalDepartments}
-                        totalTeams={totalTeams}
-                    />
-                    {filteredDepartments.length > 0 ? (
-                        <DepartmentTable
-                            departments={filteredDepartments}
-                            onEditClick={handleEditClick}
-                            onViewClick={handleViewClick}
-                            onDeleteClick={handleDeleteDepartment} // Add delete click handler
-                        />
-                    ) : (
-                        <div className="text-center text-gray-500 dark:text-gray-400">
-                            {`No results found for "${searchTerm}"`}
-                        </div>
-                    )}
-                    <Button onClick={() => setIsAddDialogOpen(true)}>Add Department</Button>
-                    <AddDepartmentDialog
-                        isOpen={isAddDialogOpen}
-                        onClose={() => setIsAddDialogOpen(false)}
-                        onAdd={handleAddDepartment}
-                    />
-                    <EditDepartmentDialog
-                        isOpen={isEditDialogOpen}
-                        onClose={() => setIsEditDialogOpen(false)}
-                        onEdit={handleEditDepartment}
-                        department={selectedDepartment}
-                    />
-                </>
-            )}
-        </div>
+      <DepartmentDetails
+        department={viewingDepartment}
+        onBack={handleBackToList}
+      />
     );
-}
+  }
+
+  return (
+    <div className="container mx-auto p-4 dark:text-white">
+      <div className="flex justify-between items-center mb-4">
+        <div style={{ width: '33%' }}>
+          <SearchBar searchQuery={searchQuery} onSearchChange={handleSearchChange} />
+        </div>
+        <DepartmentForm
+          editingDepartment={editingDepartment}
+          setEditingDepartment={setEditingDepartment}
+          teamLeaders={teamLeaders}
+          departments={departments}
+        />
+      </div>
+      {departments.length === 0 ? (
+        <div className="text-center py-4">
+          No Department found.
+        </div>
+      ) : (
+        <>
+          {filteredDepartments.length > 0 ? (
+            <Card>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full bg-white dark:bg-transparent">
+                    <thead>
+                      <tr>
+                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Name</th>
+                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Leader</th>
+                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Members</th>
+                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentDepartments.map((department: Department) => (
+                        <tr key={department.id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">{department.name}</td>
+                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
+                            {department.Leader ? `${department.Leader.firstName} ${department.Leader.lastName}` : 'No Leader Assigned'}
+                          </td>
+                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
+                            {department.Employees && department.Employees.length > 0 ? (
+                              <>
+                                {department.Employees.slice(0, 3).map((employee) => (
+                                  <span key={employee.id} className="block">
+                                    {employee.firstName} {employee.lastName}
+                                  </span>
+                                ))}
+                                {department.Employees.length > 3 && <span>etc.</span>}
+                              </>
+                            ) : (
+                              <span>No Employees</span>
+                            )}
+                          </td>
+                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
+                            <Button
+                              onClick={() => handleViewDepartment(department)}
+                              variant="outline"
+                              className="mr-2"
+                            >
+                              <Eye className="w-4 h-4 mr-1" /> View
+                            </Button>
+                            <Button
+                              onClick={() => handleEditDepartment(department)}
+                              variant="outline"
+                              className="mr-2"
+                            >
+                              <Edit className="w-4 h-4 mr-1" /> Edit
+                            </Button>
+                            <Button
+                              onClick={() => handleDeleteDepartment(department)}
+                              variant="outline"
+                            >
+                              <Trash className="w-4 h-4 mr-1" /> Delete
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="text-center py-4">
+              No results found for "{searchQuery}".
+            </div>
+          )}
+        </>
+      )}
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" onClick={() => handlePageChange(currentPage - 1)} />
+          </PaginationItem>
+          {[...Array(totalPages)].map((_, index) => (
+            <PaginationItem key={index}>
+              <PaginationLink href="#" isActive={index + 1 === currentPage} onClick={() => handlePageChange(index + 1)}>
+                {index + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <PaginationNext href="#" onClick={() => handlePageChange(currentPage + 1)} />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete {selectedDepartment?.name}?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleConfirmDelete}>Confirm</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default DepartmentList;
