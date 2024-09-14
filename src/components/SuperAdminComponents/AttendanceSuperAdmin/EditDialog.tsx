@@ -30,7 +30,8 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
         const lunchTimeTotal = timeDifferenceInHours(lunchTimeIn, lunchTimeOut);
         const totalWorkHours = timeDifferenceInHours(timeIn, timeOut);
         const workTimeTotal = totalWorkHours - lunchTimeTotal;
-        const totalTime = totalWorkHours;
+        const overTimeTotal = editData.overTimeTotal || 0;
+        const totalTime = totalWorkHours + overTimeTotal;
 
         const validWorkTimeTotal = workTimeTotal >= 0 ? workTimeTotal : null;
         const validLunchTimeTotal = lunchTimeTotal >= 0 ? lunchTimeTotal : null;
@@ -44,7 +45,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
             timeIn: formatDateTime(editData.date, timeIn),
             timeOut: formatDateTime(editData.date, timeOut),
             timeHoursWorked: validWorkTimeTotal,
-            overTimeTotal: editData.overTimeTotal,
+            overTimeTotal: overTimeTotal,
             timeTotal: totalTime.toFixed(2), // Format total time to two decimal places
             lunchTimeIn: formatDateTime(editData.date, lunchTimeIn),
             lunchTimeOut: formatDateTime(editData.date, lunchTimeOut),
