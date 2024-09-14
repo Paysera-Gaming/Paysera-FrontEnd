@@ -66,47 +66,78 @@ const AttendanceActions: React.FC<AttendanceActionsProps> = ({ attendance }) => 
 
     const handleEditSave = async (event: React.FormEvent) => {
         event.preventDefault();
-    
-        // Parse the input times correctly
-        const timeIn = new Date(`1970-01-01T${editData.timeIn}`);
-        const timeOut = new Date(`1970-01-01T${editData.timeOut}`);
-        const lunchTimeIn = new Date(`1970-01-01T${editData.lunchTimeIn}`);
-        const lunchTimeOut = new Date(`1970-01-01T${editData.lunchTimeOut}`);
-    
-        // Calculate work time and lunch time in hours
-        const workTimeTotal = (timeOut.getTime() - timeIn.getTime()) / (60 * 60 * 1000);
-        const lunchTimeTotal = (lunchTimeOut.getTime() - lunchTimeIn.getTime()) / (60 * 60 * 1000);
-        const overTimeTotal = editData.overTimeTotal ? editData.overTimeTotal : 0;
-        const totalTime = workTimeTotal - lunchTimeTotal + overTimeTotal;
-    
-        // Ensure the date is correctly formatted
-        const date = new Date(editData.date).toISOString().split('T')[0]; // Get the date part only
-        const timeInISO = new Date(`${date}T${editData.timeIn}`).toISOString();
-        const timeOutISO = new Date(`${date}T${editData.timeOut}`).toISOString();
-        const lunchTimeInISO = new Date(`${date}T${editData.lunchTimeIn}`).toISOString();
-        const lunchTimeOutISO = new Date(`${date}T${editData.lunchTimeOut}`).toISOString();
-    
+
+        // Helper function to parse 12-hour time format to 24-hour military time
+        const parseTime = (time: string) => {
+            const [hours, minutes] = time.split(/[: ]/);
+            const period = time.slice(-2); // AM or PM
+            let hours24 = parseInt(hours, 10);
+
+            if (period === 'PM' && hours24 !== 12) hours24 += 12;
+            if (period === 'AM' && hours24 === 12) hours24 = 0;
+
+            return { hours: hours24, minutes: parseInt(minutes) };
+        };
+
+        // Function to calculate the difference between two times in hours
+        const timeDifferenceInHours = (startTime: { hours: number, minutes: number }, endTime: { hours: number, minutes: number }) => {
+            const startMinutes = startTime.hours * 60 + startTime.minutes;
+            const endMinutes = endTime.hours * 60 + endTime.minutes;
+            const diffInMinutes = endMinutes - startMinutes;
+
+            return diffInMinutes / 60; // Return the difference in hours
+        };
+
+        // Parse times
+        const timeIn = parseTime(editData.timeIn); // e.g., 08:00 AM
+        const timeOut = parseTime(editData.timeOut); // e.g., 05:00 PM
+        const lunchTimeIn = parseTime(editData.lunchTimeIn); // e.g., 01:00 PM
+        const lunchTimeOut = parseTime(editData.lunchTimeOut); // e.g., 02:00 PM
+
+        // Calculate Lunch Time Total (time between Lunch Time In and Lunch Time Out)
+        const lunchTimeTotal = timeDifferenceInHours(lunchTimeIn, lunchTimeOut);
+
+        // Calculate total work hours (time between Time In and Time Out)
+        const totalWorkHours = timeDifferenceInHours(timeIn, timeOut);
+
+        // Calculate Work Time Total (total work hours minus lunch break)
+        const workTimeTotal = totalWorkHours - lunchTimeTotal;
+
+        // Total time in the office (should equal the difference between Time In and Time Out)
+        const totalTime = totalWorkHours; // Total time spent at work including the lunch break
+
+        // Set to null if calculations are incorrect
+        const validWorkTimeTotal = workTimeTotal >= 0 ? workTimeTotal : null;
+        const validLunchTimeTotal = lunchTimeTotal >= 0 ? lunchTimeTotal : null;
+
+        // Format the date-time to ISO format for saving (optional)
+        const formatDateTime = (date: string, time: { hours: number, minutes: number }) => {
+            const dateObj = new Date(date);
+            dateObj.setHours(time.hours, time.minutes, 0, 0);
+            return dateObj.toISOString();
+        };
+
         const payload = {
             id: editData.id,
-            employeeId: editData.employee.id, // Access employeeId correctly
+            employeeId: editData.employee.id,
             date: new Date(editData.date).toISOString(),
             status: editData.status,
             scheduleType: editData.scheduleType,
-            timeIn: timeInISO,
-            timeOut: timeOutISO,
-            timeHoursWorked: workTimeTotal,
+            timeIn: formatDateTime(editData.date, timeIn),
+            timeOut: formatDateTime(editData.date, timeOut),
+            timeHoursWorked: validWorkTimeTotal, // Work time excluding lunch
             overTimeTotal: editData.overTimeTotal,
-            timeTotal: totalTime,
-            lunchTimeIn: lunchTimeInISO,
-            lunchTimeOut: lunchTimeOutISO,
-            lunchTimeTotal: lunchTimeTotal,
+            timeTotal: totalTime.toFixed(2), // Total time (including lunch)
+            lunchTimeIn: formatDateTime(editData.date, lunchTimeIn),
+            lunchTimeOut: formatDateTime(editData.date, lunchTimeOut),
+            lunchTimeTotal: validLunchTimeTotal, // Total lunch time
         };
-    
+
         try {
             await axios.put(`${import.meta.env.VITE_BASE_API}/api/attendance/${attendance.id}`, payload);
             toast.success(`Successfully updated attendance for ${attendance.employeeName} on ${attendance.date}`);
             setIsEditDialogOpen(false);
-            queryClient.invalidateQueries({ queryKey: ['attendanceList'] }); // Invalidate the attendance query
+            queryClient.invalidateQueries({ queryKey: ['attendanceList'] });
         } catch (error) {
             toast.error('Error updating the attendance.');
             console.error('Error updating the attendance:', error);
