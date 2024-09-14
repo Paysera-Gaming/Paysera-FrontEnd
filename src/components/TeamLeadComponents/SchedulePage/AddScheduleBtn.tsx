@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 
 import { useState } from 'react';
 import ScheduleForm from './ScheduleForm';
+import { createSchedule } from '@/api/ScheduleAPI';
+// Adjust the import path as necessary
 
 export default function AddScheduleBtn() {
 	const [openAlert, setAlert] = useState<boolean>(false);
@@ -32,7 +34,11 @@ export default function AddScheduleBtn() {
 				</AlertDialogHeader>
 				{/* form here */}
 
-				<ScheduleForm updateParentState={setAlert}></ScheduleForm>
+				<ScheduleForm
+					isPost={true}
+					fetchRequest={createSchedule}
+					updateParentState={setAlert}
+				></ScheduleForm>
 			</AlertDialogContent>
 		</AlertDialog>
 	);

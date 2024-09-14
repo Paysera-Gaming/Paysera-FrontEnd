@@ -1,21 +1,5 @@
-export interface TSchedule {
-	id: number;
-	role: string;
-	name: string;
-	scheduleId: number;
-	departmentId: number;
-	updatedAt: Date;
-	createdAt: Date;
-	scheduleType: 'FIXED' | 'SUPER_FLEXI' | 'FLEXI';
-	startTime: Date;
-	endTime: Date;
-	limitWorkHoursDay: number;
-	allowedOvertime: boolean;
-	lunchStartTime: Date;
-	lunchEndTime: Date;
-}
 import { ArrowUpDown } from 'lucide-react';
-
+import { createContext, forwardRef } from 'react';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -33,22 +17,15 @@ import EditSchedule from '../TeamLeadComponents/DialogForms/EditSchedule';
 import RemoveScheduleDialog from '../TeamLeadComponents/DialogForms/RemoveSchedule';
 import { formatDate } from './DataColumns';
 import { Badge } from '../ui/badge';
+import { TDepartmentSchedules } from '@/api/ScheduleAPI';
 
-export const scheduleColumns: ColumnDef<TSchedule>[] = [
-	{
-		accessorKey: 'id',
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-				>
-					ID
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
-	},
+export const ScheduleContext = createContext<TDepartmentSchedules | undefined>(
+	undefined
+);
+// overhaul the schedule interface
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const scheduleColumns: ColumnDef<TDepartmentSchedules>[] = [
 	{
 		accessorKey: 'name',
 		header: ({ column }) => {
@@ -57,7 +34,21 @@ export const scheduleColumns: ColumnDef<TSchedule>[] = [
 					variant="ghost"
 					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
 				>
-					Name
+					Schedule Name
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+	},
+	{
+		accessorKey: 'Schedule.scheduleType',
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+				>
+					Schedule Type
 					<ArrowUpDown className="ml-2 h-4 w-4" />
 				</Button>
 			);
@@ -77,57 +68,38 @@ export const scheduleColumns: ColumnDef<TSchedule>[] = [
 			);
 		},
 	},
+
 	{
-		accessorKey: 'scheduleId',
-		header: 'Schedule ID',
-	},
-	{
-		accessorKey: 'createdAt',
-		header: 'Created At',
-		cell: ({ row }) => {
-			return formatDate(row.getValue('createdAt'));
-		},
-	},
-	{
-		accessorKey: 'updatedAt',
-		header: 'Updated At',
-		cell: ({ row }) => {
-			return formatDate(row.getValue('updatedAt'));
-		},
-	},
-	{
-		accessorKey: 'scheduleType',
-		header: 'Schedule Type',
-	},
-	{
-		accessorKey: 'startTime',
+		accessorKey: 'Schedule.startTime',
 		header: 'Start Time',
 		cell: ({ row }) => {
-			return formatDate(row.getValue('startTime'));
+			return formatDate(new Date(row.getValue('Schedule_startTime')));
 		},
 	},
 	{
-		accessorKey: 'endTime',
+		accessorKey: 'Schedule.endTime',
 		header: 'End Time',
 		cell: ({ row }) => {
-			return formatDate(row.getValue('endTime'));
+			return formatDate(new Date(row.getValue('Schedule_endTime')));
 		},
 	},
 
 	{
-		accessorKey: 'limitWorkHoursDay',
+		accessorKey: 'Schedule.limitWorkHoursDay',
 		header: 'Work Hours Limit',
 	},
 
 	{
-		accessorKey: 'allowedOvertime',
+		accessorKey: 'Schedule.allowedOvertime',
 		header: 'Allowed Overtime',
 		cell: ({ row }) => {
-			const isAllowed: boolean = row.getValue('allowedOvertime');
+			const isAllowed: boolean = row.getValue('Schedule_allowedOvertime');
 
 			return (
 				<Badge
-					variant={row.getValue('allowedOvertime') ? 'default' : 'destructive'}
+					variant={
+						row.getValue('Schedule_allowedOvertime') ? 'default' : 'destructive'
+					}
 				>
 					{isAllowed ? 'Yes' : 'No'}
 				</Badge>
@@ -136,18 +108,32 @@ export const scheduleColumns: ColumnDef<TSchedule>[] = [
 	},
 
 	{
-		accessorKey: 'lunchStartTime',
+		accessorKey: 'Schedule.lunchStartTime',
 		header: 'Lunch Start Time',
 		cell: ({ row }) => {
-			return formatDate(row.getValue('lunchStartTime'));
+			return formatDate(new Date(row.getValue('Schedule_lunchStartTime')));
 		},
 	},
 
 	{
-		accessorKey: 'lunchEndTime',
+		accessorKey: 'Schedule.lunchEndTime',
 		header: 'Lunch End Time',
 		cell: ({ row }) => {
-			return formatDate(row.getValue('lunchEndTime'));
+			return formatDate(new Date(row.getValue('Schedule_lunchEndTime')));
+		},
+	},
+	{
+		accessorKey: 'createdAt',
+		header: 'Created At',
+		cell: ({ row }) => {
+			return formatDate(new Date(row.getValue('createdAt')));
+		},
+	},
+	{
+		accessorKey: 'updatedAt',
+		header: 'Updated At',
+		cell: ({ row }) => {
+			return formatDate(new Date(row.getValue('updatedAt')));
 		},
 	},
 
@@ -155,7 +141,8 @@ export const scheduleColumns: ColumnDef<TSchedule>[] = [
 	{
 		id: 'actions',
 		cell: ({ row }) => {
-			const employee = row.original;
+			const RefRemoveDialog = forwardRef(RemoveScheduleDialog);
+			const RefEditSchedule = forwardRef(EditSchedule);
 
 			return (
 				// try to make this drop down into a stupid standalone
@@ -171,12 +158,14 @@ export const scheduleColumns: ColumnDef<TSchedule>[] = [
 
 						<DropdownMenuSeparator />
 
-						<DropdownMenu>
-							<EditSchedule employeeRole={employee.role}></EditSchedule>
-						</DropdownMenu>
+						<DropdownMenuItem asChild>
+							<ScheduleContext.Provider value={row.original}>
+								<RefEditSchedule></RefEditSchedule>
+							</ScheduleContext.Provider>
+						</DropdownMenuItem>
 
 						<DropdownMenuItem asChild>
-							<RemoveScheduleDialog></RemoveScheduleDialog>
+							<RefRemoveDialog></RefRemoveDialog>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>

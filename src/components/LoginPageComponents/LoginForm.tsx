@@ -22,7 +22,10 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-
+import { useMutation } from '@tanstack/react-query';
+import { login } from '@/api/LoginAPI';
+import { useUserStore } from '@/stores/userStore';
+import { useState } from 'react';
 // schema for the form
 const formSchema = z.object({
 	username: z
@@ -39,22 +42,44 @@ const formSchema = z.object({
 
 export default function LoginForm() {
 	const navigate = useNavigate();
-
+	const [disableSend, setDisable] = useState(false);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: { username: '', password: '' },
 	});
+	const mutatationLogIn = useMutation({
+		mutationFn: () => {
+			return login(form.getValues().username, form.getValues().password);
+		},
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// submit your shit here
-		if (values.username && values.password) {
-			toast.success('login succesful');
-			return setTimeout(() => {
-				return navigate('/teamlead');
+		onSuccess: (data) => {
+			toast.success('Login Success');
+			useUserStore.getState().setUser(data);
+			setTimeout(() => {
+				switch (useUserStore.getState().user?.accessLevel) {
+					case 'ADMIN':
+						navigate('/superadmin/dashboard');
+						break;
+					case 'TEAM_LEADER':
+						navigate('/teamlead/dashboard');
+						break;
+					case 'EMPLOYEE':
+						navigate('/employee/dashboard');
+						break;
+				}
 			}, 500);
-		} else {
-			toast.error('please try again');
-		}
+		},
+
+		onError: (error) => {
+			setDisable(false);
+			toast.error(error.message);
+		},
+	});
+
+	function onSubmit() {
+		toast.loading('Logging in...');
+		setDisable(true);
+		mutatationLogIn.mutate();
 	}
 
 	return (
@@ -88,7 +113,9 @@ export default function LoginForm() {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">Login</Button>
+				<Button disabled={disableSend} type="submit">
+					Login
+				</Button>
 			</form>
 			<Toaster></Toaster>
 		</Form>

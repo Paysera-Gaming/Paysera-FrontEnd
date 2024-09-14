@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { DatePicker } from '../TeamLeadComponents/AttendancePage/DatePicker';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
 	Table,
@@ -46,7 +46,7 @@ export function AttendanceTable<TData, TValue>({
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[]
 	);
-	const [selectedDate, setDate] = React.useState<Date>();
+	const [selectedDate, setDate] = React.useState<string>();
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
 	const table = useReactTable({
@@ -66,26 +66,45 @@ export function AttendanceTable<TData, TValue>({
 		},
 	});
 
-	function checkDate(date: Date) {
+	function checkDate(date: string) {
 		setDate(date);
-		alert(date);
 	}
+
+	useEffect(() => {
+		console.log(selectedDate);
+		if (selectedDate) {
+			table.getColumn('createdAt')?.setFilterValue(selectedDate);
+		}
+	}, [selectedDate, table]);
 
 	return (
 		<div className=" w-full flex items-center justify-center flex-col gap-4 mt-1">
 			<div className="w-full flex items-center justify-between">
 				<div className="flex items-center justify-center">
 					<DatePicker updateParentState={checkDate}></DatePicker>
+					<Button
+						variant="outline"
+						onClick={() => {
+							table.getColumn('createdAt')?.setFilterValue('');
+						}}
+						className="ml-3"
+					>
+						Reset
+					</Button>
 				</div>
 
 				<div className="flex items-center justify-center gap-2">
 					<Input
-						placeholder="Filter Employee via ID..."
+						placeholder="Filter Employee via Last Name"
 						value={
-							(table.getColumn('userID')?.getFilterValue() as string) ?? ''
+							(table
+								.getColumn('employee_lastName')
+								?.getFilterValue() as string) ?? ''
 						}
 						onChange={(event) =>
-							table.getColumn('userID')?.setFilterValue(event.target.value)
+							table
+								.getColumn('employee_lastName')
+								?.setFilterValue(event.target.value)
 						}
 						className="w-[220px]"
 					/>

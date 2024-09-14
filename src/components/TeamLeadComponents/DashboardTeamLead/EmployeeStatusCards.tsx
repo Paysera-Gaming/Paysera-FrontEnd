@@ -37,9 +37,9 @@ export default function EmployeesStatusCards() {
 		},
 	]);
 
-	const CardItems = cardData.map((card) => {
+	const CardItems = cardData.map((card, index) => {
 		return (
-			<Card className="flex-1 p-4">
+			<Card className="flex-1 p-4" key={index}>
 				<CardContent className="flex item-cineter justify-between p-0 pb-2">
 					<p className="text-lg">{card.title}:</p>
 					{card.icon}
