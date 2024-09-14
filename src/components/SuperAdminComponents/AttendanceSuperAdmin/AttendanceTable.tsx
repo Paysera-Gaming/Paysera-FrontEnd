@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { flexRender, useReactTable, ColumnDef, getCoreRowModel } from '@tanstack/react-table';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Attendance } from './types';
 import { format } from 'date-fns';
 import AttendanceActions from './AttendanceActions';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface AttendanceTableProps {
   data: Attendance[];
@@ -18,6 +26,9 @@ const formatNumber = (value: number) => {
 };
 
 const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRange, activeFilter, searchQuery }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 10;
+
   const table = useReactTable({
     data,
     columns,
@@ -26,6 +37,15 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
 
   const formattedFromDate = dateRange?.from ? format(dateRange.from, "LLL dd, y") : "N/A";
   const formattedToDate = dateRange?.to ? format(dateRange.to, "LLL dd, y") : "N/A";
+
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
+  const totalPages = Math.ceil(data.length / recordsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div className="rounded-md border">
@@ -48,16 +68,16 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
                 Please select a start date and end date to view attendance records.
               </TableCell>
             </TableRow>
-          ) : table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
+          ) : currentRecords.length ? (
+            currentRecords.map((row, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {table.getRowModel().rows[rowIndex].getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {typeof cell.getValue() === 'number' ? formatNumber(cell.getValue() as number) : flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
                 <TableCell>
-                  <AttendanceActions attendance={row.original} />
+                  <AttendanceActions attendance={row} />
                 </TableCell>
               </TableRow>
             ))
@@ -81,6 +101,23 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
           )}
         </TableBody>
       </Table>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" onClick={() => handlePageChange(currentPage - 1)} />
+          </PaginationItem>
+          {[...Array(totalPages)].map((_, index) => (
+            <PaginationItem key={index}>
+              <PaginationLink href="#" isActive={index + 1 === currentPage} onClick={() => handlePageChange(index + 1)}>
+                {index + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <PaginationNext href="#" onClick={() => handlePageChange(currentPage + 1)} />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 };
