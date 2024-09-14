@@ -153,7 +153,7 @@ const AttendanceActions: React.FC<AttendanceActionsProps> = ({ attendance }) => 
                                     <div className="text-red-500">
                                         {errorMessages.map((message, index) => (
                                             <div key={index}>{message}</div>
-                                        ))}
+                                        ))} 
                                     </div>
                                 )}
                                 <div className="grid grid-cols-4 items-center gap-4">
@@ -170,21 +170,6 @@ const AttendanceActions: React.FC<AttendanceActionsProps> = ({ attendance }) => 
                                         <option value="BREAK">BREAK</option>
                                         <option value="DONE">DONE</option>
                                         <option value="PAID_LEAVE">PAID_LEAVE</option>
-                                    </select>
-                                </div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="scheduleType" className="text-right">
-                                        Schedule Type
-                                    </Label>
-                                    <select
-                                        id="scheduleType"
-                                        className="col-span-3"
-                                        value={editData.scheduleType}
-                                        onChange={(e) => setEditData({ ...editData, scheduleType: e.target.value })}
-                                    >
-                                        <option value="FIXED">FIXED</option>
-                                        <option value="FLEXI">FLEXI</option>
-                                        <option value="SUPER_FLEXI">SUPER_FLEXI</option>
                                     </select>
                                 </div>
                                 <div className="grid grid-cols-4 items-center gap-4">
