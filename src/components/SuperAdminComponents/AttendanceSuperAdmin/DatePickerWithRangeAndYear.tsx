@@ -50,12 +50,13 @@ const DatePickerWithRangeAndYear: React.FC<DatePickerWithRangeAndYearProps> = ({
     }
   };
 
-  const handleTodayClick = () => {
+  const handleRefreshClick = () => {
     const today = new Date();
     const todayRange = { from: today, to: today };
     setDate(todayRange);
     setCurrentMonth(today);
     onChange(todayRange, selectedYear);
+    window.location.reload(); // Refresh the page
   };
 
   return (
@@ -87,7 +88,7 @@ const DatePickerWithRangeAndYear: React.FC<DatePickerWithRangeAndYearProps> = ({
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <div className="flex justify-between p-2">
-            <Button variant="outline" onClick={handleTodayClick}>
+            <Button variant="outline" onClick={handleRefreshClick}>
               Today
             </Button>
             <DropdownMenu>
