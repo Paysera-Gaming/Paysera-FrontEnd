@@ -48,13 +48,13 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
   };
 
   return (
-    <div className="rounded-md border">
-      <Table>
+    <div className="rounded-md border" style={{ maxWidth: '1100px', margin: '0 auto', overflowX: 'auto' }}>
+      <Table style={{ width: '100%', fontSize: '12px' }}>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+                <TableHead key={header.id} style={{ width: `${100 / columns.length}%`, fontSize: '12px' }}>
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
@@ -64,7 +64,7 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
         <TableBody>
           {!dateRange?.from || !dateRange?.to ? (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
+              <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500" style={{ fontSize: '12px' }}>
                 Please select a start date and end date to view attendance records.
               </TableCell>
             </TableRow>
@@ -72,18 +72,18 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
             currentRecords.map((row, rowIndex) => (
               <TableRow key={rowIndex}>
                 {table.getRowModel().rows[rowIndex].getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell key={cell.id} style={{ width: `${100 / columns.length}%`, fontSize: '12px' }}>
                     {typeof cell.getValue() === 'number' ? formatNumber(cell.getValue() as number) : flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
-                <TableCell>
+                <TableCell style={{ width: `${100 / columns.length}%`, fontSize: '12px' }}>
                   <AttendanceActions attendance={row} />
                 </TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
+              <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500" style={{ fontSize: '12px' }}>
                 {searchQuery ? (
                   <>
                     No results found for "{searchQuery}".<br />
