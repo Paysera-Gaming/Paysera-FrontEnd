@@ -1,31 +1,50 @@
-import { DataTable } from '@/components/DataTable/DataTableProvider';
 import {
-	scheduleColumns,
-	TSchedule,
-} from '@/components/DataTable/ScheduleColumn';
+	getAllSchedulesInDepartment,
+	TDepartmentSchedules,
+} from '@/api/ScheduleAPI';
+import { DataTable } from '@/components/DataTable/DataTableProvider';
+import { scheduleColumns } from '@/components/DataTable/ScheduleColumn';
 import AddScheduleBtn from '@/components/TeamLeadComponents/SchedulePage/AddScheduleBtn';
-
-const dummyScheduleData: TSchedule[] = [
-	{
-		id: 1,
-		name: 'JOe',
-		role: 'Manager',
-		scheduleId: 101,
-		departmentId: 10,
-		updatedAt: new Date('2024-08-25T12:00:00'),
-		createdAt: new Date('2024-08-01T08:30:00'),
-		scheduleType: 'FIXED',
-		startTime: new Date('2024-08-26T09:00:00'),
-		endTime: new Date('2024-08-26T17:00:00'),
-		limitWorkHoursDay: 8,
-		allowedOvertime: false,
-		lunchStartTime: new Date('2024-08-26T12:00:00'),
-		lunchEndTime: new Date('2024-08-26T12:30:00'),
-		joe: { name: 'Doe', age: 20 },
-	},
-];
+import { Skeleton } from '@/components/ui/skeleton';
+import { useUserStore } from '@/stores/userStore';
+import { useQuery } from '@tanstack/react-query';
 
 export default function SchedulePage() {
+	const { data, isError, isLoading } = useQuery({
+		queryKey: ['Schedule'],
+		queryFn: () => {
+			const user = useUserStore.getState().getUser();
+			const departmentId = user?.departmentId;
+			if (departmentId !== undefined) {
+				return getAllSchedulesInDepartment(departmentId);
+			} else {
+				throw new Error('No Department Id Found');
+			}
+		},
+	});
+
+	const scheduleData: TDepartmentSchedules[] = data as TDepartmentSchedules[];
+	if (isError) {
+		return <>An Error has occured</>;
+	}
+
+	if (isLoading) {
+		return (
+			<div className=" w-full h-full border-border border-solid border p-5 rounded-md ">
+				<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0">
+					Manage Employees In Department
+				</h2>
+				<div className="grid grid-cols-5 w-full mt-2 gap-2">
+					<Skeleton className="col-span-5 h-10" />
+					<Skeleton className="col-span-5 h-72" />
+					<div className="col-span-3"></div>
+					<Skeleton className="col-span-1 h-10" />
+					<Skeleton className="col-span-1 h-10" />
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<div className=" w-full h-full border-border border-solid border p-5 rounded-md">
 			{/* adjust the bloody cancel and submit button sa add schedule */}
@@ -35,8 +54,8 @@ export default function SchedulePage() {
 			<DataTable
 				addButton={<AddScheduleBtn />}
 				columns={scheduleColumns}
-				data={dummyScheduleData}
-				searchQuery="id"
+				data={scheduleData}
+				searchQuery="name"
 			></DataTable>
 		</div>
 	);

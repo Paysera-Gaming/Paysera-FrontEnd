@@ -7,6 +7,7 @@ export const formSchema = z.object({
 	// first
 	name: z.string().min(2).max(50),
 	role: z.string().min(2).max(50),
+
 	// second
 	timeIn: z.date(),
 	timeOut: z.date(),
@@ -16,11 +17,57 @@ export const formSchema = z.object({
 	allowedOverTime: z.boolean(),
 });
 
+// [
+//   {
+//     "id": 1,
+//     "name": "FIXED ENGINEER Schedule",
+//     "role": "ENGINEER",
+//     "scheduleId": 1,
+//     "departmentId": 1,
+//     "updatedAt": "2024-09-11T02:48:57.916Z",
+//     "createdAt": "2024-09-11T02:48:57.916Z",
+//     "Schedule": {
+//       "id": 1,
+//       "scheduleType": "FIXED",
+//       "startTime": "2024-08-01T09:00:00.000Z",
+//       "endTime": "2024-08-01T17:00:00.000Z",
+//       "limitWorkHoursDay": null,
+//       "allowedOvertime": false,
+//       "lunchStartTime": "2024-08-01T12:00:00.000Z",
+//       "lunchEndTime": "2024-08-01T13:00:00.000Z",
+//       "updatedAt": "2024-09-11T02:48:57.912Z",
+//       "createdAt": "2024-09-11T02:48:57.912Z"
+//     }
+//   }
+// ]
+
+export type TDepartmentSchedules = {
+	id: number;
+	name: string;
+	role: string;
+	scheduleId: number;
+	departmentId: number;
+	updatedAt: string;
+	createdAt: string;
+	Schedule: {
+		id: number;
+		scheduleType: 'FIXED' | 'SUPER_FLEXI' | 'FLEXI';
+		startTime: string;
+		endTime: string;
+		limitWorkHoursDay: number;
+		allowedOvertime: boolean;
+		lunchStartTime: string;
+		lunchEndTime: string;
+		updatedAt: string;
+		createdAt: string;
+	};
+};
+
 export async function getAllSchedulesInDepartment(
 	departmentId: number
-): Promise<z.infer<typeof formSchema>[]> {
-	const response: AxiosResponse<z.infer<typeof formSchema>[]> =
-		await axiosInstance.get(`/api/department-schedule/${departmentId}`);
+): Promise<TDepartmentSchedules[]> {
+	const response: AxiosResponse<TDepartmentSchedules[]> =
+		await axiosInstance.get(`/api/department/${departmentId}/schedules`);
 	console.log(response.data);
 	return response.data;
 }
