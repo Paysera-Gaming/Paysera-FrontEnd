@@ -134,10 +134,10 @@ const DepartmentList: React.FC = () => {
                   <table className="min-w-full bg-white dark:bg-transparent">
                     <thead>
                       <tr>
-                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-black dark:text-gray-300">Name</th>
-                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-black dark:text-gray-300">Leader</th>
-                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-black dark:text-gray-300">Members</th>
-                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-black dark:text-gray-300">Actions</th>
+                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Name</th>
+                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Leader</th>
+                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Members</th>
+                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
