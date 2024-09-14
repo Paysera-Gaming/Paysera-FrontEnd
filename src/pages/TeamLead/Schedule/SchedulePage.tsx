@@ -23,7 +23,7 @@ export default function SchedulePage() {
 		},
 	});
 
-	const scheduleData: TDepartmentSchedules[] = data as TDepartmentSchedules[];
+	const scheduleData: TDepartmentSchedules[] = data ?? [];
 	if (isError) {
 		return <>An Error has occured</>;
 	}
