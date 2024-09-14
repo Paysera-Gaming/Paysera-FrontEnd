@@ -67,15 +67,16 @@ export function AttendanceTable<TData, TValue>({
 	});
 
 	function checkDate(date: string) {
-		console.log(table.getAllColumns());
-
 		setDate(date);
 		alert(date);
 	}
 
 	useEffect(() => {
-		table.getColumn('createdAt')?.setFilterValue(selectedDate);
-	}, [selectedDate]);
+		console.log(selectedDate);
+		if (selectedDate) {
+			table.getColumn('createdAt')?.setFilterValue(selectedDate);
+		}
+	}, [selectedDate, table]);
 
 	return (
 		<div className=" w-full flex items-center justify-center flex-col gap-4 mt-1">
