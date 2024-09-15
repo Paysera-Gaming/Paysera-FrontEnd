@@ -77,7 +77,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
                             </Label>
                             <select
                                 id="status"
-                                className="col-span-3"
+                                className="col-span-3 dark:bg-gray-800 dark:text-white"
                                 value={editData.status}
                                 onChange={(e) => setEditData({ ...editData, status: e.target.value })}
                             >
@@ -94,7 +94,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
                             <input
                                 type="time"
                                 id="timeIn"
-                                className="col-span-3"
+                                className="col-span-3 dark:bg-gray-800 dark:text-white"
                                 value={editData.timeIn}
                                 onChange={(e) => setEditData({ ...editData, timeIn: e.target.value })}
                             />
@@ -106,7 +106,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
                             <input
                                 type="time"
                                 id="timeOut"
-                                className="col-span-3"
+                                className="col-span-3 dark:bg-gray-800 dark:text-white"
                                 value={editData.timeOut}
                                 onChange={(e) => setEditData({ ...editData, timeOut: e.target.value })}
                             />
@@ -118,7 +118,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
                             <input
                                 type="time"
                                 id="lunchTimeIn"
-                                className="col-span-3"
+                                className="col-span-3 dark:bg-gray-800 dark:text-white"
                                 value={editData.lunchTimeIn}
                                 onChange={(e) => setEditData({ ...editData, lunchTimeIn: e.target.value })}
                             />
@@ -130,7 +130,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
                             <input
                                 type="time"
                                 id="lunchTimeOut"
-                                className="col-span-3"
+                                className="col-span-3 dark:bg-gray-800 dark:text-white"
                                 value={editData.lunchTimeOut}
                                 onChange={(e) => setEditData({ ...editData, lunchTimeOut: e.target.value })}
                             />
@@ -142,7 +142,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
                             <input
                                 type="number"
                                 id="overTimeTotal"
-                                className="col-span-3"
+                                className="col-span-3 dark:bg-gray-800 dark:text-white"
                                 value={editData.overTimeTotal || ''}
                                 onChange={(e) => setEditData({ ...editData, overTimeTotal: parseFloat(e.target.value) })}
                             />
