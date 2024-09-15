@@ -51,7 +51,7 @@ function UserInfo() {
 export default function EmployeeInfoCard() {
 	return (
 		<div className="flex flex-col gap-2">
-			<Tabs defaultValue="user">
+			<Tabs defaultValue="employee">
 				<TabsList className="grid w-full grid-cols-2">
 					<TabsTrigger
 						value="employee"
