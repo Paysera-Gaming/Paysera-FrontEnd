@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { axiosInstance } from '.';
 import { toast } from 'sonner';
+import { TDepartmentSchedules } from './ScheduleAPI';
 
 export type TUserInfo = {
 	id: number;
@@ -13,6 +14,7 @@ export type TUserInfo = {
 	middleName: string;
 	role: string;
 	departmentName: string;
+	schedule: TDepartmentSchedules | string;
 };
 
 export async function login(
@@ -42,6 +44,8 @@ async function getUserInfo(): Promise<TUserInfo> {
 	const response: AxiosResponse<TUserInfo> = await axiosInstance.get(
 		'/api/info'
 	);
+
+	console.log(response.data);
 
 	return response.data;
 }
