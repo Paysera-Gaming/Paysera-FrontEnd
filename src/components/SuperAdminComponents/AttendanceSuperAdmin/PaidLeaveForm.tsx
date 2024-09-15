@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,6 +22,7 @@ const fetchEmployees = async (): Promise<Employee[]> => {
 };
 
 const PaidLeaveForm: React.FC = () => {
+  const queryClient = useQueryClient();
   const { data: employees = [] } = useQuery<Employee[], Error>({
     queryKey: ["employees"],
     queryFn: fetchEmployees,
@@ -30,6 +31,21 @@ const PaidLeaveForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [scheduleType, setScheduleType] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+  const mutation = useMutation({
+    mutationFn: async (payload: any) => {
+      await axios.post(import.meta.env.VITE_BASE_API + "/api/attendance", payload);
+    },
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['attendanceData'] });
+      toast.success("Paid leave submitted successfully!");
+      setIsDialogOpen(false); // Close the dialog
+    },
+    onError: () => {
+      toast.error("Failed to submit paid leave.");
+    }
+  });
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -61,14 +77,7 @@ const PaidLeaveForm: React.FC = () => {
       timeTotal: 9,
     };
 
-    try {
-      await axios.post(import.meta.env.VITE_BASE_API + "/api/attendance", payload);
-      toast.success("Paid leave submitted successfully!");
-      setIsDialogOpen(false); // Close the dialog
-    } catch (error) {
-      console.error("Error submitting paid leave:", error);
-      toast.error("Failed to submit paid leave.");
-    }
+    mutation.mutate(payload);
   };
 
   return (
