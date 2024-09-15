@@ -55,8 +55,8 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
         try {
             await axios.put(`${import.meta.env.VITE_BASE_API}/api/attendance/${attendance.id}`, payload);
             toast.success(`Successfully updated attendance for ${attendance.employeeName} on ${attendance.date}`);
-            onClose();
             queryClient.invalidateQueries({ queryKey: ['attendanceList'] });
+            onClose();
         } catch (error) {
             toast.error('Error updating the attendance.');
             console.error('Error updating the attendance:', error);
@@ -65,19 +65,19 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent>
+            <DialogContent className="max-w-lg p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
                 <DialogHeader>
-                    <DialogTitle>Edit Attendance</DialogTitle>
+                    <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">Edit Attendance</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={handleEditSave}>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="status" className="text-right">
+                <form onSubmit={handleEditSave} className="space-y-6">
+                    <div className="space-y-4">
+                        <div className="flex items-center space-x-4">
+                            <Label htmlFor="status" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
                                 Status
                             </Label>
                             <select
                                 id="status"
-                                className="col-span-3 dark:bg-gray-800 dark:text-white"
+                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
                                 value={editData.status}
                                 onChange={(e) => setEditData({ ...editData, status: e.target.value })}
                             >
@@ -87,70 +87,74 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
                                 <option value="PAID_LEAVE">PAID_LEAVE</option>
                             </select>
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="timeIn" className="text-right">
+                        <div className="flex items-center space-x-4">
+                            <Label htmlFor="timeIn" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
                                 Time In
                             </Label>
                             <input
                                 type="time"
                                 id="timeIn"
-                                className="col-span-3 dark:bg-gray-800 dark:text-white"
+                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
                                 value={editData.timeIn}
                                 onChange={(e) => setEditData({ ...editData, timeIn: e.target.value })}
                             />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="timeOut" className="text-right">
+                        <div className="flex items-center space-x-4">
+                            <Label htmlFor="timeOut" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
                                 Time Out
                             </Label>
                             <input
                                 type="time"
                                 id="timeOut"
-                                className="col-span-3 dark:bg-gray-800 dark:text-white"
+                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
                                 value={editData.timeOut}
                                 onChange={(e) => setEditData({ ...editData, timeOut: e.target.value })}
                             />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="lunchTimeIn" className="text-right">
+                        <div className="flex items-center space-x-4">
+                            <Label htmlFor="lunchTimeIn" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
                                 Lunch Time In
                             </Label>
                             <input
                                 type="time"
                                 id="lunchTimeIn"
-                                className="col-span-3 dark:bg-gray-800 dark:text-white"
+                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
                                 value={editData.lunchTimeIn}
                                 onChange={(e) => setEditData({ ...editData, lunchTimeIn: e.target.value })}
                             />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="lunchTimeOut" className="text-right">
+                        <div className="flex items-center space-x-4">
+                            <Label htmlFor="lunchTimeOut" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
                                 Lunch Time Out
                             </Label>
                             <input
                                 type="time"
                                 id="lunchTimeOut"
-                                className="col-span-3 dark:bg-gray-800 dark:text-white"
+                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
                                 value={editData.lunchTimeOut}
                                 onChange={(e) => setEditData({ ...editData, lunchTimeOut: e.target.value })}
                             />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="overTimeTotal" className="text-right">
+                        <div className="flex items-center space-x-4">
+                            <Label htmlFor="overTimeTotal" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
                                 Overtime Total (hours)
                             </Label>
                             <input
                                 type="number"
                                 id="overTimeTotal"
-                                className="col-span-3 dark:bg-gray-800 dark:text-white"
+                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
                                 value={editData.overTimeTotal || ''}
                                 onChange={(e) => setEditData({ ...editData, overTimeTotal: parseFloat(e.target.value) })}
                             />
                         </div>
                     </div>
-                    <DialogFooter>
-                        <Button variant="outline" onClick={onClose}>Cancel</Button>
-                        <Button type="submit" variant="default">Save</Button>
+                    <DialogFooter className="flex justify-end space-x-4">
+                        <Button type="button" variant="outline" onClick={onClose} className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md dark:text-gray-300 dark:border-gray-600">
+                            Cancel
+                        </Button>
+                        <Button type="submit" variant="default" className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                            Save
+                        </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
