@@ -43,7 +43,7 @@ const PaidLeaveForm: React.FC = () => {
       setIsDialogOpen(false); // Close the dialog
     },
     onError: () => {
-      toast.error("Failed to submit paid leave.");
+      toast.error("Failed to submit paid leave because this user already has a paid leave on this day.");
     }
   });
 
