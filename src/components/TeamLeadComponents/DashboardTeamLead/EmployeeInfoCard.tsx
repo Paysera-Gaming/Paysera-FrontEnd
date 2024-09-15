@@ -6,7 +6,7 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Book, BookUser, CalendarClockIcon } from 'lucide-react';
+import { Book, BookUser } from 'lucide-react';
 import { useUserStore } from '@/stores/userStore';
 import ScheduleInfoCard from '@/components/ScheduleInfo/ScheduleInfoCard';
 
@@ -52,25 +52,26 @@ export default function EmployeeInfoCard() {
 	return (
 		<div className="flex flex-col gap-2">
 			<Tabs defaultValue="employee">
-				<TabsList className="grid w-full grid-cols-2">
+				<TabsList className="flex items-center justify-between w-full">
 					<TabsTrigger
 						value="employee"
 						className="flex items-center justify-between flex-row text-base"
 					>
-						Employee Info <BookUser size={'1.8rem'}></BookUser>
+						{/* <BookUser size={'1.8rem'}></BookUser> */}
+						Employee Info
 					</TabsTrigger>
 					<TabsTrigger
 						className="flex items-center justify-between flex-row"
 						value="schedule"
 					>
 						Schedule Info
-						<CalendarClockIcon size={'1.8rem'}></CalendarClockIcon>
 					</TabsTrigger>
 				</TabsList>
 				<TabsContent value="employee">
 					<Card className="flex-1 p-0">
 						<CardHeader className=" pb-1 flex flex-row items-center justify-between">
 							<CardTitle>Employee Info</CardTitle>
+							<BookUser size={'1.8rem'}></BookUser>
 						</CardHeader>
 						<CardContent>
 							<UserInfo></UserInfo>

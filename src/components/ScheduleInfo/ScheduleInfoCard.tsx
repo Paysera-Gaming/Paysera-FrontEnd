@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { useUserStore } from '@/stores/userStore';
-
+import { CalendarClockIcon } from 'lucide-react';
 // create a map of the user's information
 function ScheduleInfo() {
 	const user = useUserStore.getState().user;
@@ -47,6 +47,7 @@ export default function ScheduleInfoCard() {
 		<Card className="flex-1 p-0">
 			<CardHeader className=" pb-1 flex flex-row items-center justify-between">
 				<CardTitle>Schedule</CardTitle>
+				<CalendarClockIcon size={'1.8rem'}></CalendarClockIcon>
 			</CardHeader>
 			<CardContent>
 				<ScheduleInfo></ScheduleInfo>
