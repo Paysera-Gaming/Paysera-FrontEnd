@@ -5,15 +5,18 @@ import { CalendarClockIcon } from 'lucide-react';
 // create a map of the user's information
 function ScheduleInfo() {
 	const user = useUserStore.getState().user;
-	const scheduleInfo = user?.schedule;
 
 	function dateToHours(date: string) {
 		const translatedDate = new Date(date);
 		return format(translatedDate, 'HH:mm');
 	}
 
-	if (typeof scheduleInfo === 'object' && scheduleInfo !== null) {
-		const schedule = scheduleInfo.Schedule;
+	if (user?.schedule == undefined || user?.schedule.Schedule == undefined) {
+		return (
+			<p>No schedule, please tell your team leader to assign you a schedule.</p>
+		);
+	} else {
+		const schedule = user?.schedule.Schedule;
 
 		return (
 			<ul>
@@ -34,10 +37,6 @@ function ScheduleInfo() {
 					{dateToHours(schedule.lunchEndTime)}
 				</li>
 			</ul>
-		);
-	} else {
-		return (
-			<p>No schedule, please tell your team leader to assign you a schedule.</p>
 		);
 	}
 }

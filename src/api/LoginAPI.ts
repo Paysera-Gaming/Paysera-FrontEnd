@@ -14,7 +14,7 @@ export type TUserInfo = {
 	middleName: string;
 	role: string;
 	departmentName: string;
-	schedule: TDepartmentSchedules | string;
+	schedule: TDepartmentSchedules | undefined;
 };
 
 export async function login(

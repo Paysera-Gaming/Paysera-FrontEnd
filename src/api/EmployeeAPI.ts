@@ -30,7 +30,7 @@ export async function addEmployeeInDepartment(
 ): Promise<TAddEmployee> {
 	const response: AxiosResponse<TEmployee> = await axiosInstance.put(
 		`/api/department/${departmentId}/employee`,
-		{ employeeId: employee.id, role: employee.role }
+		{ userName: employee.username, role: employee.role }
 	);
 
 	return response.data;
