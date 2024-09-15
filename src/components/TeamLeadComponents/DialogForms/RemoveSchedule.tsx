@@ -8,10 +8,37 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { ScheduleContext } from '@/components/DataTable/ScheduleColumn';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deleteSchedule } from '@/api/ScheduleAPI';
+import { toast } from 'sonner';
 
 export default function RemoveScheduleDialog() {
 	const [openWarn, setWarn] = useState<boolean>(false);
+	const ScheduleSub = useContext(ScheduleContext);
+	const queryClient = useQueryClient();
+	const mutation = useMutation({
+		mutationFn: () => {
+			if (ScheduleSub?.id !== undefined) {
+				return deleteSchedule(ScheduleSub.scheduleId);
+			}
+			throw new Error('Schedule ID is undefined');
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['Schedule'] });
+			toast.success('Schedule has been removed!');
+		},
+		onError: (error) => {
+			toast.error('Failed to remove schedule');
+			console.error(error);
+		},
+	});
+
+	function submitDelete() {
+		mutation.mutate();
+		setWarn(false);
+	}
 
 	return (
 		<AlertDialog open={openWarn} onOpenChange={setWarn}>
@@ -33,7 +60,7 @@ export default function RemoveScheduleDialog() {
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction>Continue</AlertDialogAction>
+					<AlertDialogAction onClick={submitDelete}>Continue</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

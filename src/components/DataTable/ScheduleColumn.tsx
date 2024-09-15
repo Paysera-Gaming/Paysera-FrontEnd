@@ -165,7 +165,9 @@ export const scheduleColumns: ColumnDef<TDepartmentSchedules>[] = [
 						</DropdownMenuItem>
 
 						<DropdownMenuItem asChild>
-							<RefRemoveDialog></RefRemoveDialog>
+							<ScheduleContext.Provider value={row.original}>
+								<RefRemoveDialog></RefRemoveDialog>
+							</ScheduleContext.Provider>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
