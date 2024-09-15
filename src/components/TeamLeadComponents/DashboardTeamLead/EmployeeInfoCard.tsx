@@ -52,18 +52,11 @@ export default function EmployeeInfoCard() {
 	return (
 		<div className="flex flex-col gap-2">
 			<Tabs defaultValue="employee">
-				<TabsList className="flex items-center justify-between w-full">
-					<TabsTrigger
-						value="employee"
-						className="flex items-center justify-between flex-row text-base"
-					>
-						{/* <BookUser size={'1.8rem'}></BookUser> */}
+				<TabsList className="flex items-center justify-between w-full ">
+					<TabsTrigger value="employee" className="flex-1 text-base">
 						Employee Info
 					</TabsTrigger>
-					<TabsTrigger
-						className="flex items-center justify-between flex-row"
-						value="schedule"
-					>
+					<TabsTrigger className="flex-1 text-base" value="schedule">
 						Schedule Info
 					</TabsTrigger>
 				</TabsList>
