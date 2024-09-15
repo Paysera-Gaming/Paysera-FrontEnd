@@ -20,7 +20,10 @@
     import { Attendance } from '@/components/SuperAdminComponents/AttendanceSuperAdmin/types'; // Corrected import path
     
     function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
-        const renderedList = tableData.map((data) => {
+        // Sort the data by date in descending order
+        const sortedData = tableData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    
+        const renderedList = sortedData.map((data) => {
             const parsedDate = new Date(data.date); // Parse the date string
             return (
                 <TableRow key={data.id}>
