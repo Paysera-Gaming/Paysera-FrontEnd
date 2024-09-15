@@ -38,3 +38,13 @@ export async function getAttendance(
 
 	return response.data;
 }
+
+export async function getAttendanceToday(
+	departmentId: string
+): Promise<TAttendance[]> {
+	const response: AxiosResponse<TAttendance[]> = await axiosInstance.get(
+		`/api/department/${departmentId}/attendance/today`
+	);
+
+	return response.data;
+}

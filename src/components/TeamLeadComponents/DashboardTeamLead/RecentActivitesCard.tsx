@@ -1,4 +1,5 @@
 // card
+import { getAttendanceToday, TAttendance } from '@/api/AttendanceAPI';
 import {
 	Card,
 	CardContent,
@@ -7,6 +8,7 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
 // table
 import {
 	Table,
@@ -16,24 +18,48 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { useUserStore } from '@/stores/userStore';
+import { useQuery } from '@tanstack/react-query';
 import { Activity } from 'lucide-react';
 
-import { useState } from 'react';
+function compareHours(date: Date) {
+	const currentDate = new Date();
+	const hours = date.getHours();
+	const currentHours = currentDate.getHours();
 
-interface DataProps {
-	name: string;
-	role: string;
-	activity: string;
-	time: string;
+	return `${currentHours - hours} hours ago`;
 }
 
-function RecentActivitiesTable({ tableData }: { tableData: DataProps[] }) {
+function compareMinutes(date: Date) {
+	const currentDate = new Date();
+	const minutes = date.getMinutes();
+	const currentMinutes = currentDate.getMinutes();
+
+	return `${currentMinutes - minutes} minutes ago`;
+}
+
+function isGreaterThanOneHour(date: Date) {
+	const currentDate = new Date();
+	const hours = date.getHours();
+	const currentHours = currentDate.getHours();
+
+	const isGreaterThanOneHour = currentHours - hours > 1;
+
+	if (isGreaterThanOneHour) {
+		return compareHours(date);
+	} else {
+		return compareMinutes(date);
+	}
+}
+
+function RecentActivitiesTable({ tableData }: { tableData: TAttendance[] }) {
 	const renderedList = tableData.map((data, index) => (
 		<TableRow key={index}>
-			<TableCell>{data.name}</TableCell>
-			<TableCell>{data.role}</TableCell>
-			<TableCell>{data.activity}</TableCell>
-			<TableCell>{data.time}</TableCell>
+			<TableCell>{data.employee.lastName}</TableCell>
+			<TableCell>{data.employee.firstName}</TableCell>
+			<TableCell>{data.employee.middleName}</TableCell>
+			<TableCell>{data.employee.role}</TableCell>
+			<TableCell>{isGreaterThanOneHour(new Date(data.timeIn))}</TableCell>
 		</TableRow>
 	));
 
@@ -41,9 +67,10 @@ function RecentActivitiesTable({ tableData }: { tableData: DataProps[] }) {
 		<Table>
 			<TableHeader>
 				<TableRow>
-					<TableHead>Name</TableHead>
+					<TableHead>Last Name</TableHead>
+					<TableHead>First Name</TableHead>
+					<TableHead>Middle Name</TableHead>
 					<TableHead>Role</TableHead>
-					<TableHead>Activity</TableHead>
 					<TableHead>Time</TableHead>
 				</TableRow>
 			</TableHeader>
@@ -53,11 +80,28 @@ function RecentActivitiesTable({ tableData }: { tableData: DataProps[] }) {
 }
 
 export default function RecentActivitiesCard() {
-	const [dummyData, setDummyData] = useState<DataProps[]>([
-		{ name: 'lue', role: 'gamer', activity: 'gaming', time: '5 hours ago' },
-		{ name: 'lue', role: 'gamer', activity: 'gaming', time: '5 hours ago' },
-		{ name: 'lue', role: 'gamer', activity: 'gaming', time: '5 hours ago' },
-	]);
+	const { data, isError, isLoading } = useQuery({
+		queryKey: ['AttendanceToady'],
+		queryFn: () => {
+			const user = useUserStore.getState().getUser();
+			const departmentId = user?.departmentId;
+
+			if (departmentId !== undefined) {
+				return getAttendanceToday(departmentId.toString());
+			} else {
+				throw new Error('No Department Id Found');
+			}
+		},
+	});
+
+	const dummyData: TAttendance[] = data ?? [];
+	if (isLoading) {
+		return <Skeleton className="flex-1 col-span-2 "></Skeleton>;
+	}
+
+	if (isError) {
+		return <>An Error has occured</>;
+	}
 
 	return (
 		<Card className="flex-1 col-span-2 ">

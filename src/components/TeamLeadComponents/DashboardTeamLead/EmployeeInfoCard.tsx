@@ -39,7 +39,7 @@ function UserInfo() {
 				{info.role}
 			</li>
 			<li>
-				<b>Tier:&nbsp;</b>
+				<b>Access Level:&nbsp;</b>
 				{returnRole(info.accessLevel)}
 			</li>
 			<li>
