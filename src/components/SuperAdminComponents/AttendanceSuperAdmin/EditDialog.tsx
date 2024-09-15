@@ -67,7 +67,9 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="max-w-lg p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
                 <DialogHeader>
-                    <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">Edit Attendance</DialogTitle>
+                    <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
+                        Edit Attendance for {attendance.employee.lastName}, {attendance.employee.firstName}
+                    </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleEditSave} className="space-y-6">
                     <div className="space-y-4">
