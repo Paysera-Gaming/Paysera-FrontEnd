@@ -40,18 +40,6 @@ function SuperAdminInfo() {
             <li>
                 <b>Access Level:</b> {info.accessLevel}
             </li>
-            <li>
-                <b>Tier:</b> {info.role}
-            </li>
-            <li>
-                <b>Overtime:</b> <Badge variant={'default'}>Allowed</Badge>
-            </li>
-            <li>
-                <b>Sched type:</b> <Badge>Flexi</Badge>
-            </li>
-            <li>
-                <b>Today's Schedule:</b> 8:00 - 15:00
-            </li>
         </ul>
     );
 }
