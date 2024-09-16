@@ -107,6 +107,7 @@ export default function TimeForm() {
 			queryClient.invalidateQueries({ queryKey: ['UsersAttendance'] });
 
 			ToasterSwitch(form.getValues('TimeType'), currentTime);
+
 		},
 	});
 
