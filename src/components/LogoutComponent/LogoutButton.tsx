@@ -33,7 +33,6 @@ export default function LogOutButton() {
 	const mutateLogout = useMutation({
 		mutationFn: logout,
 		onSuccess: () => {
-			toast.success('Logged out successfully');
 			navigate('/login');
 		},
 		onError: (error) => {
