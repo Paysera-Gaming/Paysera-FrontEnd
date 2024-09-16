@@ -30,7 +30,9 @@ import { toast } from 'sonner';
 import { useUserStore } from '@/stores/userStore';
 
 export const formSchemaAddEmployee = z.object({
-	id: z.coerce.number(),
+	username: z
+		.string()
+		.min(5, { message: 'Minimum Charactus must be atleast 5' }),
 	role: z.string().min(5, { message: 'Minimum Charactus must be atleast 5' }),
 });
 
@@ -40,7 +42,7 @@ export default function AddEmployee() {
 	const form = useForm<z.infer<typeof formSchemaAddEmployee>>({
 		resolver: zodResolver(formSchemaAddEmployee),
 		defaultValues: {
-			id: undefined,
+			username: undefined,
 			role: '',
 		},
 	});
@@ -97,16 +99,12 @@ export default function AddEmployee() {
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 						<FormField
 							control={form.control}
-							name="id"
+							name="username"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>EmployeeID</FormLabel>
 									<FormControl>
-										<Input
-											type="number"
-											placeholder="Enter Employee id"
-											{...field}
-										/>
+										<Input placeholder="Enter Employee username" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

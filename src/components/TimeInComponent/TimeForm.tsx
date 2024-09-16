@@ -34,6 +34,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '../ui/button';
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { clockIn, clockOut, lunchIn, lunchOut } from '@/api/ClockInAPI';
+import { useUserStore } from '@/stores/userStore';
+import { toast } from 'sonner';
 
 // import { toast } from 'sonner';
 
@@ -60,7 +64,54 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
-		defaultValues: {},
+		defaultValues: {
+			TimeType: 'Clock-In',
+		},
+	});
+	const currentTime = new Date().toISOString();
+	const employeeId = useUserStore.getState().user?.id;
+	const mutateTime = useMutation({
+		mutationFn: async () => {
+			// if no id
+			if (employeeId === undefined) {
+				throw new Error('Employee ID is undefined');
+			}
+
+			switch (form.getValues('TimeType')) {
+				case 'Clock-In':
+					return clockIn({
+						employeeId: employeeId,
+						timeIn: currentTime,
+					});
+
+				case 'Clock-Out':
+					return clockOut({
+						employeeId: employeeId,
+						timeIn: currentTime,
+					});
+
+				case 'Lunch-In':
+					return lunchIn({
+						employeeId: employeeId,
+						timeIn: currentTime,
+					});
+
+				case 'Lunch-Out':
+					return lunchOut({
+						employeeId: employeeId,
+						timeIn: currentTime,
+					});
+				default:
+					throw new Error('Invalid TimeType');
+			}
+		},
+		onSuccess: () => {
+			ToasterSwitch(form.getValues('TimeType'), currentTime);
+		},
+		onError: () => {
+			// An error happened!
+			toast.error('An error has occured');
+		},
 	});
 
 	// values: z.infer<typeof formSchema>
@@ -69,13 +120,12 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 	}
 
 	function runYourMother() {
-		const formValues = form.getValues('TimeType');
+		mutateTime.mutate();
 
 		// dapat may mangyayari
-		updateParentState(formValues);
+		updateParentState(form.getValues('TimeType'));
 
 		// second param should be the snapshot
-		ToasterSwitch(formValues, formValues);
 	}
 
 	return (
