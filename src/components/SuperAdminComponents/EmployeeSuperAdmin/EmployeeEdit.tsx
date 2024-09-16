@@ -23,6 +23,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // TanStack Query
 import { useQueryClient } from '@tanstack/react-query';
@@ -99,7 +101,7 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent>
+      <DialogContent className="max-w-2xl mx-auto"> {/* Adjusted width */}
         <DialogHeader>
           <DialogTitle>Edit Employee</DialogTitle>
           <DialogDescription>
@@ -108,131 +110,159 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-            <div className="flex flex-col space-y-4">
-              <div className="flex flex-col space-y-2">
-                <h2 className="text-lg font-semibold">Part 1: Identity Information</h2>
-                <div className="flex space-x-4">
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Username</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="lastName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Last Name</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="firstName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>First Name</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="middleName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Middle Name</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col space-y-2">
-                <h2 className="text-lg font-semibold">Part 2: Account Credentials</h2>
-                <div className="flex space-x-4">
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input type="password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="confirmPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Confirm Password</FormLabel>
-                        <FormControl>
-                          <Input type="password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col space-y-2">
-                <h2 className="text-lg font-semibold">Part 3: Access Level</h2>
-                <div className="flex space-x-4">
-                  <FormField
-                    control={form.control}
-                    name="accessLevel"
-                    render={() => (
-                      <FormItem>
-                        <FormLabel>Access Level</FormLabel>
-                        <FormControl>
-                          <Controller
-                            control={form.control}
-                            name="accessLevel"
-                            render={({ field }) => (
-                              <Select onValueChange={field.onChange} value={field.value}>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select Access Level" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="EMPLOYEE">Employee</SelectItem>
-                                  <SelectItem value="TEAM_LEADER">Team Leader</SelectItem>
-                                  <SelectItem value="ADMIN">Admin</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            )}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
+            <Tabs defaultValue="identity" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="identity">Identity Information</TabsTrigger>
+                <TabsTrigger value="credentials">Account Credentials</TabsTrigger>
+                <TabsTrigger value="access">Access Level</TabsTrigger>
+              </TabsList>
+              <TabsContent value="identity">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Identity Information</CardTitle>
+                    <CardDescription>
+                      Fill out the identity information for the employee.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                      <FormField
+                        control={form.control}
+                        name="username"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Username</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="lastName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Last Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="firstName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>First Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="middleName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Middle Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent value="credentials">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Account Credentials</CardTitle>
+                    <CardDescription>
+                      Set the account credentials for the employee.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Password</FormLabel>
+                            <FormControl>
+                              <Input type="password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Confirm Password</FormLabel>
+                            <FormControl>
+                              <Input type="password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent value="access">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Access Level</CardTitle>
+                    <CardDescription>
+                      Set the access level for the employee.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="accessLevel"
+                      render={() => (
+                        <FormItem>
+                          <FormLabel>Access Level</FormLabel>
+                          <FormControl>
+                            <Controller
+                              control={form.control}
+                              name="accessLevel"
+                              render={({ field }) => (
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select Access Level" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="EMPLOYEE">Employee</SelectItem>
+                                    <SelectItem value="TEAM_LEADER">Team Leader</SelectItem>
+                                    <SelectItem value="ADMIN">Admin</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              )}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
             <DialogFooter>
               <Button type="submit" className="dark:text-white">Update</Button>
               <Button type="button" variant="outline" onClick={handleClose}>Cancel</Button>
