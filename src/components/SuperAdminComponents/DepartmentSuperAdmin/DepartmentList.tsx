@@ -111,8 +111,11 @@ const DepartmentList: React.FC = () => {
   return (
     <div className="container mx-auto p-4 dark:text-white">
       <div className="flex justify-between items-center mb-4">
-        <div style={{ width: '33%' }}>
+        <div className="flex items-center" style={{ width: '33%' }}>
           <SearchBar searchQuery={searchQuery} onSearchChange={handleSearchChange} />
+          <div className="text-gray-500 dark:text-gray-400 ml-4">
+            {filteredDepartments.length} Departments
+          </div>
         </div>
         <DepartmentForm
           editingDepartment={editingDepartment}
