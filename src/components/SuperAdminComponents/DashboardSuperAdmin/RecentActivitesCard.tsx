@@ -67,11 +67,11 @@
             <Card className="flex-1 col-span-2 ">
                 <CardHeader>
                     <div className="flex item-center justify-between">
-                        <CardTitle> Recent Activities</CardTitle>
+                        <CardTitle>Activities Record</CardTitle>
                         <Activity></Activity>
                     </div>
                     <CardDescription>
-                        Recent activities of the employees of this department
+                        Recent activities for paid leave of the employees of this department
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
