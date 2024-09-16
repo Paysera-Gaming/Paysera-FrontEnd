@@ -6,7 +6,7 @@ import SummaryCards from './SummaryCards';
 import EmployeeTable from './EmployeeTable';
 import EmployeeForm from './EmployeeForm';
 import EmployeeEdit from './EmployeeEdit';
-import { Employee } from './types'; // Import the shared Employee type
+import { Employee, EmployeeCounts, getEmployeeCounts } from './types'; // Import the shared Employee type and getEmployeeCounts function
 
 const fetchEmployees = async (): Promise<Employee[]> => {
   const response = await axios.get(import.meta.env.VITE_BASE_API + '/api/employee');
@@ -83,17 +83,13 @@ const EmployeeList: React.FC = () => {
       return true;
     });
 
-  const overallCount = employees.length;
-  const onlineCount = employees.filter((emp: Employee) => emp.isActive).length;
-  const offlineCount = overallCount - onlineCount;
+  const counts: EmployeeCounts = getEmployeeCounts(employees);
 
   return (
     <div className="p-4 space-y-4">
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} accessLevel={accessLevel} setAccessLevel={setAccessLevel} />
       <SummaryCards
-        overallCount={overallCount}
-        onlineCount={onlineCount}
-        offlineCount={offlineCount}
+        counts={counts}
         activeFilter={activeFilter}
         handleFilterClick={handleFilterClick}
       />
