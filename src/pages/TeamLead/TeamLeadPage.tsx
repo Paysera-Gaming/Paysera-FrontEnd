@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 
 import TeamLeadNavigation from '@/components/TeamLeadComponents/TeamLeadNavigationBar';
 import Timebar from '@/components/TimeInComponent/TimeBar';
-import { Toaster } from '@/components/ui/sonner';
+
 export default function TeamLeadPage() {
 	return (
 		<div className="h-[100svh] w-[100svw] flex flex-1 items-center justify-start p-5 gap-5">
@@ -12,7 +12,6 @@ export default function TeamLeadPage() {
 				<Timebar></Timebar>
 				<Outlet></Outlet>
 			</main>
-			<Toaster richColors closeButton></Toaster>
 		</div>
 	);
 }

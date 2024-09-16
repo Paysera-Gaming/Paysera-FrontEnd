@@ -43,7 +43,7 @@ function ScheduleInfo() {
 
 export default function ScheduleInfoCard() {
 	return (
-		<Card className="flex-1 p-0">
+		<Card className=" p-0">
 			<CardHeader className=" pb-1 flex flex-row items-center justify-between">
 				<CardTitle>Schedule</CardTitle>
 				<CalendarClockIcon size={'1.8rem'}></CalendarClockIcon>

@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Timebar from '@/components/TimeInComponent/TimeBar';
-import { Toaster } from '@/components/ui/sonner';
+
 import EmployeeNavigation from '@/components/EmployeeComponents/EmployeeNavigation/EmployeeNavigation';
 
 export default function EmployeePage() {
@@ -12,7 +12,6 @@ export default function EmployeePage() {
 				<Timebar></Timebar>
 				<Outlet></Outlet>
 			</main>
-			<Toaster richColors closeButton></Toaster>
 		</div>
 	);
 }

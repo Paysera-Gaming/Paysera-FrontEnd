@@ -37,9 +37,6 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { clockIn, clockOut, lunchIn, lunchOut } from '@/api/ClockInAPI';
 import { useUserStore } from '@/stores/userStore';
-import { toast } from 'sonner';
-
-// import { toast } from 'sonner';
 
 // create a function that will create a snapshot of the start time and end time
 
@@ -81,36 +78,36 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 				case 'Clock-In':
 					return clockIn({
 						employeeId: employeeId,
-						timeIn: currentTime,
+						timeStamp: currentTime,
 					});
 
 				case 'Clock-Out':
 					return clockOut({
 						employeeId: employeeId,
-						timeIn: currentTime,
+						timeStamp: currentTime,
 					});
 
 				case 'Lunch-In':
 					return lunchIn({
 						employeeId: employeeId,
-						timeIn: currentTime,
+						timeStamp: currentTime,
 					});
 
 				case 'Lunch-Out':
 					return lunchOut({
 						employeeId: employeeId,
-						timeIn: currentTime,
+						timeStamp: currentTime,
 					});
 				default:
 					throw new Error('Invalid TimeType');
 			}
 		},
 		onSuccess: () => {
+			// this will run the toast
+			// and the updateParentState function
+			// that will update the display timer
 			ToasterSwitch(form.getValues('TimeType'), currentTime);
-		},
-		onError: () => {
-			// An error happened!
-			toast.error('An error has occured');
+			updateParentState(form.getValues('TimeType'));
 		},
 	});
 
@@ -121,11 +118,6 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 
 	function runYourMother() {
 		mutateTime.mutate();
-
-		// dapat may mangyayari
-		updateParentState(form.getValues('TimeType'));
-
-		// second param should be the snapshot
 	}
 
 	return (
