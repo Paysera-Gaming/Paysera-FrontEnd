@@ -34,19 +34,15 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '../ui/button';
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { clockIn, clockOut, lunchIn, lunchOut } from '@/api/ClockInAPI';
 import { useUserStore } from '@/stores/userStore';
 
 // create a function that will create a snapshot of the start time and end time
 
-type UserStatus = 'Clock-In' | 'Lunch-In' | 'Lunch-Out' | 'Clock-Out' | 'None';
+export interface ChildProps {}
 
-export interface ChildProps {
-	updateParentState: (newValue: UserStatus) => void;
-}
-
-export default function TimeForm({ updateParentState }: ChildProps) {
+export default function TimeForm() {
 	const [isOpen, setIsOpen] = useState(false);
 	const timeValues = [
 		'Clock-In',
@@ -58,6 +54,8 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 	const formSchema = z.object({
 		TimeType: z.enum(timeValues),
 	});
+
+	const queryClient = useQueryClient();
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -106,8 +104,10 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 			// this will run the toast
 			// and the updateParentState function
 			// that will update the display timer
+			queryClient.invalidateQueries({ queryKey: ['UsersAttendance'] });
+
 			ToasterSwitch(form.getValues('TimeType'), currentTime);
-			updateParentState(form.getValues('TimeType'));
+
 		},
 	});
 
