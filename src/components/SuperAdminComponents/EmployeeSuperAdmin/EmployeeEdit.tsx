@@ -111,10 +111,9 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
             <Tabs defaultValue="identity" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="identity">Identity Information</TabsTrigger>
-                <TabsTrigger value="credentials">Account Credentials</TabsTrigger>
-                <TabsTrigger value="access">Access Level</TabsTrigger>
+                <TabsTrigger value="credentials">Account Credentials & Access Level</TabsTrigger>
               </TabsList>
               <TabsContent value="identity">
                 <Card>
@@ -185,9 +184,9 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
               <TabsContent value="credentials">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Account Credentials</CardTitle>
+                    <CardTitle>Account Credentials & Access Level</CardTitle>
                     <CardDescription>
-                      Set the account credentials for the employee.
+                      Set the account credentials and access level for the employee.
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -218,47 +217,35 @@ export default function EmployeeEdit({ onSubmit, isOpen, onClose, employee }: { 
                           </FormItem>
                         )}
                       />
+                      <FormField
+                        control={form.control}
+                        name="accessLevel"
+                        render={() => (
+                          <FormItem>
+                            <FormLabel>Access Level</FormLabel>
+                            <FormControl>
+                              <Controller
+                                control={form.control}
+                                name="accessLevel"
+                                render={({ field }) => (
+                                  <Select onValueChange={field.onChange} value={field.value}>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select Access Level" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="EMPLOYEE">Employee</SelectItem>
+                                      <SelectItem value="TEAM_LEADER">Team Leader</SelectItem>
+                                      <SelectItem value="ADMIN">Admin</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                )}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              <TabsContent value="access">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Access Level</CardTitle>
-                    <CardDescription>
-                      Set the access level for the employee.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="accessLevel"
-                      render={() => (
-                        <FormItem>
-                          <FormLabel>Access Level</FormLabel>
-                          <FormControl>
-                            <Controller
-                              control={form.control}
-                              name="accessLevel"
-                              render={({ field }) => (
-                                <Select onValueChange={field.onChange} value={field.value}>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Select Access Level" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="EMPLOYEE">Employee</SelectItem>
-                                    <SelectItem value="TEAM_LEADER">Team Leader</SelectItem>
-                                    <SelectItem value="ADMIN">Admin</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              )}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </CardContent>
                 </Card>
               </TabsContent>
