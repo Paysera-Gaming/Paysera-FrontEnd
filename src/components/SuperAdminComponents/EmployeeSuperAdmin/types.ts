@@ -1,10 +1,10 @@
-// src/types.ts
+// Ensure this file exports Employee type
 export interface Employee {
-  id: number;
-  username: string;
-  firstName: string;
-  lastName: string;
-  middleName?: string; // Make middleName optional
-  accessLevel: 'EMPLOYEE' | 'TEAM_LEADER' | 'ADMIN'; // Define accessLevel as a union type
-  isActive: boolean;
+    id: number;
+    username: string;
+    firstName: string;
+    lastName: string;
+    middleName?: string;
+    accessLevel: 'EMPLOYEE' | 'TEAM_LEADER' | 'ADMIN';
+    isActive: boolean;
 }

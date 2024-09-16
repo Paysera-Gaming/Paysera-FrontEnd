@@ -17,7 +17,10 @@
     import { Activity } from 'lucide-react';
     import { useQuery } from '@tanstack/react-query';
     import { getAttendanceList } from '@/components/SuperAdminComponents/AttendanceSuperAdmin/api'; // Corrected import path
+    import { getEmployeeList } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/api'; // Corrected import path
     import { Attendance } from '@/components/SuperAdminComponents/AttendanceSuperAdmin/types'; // Corrected import path
+    import { Employee } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/types'; // Corrected import path
+    import { useState } from 'react';
     
     function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
         // Sort the data by date in descending order
@@ -50,33 +53,84 @@
         );
     }
     
+    function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
+        // Sort the data by id in descending order (assuming id is incremented over time)
+        const sortedData = tableData.sort((a, b) => b.id - a.id);
+    
+        const renderedList = sortedData.map((employee) => (
+            <TableRow key={employee.id}>
+                <TableCell>{employee.username}</TableCell>
+                <TableCell>{employee.firstName}</TableCell>
+                <TableCell>{employee.lastName}</TableCell>
+                <TableCell>{employee.accessLevel}</TableCell>
+                <TableCell>{employee.isActive ? 'Active' : 'Inactive'}</TableCell>
+            </TableRow>
+        ));
+    
+        return (
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Username</TableHead>
+                        <TableHead>First Name</TableHead>
+                        <TableHead>Last Name</TableHead>
+                        <TableHead>Access Level</TableHead>
+                        <TableHead>Status</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>{renderedList}</TableBody>
+            </Table>
+        );
+    }
+    
     export default function RecentActivitiesCard() {
-        const { data, isLoading, error } = useQuery<Attendance[]>({
+        const [selectedOption, setSelectedOption] = useState('Paid');
+        const { data: attendanceData, isLoading: isLoadingAttendance, error: attendanceError } = useQuery<Attendance[]>({
             queryKey: ['attendanceData'],
             queryFn: getAttendanceList, // Use the imported function
         });
     
-        if (isLoading) return <div>Loading...</div>;
-        if (error) return <div>Error loading data</div>;
+        const { data: employeeData, isLoading: isLoadingEmployee, error: employeeError } = useQuery<Employee[]>({
+            queryKey: ['employeeData'],
+            queryFn: getEmployeeList, // Use the imported function
+        });
     
-        console.log(data); // Log the data to see its structure
+        if (isLoadingAttendance || isLoadingEmployee) return <div>Loading...</div>;
     
-        const paidLeaveData = Array.isArray(data) ? data.filter((attendance: Attendance) => attendance.status === 'PAID_LEAVE') : [];
+        if (attendanceError) return <div>Error loading attendance data: {attendanceError.message}</div>;
+        if (employeeError) return <div>Error loading employee data: {employeeError.message}</div>;
+    
+        const paidLeaveData = Array.isArray(attendanceData) ? attendanceData.filter((attendance: Attendance) => attendance.status === 'PAID_LEAVE') : [];
+    
+        const handleDropdownChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+            setSelectedOption(event.target.value);
+        };
+    
+        const title = selectedOption === 'Paid' ? 'Activities Record' : 'Employee Record';
+        const description = selectedOption === 'Paid'
+            ? 'Recent activities for paid leave of the employees of this department'
+            : 'Recent activities for adding employees, sorted from latest to oldest';
     
         return (
             <Card className="flex-1 col-span-2 ">
                 <CardHeader>
                     <div className="flex item-center justify-between">
-                        <CardTitle>Activities Record</CardTitle>
+                        <CardTitle>{title}</CardTitle>
                         <Activity></Activity>
                     </div>
-                    <CardDescription>
-                        Recent activities for paid leave of the employees of this department
-                    </CardDescription>
+                    <CardDescription>{description}</CardDescription>
+                    <select onChange={handleDropdownChange} value={selectedOption}>
+                        <option value="Paid">Paid</option>
+                        <option value="Employee">Employee</option>
+                    </select>
                 </CardHeader>
                 <CardContent>
                     <ScrollArea className="h-[200px] ">
-                        <RecentActivitiesTable tableData={paidLeaveData}></RecentActivitiesTable>
+                        {selectedOption === 'Paid' ? (
+                            <RecentActivitiesTable tableData={paidLeaveData}></RecentActivitiesTable>
+                        ) : (
+                            employeeData && <EmployeeListTable tableData={employeeData}></EmployeeListTable>
+                        )}
                     </ScrollArea>
                 </CardContent>
             </Card>
