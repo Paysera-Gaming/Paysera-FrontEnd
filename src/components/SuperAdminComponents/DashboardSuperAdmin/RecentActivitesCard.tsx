@@ -124,7 +124,7 @@
             <Card className="flex-1 col-span-2 p-2">
                 <CardHeader className="flex flex-col md:flex-row items-center justify-between">
                     <div className="flex items-center space-x-2">
-                        <Activity className="text-blue-500" />
+                        <Activity size={'1.8rem'} className="text-black dark:text-white" />
                         <CardTitle className="text-base font-semibold">{title}</CardTitle>
                     </div>
                     <DropdownMenu>
