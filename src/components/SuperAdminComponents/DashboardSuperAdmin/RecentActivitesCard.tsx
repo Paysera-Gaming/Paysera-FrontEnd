@@ -112,24 +112,28 @@
             : 'Recent activities for adding employees, sorted from latest to oldest';
     
         return (
-            <Card className="flex-1 col-span-2 ">
-                <CardHeader>
-                    <div className="flex item-center justify-between">
-                        <CardTitle>{title}</CardTitle>
-                        <Activity></Activity>
+            <Card className="flex-1 col-span-2 p-2">
+                <CardHeader className="flex flex-col md:flex-row items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                        <Activity className="text-blue-500" />
+                        <CardTitle className="text-base font-semibold">{title}</CardTitle>
                     </div>
-                    <CardDescription>{description}</CardDescription>
-                    <select onChange={handleDropdownChange} value={selectedOption}>
+                    <select
+                        onChange={handleDropdownChange}
+                        value={selectedOption}
+                        className="mt-2 md:mt-0 p-1 border rounded-md text-sm"
+                    >
                         <option value="Paid">Paid</option>
                         <option value="Employee">Employee</option>
                     </select>
                 </CardHeader>
-                <CardContent>
-                    <ScrollArea className="h-[200px] ">
+                <CardDescription className="mt-1 text-xs text-gray-600">{description}</CardDescription>
+                <CardContent className="mt-2">
+                    <ScrollArea className="h-[150px]">
                         {selectedOption === 'Paid' ? (
-                            <RecentActivitiesTable tableData={paidLeaveData}></RecentActivitiesTable>
+                            <RecentActivitiesTable tableData={paidLeaveData} />
                         ) : (
-                            employeeData && <EmployeeListTable tableData={employeeData}></EmployeeListTable>
+                            employeeData && <EmployeeListTable tableData={employeeData} />
                         )}
                     </ScrollArea>
                 </CardContent>
