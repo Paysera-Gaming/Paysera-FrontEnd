@@ -28,6 +28,9 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+// Lucide icons
+import { User, Lock } from 'lucide-react';
+
 // TanStack Query
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -113,8 +116,14 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
             <Tabs defaultValue="identity" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="identity">Identity Information</TabsTrigger>
-                <TabsTrigger value="credentials">Account Credentials & Access Level</TabsTrigger>
+                <TabsTrigger value="identity">
+                  <User className="mr-2 h-4 w-4" />
+                  Identity Information
+                </TabsTrigger>
+                <TabsTrigger value="credentials">
+                  <Lock className="mr-2 h-4 w-4" />
+                  Account Credentials & Access Level
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="identity">
                 <Card>
