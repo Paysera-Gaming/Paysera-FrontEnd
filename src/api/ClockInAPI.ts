@@ -1,5 +1,6 @@
 import { axiosInstance } from '.';
 import { AxiosResponse } from 'axios';
+import { TAttendance } from './AttendanceAPI';
 
 export type TClockRequestBody = {
 	employeeId: number;
@@ -24,12 +25,14 @@ export async function clockOut(body: TClockRequestBody): Promise<number> {
 	return response.status;
 }
 
-export async function getTodaysAttendance(employeeId: number): Promise<number> {
-	const response: AxiosResponse<number> = await axiosInstance.get(
+export async function getTodaysAttendance(
+	employeeId: number
+): Promise<TAttendance> {
+	const response: AxiosResponse<TAttendance> = await axiosInstance.get(
 		`/api/attendance/today/${employeeId}`
 	);
 
-	return response.status;
+	return response.data;
 }
 
 export async function lunchIn(body: TClockRequestBody): Promise<number> {
