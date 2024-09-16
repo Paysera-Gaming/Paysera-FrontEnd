@@ -18,10 +18,14 @@ import RemoveScheduleDialog from '../TeamLeadComponents/DialogForms/RemoveSchedu
 import { formatDate } from './DataColumns';
 import { Badge } from '../ui/badge';
 import { TDepartmentSchedules } from '@/api/ScheduleAPI';
-
+import { format } from 'date-fns';
 export const ScheduleContext = createContext<TDepartmentSchedules | undefined>(
 	undefined
 );
+
+function dateToHours(date: Date) {
+	return format(date, 'HH:mm');
+}
 // overhaul the schedule interface
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -73,14 +77,14 @@ export const scheduleColumns: ColumnDef<TDepartmentSchedules>[] = [
 		accessorKey: 'Schedule.startTime',
 		header: 'Start Time',
 		cell: ({ row }) => {
-			return formatDate(new Date(row.getValue('Schedule_startTime')));
+			return dateToHours(new Date(row.getValue('Schedule_startTime')));
 		},
 	},
 	{
 		accessorKey: 'Schedule.endTime',
 		header: 'End Time',
 		cell: ({ row }) => {
-			return formatDate(new Date(row.getValue('Schedule_endTime')));
+			return dateToHours(new Date(row.getValue('Schedule_endTime')));
 		},
 	},
 
@@ -111,7 +115,7 @@ export const scheduleColumns: ColumnDef<TDepartmentSchedules>[] = [
 		accessorKey: 'Schedule.lunchStartTime',
 		header: 'Lunch Start Time',
 		cell: ({ row }) => {
-			return formatDate(new Date(row.getValue('Schedule_lunchStartTime')));
+			return dateToHours(new Date(row.getValue('Schedule_lunchStartTime')));
 		},
 	},
 
@@ -119,7 +123,7 @@ export const scheduleColumns: ColumnDef<TDepartmentSchedules>[] = [
 		accessorKey: 'Schedule.lunchEndTime',
 		header: 'Lunch End Time',
 		cell: ({ row }) => {
-			return formatDate(new Date(row.getValue('Schedule_lunchEndTime')));
+			return dateToHours(new Date(row.getValue('Schedule_lunchEndTime')));
 		},
 	},
 	{
