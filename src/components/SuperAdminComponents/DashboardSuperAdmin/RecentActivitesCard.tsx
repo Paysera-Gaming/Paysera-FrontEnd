@@ -1,3 +1,5 @@
+    "use client";
+    
     import {
         Card,
         CardContent,
@@ -21,6 +23,13 @@
     import { Attendance } from '@/components/SuperAdminComponents/AttendanceSuperAdmin/types'; // Corrected import path
     import { Employee } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/types'; // Corrected import path
     import { useState } from 'react';
+    import {
+        DropdownMenu,
+        DropdownMenuContent,
+        DropdownMenuItem,
+        DropdownMenuTrigger,
+    } from '@/components/ui/dropdown-menu';
+    import { Button } from '@/components/ui/button';
     
     function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
         // Sort the data by date in descending order
@@ -102,11 +111,11 @@
     
         const paidLeaveData = Array.isArray(attendanceData) ? attendanceData.filter((attendance: Attendance) => attendance.status === 'PAID_LEAVE') : [];
     
-        const handleDropdownChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-            setSelectedOption(event.target.value);
+        const handleDropdownChange = (value: string) => {
+            setSelectedOption(value);
         };
     
-        const title = selectedOption === 'Paid' ? 'Activities Record' : 'Employee Record';
+        const title = selectedOption === 'Paid' ? 'Paid Leave Record' : 'Employee Record';
         const description = selectedOption === 'Paid'
             ? 'Recent activities for paid leave of the employees of this department'
             : 'Recent activities for adding employees, sorted from latest to oldest';
@@ -118,14 +127,19 @@
                         <Activity className="text-blue-500" />
                         <CardTitle className="text-base font-semibold">{title}</CardTitle>
                     </div>
-                    <select
-                        onChange={handleDropdownChange}
-                        value={selectedOption}
-                        className="mt-2 md:mt-0 p-1 border rounded-md text-sm"
-                    >
-                        <option value="Paid">Paid</option>
-                        <option value="Employee">Employee</option>
-                    </select>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="mt-2 md:mt-0 p-1 text-sm">Select Option</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-48">
+                            <DropdownMenuItem onSelect={() => handleDropdownChange('Paid')}>
+                                Paid
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => handleDropdownChange('Employee')}>
+                                Employee
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </CardHeader>
                 <CardDescription className="mt-1 text-xs text-gray-600">{description}</CardDescription>
                 <CardContent className="mt-2">
