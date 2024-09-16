@@ -123,10 +123,12 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                                             <Edit2 size={16} />
                                             Edit
                                         </Button>
-                                        <Button variant="outline" size="sm" color="red" onClick={() => handleDeleteClick(emp)}>
-                                            <Trash2 size={16} />
-                                            Delete
-                                        </Button>
+                                        {emp.accessLevel !== 'ADMIN' && (
+                                            <Button variant="outline" size="sm" color="red" onClick={() => handleDeleteClick(emp)}>
+                                                <Trash2 size={16} />
+                                                Delete
+                                            </Button>
+                                        )}
                                     </div>
                                 </TableCell>
                             </TableRow>
