@@ -102,7 +102,7 @@ export default function AddEmployee() {
 							name="username"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>EmployeeID</FormLabel>
+									<FormLabel>Insert Employee Username</FormLabel>
 									<FormControl>
 										<Input placeholder="Enter Employee username" {...field} />
 									</FormControl>
