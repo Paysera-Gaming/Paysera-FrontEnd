@@ -106,7 +106,11 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 			}
 		},
 		onSuccess: () => {
+			// this will run the toast
+			// and the updateParentState function
+			// that will update the display timer
 			ToasterSwitch(form.getValues('TimeType'), currentTime);
+			updateParentState(form.getValues('TimeType'));
 		},
 		onError: () => {
 			// An error happened!
@@ -121,11 +125,6 @@ export default function TimeForm({ updateParentState }: ChildProps) {
 
 	function runYourMother() {
 		mutateTime.mutate();
-
-		// dapat may mangyayari
-		updateParentState(form.getValues('TimeType'));
-
-		// second param should be the snapshot
 	}
 
 	return (

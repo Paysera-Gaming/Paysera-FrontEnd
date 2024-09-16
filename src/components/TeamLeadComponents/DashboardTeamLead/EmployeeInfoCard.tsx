@@ -61,7 +61,7 @@ export default function EmployeeInfoCard() {
 					</TabsTrigger>
 				</TabsList>
 				<TabsContent value="employee">
-					<Card className="flex-1 p-0">
+					<Card className=" p-0">
 						<CardHeader className=" pb-1 flex flex-row items-center justify-between">
 							<CardTitle>Employee Info</CardTitle>
 							<BookUser size={'1.8rem'}></BookUser>
