@@ -17,7 +17,14 @@ const AttendanceActions: React.FC<AttendanceActionsProps> = ({ attendance }) => 
     const queryClient = useQueryClient();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-    const [editData, setEditData] = useState(attendance);
+    const [editData, setEditData] = useState<Attendance>({
+        ...attendance,
+        timeIn: '08:00',
+        timeOut: '17:00',
+        lunchTimeIn: '13:00',
+        lunchTimeOut: '14:00',
+        overTimeTotal: 0,
+    });
 
     const handleDeleteClick = () => {
         setIsDialogOpen(true);
