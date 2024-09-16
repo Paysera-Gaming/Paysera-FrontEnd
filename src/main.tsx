@@ -32,6 +32,7 @@ import {
 import ProtectedRoute from './lib/AccessLevelUtils';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from '@/components/ui/sonner';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -133,6 +134,18 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 		<QueryClientProvider client={queryClient}>
 			<ThemeProvider>
 				<RouterProvider router={router} />
+				<Toaster
+					richColors
+					closeButton
+					toastOptions={{
+						classNames: {
+							error: 'bg-red-400',
+							success: 'text-green-400',
+							warning: 'text-yellow-400',
+							info: 'bg-blue-400',
+						},
+					}}
+				></Toaster>
 			</ThemeProvider>
 		</QueryClientProvider>
 	</React.StrictMode>
