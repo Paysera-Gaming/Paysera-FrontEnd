@@ -60,18 +60,18 @@ const AttendanceList: React.FC = () => {
   if (error) return <div>Error loading attendance list</div>;
 
   return (
-    <div className="w-full">
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="border p-1 rounded mr-2 text-sm bg-white dark:bg-transparent dark:text-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-          <DateRangePicker onChange={handleDateRangeAndYearChange} />
-        </div>
+	<div className="w-full">
+	  <div className="flex justify-between items-center mb-4">
+		<div className="flex items-center">
+		  <input
+			type="text"
+			placeholder="Search..."
+			value={searchQuery}
+			onChange={handleSearchChange}
+			className="border p-2 rounded mr-2 text-base bg-white dark:bg-transparent dark:text-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+		  />
+		  <DateRangePicker onChange={handleDateRangeAndYearChange} />
+		</div>
         <div className="flex items-center">
           <Button
             onClick={() => {
@@ -84,13 +84,13 @@ const AttendanceList: React.FC = () => {
                 console.error('Date range is not fully defined');
               }
             }}
-            className="bg-green-500 text-white mr-2"
+            className="bg-green-500 text-white mr-4"
           >
             Export to CSV
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">Filters</Button>
+              <Button variant="outline" className="mr-4">Filters</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel>Sort Order</DropdownMenuLabel>
