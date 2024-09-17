@@ -89,11 +89,11 @@ export default function LoginForm() {
 					name="username"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Employee ID</FormLabel>
+							<FormLabel>Username</FormLabel>
 							<FormControl>
 								<Input placeholder="Employee" {...field} />
 							</FormControl>
-							<FormDescription>Insert your Employee ID here.</FormDescription>
+							<FormDescription>Insert your Username here.</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -103,7 +103,7 @@ export default function LoginForm() {
 					name="password"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Employee Password</FormLabel>
+							<FormLabel>Password</FormLabel>
 							<FormControl>
 								<Input placeholder="Password" type="password" {...field} />
 							</FormControl>
