@@ -1,5 +1,4 @@
-    "use client";
-    
+    import React, { useState } from 'react';
     import {
         Card,
         CardContent,
@@ -22,7 +21,6 @@
     import { getEmployeeList } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/api'; // Corrected import path
     import { Attendance } from '@/components/SuperAdminComponents/AttendanceSuperAdmin/types'; // Corrected import path
     import { Employee } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/types'; // Corrected import path
-    import { useState } from 'react';
     import {
         DropdownMenu,
         DropdownMenuContent,
@@ -30,6 +28,7 @@
         DropdownMenuTrigger,
     } from '@/components/ui/dropdown-menu';
     import { Button } from '@/components/ui/button';
+    import { Skeleton } from '@/components/ui/skeleton';
     
     function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
         // Sort the data by date in descending order
@@ -92,22 +91,70 @@
         );
     }
     
+    const SkeletonCard: React.FC = () => {
+        return (
+            <Card className="flex-1 col-span-2 p-2">
+                <CardHeader className="flex flex-col md:flex-row items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                        <Skeleton className="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-700" />
+                        <Skeleton className="h-6 w-32 rounded bg-gray-200 dark:bg-gray-700" />
+                    </div>
+                    <Skeleton className="h-8 w-24 rounded bg-gray-200 dark:bg-gray-700 mt-2 md:mt-0" />
+                </CardHeader>
+                <CardDescription className="mt-1 text-xs text-gray-600">
+                    <Skeleton className="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-700" />
+                </CardDescription>
+                <CardContent className="mt-2">
+                    <ScrollArea className="h-[150px]">
+                        <div className="space-y-2">
+                            <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
+                            <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
+                            <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
+                            <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
+                        </div>
+                    </ScrollArea>
+                </CardContent>
+            </Card>
+        );
+    };
+    
     export default function RecentActivitiesCard() {
         const [selectedOption, setSelectedOption] = useState('Paid');
-        const { data: attendanceData, isLoading: isLoadingAttendance, error: attendanceError } = useQuery<Attendance[]>({
+        const { data: attendanceData, isLoading: isLoadingAttendance, error: attendanceError, refetch: refetchAttendance } = useQuery<Attendance[]>({
             queryKey: ['attendanceData'],
             queryFn: getAttendanceList, // Use the imported function
         });
     
-        const { data: employeeData, isLoading: isLoadingEmployee, error: employeeError } = useQuery<Employee[]>({
+        const { data: employeeData, isLoading: isLoadingEmployee, error: employeeError, refetch: refetchEmployee } = useQuery<Employee[]>({
             queryKey: ['employeeData'],
             queryFn: getEmployeeList, // Use the imported function
         });
     
-        if (isLoadingAttendance || isLoadingEmployee) return <div>Loading...</div>;
+        if (isLoadingAttendance || isLoadingEmployee) return <SkeletonCard />;
     
-        if (attendanceError) return <div>Error loading attendance data: {attendanceError.message}</div>;
-        if (employeeError) return <div>Error loading employee data: {employeeError.message}</div>;
+        const handleRetry = () => {
+            if (attendanceError) refetchAttendance();
+            if (employeeError) refetchEmployee();
+        };
+    
+        if (attendanceError || employeeError) {
+            return (
+                <Card className="flex-1 col-span-2 p-2">
+                    <CardHeader className="flex flex-col md:flex-row items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                            <Activity size={'1.8rem'} className="text-black dark:text-white" />
+                            <CardTitle className="text-base font-semibold">Error</CardTitle>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="mt-2">
+                        <div className="text-center">
+                            <p className="text-red-500">Failed to load data. Please try again.</p>
+                            <Button onClick={handleRetry} className="mt-4">Retry</Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            );
+        }
     
         const paidLeaveData = Array.isArray(attendanceData) ? attendanceData.filter((attendance: Attendance) => attendance.status === 'PAID_LEAVE') : [];
     
