@@ -12,9 +12,8 @@ export interface TimerProps {
 	formAction: 'Clock-In' | 'Lunch-In' | 'Lunch-Out' | 'Clock-Out' | 'None';
 }
 
-function convertDateToSeconds(date: Date): number {
-	const currentDate = new Date();
-	const differenceInMilliseconds = currentDate.getTime() - date.getTime();
+function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
+	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
 	const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
 	return differenceInSeconds;
 }
@@ -68,9 +67,43 @@ export default function TimerDisplay() {
 	});
 
 	useEffect(() => {
+		// OMEGA JEMPOY ALERT
+		let convertedToSecond = 0;
 		if (isSuccess && data) {
-			const convertToSecond = convertDateToSeconds(new Date(data.timeIn));
-			setTime(convertToSecond);
+			// if timeOut is present
+			if (data.timeOut) {
+				convertedToSecond = convertDateToSeconds(
+					new Date(data.timeIn),
+					new Date(data.timeOut)
+				);
+				setTime(convertedToSecond);
+				return;
+			}
+			// if lunchTimeOut is present but timeOut is not
+			// then we will use the lunchTimeOut to calculate the time
+			if (data.lunchTimeIn) {
+				convertedToSecond = convertDateToSeconds(
+					new Date(data.lunchTimeIn),
+					new Date()
+				);
+				setTime(convertedToSecond);
+				return;
+			}
+			if (data.lunchTimeOut) {
+				convertedToSecond = convertDateToSeconds(
+					new Date(data.timeIn),
+					new Date()
+				);
+				setTime(convertedToSecond);
+				return;
+			} else {
+				convertedToSecond = convertDateToSeconds(
+					new Date(data.timeIn),
+					new Date()
+				);
+				setTime(convertedToSecond);
+				return;
+			}
 		}
 	}, [isSuccess, data]);
 
