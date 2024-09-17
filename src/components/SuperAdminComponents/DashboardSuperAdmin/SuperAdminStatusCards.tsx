@@ -25,10 +25,6 @@ export default function EmployeesStatusCards() {
         };
 
         fetchData(); // Initial fetch
-
-        const intervalId = setInterval(fetchData, 5000); // Fetch every 5 seconds
-
-        return () => clearInterval(intervalId); // Cleanup interval on component unmount
     }, []);
 
     const overallCount = employees.length;
