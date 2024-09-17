@@ -84,7 +84,12 @@ export const attendanceColumns: ColumnDef<TAttendance>[] = [
 	},
 	{
 		accessorKey: 'timeTotal',
-		header: 'Time Worked total',
+		header: 'Time Worked total (in hours)',
+		cell: ({ row }) => {
+			const timeTotal = row.getValue('timeTotal');
+			const roundedTimeTotal = Number((timeTotal as number).toFixed(2));
+			return roundedTimeTotal;
+		},
 	},
 	{
 		accessorKey: 'lunchTimeIn',
