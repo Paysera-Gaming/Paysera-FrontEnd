@@ -14,7 +14,8 @@ import { Label } from '@/components/ui/label';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { updateEmployee } from '@/api/EmployeeAPI';
-
+import { useUserStore } from '@/stores/userStore';
+import { getUserInfo } from '@/api/LoginAPI';
 const EditRole = forwardRef<HTMLDivElement, { employeeInfo: TEmployee }>(
 	({ employeeInfo }, ref) => {
 		const queryClient = useQueryClient();
@@ -29,6 +30,14 @@ const EditRole = forwardRef<HTMLDivElement, { employeeInfo: TEmployee }>(
 				toast.error('An error happened!');
 			},
 			onSuccess: () => {
+				if (employeeInfo.id == useUserStore.getState().user?.id) {
+					getUserInfo().then((data) => {
+						console.log('this is the data', data);
+
+						useUserStore.getState().setUser(data);
+					});
+					toast.success('Your role has been changed');
+				}
 				toast.success('The Role has been changed');
 				queryClient.invalidateQueries({ queryKey: ['EmployeesInfo'] });
 			},
