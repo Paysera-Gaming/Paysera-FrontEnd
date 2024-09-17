@@ -40,7 +40,7 @@ export async function login(
 	}
 }
 
-async function getUserInfo(): Promise<TUserInfo> {
+export async function getUserInfo(): Promise<TUserInfo> {
 	const response: AxiosResponse<TUserInfo> = await axiosInstance.get(
 		'/api/info'
 	);

@@ -68,6 +68,5 @@ export async function deleteEmployee(
 			},
 		}
 	);
-
 	return response.status;
 }
