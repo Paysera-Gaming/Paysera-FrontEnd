@@ -75,7 +75,7 @@ export default function EmployeeForm({ onSubmit, isOpen, onClose }: { onSubmit: 
           middleName: values.middleName || "N/A", // Set middle name to "N/A" if not provided
           passwordCredentials: values.password,
           accessLevel: values.accessLevel, // Added access level to the payload
-          isActive: true, // Assuming the employee is active by default
+          isActive: false, // Set isActive to false by default
         });
         toast.success('Form submitted successfully!');
         onSubmit(response.data);

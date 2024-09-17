@@ -25,6 +25,11 @@ const formatNumber = (value: number) => {
   return value.toFixed(2);
 };
 
+const formatTime = (date: Date | null) => {
+  if (!date) return '';
+  return format(date, 'HH:mm'); // 24-hour format
+};
+
 const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRange, activeFilter, searchQuery }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10;
@@ -45,6 +50,20 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
+  };
+
+  const renderCellValue = (cell: any) => {
+    const value = cell.getValue();
+    if (value === null || value === undefined) {
+      return '';
+    }
+    if (typeof value === 'string' && (value === '7:30 AM' || value === '07:30 AM')) {
+      return '0.00';
+    }
+    if (cell.column.id === 'timeIn' || cell.column.id === 'lunchTimeIn' || cell.column.id === 'lunchTimeOut' || cell.column.id === 'timeOut') {
+      return formatTime(new Date(value));
+    }
+    return typeof value === 'number' ? formatNumber(value) : flexRender(cell.column.columnDef.cell, cell.getContext());
   };
 
   return (
@@ -73,7 +92,7 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
               <TableRow key={rowIndex}>
                 {table.getRowModel().rows[rowIndex].getVisibleCells().map((cell) => (
                   <TableCell key={cell.id} style={{ width: `${100 / columns.length}%`, fontSize: '12px' }}>
-                    {typeof cell.getValue() === 'number' ? formatNumber(cell.getValue() as number) : flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {renderCellValue(cell)}
                   </TableCell>
                 ))}
                 <TableCell style={{ width: `${100 / columns.length}%`, fontSize: '12px' }}>
