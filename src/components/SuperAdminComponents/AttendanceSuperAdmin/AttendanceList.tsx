@@ -58,6 +58,7 @@ const AttendanceList: React.FC = () => {
     handleSearchChange,
     handleSortOrderChange,
     handleStatusFilterChange,
+
     filteredAttendanceList = [],
   } = useFiltersAndHandlers(attendanceList);
 
@@ -92,6 +93,7 @@ const AttendanceList: React.FC = () => {
     );
   }
 
+
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-4">
@@ -102,6 +104,7 @@ const AttendanceList: React.FC = () => {
             value={searchQuery}
             onChange={handleSearchChange}
             className="border p-2 rounded mr-2 text-base bg-white dark:bg-transparent dark:text-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+
           />
           <DateRangePicker onChange={handleDateRangeAndYearChange} />
         </div>
@@ -111,19 +114,24 @@ const AttendanceList: React.FC = () => {
               if (dateRange.from && dateRange.to) {
                 exportToCSV(
                   filteredAttendanceList,
+
                   dateRange as { from: Date; to: Date }
                 );
               } else {
                 console.error('Date range is not fully defined');
               }
             }}
+
             className="bg-green-500 text-white mr-4"
+
           >
             Export to CSV
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
+
               <Button variant="outline" className="mr-4">Filters</Button>
+
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel>Sort Order</DropdownMenuLabel>
@@ -192,7 +200,9 @@ const AttendanceList: React.FC = () => {
         handleFilterClick={handleFilterClick}
       />
       <AttendanceTable
+
         data={filteredAttendanceList}
+
         columns={columns}
         dateRange={dateRange}
         activeFilter={activeFilter}

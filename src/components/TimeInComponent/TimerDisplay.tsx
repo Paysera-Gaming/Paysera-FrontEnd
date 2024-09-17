@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { TimerIcon } from 'lucide-react';
+import { TimerIcon, UtensilsCrossed } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useUserStore } from '@/stores/userStore';
@@ -18,18 +18,30 @@ function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
 	return differenceInSeconds;
 }
 
-function badgeVariant(
-	status: UserStatus
-): 'default' | 'secondary' | 'destructive' | 'outline' {
+function IconVariant(status: UserStatus) {
 	switch (status) {
-		case 'ONGOING':
-			return 'default';
+		case 'ONGOING' || 'BREAK':
+			return (
+				<TimerIcon
+					size={`1.5rem`}
+					className="mb-1 text-primary-foreground stroke-[2px]"
+				></TimerIcon>
+			);
 
 		case 'BREAK':
-			return 'secondary';
-
-		case 'DONE':
-			return 'destructive';
+			return (
+				<UtensilsCrossed
+					size={`1.5rem`}
+					className="mb-1 text-primary-foreground stroke-[2px]"
+				></UtensilsCrossed>
+			);
+		default:
+			return (
+				<TimerIcon
+					size={`1.5rem`}
+					className="mb-1 text-primary-foreground stroke-[2px]"
+				></TimerIcon>
+			);
 	}
 }
 
@@ -79,16 +91,7 @@ export default function TimerDisplay() {
 				setTime(convertedToSecond);
 				return;
 			}
-			// if lunchTimeOut is present but timeOut is not
-			// then we will use the lunchTimeOut to calculate the time
-			if (data.lunchTimeIn) {
-				convertedToSecond = convertDateToSeconds(
-					new Date(data.lunchTimeIn),
-					new Date()
-				);
-				setTime(convertedToSecond);
-				return;
-			}
+
 			if (data.lunchTimeOut) {
 				convertedToSecond = convertDateToSeconds(
 					new Date(data.timeIn),
@@ -96,19 +99,31 @@ export default function TimerDisplay() {
 				);
 				setTime(convertedToSecond);
 				return;
-			} else {
+			}
+			// if lunchTimeOut is present but timeOut is not
+			// then we will use the lunchTimeOut to calculate the time
+			if (data.lunchTimeIn) {
 				convertedToSecond = convertDateToSeconds(
 					new Date(data.timeIn),
-					new Date()
+					new Date(data.lunchTimeIn)
 				);
 				setTime(convertedToSecond);
 				return;
 			}
+
+			convertedToSecond = convertDateToSeconds(
+				new Date(data.timeIn),
+				new Date()
+			);
+			setTime(convertedToSecond);
 		}
 	}, [isSuccess, data]);
 
 	useEffect(() => {
-		if (isSuccess && data.status === 'ONGOING') {
+		console.log(data?.status);
+
+		if (isSuccess && (data.status === 'ONGOING' || data.status === 'BREAK')) {
+			// starts the time
 			timerIntervalId.current = setInterval(() => {
 				setTime((time) => time + 1);
 			}, 1000);
@@ -135,8 +150,11 @@ export default function TimerDisplay() {
 				<span>
 					<p className="font-semibold inline text-lg">Status: &nbsp;</p>
 					<Badge
-						className="inline"
-						variant={badgeVariant(data.status as UserStatus)}
+						className={cn('inline', {
+							'bg-primary outline-ring': data.status === 'ONGOING',
+							'bg-destructive outline-destructive': data.status != 'ONGOING',
+							'bg-orange-500 outline-orange-500': data.status == 'BREAK',
+						})}
 					>
 						{statusVariant(data.status as UserStatus)}
 					</Badge>
@@ -147,13 +165,11 @@ export default function TimerDisplay() {
 						{
 							'bg-primary outline-ring': data.status === 'ONGOING',
 							'bg-destructive outline-destructive': data.status != 'ONGOING',
+							'bg-orange-500 outline-orange-500': data.status == 'BREAK',
 						}
 					)}
 				>
-					<TimerIcon
-						size={`1.5rem`}
-						className="mb-1 text-primary-foreground stroke-[2px]"
-					></TimerIcon>
+					{IconVariant(data.status as UserStatus)}
 					<span className="w-24 text-accent text-center rounded-full ">
 						<h3 className="text-lg font-semibold ">
 							{hoursDisplay}:{minutesDisplay}:{secondsDisplay}
@@ -169,7 +185,7 @@ export default function TimerDisplay() {
 			{/* status */}
 			<span>
 				<p className="font-semibold inline text-lg">Status: &nbsp;</p>
-				<Badge className="inline" variant="destructive">
+				<Badge className="inline" color="destructive">
 					NONE
 				</Badge>
 			</span>
