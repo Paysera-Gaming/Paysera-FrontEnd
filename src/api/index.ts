@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { redirect } from 'react-router-dom';
-const url = import.meta.env.VITE_APP_API_URL;
+const url = import.meta.env.VITE_BASE_API;
 
 export const axiosInstance = axios.create({
 	baseURL: url,
