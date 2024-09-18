@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Leader, addDepartment, updateDepartment, updateDepartmentLeader, Department } from './api';
@@ -7,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface DepartmentFormProps {
   editingDepartment: Department | null;
@@ -37,27 +40,39 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
     mutationFn: addDepartment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['departments'] });
+      toast.success('Department added successfully!');
     },
+    onError: () => {
+      toast.error('Error adding department.');
+    }
   });
 
   const updateDepartmentMutation = useMutation({
     mutationFn: updateDepartment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['departments'] });
+      toast.success('Department updated successfully!');
     },
+    onError: () => {
+      toast.error('Error updating department.');
+    }
   });
 
   const updateDepartmentLeaderMutation = useMutation({
     mutationFn: updateDepartmentLeader,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['departments'] });
+      toast.success('Department leader updated successfully!');
     },
+    onError: () => {
+      toast.error('Error updating department leader.');
+    }
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!departmentName || departmentLeaderId === null) {
-      setErrorMessage('Please provide both department name and leader ID.');
+      toast.error('Please provide both department name and leader ID.');
       return;
     }
 
@@ -83,7 +98,6 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
     setIsDialogOpen(false);
   };
 
-  // Filter out team leaders who are already assigned to other departments
   const availableTeamLeaders = teamLeaders.filter((leader) => {
     return !departments.some((department) => department.leaderId === leader.id && department.id !== editingDepartment?.id);
   });
