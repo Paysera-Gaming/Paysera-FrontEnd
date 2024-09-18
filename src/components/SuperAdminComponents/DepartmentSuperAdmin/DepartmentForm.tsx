@@ -66,10 +66,12 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
         id: editingDepartment.id,
         name: departmentName,
       });
-      updateDepartmentLeaderMutation.mutate({
-        id: editingDepartment.id,
-        leaderId: departmentLeaderId,
-      });
+      if (editingDepartment.leaderId !== departmentLeaderId) {
+        updateDepartmentLeaderMutation.mutate({
+          id: editingDepartment.id,
+          leaderId: departmentLeaderId,
+        });
+      }
       setEditingDepartment(null);
     } else {
       addDepartmentMutation.mutate({ name: departmentName, leaderId: departmentLeaderId });
