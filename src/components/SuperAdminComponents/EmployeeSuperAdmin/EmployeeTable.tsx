@@ -68,7 +68,6 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
     
         try {
             await axiosInstance.put(`/api/employee/${selectedEmployee.id}`, values);
-            toast.success(`Successfully updated ${selectedEmployee.firstName} ${selectedEmployee.lastName}`);
             setIsEditDialogOpen(false);
             queryClient.invalidateQueries({ queryKey: ['employees'] });
         } catch (error: any) {
@@ -82,7 +81,6 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
             }
         }
     };
-    
 
     const indexOfLastEmployee = currentPage * employeesPerPage;
     const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
