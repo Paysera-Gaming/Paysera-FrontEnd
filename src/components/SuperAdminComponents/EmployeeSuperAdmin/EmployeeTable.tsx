@@ -65,19 +65,24 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
 
     const handleEditSubmit = async (values: any) => {
         if (!selectedEmployee) return;
-
+    
         try {
-            await axiosInstance.put(`/api/employee/${selectedEmployee.id}`, {
-                ...values,
-                middleName: values.middleName || "",
-            });
-            toast.success(`Successfully edited ${selectedEmployee.firstName} ${selectedEmployee.lastName}`);
+            await axiosInstance.put(`/api/employee/${selectedEmployee.id}`, values);
+            toast.success(`Successfully updated ${selectedEmployee.firstName} ${selectedEmployee.lastName}`);
             setIsEditDialogOpen(false);
             queryClient.invalidateQueries({ queryKey: ['employees'] });
-        } catch (error) {
-            console.error('Error editing the employee:', error);
+        } catch (error: any) {
+            if (error.response) {
+                // Log error details returned from the server
+                console.error('Error editing the employee:', error.response.data);
+                toast.error('Error editing the employee: ' + error.response.data.message || 'Unknown error');
+            } else {
+                console.error('Error editing the employee:', error);
+                toast.error('Error editing the employee.');
+            }
         }
     };
+    
 
     const indexOfLastEmployee = currentPage * employeesPerPage;
     const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;

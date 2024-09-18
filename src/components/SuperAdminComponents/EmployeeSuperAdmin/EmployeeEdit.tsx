@@ -122,7 +122,7 @@ export default function EmployeeEdit({
 		},
 	});
 
-		async function handleSubmit(values: z.infer<typeof formSchema>) {
+	async function handleSubmit(values: z.infer<typeof formSchema>) {
 		const updatedFields: any = {};
 		if (values.username) updatedFields.username = values.username;
 		if (values.firstName) updatedFields.firstName = values.firstName;
@@ -141,20 +141,25 @@ export default function EmployeeEdit({
 			);
 	
 			if (response.status === 200) {
-				toast.success(
-					`Successfully edited ${employee.firstName} ${employee.lastName}`
-				);
-				onSubmit(response.data);
+				toast.success(`Successfully edited ${employee.firstName} ${employee.lastName}`);
+				onSubmit(response.data); // Call the onSubmit callback
 				queryClient.invalidateQueries({ queryKey: ['employees'] }); // Invalidate the employee query
-				handleClose();
+				handleClose(); // Close the dialog
 			}
 		} catch (error) {
+			// Handle specific error cases
 			if ((error as any).response && (error as any).response.status === 400) {
 				toast.error('Invalid employee ID.');
+			} else {
+				toast.error('Failed to update the employee. Please try again.');
 			}
 			console.error('Error editing the employee:', error);
+	
+			// Keep the dialog open and reset form state if there's an error
+			form.reset(form.getValues()); // Reset the form to the current values
 		}
 	}
+	
 	function handleClose() {
 		form.reset();
 		onClose();
