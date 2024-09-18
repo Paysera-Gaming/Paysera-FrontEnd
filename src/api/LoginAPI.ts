@@ -28,7 +28,6 @@ export async function login(
 			password: password,
 		}
 	);
-
 	if (response.status === 200) {
 		// if the response is 200 then we can get the user info
 		return await getUserInfo().then((data) => {

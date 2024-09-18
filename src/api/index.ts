@@ -21,22 +21,27 @@ axiosInstance.interceptors.response.use(
 		// Any status codes that falls outside the range of 2xx cause this function to trigger
 		// Do something with response error
 
-		if (error.response === undefined) {
+		if (!error.response) {
 			toast.error('Network Error');
 			return Promise.reject(error);
 		}
 
-		if (error.response?.status === 401) {
-			toast.error('Unauthorized Redirecting to login page');
-			redirect('/login');
-		}
+		const { status, data } = error.response;
 
-		if (error.response?.status >= 500) {
-			toast.error('Server Error');
-		}
-
-		if (error.response?.status == 400) {
-			toast.error(error.response.data.message);
+		switch (status) {
+			case 401:
+				toast.error('Unauthorized Redirecting to login page');
+				redirect('/login');
+				break;
+			case 400:
+				toast.error(data.message || 'Bad Request');
+				break;
+			// case 404:
+			// 	toast.error('Not Found');
+			// 	break;
+			case 500:
+				toast.error('Server Error');
+				break;
 		}
 
 		return Promise.reject(error);

@@ -330,7 +330,6 @@ export default function EmployeeForm({
 						</DialogFooter>
 					</form>
 				</Form>
-				<Toaster />
 			</DialogContent>
 		</Dialog>
 	);

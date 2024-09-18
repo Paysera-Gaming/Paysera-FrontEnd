@@ -6,8 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-// import { Toaster } from "@/components/ui/sonner";
-import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
 
 // shad ui
@@ -70,7 +68,7 @@ export default function LoginForm() {
 			}, 500);
 		},
 
-		onError: (error) => {
+		onError: () => {
 			setDisable(false);
 			toast.error(error.message);
 		},
@@ -116,7 +114,6 @@ export default function LoginForm() {
 					Login
 				</Button>
 			</form>
-			<Toaster></Toaster>
 		</Form>
 	);
 }
