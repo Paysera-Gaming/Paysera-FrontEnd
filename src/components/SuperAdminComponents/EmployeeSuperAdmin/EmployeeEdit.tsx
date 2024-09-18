@@ -122,7 +122,7 @@ export default function EmployeeEdit({
 		},
 	});
 
-	async function handleSubmit(values: z.infer<typeof formSchema>) {
+		async function handleSubmit(values: z.infer<typeof formSchema>) {
 		const updatedFields: any = {};
 		if (values.username) updatedFields.username = values.username;
 		if (values.firstName) updatedFields.firstName = values.firstName;
@@ -130,16 +130,16 @@ export default function EmployeeEdit({
 		updatedFields.middleName = values.middleName || 'N/A'; // Handle optional middle name
 		if (values.password) updatedFields.passwordCredentials = values.password;
 		if (values.accessLevel) updatedFields.accessLevel = values.accessLevel; // Handle access level
-
+	
 		try {
 			const response = await axios.put(
 				`${import.meta.env.VITE_BASE_API}/api/employee/${employee.id}`,
 				{
 					...updatedFields,
-					isActive: true,
+					isActive: employee.isActive, // Preserve the current isActive status
 				}
 			);
-
+	
 			if (response.status === 200) {
 				toast.success(
 					`Successfully edited ${employee.firstName} ${employee.lastName}`
@@ -155,7 +155,6 @@ export default function EmployeeEdit({
 			console.error('Error editing the employee:', error);
 		}
 	}
-
 	function handleClose() {
 		form.reset();
 		onClose();
