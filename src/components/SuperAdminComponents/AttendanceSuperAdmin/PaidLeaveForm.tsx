@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,9 +15,10 @@ import { Label } from "@/components/ui/label";
 import { Employee } from "../EmployeeSuperAdmin/types";
 import { DatePickerDemo } from "./DatePickerDemo"; // Ensure the correct path
 import { Toaster, toast } from 'sonner';
+import { axiosInstance } from "@/api";
 
 const fetchEmployees = async (): Promise<Employee[]> => {
-  const response = await axios.get(import.meta.env.VITE_BASE_API + "/api/employee");
+  const response = await axiosInstance.get("/api/employee");
   return response.data;
 };
 
@@ -34,7 +35,7 @@ const PaidLeaveForm: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: async (payload: any) => {
-      await axios.post(import.meta.env.VITE_BASE_API + "/api/attendance", payload);
+      await axiosInstance.post("/api/attendance", payload);
     },
     onSuccess: () => {
       // Invalidate and refetch

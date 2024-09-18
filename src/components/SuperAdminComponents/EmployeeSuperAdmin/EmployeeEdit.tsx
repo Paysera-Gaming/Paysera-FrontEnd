@@ -2,7 +2,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
-import axios from 'axios';
 
 // import { Toaster } from "@/components/ui/sonner";
 import { Toaster } from '@/components/ui/sonner';
@@ -48,6 +47,7 @@ import { User, Lock } from 'lucide-react';
 
 // TanStack Query
 import { useQueryClient } from '@tanstack/react-query';
+import { axiosInstance } from '@/api';
 
 // schema for the form
 const formSchema = z
@@ -132,8 +132,8 @@ export default function EmployeeEdit({
 		if (values.accessLevel) updatedFields.accessLevel = values.accessLevel; // Handle access level
 	
 		try {
-			const response = await axios.put(
-				`${import.meta.env.VITE_BASE_API}/api/employee/${employee.id}`,
+			const response = await axiosInstance.put(
+				`/api/employee/${employee.id}`,
 				{
 					...updatedFields,
 					isActive: employee.isActive, // Preserve the current isActive status

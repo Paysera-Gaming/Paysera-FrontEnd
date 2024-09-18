@@ -5,7 +5,6 @@ import { Edit2, Trash2, Circle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import axios from 'axios';
 import EmployeeEdit from './EmployeeEdit';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -16,6 +15,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { axiosInstance } from '@/api';
 
 interface Employee {
     id: number;
@@ -53,7 +53,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
         if (!selectedEmployee) return;
 
         try {
-            await axios.delete(`${import.meta.env.VITE_BASE_API}/api/employee/${selectedEmployee.id}`);
+            await axiosInstance.delete(`/api/employee/${selectedEmployee.id}`);
             toast.success(`Successfully deleted ${selectedEmployee.firstName} ${selectedEmployee.lastName}`);
             setIsDialogOpen(false);
             queryClient.invalidateQueries({ queryKey: ['employees'] });
@@ -67,7 +67,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
         if (!selectedEmployee) return;
 
         try {
-            await axios.put(`${import.meta.env.VITE_BASE_API}/api/employee/${selectedEmployee.id}`, {
+            await axiosInstance.put(`/api/employee/${selectedEmployee.id}`, {
                 ...values,
                 middleName: values.middleName || "",
             });
