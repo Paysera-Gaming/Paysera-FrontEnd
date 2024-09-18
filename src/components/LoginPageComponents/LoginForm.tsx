@@ -68,7 +68,7 @@ export default function LoginForm() {
 			}, 500);
 		},
 
-		onError: () => {
+		onError: (error) => {
 			setDisable(false);
 			toast.error(error.message);
 		},

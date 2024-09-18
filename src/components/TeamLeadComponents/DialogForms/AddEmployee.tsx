@@ -29,8 +29,7 @@ import { addEmployeeInDepartment } from '@/api/EmployeeAPI';
 import { toast } from 'sonner';
 import { useUserStore } from '@/stores/userStore';
 
-// eslint-disable-next-line react-refresh/only-export-components
-export const formSchemaAddEmployee = z.object({
+const formSchemaAddEmployee = z.object({
 	username: z
 		.string()
 		.min(5, { message: 'Minimum Charactus must be atleast 5' }),
