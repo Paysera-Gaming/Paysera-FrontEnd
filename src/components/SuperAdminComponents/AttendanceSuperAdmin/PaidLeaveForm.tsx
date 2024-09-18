@@ -14,7 +14,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Employee } from "../EmployeeSuperAdmin/types";
 import { DatePickerDemo } from "./DatePickerDemo"; // Ensure the correct path
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 import { axiosInstance } from "@/api";
 
 const fetchEmployees = async (): Promise<Employee[]> => {
@@ -147,7 +147,6 @@ const PaidLeaveForm: React.FC = () => {
           </form>
         </DialogContent>
       </Dialog>
-      <Toaster />
     </>
   );
 };
