@@ -7,7 +7,7 @@ import { z } from 'zod';
 import axios from 'axios';
 
 // import { Toaster } from "@/components/ui/sonner";
-import { Toaster } from '@/components/ui/sonner';
+
 import { toast } from 'sonner';
 
 // shad ui
@@ -330,7 +330,6 @@ export default function EmployeeForm({
 						</DialogFooter>
 					</form>
 				</Form>
-				<Toaster />
 			</DialogContent>
 		</Dialog>
 	);

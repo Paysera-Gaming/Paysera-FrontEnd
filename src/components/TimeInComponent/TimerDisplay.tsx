@@ -185,7 +185,7 @@ export default function TimerDisplay() {
 			{/* status */}
 			<span>
 				<p className="font-semibold inline text-lg">Status: &nbsp;</p>
-				<Badge className="inline" color="destructive">
+				<Badge className="inline" variant={'secondary'}>
 					NONE
 				</Badge>
 			</span>

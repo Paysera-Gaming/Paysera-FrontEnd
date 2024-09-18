@@ -2,7 +2,13 @@ import { TEmployee } from '@/components/DataTable/DataColumns';
 import { axiosInstance } from '.';
 import { AxiosResponse } from 'axios';
 import { z } from 'zod';
-import { formSchemaAddEmployee } from '@/components/TeamLeadComponents/DialogForms/AddEmployee';
+
+const formSchemaAddEmployee = z.object({
+	username: z
+		.string()
+		.min(5, { message: 'Minimum Charactus must be atleast 5' }),
+	role: z.string().min(5, { message: 'Minimum Charactus must be atleast 5' }),
+});
 
 export async function getAllEmployees(): Promise<TEmployee[]> {
 	const response: AxiosResponse<TEmployee[]> = await axiosInstance.get(
