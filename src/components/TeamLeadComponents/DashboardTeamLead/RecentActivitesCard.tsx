@@ -74,7 +74,17 @@ function RecentActivitiesTable({ tableData }: { tableData: TAttendance[] }) {
 					<TableHead>Time</TableHead>
 				</TableRow>
 			</TableHeader>
-			<TableBody>{renderedList}</TableBody>
+			<TableBody>
+				{renderedList.length > 0 ? (
+					renderedList
+				) : (
+					<TableRow>
+						<TableCell colSpan={5} className="text-center">
+							No activities
+						</TableCell>
+					</TableRow>
+				)}
+			</TableBody>
 		</Table>
 	);
 }
