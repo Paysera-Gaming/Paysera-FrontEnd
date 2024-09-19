@@ -159,7 +159,7 @@ export const attendanceColumns: ColumnDef<TAttendance>[] = [
 					variant="ghost"
 					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
 				>
-					Updated At
+					Created At
 					<ArrowUpDown className="ml-2 h-4 w-4" />
 				</Button>
 			);
