@@ -50,36 +50,40 @@ const PaidLeaveForm: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
+  
     if (!selectedDate) {
       toast.error("Please select a date.");
       return;
     }
-
+  
     const employee = employees.find(emp => emp.username === selectedEmployee);
     if (!employee) {
       toast.error("Please select a valid employee.");
       return;
     }
-
-    const date = selectedDate.toISOString().split('T')[0]; // Get the date part only
-
+  
+    // Remove the unused date variable
+    // const date = selectedDate.toISOString().split('T')[0]; // Not used
+  
+    // Create the timestamps correctly
     const payload = {
       employeeId: employee.id,
       date: selectedDate.toISOString(),
       status: "PAID_LEAVE",
       scheduleType,
-      timeIn: new Date(`${date}T08:00:00`).toISOString(),
-      timeOut: new Date(`${date}T17:00:00`).toISOString(),
-      lunchTimeIn: new Date(`${date}T12:00:00`).toISOString(),
-      lunchTimeOut: new Date(`${date}T13:00:00`).toISOString(),
+      timeIn: new Date(selectedDate.setHours(8, 0, 0)).toISOString(),
+      timeOut: new Date(selectedDate.setHours(17, 0, 0)).toISOString(),
+      lunchTimeIn: new Date(selectedDate.setHours(12, 0, 0)).toISOString(),
+      lunchTimeOut: new Date(selectedDate.setHours(13, 0, 0)).toISOString(),
       timeHoursWorked: 8,
       lunchTimeTotal: 1,
       timeTotal: 9,
     };
-
+  
     mutation.mutate(payload);
   };
+  
+  
 
   return (
     <>
