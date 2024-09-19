@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import SearchBar from './SearchBar';
 import SummaryCards from './SummaryCards';
 import EmployeeTable from './EmployeeTable';
 import EmployeeForm from './EmployeeForm';
 import EmployeeEdit from './EmployeeEdit';
 import { Employee, EmployeeCounts, getEmployeeCounts } from './types'; // Import the shared Employee type and getEmployeeCounts function
+import { axiosInstance } from '@/api';
 
 const fetchEmployees = async (): Promise<Employee[]> => {
-  const response = await axios.get(import.meta.env.VITE_BASE_API + '/api/employee');
+  const response = await axiosInstance.get('/api/employee');
   return response.data;
 };
 
@@ -27,7 +27,7 @@ const EmployeeList: React.FC = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
 
   const addEmployeeMutation = useMutation({
-    mutationFn: (newEmployee: Employee) => axios.post(import.meta.env.VITE_BASE_API + '/api/employee', {
+    mutationFn: (newEmployee: Employee) => axiosInstance.post('/api/employee', {
       ...newEmployee,
       middleName: newEmployee.middleName || "", // Handle optional middle name
     }),
@@ -37,7 +37,7 @@ const EmployeeList: React.FC = () => {
   });
 
   const editEmployeeMutation = useMutation({
-    mutationFn: (updatedEmployee: Employee) => axios.put(`${import.meta.env.VITE_BASE_API}/api/employee/${updatedEmployee.id}`, {
+    mutationFn: (updatedEmployee: Employee) => axiosInstance.put(`/api/employee/${updatedEmployee.id}`, {
       ...updatedEmployee,
       middleName: updatedEmployee.middleName || "", // Handle optional middle name
     }),

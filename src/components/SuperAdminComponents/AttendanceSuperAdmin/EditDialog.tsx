@@ -3,10 +3,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { parseTime, timeDifferenceInHours, formatDateTime } from './timeUtils';
-import axios from 'axios';
+
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import { Attendance } from './types';
+import { axiosInstance } from '@/api';
 
 interface EditDialogProps {
     isOpen: boolean;
@@ -53,7 +54,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
         };
 
         try {
-            await axios.put(`${import.meta.env.VITE_BASE_API}/api/attendance/${attendance.id}`, payload);
+            await axiosInstance.put(`/api/attendance/${attendance.id}`, payload);
             toast.success(`Successfully updated attendance for ${attendance.employeeName} on ${attendance.date}`);
             queryClient.invalidateQueries({ queryKey: ['attendanceList'] });
             onClose();

@@ -4,7 +4,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
-import axios from 'axios';
 
 // import { Toaster } from "@/components/ui/sonner";
 
@@ -50,6 +49,7 @@ import { User, Lock } from 'lucide-react';
 
 // TanStack Query
 import { useQueryClient } from '@tanstack/react-query';
+import { axiosInstance } from '@/api';
 
 // schema for the form
 const formSchema = z
@@ -113,8 +113,8 @@ export default function EmployeeForm({
 			values.accessLevel
 		) {
 			try {
-				const response = await axios.post(
-					import.meta.env.VITE_BASE_API + '/api/employee',
+				const response = await axiosInstance.post(
+					'/api/employee',
 					{
 						username: values.username, // Added username to the payload
 						firstName: values.firstName,

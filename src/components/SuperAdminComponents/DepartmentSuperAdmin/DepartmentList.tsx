@@ -124,82 +124,76 @@ const DepartmentList: React.FC = () => {
           departments={departments}
         />
       </div>
-      {departments.length === 0 ? (
-        <div className="text-center py-4">
-          No Department found.
-        </div>
-      ) : (
-        <>
-          {filteredDepartments.length > 0 ? (
-            <Card>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white dark:bg-transparent">
-                    <thead>
-                      <tr>
-                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Name</th>
-                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Leader</th>
-                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Members</th>
-                        <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {currentDepartments.map((department: Department) => (
-                        <tr key={department.id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">{department.name}</td>
-                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
-                            {department.Leader ? `${department.Leader.firstName} ${department.Leader.lastName}` : 'No Leader Assigned'}
-                          </td>
-                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
-                            {department.Employees && department.Employees.length > 0 ? (
-                              <>
-                                {department.Employees.slice(0, 3).map((employee) => (
-                                  <span key={employee.id} className="block">
-                                    {employee.firstName} {employee.lastName}
-                                  </span>
-                                ))}
-                                {department.Employees.length > 3 && <span>etc.</span>}
-                              </>
-                            ) : (
-                              <span>No Employees</span>
-                            )}
-                          </td>
-                          <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
-                            <Button
-                              onClick={() => handleViewDepartment(department)}
-                              variant="outline"
-                              className="mr-2"
-                            >
-                              <Eye className="w-4 h-4 mr-1" /> View
-                            </Button>
-                            <Button
-                              onClick={() => handleEditDepartment(department)}
-                              variant="outline"
-                              className="mr-2"
-                            >
-                              <Edit className="w-4 h-4 mr-1" /> Edit
-                            </Button>
-                            <Button
-                              onClick={() => handleDeleteDepartment(department)}
-                              variant="outline"
-                            >
-                              <Trash className="w-4 h-4 mr-1" /> Delete
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="text-center py-4">
-              No results found for "{searchQuery}".
-            </div>
-          )}
-        </>
-      )}
+      <Card>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white dark:bg-transparent">
+              <thead>
+                <tr>
+                  <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Name</th>
+                  <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Leader</th>
+                  <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Members</th>
+                  <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentDepartments.length > 0 ? (
+                  currentDepartments.map((department: Department) => (
+                    <tr key={department.id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                      <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">{department.name}</td>
+                      <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
+                        {department.Leader ? `${department.Leader.firstName} ${department.Leader.lastName}` : 'No Leader Assigned'}
+                      </td>
+                      <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
+                        {department.Employees && department.Employees.length > 0 ? (
+                          <>
+                            {department.Employees.slice(0, 3).map((employee) => (
+                              <span key={employee.id} className="block">
+                                {employee.firstName} {employee.lastName}
+                              </span>
+                            ))}
+                            {department.Employees.length > 3 && <span>etc.</span>}
+                          </>
+                        ) : (
+                          <span>No Employees</span>
+                        )}
+                      </td>
+                      <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
+                        <Button
+                          onClick={() => handleViewDepartment(department)}
+                          variant="outline"
+                          className="mr-2"
+                        >
+                          <Eye className="w-4 h-4 mr-1" /> View
+                        </Button>
+                        <Button
+                          onClick={() => handleEditDepartment(department)}
+                          variant="outline"
+                          className="mr-2"
+                        >
+                          <Edit className="w-4 h-4 mr-1" /> Edit
+                        </Button>
+                        <Button
+                          onClick={() => handleDeleteDepartment(department)}
+                          variant="outline"
+                        >
+                          <Trash className="w-4 h-4 mr-1" /> Delete
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4} className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-center text-black dark:text-gray-300">
+                      No Department found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
       <Pagination>
         <PaginationContent>
           <PaginationItem>

@@ -3,11 +3,12 @@ import { Button } from '@/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
-import axios from 'axios';
+
 import { useQueryClient } from '@tanstack/react-query';
 import DeleteDialog from './DeleteDialog';
 import EditDialog from './EditDialog';
 import { Attendance } from './types';
+import { axiosInstance } from '@/api';
 
 interface AttendanceActionsProps {
     attendance: Attendance;
@@ -32,7 +33,7 @@ const AttendanceActions: React.FC<AttendanceActionsProps> = ({ attendance }) => 
 
     const handleConfirmDelete = async () => {
         try {
-            await axios.delete(`${import.meta.env.VITE_BASE_API}/api/attendance/${attendance.id}`);
+            await axiosInstance.delete(`/api/attendance/${attendance.id}`);
             toast.success(`Successfully deleted attendance for ${attendance.employeeName} on ${attendance.date}`);
             setIsDialogOpen(false);
             queryClient.invalidateQueries({ queryKey: ['attendanceList'] });
