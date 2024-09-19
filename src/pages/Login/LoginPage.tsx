@@ -10,7 +10,7 @@ import {
 import LoginForm from '@/components/LoginPageComponents/LoginForm';
 import { useEffect } from 'react';
 import { useUserStore } from '@/stores/userStore';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const routeMaps = new Map([
 	['EMPLOYEE', '/employee/dashboard'],
@@ -19,14 +19,18 @@ const routeMaps = new Map([
 ]);
 
 export default function LoginPage() {
+	const navigate = useNavigate();
 	// this useEffect checks if the user is already logged in
 	// if so then they will be redirected to their respective dashboard
 	useEffect(() => {
 		if (useUserStore.getState().user != undefined) {
+			console.log('what');
+
 			const userRoute = useUserStore.getState().user?.accessLevel;
 			console.log('User is logged in');
 			const route = routeMaps.get(userRoute || '') || '/defaultRoute';
-			<Navigate to={route} />;
+
+			navigate(route);
 		}
 	});
 
