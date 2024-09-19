@@ -8,8 +8,28 @@ import {
 } from '@/components/ui/card';
 
 import LoginForm from '@/components/LoginPageComponents/LoginForm';
+import { useEffect } from 'react';
+import { useUserStore } from '@/stores/userStore';
+import { Navigate } from 'react-router-dom';
+
+const routeMaps = new Map([
+	['EMPLOYEE', '/employee/dashboard'],
+	['TEAM_LEADER', '/teamlead/dashboard'],
+	['ADMIN', '/superadmin/dashboard'],
+]);
 
 export default function LoginPage() {
+	// this useEffect checks if the user is already logged in
+	// if so then they will be redirected to their respective dashboard
+	useEffect(() => {
+		if (useUserStore.getState().user != undefined) {
+			const userRoute = useUserStore.getState().user?.accessLevel;
+			console.log('User is logged in');
+			const route = routeMaps.get(userRoute || '') || '/defaultRoute';
+			<Navigate to={route} />;
+		}
+	});
+
 	return (
 		<main className=" h-full flex items-center justify-center">
 			<Card className="w-[360px]">
