@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useUserStore } from '@/stores/userStore';
 import { getAttendance } from '@/api/AttendanceAPI';
 import { Skeleton } from '@/components/ui/skeleton';
+import ErrorDisplay from '@/components/ErrorComponent/ErrorDisplay';
 
 export default function AttendancePage() {
 	const { data, isError, isLoading } = useQuery({
@@ -23,14 +24,14 @@ export default function AttendancePage() {
 	const attendanceData: TAttendance[] = data ?? [];
 
 	if (isError) {
-		return <>An Error has occured</>;
+		return <ErrorDisplay />;
 	}
 
 	if (isLoading) {
 		return (
 			<div className=" w-full h-full border-border border-solid border p-5 rounded-md ">
 				<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0">
-					Manage Employees In Department
+					Attendance
 				</h2>
 				<div className="grid grid-cols-5 w-full mt-2 gap-2">
 					<Skeleton className="col-span-5 h-10" />

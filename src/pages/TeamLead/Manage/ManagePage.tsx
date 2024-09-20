@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getAllEmployeesInDepartment } from '../../../api/EmployeeAPI';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useUserStore } from '@/stores/userStore';
+import ErrorDisplay from '@/components/ErrorComponent/ErrorDisplay';
 
 // todo's
 // need to add edit employee in department - doing
@@ -30,7 +31,7 @@ export default function ManagePage() {
 	const dataEmployees: TEmployee[] = data ?? [];
 
 	if (isError) {
-		return <>An Error has occured</>;
+		return <ErrorDisplay />;
 	}
 
 	if (isLoading) {
