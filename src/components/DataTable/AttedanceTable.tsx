@@ -135,7 +135,7 @@ export function AttendanceTable<TData, TValue>({
 				</div>
 			</div>
 
-			<ScrollArea className="2xl:w-[1600px] md:w-[500px] lg:w-[950px] lg:h-[300px] md:h-[250px]  whitespace-nowrap rounded-md border">
+			<ScrollArea className="2xl:w-[1600px] md:w-[500px] lg:w-[950px]  xl:h-auto lg:h-[300px] md:h-[250px] sm:h-[200px] xs:h-[150px]  whitespace-nowrap rounded-md border">
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
