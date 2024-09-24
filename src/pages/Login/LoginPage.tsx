@@ -24,12 +24,9 @@ export default function LoginPage() {
 	// if so then they will be redirected to their respective dashboard
 	useEffect(() => {
 		if (useUserStore.getState().user != undefined) {
-			console.log('what');
-
 			const userRoute = useUserStore.getState().user?.accessLevel;
 			console.log('User is logged in');
 			const route = routeMaps.get(userRoute || '') || '/defaultRoute';
-
 			navigate(route);
 		}
 	});
