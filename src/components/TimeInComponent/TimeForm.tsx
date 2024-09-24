@@ -72,33 +72,24 @@ export default function TimeForm() {
 				throw new Error('Employee ID is undefined');
 			}
 
-			switch (form.getValues('TimeType')) {
-				case 'Clock-In':
-					return clockIn({
-						employeeId: employeeId,
-						timeStamp: currentTime,
-					});
+			const timeType = form.getValues('TimeType');
+			// created an object that will hold the action functions
+			const timeActions = {
+				'Clock-In': clockIn,
+				'Clock-Out': clockOut,
+				'Lunch-In': lunchIn,
+				'Lunch-Out': lunchOut,
+			};
 
-				case 'Clock-Out':
-					return clockOut({
-						employeeId: employeeId,
-						timeStamp: currentTime,
-					});
-
-				case 'Lunch-In':
-					return lunchIn({
-						employeeId: employeeId,
-						timeStamp: currentTime,
-					});
-
-				case 'Lunch-Out':
-					return lunchOut({
-						employeeId: employeeId,
-						timeStamp: currentTime,
-					});
-				default:
-					throw new Error('Invalid TimeType');
+			const action = timeActions[timeType];
+			if (!action) {
+				throw new Error('Invalid TimeType');
 			}
+
+			return action({
+				employeeId: employeeId,
+				timeStamp: currentTime,
+			});
 		},
 		onSuccess: () => {
 			// this will run the toast
@@ -107,15 +98,15 @@ export default function TimeForm() {
 			queryClient.invalidateQueries({ queryKey: ['UsersAttendance'] });
 
 			ToasterSwitch(form.getValues('TimeType'), currentTime);
-
 		},
 	});
 
-	// values: z.infer<typeof formSchema>
 	function onSubmit() {
 		setIsOpen(true);
 	}
 
+	// i have no idea what to name this guy so i just named it runYourMother
+	// nonetheless this function will run sa post update
 	function runYourMother() {
 		mutateTime.mutate();
 	}

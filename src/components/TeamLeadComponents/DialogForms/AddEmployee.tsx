@@ -64,8 +64,9 @@ export default function AddEmployee() {
 			}
 		},
 		onError: (error) => {
-			toast.error(error.message);
+			console.error(error);
 		},
+
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['EmployeesInfo'] });
 

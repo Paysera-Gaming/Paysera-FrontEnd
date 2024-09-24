@@ -26,9 +26,7 @@ const EditRole = forwardRef<HTMLDivElement, { employeeInfo: TEmployee }>(
 				employeeInfo.role = roleInput;
 				return updateEmployee(employeeInfo);
 			},
-			onError: () => {
-				toast.error('An error happened!');
-			},
+
 			onSuccess: () => {
 				if (employeeInfo.id == useUserStore.getState().user?.id) {
 					getUserInfo().then((data) => {

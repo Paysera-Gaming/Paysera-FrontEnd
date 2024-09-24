@@ -117,8 +117,6 @@ export default function ScheduleForm({
 		onError: (error) => {
 			console.log(error);
 			console.log(ScheduleSub);
-
-			toast.error('Something went wrong!');
 		},
 	});
 

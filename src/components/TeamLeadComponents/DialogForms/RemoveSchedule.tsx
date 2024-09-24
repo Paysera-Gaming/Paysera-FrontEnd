@@ -30,7 +30,6 @@ export default function RemoveScheduleDialog() {
 			toast.success('Schedule has been removed!');
 		},
 		onError: (error) => {
-			toast.error('Failed to remove schedule');
 			console.error(error);
 		},
 	});

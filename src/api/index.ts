@@ -36,12 +36,14 @@ axiosInstance.interceptors.response.use(
 			case 400:
 				toast.error(data.message || 'Bad Request');
 				break;
-			// case 404:
-			// 	toast.error('Not Found');
-			// 	break;
+			case 404:
+				toast.error(data.message || 'Not Found');
+				break;
 			case 500:
 				toast.error('Server Error');
 				break;
+			default:
+				toast.error(data.message || 'An error occurred');
 		}
 
 		return Promise.reject(error);
