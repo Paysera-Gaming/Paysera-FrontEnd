@@ -47,7 +47,7 @@ export default function RemoveScheduleDialog() {
 					setWarn(true);
 				}}
 			>
-				<p>Remove Employee</p>
+				<p>Remove Schedule</p>
 			</div>
 
 			<AlertDialogContent>
