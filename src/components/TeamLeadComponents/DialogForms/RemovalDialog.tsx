@@ -32,8 +32,6 @@ const RemoveDialog = forwardRef<HTMLDivElement, RemoveDialogProps>(
 			},
 			onError: (data) => {
 				console.log(data.message);
-
-				toast.error('An error happened!');
 			},
 		});
 
