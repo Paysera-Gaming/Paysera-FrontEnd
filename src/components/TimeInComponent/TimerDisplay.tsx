@@ -55,6 +55,8 @@ function statusVariant(status: UserStatus) {
 
 		case 'DONE':
 			return 'Offline';
+		default:
+			return 'Offline';
 	}
 }
 
