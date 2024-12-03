@@ -6,12 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { CalendarIcon, PlusIcon, Edit2, Trash2 } from 'lucide-react';
@@ -19,66 +16,63 @@ import { CalendarIcon, PlusIcon, Edit2, Trash2 } from 'lucide-react';
 interface Holiday {
   id: number;
   name: string;
-  startDate: Date;
-  endDate: Date;
-  status: 'Upcoming' | 'Ongoing' | 'Completed';
+  date: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const fetchHolidays = async (): Promise<Holiday[]> => {
-  const response = await axiosInstance.get('/api/holidays');
+  const response = await axiosInstance.get('/api/holiday');
   return response.data;
 };
 
 const HolidayList: React.FC = () => {
   const queryClient = useQueryClient();
   const { data: holidays = [] } = useQuery<Holiday[], Error>({
-    queryKey: ['holidays'],
+    queryKey: ['holiday'],
     queryFn: fetchHolidays,
   });
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeFilter, setActiveFilter] = useState('all');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedHoliday, setSelectedHoliday] = useState<Holiday | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const addHolidayMutation = useMutation({
-    mutationFn: (newHoliday: Omit<Holiday, 'id'>) => axiosInstance.post('/api/holidays', newHoliday),
+    mutationFn: (newHoliday: Omit<Holiday, 'id' | 'createdAt' | 'updatedAt'>) => axiosInstance.post('/api/holiday', newHoliday),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['holidays'] });
+      queryClient.invalidateQueries({ queryKey: ['holiday'] });
       toast.success('Holiday added successfully!');
     },
   });
 
   const editHolidayMutation = useMutation({
-    mutationFn: (updatedHoliday: Holiday) => axiosInstance.put(`/api/holidays/${updatedHoliday.id}`, updatedHoliday),
+    mutationFn: (updatedHoliday: Omit<Holiday, 'createdAt' | 'updatedAt'>) => axiosInstance.put(`/api/holiday/${updatedHoliday.id}`, updatedHoliday),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['holidays'] });
+      queryClient.invalidateQueries({ queryKey: ['holiday'] });
       toast.success('Holiday updated successfully!');
     },
   });
 
   const deleteHolidayMutation = useMutation({
-    mutationFn: (id: number) => axiosInstance.delete(`/api/holidays/${id}`),
+    mutationFn: (id: number) => axiosInstance.delete(`/api/holiday/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['holidays'] });
+      queryClient.invalidateQueries({ queryKey: ['holiday'] });
       toast.success('Holiday deleted successfully!');
     },
   });
 
   const filteredHolidays = holidays.filter((holiday) => {
-    const matchesSearch = holiday.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = activeFilter === 'all' || holiday.status.toLowerCase() === activeFilter.toLowerCase();
-    return matchesSearch && matchesFilter;
+    return holiday.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  const handleFormSubmit = (newHoliday: Omit<Holiday, 'id'>) => {
+  const handleFormSubmit = (newHoliday: Omit<Holiday, 'id' | 'createdAt' | 'updatedAt'>) => {
     addHolidayMutation.mutate(newHoliday);
     setIsFormOpen(false);
   };
 
-  const handleEditSubmit = (updatedHoliday: Holiday) => {
+  const handleEditSubmit = (updatedHoliday: Omit<Holiday, 'createdAt' | 'updatedAt'>) => {
     editHolidayMutation.mutate(updatedHoliday);
     setIsEditOpen(false);
     setSelectedHoliday(null);
@@ -97,7 +91,7 @@ const HolidayList: React.FC = () => {
       <div className="flex justify-between items-center">
         <Input
           type="text"
-          placeholder="Search holidays..."
+          placeholder="Search holiday..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="max-w-sm"
@@ -107,23 +101,13 @@ const HolidayList: React.FC = () => {
         </Button>
       </div>
 
-      <Tabs value={activeFilter} onValueChange={setActiveFilter}>
-        <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-          <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
-          <TabsTrigger value="completed">Completed</TabsTrigger>
-        </TabsList>
-      </Tabs>
-
       <Card>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
-                <TableHead>Dates</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Date</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -134,13 +118,8 @@ const HolidayList: React.FC = () => {
                   <TableCell>
                     <div className="flex items-center">
                       <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground" />
-                      {format(holiday.startDate, 'MMM d, yyyy')} - {format(holiday.endDate, 'MMM d, yyyy')}
+                      {format(new Date(holiday.date), 'MMM d, yyyy')}
                     </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={holiday.status === 'Completed' ? 'secondary' : 'default'}>
-                      {holiday.status}
-                    </Badge>
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
@@ -217,20 +196,18 @@ const HolidayList: React.FC = () => {
 
 interface HolidayFormProps {
   holiday?: Holiday;
-  onSubmit: (holiday: Omit<Holiday, 'id'>) => void;
+  onSubmit: (holiday: Omit<Holiday, 'id' | 'createdAt' | 'updatedAt'>) => void;
   onCancel: () => void;
 }
 
 const HolidayForm: React.FC<HolidayFormProps> = ({ holiday, onSubmit, onCancel }) => {
   const [name, setName] = useState(holiday?.name || '');
-  const [startDate, setStartDate] = useState<Date | undefined>(holiday?.startDate);
-  const [endDate, setEndDate] = useState<Date | undefined>(holiday?.endDate);
-  const [status, setStatus] = useState<Holiday['status']>(holiday?.status || 'Upcoming');
+  const [date, setDate] = useState<Date | undefined>(holiday?.date);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name && startDate && endDate) {
-      onSubmit({ name, startDate, endDate, status });
+    if (name && date) {
+      onSubmit({ name, date });
     }
   };
 
@@ -240,58 +217,24 @@ const HolidayForm: React.FC<HolidayFormProps> = ({ holiday, onSubmit, onCancel }
         <Label htmlFor="name">Holiday Name</Label>
         <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="startDate">Start Date</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="w-full justify-start text-left font-normal">
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {startDate ? format(startDate, 'PPP') : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={startDate}
-                onSelect={setStartDate}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="endDate">End Date</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="w-full justify-start text-left font-normal">
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {endDate ? format(endDate, 'PPP') : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={endDate}
-                onSelect={setEndDate}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
       <div className="space-y-2">
-        <Label htmlFor="status">Status</Label>
-        <Select value={status} onValueChange={(value) => setStatus(value as Holiday['status'])}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select a status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Upcoming">Upcoming</SelectItem>
-            <SelectItem value="Ongoing">Ongoing</SelectItem>
-            <SelectItem value="Completed">Completed</SelectItem>
-          </SelectContent>
-        </Select>
+        <Label htmlFor="date">Date</Label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="w-full justify-start text-left font-normal">
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? format(date, 'PPP') : <span>Pick a date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
       </div>
       <div className="flex justify-end gap-2">
         <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
@@ -302,4 +245,3 @@ const HolidayForm: React.FC<HolidayFormProps> = ({ holiday, onSubmit, onCancel }
 };
 
 export default HolidayList;
-
