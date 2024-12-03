@@ -63,10 +63,10 @@ const AttendanceList: React.FC = () => {
   } = useFiltersAndHandlers(attendanceList);
 
   const {
-    overallCounts = { ongoing: 0, break: 0, done: 0, paidLeave: 0 },
-    fixedCounts = { ongoing: 0, break: 0, done: 0, paidLeave: 0 },
-    SUPER_FLEXICounts = { ongoing: 0, break: 0, done: 0, paidLeave: 0 },
-    flexiCounts = { ongoing: 0, break: 0, done: 0, paidLeave: 0 },
+    overallCounts = { ongoing: 0, done: 0, paidLeave: 0 },
+    fixedCounts = { ongoing: 0, done: 0, paidLeave: 0 },
+    SUPER_FLEXICounts = { ongoing: 0, done: 0, paidLeave: 0 },
+    flexiCounts = { ongoing: 0, done: 0, paidLeave: 0 },
     overallCount = 0,
     fixedCount = 0,
     SUPER_FLEXICount = 0,
@@ -93,7 +93,6 @@ const AttendanceList: React.FC = () => {
     );
   }
 
-
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-4">
@@ -104,7 +103,6 @@ const AttendanceList: React.FC = () => {
             value={searchQuery}
             onChange={handleSearchChange}
             className="border p-2 rounded mr-2 text-base bg-white dark:bg-transparent dark:text-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-
           />
           <DateRangePicker onChange={handleDateRangeAndYearChange} />
         </div>
@@ -114,24 +112,19 @@ const AttendanceList: React.FC = () => {
               if (dateRange.from && dateRange.to) {
                 exportToCSV(
                   filteredAttendanceList,
-
                   dateRange as { from: Date; to: Date }
                 );
               } else {
                 console.error('Date range is not fully defined');
               }
             }}
-
             className="bg-green-500 text-white mr-4"
-
           >
             Export to CSV
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-
               <Button variant="outline" className="mr-4">Filters</Button>
-
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel>Sort Order</DropdownMenuLabel>
@@ -164,12 +157,6 @@ const AttendanceList: React.FC = () => {
                 Ongoing
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
-                checked={statusFilter === 'BREAK'}
-                onCheckedChange={() => handleStatusFilterChange('BREAK')}
-              >
-                Break
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
                 checked={statusFilter === 'DONE'}
                 onCheckedChange={() => handleStatusFilterChange('DONE')}
               >
@@ -200,9 +187,7 @@ const AttendanceList: React.FC = () => {
         handleFilterClick={handleFilterClick}
       />
       <AttendanceTable
-
         data={filteredAttendanceList}
-
         columns={columns}
         dateRange={dateRange}
         activeFilter={activeFilter}
