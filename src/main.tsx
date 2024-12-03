@@ -24,6 +24,7 @@ import SuperAdminDashboardPage from './pages/SuperAdmin/Dashboard/DashboardPage'
 import AttendanceDashboard from './pages/SuperAdmin/Attendance/AttendanceDashboard';
 import SuperAdminEmployeeDashboard from './pages/SuperAdmin/Employee/SuperAdminEmployeeDashboard';
 import SuperAdminDepartmentDashboard from './pages/SuperAdmin/Department/SuperAdminDepartmentDashboard';
+import SuperAdminHolidayDashboard from './pages/SuperAdmin/Holiday/SuperAdminHolidayDashboard';
 
 import './index.css';
 
@@ -72,6 +73,7 @@ const router = createBrowserRouter([
 		children: [
 			{ index: true, loader: async () => redirect('/superadmin/dashboard') },
 			{ path: 'dashboard', element: <SuperAdminDashboardPage /> },
+			{ path: 'holidays', element: <SuperAdminHolidayDashboard /> },
 			{ path: 'schedule', element: <SchedulePage /> },
 			{ path: 'attendance', element: <AttendanceDashboard /> },
 			{ path: 'employee', element: <SuperAdminEmployeeDashboard /> },

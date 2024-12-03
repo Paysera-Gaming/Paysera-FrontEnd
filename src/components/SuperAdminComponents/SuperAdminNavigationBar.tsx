@@ -43,7 +43,7 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
                         )
                     }
                     id={link}
-                    to={link}
+                    to={`/superadmin/${link}`} // Ensure the path is correct
                 >
                     {iconList[index]}
                     {link}
@@ -72,7 +72,7 @@ function ProfileHeader() {
 export default function SuperAdminNavigation() {
     const routeLinks: string[] = [
         'dashboard',
-        'holiday', // Added holiday link
+        'holidays', // Ensure this matches the route path in main.tsx
         'attendance',
         'employee',
         'departments',
