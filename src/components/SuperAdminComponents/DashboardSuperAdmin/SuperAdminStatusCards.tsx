@@ -64,8 +64,8 @@ export default function EmployeesStatusCards() {
 
     return (
         <>
+            <AnnouncementCard /> {/* Include the AnnouncementCard component at the top */}
             {CardItems}
-            <AnnouncementCard /> {/* Include the AnnouncementCard component */}
         </>
     );
 }
