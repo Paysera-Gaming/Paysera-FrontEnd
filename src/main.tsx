@@ -56,7 +56,8 @@ const router = createBrowserRouter([
 		path: '/teamlead',
 
 		element: (
-			<ProtectedRoute page={<TeamLeadPage />} requiredLevel="TEAM_LEADER" />
+			// <ProtectedRoute page={<TeamLeadPage />} requiredLevel="TEAM_LEADER" />
+			<TeamLeadPage />
 		),
 		children: [
 			{ index: true, loader: async () => redirect('/teamlead/dashboard') },
