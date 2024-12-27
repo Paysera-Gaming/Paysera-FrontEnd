@@ -79,16 +79,13 @@ export default function ScheduleForm({
 			timeOut: new Date(
 				ScheduleSub?.Schedule.endTime ?? new Date().setHours(0, 0, 0, 0)
 			),
-			lunchTimeIn: new Date(
-				ScheduleSub?.Schedule.lunchStartTime ?? new Date().setHours(0, 0, 0, 0)
-			),
-			lunchTimeOut: new Date(
-				ScheduleSub?.Schedule.lunchEndTime ?? new Date().setHours(0, 0, 0, 0)
-			),
+
 			allowedOverTime: ScheduleSub?.Schedule.allowedOvertime ?? false,
 			scheduleType: ScheduleSub?.Schedule.scheduleType,
 		},
 	});
+
+	const watchedType =form.watch("scheduleType")
 
 	const queryClient = useQueryClient();
 
@@ -228,76 +225,45 @@ export default function ScheduleForm({
 					</div>
 
 					{/* time */}
-					<FormField
-						control={form.control}
-						name="timeIn"
-						render={({ field }) => (
-							<FormItem className="border border-border border-solid rounded-md p-3">
-								<FormLabel>Time-In Start</FormLabel>
-								<FormControl>
-									<TimePicker
-										date={field.value}
-										setDate={field.onChange}
-									></TimePicker>
-								</FormControl>
-								<FormDescription>*In military time</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="timeOut"
-						render={({ field }) => (
-							<FormItem className="border border-border border-solid rounded-md p-3">
-								<FormLabel>Time-Out Start</FormLabel>
-								<FormControl>
-									<TimePicker
-										date={field.value}
-										setDate={field.onChange}
-									></TimePicker>
-								</FormControl>
-								<FormDescription>*In military Time</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					{/* lunch */}
-					<FormField
-						control={form.control}
-						name="lunchTimeIn"
-						render={({ field }) => (
-							<FormItem className="border border-border border-solid rounded-md p-3">
-								<FormLabel>Lunchbreak Start</FormLabel>
-								<FormControl>
-									<TimePicker
-										date={field.value}
-										setDate={field.onChange}
-									></TimePicker>
-								</FormControl>
-								<FormDescription>*In military Time</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="lunchTimeOut"
-						render={({ field }) => (
-							<FormItem className="border border-border border-solid rounded-md p-3">
-								<FormLabel>Lunchbreak End</FormLabel>
-								<FormControl>
-									<TimePicker
-										date={field.value}
-										setDate={field.onChange}
-									></TimePicker>
-								</FormControl>
-								<FormDescription>In military Time</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+					{watchedType === 'FIXED' && (<>
+						<FormField
+							control={form.control}
+							name="timeIn"
+							render={({ field }) => (
+								<FormItem className="border border-border border-solid rounded-md p-3">
+									<FormLabel>Time-In Start</FormLabel>
+									<FormControl>
+										<TimePicker
+											date={field.value}
+											setDate={field.onChange}
+										></TimePicker>
+									</FormControl>
+									<FormDescription>*In military time</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="timeOut"
+							render={({ field }) => (
+								<FormItem className="border border-border border-solid rounded-md p-3">
+									<FormLabel>Time-Out Start</FormLabel>
+									<FormControl>
+										<TimePicker
+											date={field.value}
+											setDate={field.onChange}
+										></TimePicker>
+									</FormControl>
+									<FormDescription>*In military Time</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
+
+
+					</>)}
 					<FormField
 						control={form.control}
 						name="allowedOverTime"

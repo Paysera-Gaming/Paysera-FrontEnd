@@ -6,8 +6,6 @@ export type TInputForm = {
 	role: string;
 	timeIn: Date;
 	timeOut: Date;
-	lunchTimeIn: Date;
-	lunchTimeOut: Date;
 	allowedOverTime: boolean;
 	scheduleType: 'FIXED' | 'SUPER_FLEXI' | 'FLEXI';
 };
@@ -27,8 +25,9 @@ export type TDepartmentSchedules = {
 		endTime: string;
 		limitWorkHoursDay: number;
 		allowedOvertime: boolean;
-		lunchStartTime: string;
-		lunchEndTime: string;
+		// TODO adjust table now that lunch is gone
+		// lunchStartTime: string;
+		// lunchEndTime: string;
 		updatedAt: string;
 		createdAt: string;
 	};
@@ -74,8 +73,6 @@ export async function createSchedule(
 			endTime: schedule.timeOut,
 			limitWorkHoursDay: totalHours,
 			allowedOvertime: schedule.allowedOverTime,
-			lunchStartTime: schedule.lunchTimeIn,
-			lunchEndTime: schedule.lunchTimeOut,
 		}
 	);
 
@@ -100,8 +97,6 @@ export async function updateSchedule(
 			endTime: schedule.timeOut,
 			limitWorkHoursDay: totalHours,
 			allowedOvertime: schedule.allowedOverTime,
-			lunchStartTime: schedule.lunchTimeIn,
-			lunchEndTime: schedule.lunchTimeOut,
 		}
 	);
 	return response.status;
