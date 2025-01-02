@@ -9,7 +9,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/ThemeProvider/ThemeProvider';
 import ProtectedRoute from './lib/AccessLevelUtils';
+// component notif
+import ConfirmationDialog from "@/lib/ConfirmationDialog.tsx";
 
+// pages
 import LoginPage from './pages/Login/LoginPage';
 import EmployeePage from './pages/Employee/EmployeePage';
 import EmployeeDashboardPage from './pages/Employee/Dashboard/DashboardPage';
@@ -57,7 +60,10 @@ const router = createBrowserRouter([
 
 		element: (
 			// <ProtectedRoute page={<TeamLeadPage />} requiredLevel="TEAM_LEADER" />
-			<TeamLeadPage />
+			<>
+				<TeamLeadPage />
+				<ConfirmationDialog />
+			</>
 		),
 		children: [
 			{ index: true, loader: async () => redirect('/teamlead/dashboard') },
