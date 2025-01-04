@@ -12,7 +12,7 @@ import {
 import useConfirmationStore from "@/stores/GlobalAlertStore.ts";
 
 const ConfirmationDialog = () => {
-    const { open, title, description, cancelLabel, actionLabel, onAction, closeConfirmation } = useConfirmationStore();
+    const { open, title, description, cancelLabel, actionLabel, onAction, closeConfirmation,onCancel } = useConfirmationStore();
 
     return (
         <AlertDialog open={open} onOpenChange={closeConfirmation}>
@@ -24,7 +24,10 @@ const ConfirmationDialog = () => {
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel>{cancelLabel}</AlertDialogCancel>
+                    <AlertDialogCancel onClick={()=>{
+                        closeConfirmation();
+                        onCancel();
+                    }}>{cancelLabel}</AlertDialogCancel>
                     <AlertDialogAction onClick={onAction}>{actionLabel}</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
