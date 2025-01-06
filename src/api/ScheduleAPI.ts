@@ -25,7 +25,6 @@ export type TDepartmentSchedules = {
 		endTime: string;
 		limitWorkHoursDay: number;
 		allowedOvertime: boolean;
-		// TODO adjust table now that lunch is gone
 		// lunchStartTime: string;
 		// lunchEndTime: string;
 		updatedAt: string;

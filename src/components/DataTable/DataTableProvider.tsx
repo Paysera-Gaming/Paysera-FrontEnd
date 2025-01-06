@@ -168,7 +168,7 @@ export function DataTable<TData, TValue>({
 			<div className="w-full flex items-center justify-end space-x-2 mt-5">
 				<div className="flex w-[100px] items-center justify-center text-sm font-medium">
 					Page {table.getState().pagination.pageIndex + 1} of{' '}
-					{table.getPageCount()}
+					{table.getPageCount() > 0 || 1}
 				</div>
 				<Button
 					variant="outline"
