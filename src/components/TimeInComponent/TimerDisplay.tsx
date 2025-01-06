@@ -1,16 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { TimerIcon, UtensilsCrossed } from 'lucide-react';
+import { AlarmClockPlus, TimerIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useUserStore } from '@/stores/userStore';
 import { getTodaysAttendance } from '@/api/ClockInAPI';
 import { Badge } from '../ui/badge';
 
-type UserStatus = 'BREAK' | 'DONE' | 'ONGOING';
-
-export interface TimerProps {
-	formAction: 'Clock-In' | 'Lunch-In' | 'Lunch-Out' | 'Clock-Out' | 'None';
-}
+type UserStatus = 'OVERTIME' | 'DONE' | 'ONGOING';
 
 function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
 	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
@@ -20,7 +16,7 @@ function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
 
 function IconVariant(status: UserStatus) {
 	switch (status) {
-		case 'ONGOING' || 'BREAK':
+		case 'ONGOING':
 			return (
 				<TimerIcon
 					size={`1.5rem`}
@@ -28,12 +24,12 @@ function IconVariant(status: UserStatus) {
 				></TimerIcon>
 			);
 
-		case 'BREAK':
+		case 'OVERTIME':
 			return (
-				<UtensilsCrossed
+				<AlarmClockPlus
 					size={`1.5rem`}
 					className="mb-1 text-primary-foreground stroke-[2px]"
-				></UtensilsCrossed>
+				></AlarmClockPlus>
 			);
 		default:
 			return (
@@ -50,8 +46,8 @@ function statusVariant(status: UserStatus) {
 		case 'ONGOING':
 			return 'Online';
 
-		case 'BREAK':
-			return 'Lunch';
+		case 'OVERTIME':
+			return 'overtime';
 
 		case 'DONE':
 			return 'Offline';
@@ -94,29 +90,29 @@ export default function TimerDisplay() {
 				return;
 			}
 
-			if (data.lunchTimeOut) {
-				convertedToSecond = convertDateToSeconds(
-					new Date(data.timeIn),
-					new Date()
-				);
-				setTime(convertedToSecond);
-				return;
-			}
+			// if (data.lunchTimeOut) {
+			// 	convertedToSecond = convertDateToSeconds(
+			// 		new Date(data.timeIn),
+			// 		new Date()
+			// 	);
+			// 	setTime(convertedToSecond);
+			// 	return;
+			// }
 			// if lunchTimeOut is present but timeOut is not
 			// then we will use the lunchTimeOut to calculate the time
-			if (data.lunchTimeIn) {
-				convertedToSecond = convertDateToSeconds(
-					new Date(data.timeIn),
-					new Date(data.lunchTimeIn)
-				);
-				setTime(convertedToSecond);
-				return;
-			}
+			// if (data.lunchTimeIn) {
+			// 	convertedToSecond = convertDateToSeconds(
+			// 		new Date(data.timeIn),
+			// 		new Date(data.lunchTimeIn)
+			// 	);
+			// 	setTime(convertedToSecond);
+			// 	return;
+			// }
 
-			convertedToSecond = convertDateToSeconds(
-				new Date(data.timeIn),
-				new Date()
-			);
+			// convertedToSecond = convertDateToSeconds(
+			// 	new Date(data.timeIn),
+			// 	new Date()
+			// );
 			setTime(convertedToSecond);
 		}
 	}, [isSuccess, data]);
@@ -124,7 +120,10 @@ export default function TimerDisplay() {
 	useEffect(() => {
 		console.log(data?.status);
 
-		if (isSuccess && (data.status === 'ONGOING' || data.status === 'BREAK')) {
+		if (
+			isSuccess &&
+			(data.status === 'ONGOING' || data.status === 'OVERTIME')
+		) {
 			// starts the time
 			timerIntervalId.current = setInterval(() => {
 				setTime((time) => time + 1);
@@ -155,7 +154,7 @@ export default function TimerDisplay() {
 						className={cn('inline', {
 							'bg-primary outline-ring': data.status === 'ONGOING',
 							'bg-destructive outline-destructive': data.status != 'ONGOING',
-							'bg-orange-500 outline-orange-500': data.status == 'BREAK',
+							'bg-violet-500 outline-violet-500': data.status == 'OVERTIME',
 						})}
 					>
 						{statusVariant(data.status as UserStatus)}
@@ -167,7 +166,7 @@ export default function TimerDisplay() {
 						{
 							'bg-primary outline-ring': data.status === 'ONGOING',
 							'bg-destructive outline-destructive': data.status != 'ONGOING',
-							'bg-orange-500 outline-orange-500': data.status == 'BREAK',
+							'bg-violet-500 outline-violet-500': data.status == 'OVERTIME',
 						}
 					)}
 				>
