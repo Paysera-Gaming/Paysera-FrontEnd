@@ -1,4 +1,4 @@
-import { Home, Users, Calendar, Briefcase, CheckSquare } from 'lucide-react'; // Import necessary icons
+import { Home, Users, Calendar, Briefcase, CheckSquare, Bell } from 'lucide-react'; // Import necessary icons
 import { Icons } from '@/icons/Icon';
 // router
 import { NavLink } from 'react-router-dom';
@@ -17,7 +17,8 @@ interface RouteItemProps {
 function RouteItems({ links }: RouteItemProps): ReactNode {
     const iconList = [
         <Home key="home" />,
-        <Calendar key="holiday" />, // Use Calendar icon for holidays
+        <Bell key="announcement" />, // Use Bell icon for announcements
+        <Calendar key="holidays" />, // Use Calendar icon for holidays
         <CheckSquare key="attendance" />, // Use CheckSquare icon for attendance
         <Users key="employee" />, // Use Users icon for employees
         <Briefcase key="departments" />, // Use Briefcase icon for departments
@@ -72,7 +73,8 @@ function ProfileHeader() {
 export default function SuperAdminNavigation() {
     const routeLinks: string[] = [
         'dashboard',
-        'holidays', // Ensure this matches the route path in main.tsx
+        'announcement',
+        'holidays',
         'attendance',
         'employee',
         'departments',
