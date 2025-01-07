@@ -6,15 +6,20 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label"; // Import Label component
+import { Label } from "@/components/ui/label";
 import { toast } from 'sonner';
-import { PlusIcon, Edit2, Trash2 } from 'lucide-react';
+import { PlusIcon, Edit2, Trash2, CalendarIcon } from 'lucide-react';
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { format } from "date-fns"
+import { cn } from "@/lib/utils"
 
 interface Announcement {
   id: number;
   title: string;
   body: string;
-  limitDateDisplay: string;
+  startDate: Date;
+  endDate: Date;
 }
 
 const fetchAnnouncements = async (): Promise<Announcement[]> => {
@@ -104,7 +109,8 @@ const AnnouncementList: React.FC = () => {
               <TableRow>
                 <TableHead>Title</TableHead>
                 <TableHead>Body</TableHead>
-                <TableHead>Limit Date</TableHead>
+                <TableHead>Start Date</TableHead>
+                <TableHead>End Date</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -113,7 +119,8 @@ const AnnouncementList: React.FC = () => {
                 <TableRow key={announcement.id}>
                   <TableCell>{announcement.title}</TableCell>
                   <TableCell>{announcement.body}</TableCell>
-                  <TableCell>{announcement.limitDateDisplay}</TableCell>
+                  <TableCell>{format(new Date(announcement.startDate), "PPP")}</TableCell>
+                  <TableCell>{format(new Date(announcement.endDate), "PPP")}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Button variant="outline" size="sm" onClick={() => {
@@ -196,12 +203,13 @@ interface AnnouncementFormProps {
 const AnnouncementForm: React.FC<AnnouncementFormProps> = ({ announcement, onSubmit, onCancel }) => {
   const [title, setTitle] = useState(announcement?.title || '');
   const [body, setBody] = useState(announcement?.body || '');
-  const [limitDateDisplay, setLimitDateDisplay] = useState(announcement?.limitDateDisplay || '');
+  const [startDate, setStartDate] = useState<Date | undefined>(announcement?.startDate ? new Date(announcement.startDate) : undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(announcement?.endDate ? new Date(announcement.endDate) : undefined);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (title && body && limitDateDisplay) {
-      onSubmit({ title, body, limitDateDisplay });
+    if (title && body && startDate && endDate) {
+      onSubmit({ title, body, startDate, endDate });
     }
   };
 
@@ -216,8 +224,54 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({ announcement, onSub
         <Input id="body" value={body} onChange={(e) => setBody(e.target.value)} required />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="limitDateDisplay">Limit Date</Label>
-        <Input id="limitDateDisplay" value={limitDateDisplay} onChange={(e) => setLimitDateDisplay(e.target.value)} required />
+        <Label>Start Date</Label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                !startDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {startDate ? format(startDate, "PPP") : <span>Pick a date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={startDate}
+              onSelect={setStartDate}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+      <div className="space-y-2">
+        <Label>End Date</Label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                !endDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {endDate ? format(endDate, "PPP") : <span>Pick a date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={endDate}
+              onSelect={setEndDate}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
       </div>
       <div className="flex justify-end gap-2">
         <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
@@ -228,3 +282,4 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({ announcement, onSub
 };
 
 export default AnnouncementList;
+
