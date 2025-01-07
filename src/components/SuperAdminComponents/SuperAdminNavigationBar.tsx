@@ -83,7 +83,7 @@ export default function SuperAdminNavigation() {
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
-            <nav className="bg-card border-solid border-border border rounded-md h-[calc(100vh-40px)] w-[200px] p-5 flex flex-col fixed top-5 left-5 z-50">
+            <nav className="bg-card border-solid border-border border rounded-md h-[calc(100vh-40px)] w-[250px] p-5 flex flex-col fixed top-5 left-5 z-50">
                 {/* Profile header at the top */}
                 <ProfileHeader />
 
@@ -102,7 +102,7 @@ export default function SuperAdminNavigation() {
             </nav>
 
             {/* Main Content Area */}
-            <main className="flex-1 ml-[200px] p-1 bg-background">
+            <main className="flex-1 ml-[250px] p-1 bg-background">
                 {/* This is where the routes or content will be rendered */}
                 {/* Add your page content here */}
             </main>
