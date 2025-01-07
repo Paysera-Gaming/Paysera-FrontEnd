@@ -13,6 +13,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
+import { Textarea } from "@/components/ui/textarea"; // Import the Textarea component
 
 interface Announcement {
   id: number;
@@ -217,11 +218,11 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({ announcement, onSub
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="title">Title</Label>
-        <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <Textarea id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
       </div>
       <div className="space-y-2">
         <Label htmlFor="body">Body</Label>
-        <Input id="body" value={body} onChange={(e) => setBody(e.target.value)} required />
+        <Textarea id="body" value={body} onChange={(e) => setBody(e.target.value)} required />
       </div>
       <div className="space-y-2">
         <Label>Start Date</Label>
@@ -282,4 +283,3 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({ announcement, onSub
 };
 
 export default AnnouncementList;
-
