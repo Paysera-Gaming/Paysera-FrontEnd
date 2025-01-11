@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 export default function NoticeBoardCard() {
 	return (
-		<Card>
+		<Card className="col-span-3 row-span-3">
 			<CardHeader>
 				<CardTitle>Notice Board</CardTitle>
 			</CardHeader>

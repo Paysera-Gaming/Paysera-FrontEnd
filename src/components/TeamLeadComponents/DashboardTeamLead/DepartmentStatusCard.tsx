@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 export default function DepartmentStatusCard() {
 	return (
 		<Card>
-			<CardHeader>
+			<CardHeader className="pb-3">
 				<CardTitle>Department Status</CardTitle>
 			</CardHeader>
 			<CardContent>
