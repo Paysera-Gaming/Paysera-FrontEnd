@@ -8,7 +8,7 @@ export default function HolidayList() {
 				<CardTitle>Upcoming Holidays</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<ul>
+				<ul className="list-disc list-inside">
 					<li>01/12 - National Gaming Day</li>
 					<li>01/12 - National Gaming Day</li>
 					<li>01/12 - National Gaming Day</li>
