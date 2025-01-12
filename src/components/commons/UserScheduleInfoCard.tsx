@@ -1,7 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUserStore } from '@/stores/userStore';
+import { Calendar } from 'lucide-react';
 
-export default function UserScheduleInfoCard() {
+export default function UserScheduleInfoCard({
+	className,
+}: {
+	className: string;
+}) {
 	// const userInfo = useUserStore.getState()?.user;
 	// const scheduleBlock =
 	// 	userInfo!.schedule?.Schedule.startTime +
@@ -13,9 +18,10 @@ export default function UserScheduleInfoCard() {
 	// }
 
 	return (
-		<Card className="col-span-1 row-span-2">
-			<CardHeader>
+		<Card className={className}>
+			<CardHeader className="flex-row items-center justify-between w-full">
 				<CardTitle>Schedule Info</CardTitle>
+				<Calendar></Calendar>
 			</CardHeader>
 			<CardContent>
 				{/* <ul>

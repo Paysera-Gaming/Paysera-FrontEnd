@@ -15,8 +15,8 @@ export default function Dashboard() {
 		<div className=" h-full w-full border-border border-solid border p-5 rounded-md">
 			<div className=" h-[750px] w-full  grid grid-flow-col grid-rows-6  gap-3 ">
 				<DepartmentStatusCard></DepartmentStatusCard>
-				<UserInfoCard></UserInfoCard>
-				<UserScheduleInfoCard></UserScheduleInfoCard>
+				<UserInfoCard className="row-span-2"></UserInfoCard>
+				<UserScheduleInfoCard className="col-span-1 row-span-2"></UserScheduleInfoCard>
 				<UserManualCard></UserManualCard>
 				{/*  */}
 				<NoticeBoardCard></NoticeBoardCard>

@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUserStore } from '@/stores/userStore';
+import { User } from 'lucide-react';
 
-export default function UserInfoCard() {
+export default function UserInfoCard({ className }: { className: string }) {
 	const userInfo = useUserStore.getState()?.user || {
 		lastName: 'Doe',
 		firstName: 'John',
@@ -16,9 +17,10 @@ export default function UserInfoCard() {
 	}
 
 	return (
-		<Card className="row-span-2">
-			<CardHeader>
+		<Card className={className}>
+			<CardHeader className="flex-row items-center justify-between w-full">
 				<CardTitle>Employee Info</CardTitle>
+				<User></User>
 			</CardHeader>
 			<CardContent>
 				<ul>

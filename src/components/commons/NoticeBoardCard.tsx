@@ -1,10 +1,12 @@
+import { Presentation } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 export default function NoticeBoardCard() {
 	return (
 		<Card className="col-span-3 row-span-3">
-			<CardHeader>
+			<CardHeader className="flex-row items-center justify-between w-full">
 				<CardTitle>Notice Board</CardTitle>
+				<Presentation></Presentation>
 			</CardHeader>
 			<CardContent>
 				<ul>
