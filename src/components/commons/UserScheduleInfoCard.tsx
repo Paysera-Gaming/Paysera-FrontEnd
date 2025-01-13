@@ -1,21 +1,50 @@
+import { TDepartmentSchedules } from '@/api/ScheduleAPI';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUserStore } from '@/stores/userStore';
 import { Calendar } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+function ScheduleList({
+	schedule,
+}: {
+	schedule: TDepartmentSchedules | undefined;
+}) {
+	if (schedule?.Schedule != undefined) {
+		return (
+			<ul>
+				<li>Schedule Type: {schedule.name}</li>
+				<li>Schedule Info: {schedule.Schedule.scheduleType}</li>
+				<li>
+					Schedule Block:{' '}
+					{schedule.Schedule.startTime + ' - ' + schedule.Schedule.endTime}
+				</li>
+				<li>
+					Personal Schedule Block:{' '}
+					{schedule.Schedule.startTime + ' - ' + schedule.Schedule.endTime}
+				</li>
+				<li>Last Schedule Update: {schedule.Schedule.updatedAt}</li>
+			</ul>
+		);
+	} else {
+		return <div>Currently No Schedule Assigned</div>;
+	}
+}
 
 export default function UserScheduleInfoCard({
 	className,
 }: {
 	className: string;
 }) {
-	// const userInfo = useUserStore.getState()?.user;
-	// const scheduleBlock =
-	// 	userInfo!.schedule?.Schedule.startTime +
-	// 		' - ' +
-	// 		userInfo!.schedule?.Schedule.endTime || '8:00am - 5:00pm';
-
-	// if (!userInfo) {
-	// 	return <p>An Error has Occured</p>;
-	// }
+	const [getUserInfo, setUserInfo] = useState<TDepartmentSchedules | undefined>(
+		undefined
+	);
+	useEffect(() => {
+		if (useUserStore.getState()?.user?.schedule) {
+			setUserInfo(useUserStore.getState()?.user?.schedule);
+		} else {
+			setUserInfo(undefined);
+		}
+	}, [getUserInfo]);
 
 	return (
 		<Card className={className}>
@@ -24,29 +53,7 @@ export default function UserScheduleInfoCard({
 				<Calendar></Calendar>
 			</CardHeader>
 			<CardContent>
-				{/* <ul>
-					<li>Schedule Type: {userInfo?.schedule?.name || 'My Schedule'}</li>
-					<li>
-						Schedule Info:{userInfo?.schedule?.Schedule.scheduleType || 'FIXEE'}
-					</li>
-					<li>Schedule Block: {scheduleBlock || '8:00am - 5:00pm'}</li>
-					<li>
-						Personal Schedule Block:
-						{scheduleBlock || 'Saturday, 8:00am - 5:00pm'}
-					</li>
-					<li>
-						Last Schedule Update:{' '}
-						{userInfo?.schedule?.Schedule.updatedAt || '10:00pm'}
-					</li>
-				</ul> */}
-
-				<ul>
-					<li>Schedule Type: My Schedule</li>
-					<li>Schedule Info:FIXEE</li>
-					<li>Schedule Block: 8:00am - 5:00pm</li>
-					<li>Personal Schedule Block: Saturday, 8:00am - 5:00pm</li>
-					<li>Last Schedule Update: 10:00pm</li>
-				</ul>
+				<ScheduleList schedule={getUserInfo}></ScheduleList>
 			</CardContent>
 		</Card>
 	);

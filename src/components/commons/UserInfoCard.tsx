@@ -16,7 +16,7 @@ export default function UserInfoCard({ className }: { className: string }) {
 		firstName: 'John',
 		accessLevel: 'Employee',
 		departmentName: 'DOJ',
-		role: 'gamer',
+		role: 'NOT WORKING',
 	};
 	const userFullName = userInfo!.lastName + ' ' + userInfo!.firstName;
 
