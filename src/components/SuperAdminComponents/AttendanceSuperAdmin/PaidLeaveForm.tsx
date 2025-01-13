@@ -41,8 +41,8 @@ const PaidLeaveForm: React.FC = () => {
       await axiosInstance.post("/api/attendance", payload);
     },
     onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ['attendanceData'] });
+      // Invalidate and refetch the attendance list
+      queryClient.invalidateQueries({ queryKey: ['attendanceList'] });
       toast.success("Paid leave submitted successfully!");
       setIsDialogOpen(false); // Close the dialog
     },
