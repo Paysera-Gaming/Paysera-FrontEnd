@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input"; // Add this import
 import { Employee } from "../EmployeeSuperAdmin/types";
 import { DatePickerDemo } from "./DatePickerDemo"; // Ensure the correct path
 import { toast } from 'sonner';
@@ -30,9 +30,11 @@ const PaidLeaveForm: React.FC = () => {
     queryFn: fetchEmployees,
   });
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [scheduleType, setScheduleType] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   const mutation = useMutation({
     mutationFn: async (payload: PaidLeavePayload) => {
@@ -81,6 +83,10 @@ const PaidLeaveForm: React.FC = () => {
     mutation.mutate(payload);
   };
 
+  const filteredEmployees = employees.filter(employee =>
+    `${employee.firstName} ${employee.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -100,19 +106,35 @@ const PaidLeaveForm: React.FC = () => {
                 <Label htmlFor="employee" className="text-right text-sm font-medium text-gray-700 dark:text-gray-300">
                   Employee
                 </Label>
-                <select
-                  id="employee"
-                  className="col-span-3 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-transparent dark:border-gray-600 dark:text-gray-300"
-                  value={selectedEmployee}
-                  onChange={(e) => setSelectedEmployee(e.target.value)}
-                >
-                  <option value="" disabled className="dark:bg-gray-700 dark:text-gray-300">Select an employee</option>
-                  {employees.map((employee) => (
-                    <option key={employee.id} value={employee.username} className="dark:bg-gray-700 dark:text-gray-300">
-                      {employee.firstName} {employee.lastName}
-                    </option>
-                  ))}
-                </select>
+                <div className="col-span-3 relative">
+                  <Input
+                    type="text"
+                    placeholder="Search employee..."
+                    value={searchTerm}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setSearchTerm(e.target.value);
+                    }}
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="mb-2"
+                  />
+                  {isDropdownOpen && (
+                    <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto dark:bg-gray-700 dark:border-gray-600">
+                      {filteredEmployees.map((employee) => (
+                        <div
+                          key={employee.id}
+                          className={`p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 ${selectedEmployee === employee.username ? 'bg-gray-200 dark:bg-gray-600' : ''}`}
+                          onMouseDown={() => {
+                            setSelectedEmployee(employee.username);
+                            setSearchTerm(`${employee.firstName} ${employee.lastName}`);
+                            setIsDropdownOpen(false);
+                          }}
+                        >
+                          {employee.firstName} {employee.lastName}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="leaveDates" className="text-right text-sm font-medium text-gray-700 dark:text-gray-300">
