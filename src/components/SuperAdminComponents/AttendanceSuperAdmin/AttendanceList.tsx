@@ -19,32 +19,14 @@ import {
 import { useFiltersAndHandlers } from './filtersAndHandlers';
 import { calculateCounts } from './countsCalculation';
 import { columns } from './columnsDefinition';
-import { Skeleton } from '@/components/ui/skeleton';
-
-const SkeletonCard: React.FC = () => {
-  return (
-    <div className="flex flex-col space-y-3 p-4 border rounded-lg shadow-sm bg-white dark:bg-gray-800">
-      <Skeleton className="h-6 w-1/3 rounded bg-gray-200 dark:bg-gray-700" />
-      <Skeleton className="h-4 w-1/2 rounded bg-gray-200 dark:bg-gray-700" />
-      <Skeleton className="h-4 w-1/4 rounded bg-gray-200 dark:bg-gray-700" />
-      <div className="flex space-x-2 mt-4">
-        <Skeleton className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700" />
-        <Skeleton className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700" />
-        <Skeleton className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700" />
-      </div>
-    </div>
-  );
-};
 
 const AttendanceList: React.FC = () => {
   const {
     data: attendanceList = [],
-    isLoading,
-    error,
   }: UseQueryResult<Attendance[], Error> = useQuery({
     queryKey: ['attendanceList'],
     queryFn: getAttendanceList,
-    refetchInterval: 5000,
+    refetchInterval: false, // Disable polling
   });
 
   const {
@@ -72,26 +54,6 @@ const AttendanceList: React.FC = () => {
     SUPER_FLEXICount = 0,
     flexiCount = 0,
   } = calculateCounts(filteredAttendanceList);
-
-  if (isLoading || (error && !Array.isArray(attendanceList))) {
-    return (
-      <div className="w-full">
-        <div className="flex justify-between items-center mb-4">
-          <SkeletonCard />
-          <SkeletonCard />
-          <SkeletonCard />
-        </div>
-        <div className="mb-4">
-          <Skeleton className="h-10 w-full rounded bg-gray-200 dark:bg-gray-700" />
-        </div>
-        <div className="space-y-4">
-          <Skeleton className="h-6 w-1/4 rounded bg-gray-200 dark:bg-gray-700" />
-          <Skeleton className="h-6 w-1/2 rounded bg-gray-200 dark:bg-gray-700" />
-          <Skeleton className="h-6 w-1/3 rounded bg-gray-200 dark:bg-gray-700" />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full">

@@ -43,7 +43,7 @@ export default function AttendanceSummaryCards({
                         <div className="text-xs">
                             <p>ONGOING: {overallCounts.ongoing}</p>
                             <p>DONE: {overallCounts.done}</p>
-                            <p>PAID_LEAVE: {overallCounts.paidLeave}</p>
+                            <p>PAID LEAVE: {overallCounts.paidLeave}</p>
                         </div>
                     </div>
                 </CardContent>
@@ -64,7 +64,7 @@ export default function AttendanceSummaryCards({
                         <div className="text-xs">
                             <p>ONGOING: {fixedCounts.ongoing}</p>
                             <p>DONE: {fixedCounts.done}</p>
-                            <p>PAID_LEAVE: {fixedCounts.paidLeave}</p>
+                            <p>PAID LEAVE: {fixedCounts.paidLeave}</p>
                         </div>
                     </div>
                 </CardContent>
@@ -85,7 +85,7 @@ export default function AttendanceSummaryCards({
                         <div className="text-xs">
                             <p>ONGOING: {SUPER_FLEXICounts.ongoing}</p>
                             <p>DONE: {SUPER_FLEXICounts.done}</p>
-                            <p>PAID_LEAVE: {SUPER_FLEXICounts.paidLeave}</p>
+                            <p>PAID LEAVE: {SUPER_FLEXICounts.paidLeave}</p>
                         </div>
                     </div>
                 </CardContent>
@@ -106,7 +106,7 @@ export default function AttendanceSummaryCards({
                         <div className="text-xs">
                             <p>ONGOING: {flexiCounts.ongoing}</p>
                             <p>DONE: {flexiCounts.done}</p>
-                            <p>PAID_LEAVE: {flexiCounts.paidLeave}</p>
+                            <p>PAID LEAVE: {flexiCounts.paidLeave}</p>
                         </div>
                     </div>
                 </CardContent>

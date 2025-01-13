@@ -21,9 +21,21 @@ interface Holiday {
   updatedAt: Date;
 }
 
+interface HolidayApiResponse {
+  id: number;
+  name: string;
+  month: string;
+  day: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const fetchHolidays = async (): Promise<Holiday[]> => {
   const response = await axiosInstance.get('/api/holiday');
-  return response.data;
+  return response.data.map((holiday: HolidayApiResponse) => ({
+    ...holiday,
+    date: new Date(`${holiday.month} ${holiday.day}, ${new Date().getFullYear()}`),
+  }));
 };
 
 const HolidayList: React.FC = () => {
@@ -40,7 +52,12 @@ const HolidayList: React.FC = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const addHolidayMutation = useMutation({
-    mutationFn: (newHoliday: Omit<Holiday, 'id' | 'createdAt' | 'updatedAt'>) => axiosInstance.post('/api/holiday', newHoliday),
+    mutationFn: (newHoliday: Omit<Holiday, 'id' | 'createdAt' | 'updatedAt'>) => {
+      const { name, date } = newHoliday;
+      const month = date.toLocaleString('default', { month: 'long' }).toUpperCase();
+      const day = date.getDate();
+      return axiosInstance.post('/api/holiday', { name, month, day });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['holiday'] });
       toast.success('Holiday added successfully!');
@@ -48,7 +65,12 @@ const HolidayList: React.FC = () => {
   });
 
   const editHolidayMutation = useMutation({
-    mutationFn: (updatedHoliday: Omit<Holiday, 'createdAt' | 'updatedAt'>) => axiosInstance.put(`/api/holiday/${updatedHoliday.id}`, updatedHoliday),
+    mutationFn: (updatedHoliday: Omit<Holiday, 'createdAt' | 'updatedAt'>) => {
+      const { id, name, date } = updatedHoliday;
+      const month = date.toLocaleString('default', { month: 'long' }).toUpperCase();
+      const day = date.getDate();
+      return axiosInstance.put(`/api/holiday/${id}`, { name, month, day });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['holiday'] });
       toast.success('Holiday updated successfully!');

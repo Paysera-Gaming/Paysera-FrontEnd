@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { flexRender, useReactTable, ColumnDef, getCoreRowModel } from '@tanstack/react-table';
+import { flexRender, useReactTable, ColumnDef, getCoreRowModel, Cell } from '@tanstack/react-table';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Attendance } from './types';
 import { format } from 'date-fns';
@@ -52,7 +52,7 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
     setCurrentPage(pageNumber);
   };
 
-  const renderCellValue = (cell: any) => {
+  const renderCellValue = (cell: Cell<Attendance, unknown>) => {
     const value = cell.getValue();
     if (value === null || value === undefined) {
       return '';
@@ -61,7 +61,7 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
       return '0.00';
     }
     if (cell.column.id === 'timeIn' || cell.column.id === 'lunchTimeIn' || cell.column.id === 'lunchTimeOut' || cell.column.id === 'timeOut') {
-      return formatTime(new Date(value));
+      return typeof value === 'string' || typeof value === 'number' ? formatTime(new Date(value)) : '';
     }
     return typeof value === 'number' ? formatNumber(value) : flexRender(cell.column.columnDef.cell, cell.getContext());
   };

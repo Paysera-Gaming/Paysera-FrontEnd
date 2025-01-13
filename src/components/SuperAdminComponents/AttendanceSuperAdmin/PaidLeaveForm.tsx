@@ -16,6 +16,7 @@ import { Employee } from "../EmployeeSuperAdmin/types";
 import { DatePickerDemo } from "./DatePickerDemo"; // Ensure the correct path
 import { toast } from 'sonner';
 import { axiosInstance } from "@/api";
+import { PaidLeavePayload } from "./types"; // Ensure the correct path
 
 const fetchEmployees = async (): Promise<Employee[]> => {
   const response = await axiosInstance.get("/api/employee");
@@ -34,7 +35,7 @@ const PaidLeaveForm: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const mutation = useMutation({
-    mutationFn: async (payload: any) => {
+    mutationFn: async (payload: PaidLeavePayload) => {
       await axiosInstance.post("/api/attendance", payload);
     },
     onSuccess: () => {
@@ -62,11 +63,8 @@ const PaidLeaveForm: React.FC = () => {
       return;
     }
   
-    // Remove the unused date variable
-    // const date = selectedDate.toISOString().split('T')[0]; // Not used
-  
     // Create the timestamps correctly
-    const payload = {
+    const payload: PaidLeavePayload = {
       employeeId: employee.id,
       date: selectedDate.toISOString(),
       status: "PAID_LEAVE",
@@ -82,8 +80,6 @@ const PaidLeaveForm: React.FC = () => {
   
     mutation.mutate(payload);
   };
-  
-  
 
   return (
     <>
