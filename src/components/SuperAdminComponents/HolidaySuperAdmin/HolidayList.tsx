@@ -4,14 +4,11 @@ import { axiosInstance } from '@/api';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
 import { toast } from 'sonner';
-import { format } from 'date-fns';
-import { CalendarIcon, PlusIcon, Edit2, Trash2 } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
+import HolidayForm from './HolidayForm';
+import HolidayTable from './HolidayTable';
 
 interface Holiday {
   id: number;
@@ -125,46 +122,17 @@ const HolidayList: React.FC = () => {
 
       <Card>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredHolidays.map((holiday) => (
-                <TableRow key={holiday.id}>
-                  <TableCell>{holiday.name}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center">
-                      <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground" />
-                      {format(new Date(holiday.date), 'MMM d, yyyy')}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={() => {
-                        setSelectedHoliday(holiday);
-                        setIsEditOpen(true);
-                      }}>
-                        <Edit2 size={16} className="mr-2" />
-                        Edit
-                      </Button>
-                      <Button variant="outline" size="sm" onClick={() => {
-                        setSelectedHoliday(holiday);
-                        setIsDeleteDialogOpen(true);
-                      }}>
-                        <Trash2 size={16} className="mr-2" />
-                        Delete
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <HolidayTable 
+            holidays={filteredHolidays} 
+            onEdit={(holiday) => {
+              setSelectedHoliday(holiday);
+              setIsEditOpen(true);
+            }} 
+            onDelete={(holiday) => {
+              setSelectedHoliday(holiday);
+              setIsDeleteDialogOpen(true);
+            }} 
+          />
         </CardContent>
       </Card>
 
@@ -213,56 +181,6 @@ const HolidayList: React.FC = () => {
         </DialogContent>
       </Dialog>
     </div>
-  );
-};
-
-interface HolidayFormProps {
-  holiday?: Holiday;
-  onSubmit: (holiday: Omit<Holiday, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  onCancel: () => void;
-}
-
-const HolidayForm: React.FC<HolidayFormProps> = ({ holiday, onSubmit, onCancel }) => {
-  const [name, setName] = useState(holiday?.name || '');
-  const [date, setDate] = useState<Date | undefined>(holiday?.date);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (name && date) {
-      onSubmit({ name, date });
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="name">Holiday Name</Label>
-        <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="date">Date</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="w-full justify-start text-left font-normal">
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, 'PPP') : <span>Pick a date</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
-      <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
-        <Button type="submit">Save</Button>
-      </div>
-    </form>
   );
 };
 
