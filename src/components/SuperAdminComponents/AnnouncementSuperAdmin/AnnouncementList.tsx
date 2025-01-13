@@ -4,11 +4,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { toast } from 'sonner';
 import { PlusIcon, Edit2, Trash2 } from 'lucide-react';
-import AnnouncementForm from './AnnouncementForm';
+import AnnouncementDialogs from './AnnouncementDialogs';
+import AnnouncementPagination from './AnnouncementPagination';
 import { fetchAnnouncements, addAnnouncement, editAnnouncement, deleteAnnouncement } from './api';
 
 interface Announcement {
@@ -167,80 +166,26 @@ const AnnouncementList: React.FC = () => {
       </Card>
 
       {filteredAnnouncements.length > announcementsPerPage && (
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
-              />
-            </PaginationItem>
-            {Array.from({ length: Math.ceil(filteredAnnouncements.length / announcementsPerPage) }, (_, i) => i + 1).map(
-              (page) => (
-                <PaginationItem key={page}>
-                  <PaginationLink 
-                    onClick={() => setCurrentPage(page)}
-                    isActive={currentPage === page}
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              )
-            )}
-            <PaginationItem>
-              <PaginationNext 
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredAnnouncements.length / announcementsPerPage)))}
-                className={currentPage === Math.ceil(filteredAnnouncements.length / announcementsPerPage) ? 'pointer-events-none opacity-50' : ''}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <AnnouncementPagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalAnnouncements={filteredAnnouncements.length}
+          announcementsPerPage={announcementsPerPage}
+        />
       )}
 
-      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Add New Announcement</DialogTitle>
-            <DialogDescription>
-              Enter the details for your new announcement here.
-            </DialogDescription>
-          </DialogHeader>
-          <AnnouncementForm onSubmit={handleFormSubmit} onCancel={() => setIsFormOpen(false)} />
-        </DialogContent>
-      </Dialog>
-
-      {selectedAnnouncement && (
-        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Edit Announcement</DialogTitle>
-              <DialogDescription>
-                Make changes to your announcement here.
-              </DialogDescription>
-            </DialogHeader>
-            <AnnouncementForm 
-              announcement={selectedAnnouncement} 
-              onSubmit={(updatedAnnouncement) => handleEditSubmit({ ...selectedAnnouncement, ...updatedAnnouncement })} 
-              onCancel={() => setIsEditOpen(false)} 
-            />
-          </DialogContent>
-        </Dialog>
-      )}
-
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this announcement? This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={handleDeleteConfirm}>Delete</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <AnnouncementDialogs
+        isFormOpen={isFormOpen}
+        setIsFormOpen={setIsFormOpen}
+        isEditOpen={isEditOpen}
+        setIsEditOpen={setIsEditOpen}
+        isDeleteDialogOpen={isDeleteDialogOpen}
+        setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+        selectedAnnouncement={selectedAnnouncement}
+        handleFormSubmit={handleFormSubmit}
+        handleEditSubmit={handleEditSubmit}
+        handleDeleteConfirm={handleDeleteConfirm}
+      />
     </div>
   );
 };
