@@ -4,15 +4,14 @@ import { axiosInstance } from '@/api';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { toast } from 'sonner';
 import { PlusIcon, CalendarIcon } from 'lucide-react';
 import { format, isSameDay, isSameMonth } from 'date-fns';
-import HolidayForm from './HolidayForm';
 import HolidayTable from './HolidayTable';
+import HolidayDialogs from './HolidayDialogs';
+import HolidayPagination from './HolidayPagination';
 
 interface Holiday {
   id: number;
@@ -178,83 +177,28 @@ const HolidayList: React.FC = () => {
       </Card>
 
       {filteredHolidays.length > holidaysPerPage && (
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
-              />
-            </PaginationItem>
-            {Array.from({ length: Math.ceil(filteredHolidays.length / holidaysPerPage) }, (_, i) => i + 1).map(
-              (page) => (
-                <PaginationItem key={page}>
-                  <PaginationLink 
-                    onClick={() => setCurrentPage(page)}
-                    isActive={currentPage === page}
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              )
-            )}
-            <PaginationItem>
-              <PaginationNext 
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredHolidays.length / holidaysPerPage)))}
-                className={currentPage === Math.ceil(filteredHolidays.length / holidaysPerPage) ? 'pointer-events-none opacity-50' : ''}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <HolidayPagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalHolidays={filteredHolidays.length}
+          holidaysPerPage={holidaysPerPage}
+        />
       )}
 
-      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Add New Holiday</DialogTitle>
-            <DialogDescription>
-              Enter the details for your new holiday here.
-            </DialogDescription>
-          </DialogHeader>
-          <HolidayForm onSubmit={handleFormSubmit} onCancel={() => setIsFormOpen(false)} />
-        </DialogContent>
-      </Dialog>
-
-      {selectedHoliday && (
-        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Edit Holiday</DialogTitle>
-              <DialogDescription>
-                Make changes to your holiday here.
-              </DialogDescription>
-            </DialogHeader>
-            <HolidayForm 
-              holiday={selectedHoliday} 
-              onSubmit={(updatedHoliday) => handleEditSubmit({ ...updatedHoliday, id: selectedHoliday.id })} 
-              onCancel={() => setIsEditOpen(false)} 
-            />
-          </DialogContent>
-        </Dialog>
-      )}
-
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this holiday? This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={handleDeleteConfirm}>Delete</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <HolidayDialogs
+        isFormOpen={isFormOpen}
+        setIsFormOpen={setIsFormOpen}
+        isEditOpen={isEditOpen}
+        setIsEditOpen={setIsEditOpen}
+        isDeleteDialogOpen={isDeleteDialogOpen}
+        setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+        selectedHoliday={selectedHoliday}
+        handleFormSubmit={handleFormSubmit}
+        handleEditSubmit={handleEditSubmit}
+        handleDeleteConfirm={handleDeleteConfirm}
+      />
     </div>
   );
 };
 
 export default HolidayList;
-
