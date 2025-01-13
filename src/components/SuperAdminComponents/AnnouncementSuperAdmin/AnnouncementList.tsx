@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { axiosInstance } from '@/api';
+import axios from 'axios';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -8,30 +8,42 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { toast } from 'sonner';
-import { PlusIcon, Edit2, Trash2, CalendarIcon } from 'lucide-react';
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { format } from "date-fns"
-import { cn } from "@/lib/utils"
-import { Textarea } from "@/components/ui/textarea"; // Import the Textarea component
+import { PlusIcon, Edit2, Trash2 } from 'lucide-react';
+import { Textarea } from "@/components/ui/textarea";
+
+const API_BASE_URL = import.meta.env.VITE_BASE_API;
 
 interface Announcement {
   id: number;
   title: string;
   body: string;
-  startDate: Date;
-  endDate: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
+const axiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+});
+
 const fetchAnnouncements = async (): Promise<Announcement[]> => {
-  const response = await axiosInstance.get('/api/announcement');
-  return response.data;
+  try {
+    const response = await axiosInstance.get('/api/announcements');
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (typeof response.data === 'object' && response.data !== null) {
+      return [response.data];
+    }
+    return [];
+  } catch (error) {
+    console.error('Error fetching announcements:', error);
+    throw error;
+  }
 };
 
 const AnnouncementList: React.FC = () => {
   const queryClient = useQueryClient();
-  const { data: announcements = [] } = useQuery<Announcement[], Error>({
-    queryKey: ['announcement'],
+  const { data: announcements = [], isLoading, isError, error } = useQuery<Announcement[], Error>({
+    queryKey: ['announcements'],
     queryFn: fetchAnnouncements,
   });
 
@@ -42,34 +54,48 @@ const AnnouncementList: React.FC = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const addAnnouncementMutation = useMutation({
-    mutationFn: (newAnnouncement: Omit<Announcement, 'id'>) => axiosInstance.post('/api/announcement', newAnnouncement),
+    mutationFn: (newAnnouncement: Omit<Announcement, 'id' | 'createdAt' | 'updatedAt'>) => 
+      axiosInstance.post('/api/announcements', newAnnouncement),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['announcement'] });
+      queryClient.invalidateQueries({ queryKey: ['announcements'] });
       toast.success('Announcement added successfully!');
+    },
+    onError: (error) => {
+      console.error('Error adding announcement:', error);
+      toast.error('Failed to add announcement. Please try again.');
     },
   });
 
   const editAnnouncementMutation = useMutation({
-    mutationFn: (updatedAnnouncement: Announcement) => axiosInstance.put(`/api/announcement/${updatedAnnouncement.id}`, updatedAnnouncement),
+    mutationFn: (updatedAnnouncement: Announcement) => 
+      axiosInstance.put(`/api/announcements/${updatedAnnouncement.id}`, updatedAnnouncement),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['announcement'] });
+      queryClient.invalidateQueries({ queryKey: ['announcements'] });
       toast.success('Announcement updated successfully!');
+    },
+    onError: (error) => {
+      console.error('Error updating announcement:', error);
+      toast.error('Failed to update announcement. Please try again.');
     },
   });
 
   const deleteAnnouncementMutation = useMutation({
-    mutationFn: (id: number) => axiosInstance.delete(`/api/announcement/${id}`),
+    mutationFn: (id: number) => axiosInstance.delete(`/api/announcements/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['announcement'] });
+      queryClient.invalidateQueries({ queryKey: ['announcements'] });
       toast.success('Announcement deleted successfully!');
+    },
+    onError: (error) => {
+      console.error('Error deleting announcement:', error);
+      toast.error('Failed to delete announcement. Please try again.');
     },
   });
 
-  const filteredAnnouncements = announcements.filter((announcement) => {
-    return announcement.title.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+  const filteredAnnouncements = announcements.filter((announcement) =>
+    announcement?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false
+  );
 
-  const handleFormSubmit = (newAnnouncement: Omit<Announcement, 'id'>) => {
+  const handleFormSubmit = (newAnnouncement: Omit<Announcement, 'id' | 'createdAt' | 'updatedAt'>) => {
     addAnnouncementMutation.mutate(newAnnouncement);
     setIsFormOpen(false);
   };
@@ -88,6 +114,14 @@ const AnnouncementList: React.FC = () => {
     }
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading announcements: {error?.message}</div>;
+  }
+
   return (
     <div className="p-4 space-y-4">
       <div className="flex justify-between items-center">
@@ -105,45 +139,45 @@ const AnnouncementList: React.FC = () => {
 
       <Card>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Body</TableHead>
-                <TableHead>Start Date</TableHead>
-                <TableHead>End Date</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredAnnouncements.map((announcement) => (
-                <TableRow key={announcement.id}>
-                  <TableCell>{announcement.title}</TableCell>
-                  <TableCell>{announcement.body}</TableCell>
-                  <TableCell>{format(new Date(announcement.startDate), "PPP")}</TableCell>
-                  <TableCell>{format(new Date(announcement.endDate), "PPP")}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={() => {
-                        setSelectedAnnouncement(announcement);
-                        setIsEditOpen(true);
-                      }}>
-                        <Edit2 size={16} className="mr-2" />
-                        Edit
-                      </Button>
-                      <Button variant="outline" size="sm" onClick={() => {
-                        setSelectedAnnouncement(announcement);
-                        setIsDeleteDialogOpen(true);
-                      }}>
-                        <Trash2 size={16} className="mr-2" />
-                        Delete
-                      </Button>
-                    </div>
-                  </TableCell>
+          {filteredAnnouncements.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Body</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredAnnouncements.map((announcement) => (
+                  <TableRow key={announcement.id}>
+                    <TableCell>{announcement.title}</TableCell>
+                    <TableCell>{announcement.body}</TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={() => {
+                          setSelectedAnnouncement(announcement);
+                          setIsEditOpen(true);
+                        }}>
+                          <Edit2 size={16} className="mr-2" />
+                          Edit
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => {
+                          setSelectedAnnouncement(announcement);
+                          setIsDeleteDialogOpen(true);
+                        }}>
+                          <Trash2 size={16} className="mr-2" />
+                          Delete
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="text-center py-4">No announcements found.</div>
+          )}
         </CardContent>
       </Card>
 
@@ -170,7 +204,7 @@ const AnnouncementList: React.FC = () => {
             </DialogHeader>
             <AnnouncementForm 
               announcement={selectedAnnouncement} 
-              onSubmit={(updatedAnnouncement) => handleEditSubmit({ ...updatedAnnouncement, id: selectedAnnouncement.id })} 
+              onSubmit={(updatedAnnouncement) => handleEditSubmit({ ...selectedAnnouncement, ...updatedAnnouncement })} 
               onCancel={() => setIsEditOpen(false)} 
             />
           </DialogContent>
@@ -197,20 +231,18 @@ const AnnouncementList: React.FC = () => {
 
 interface AnnouncementFormProps {
   announcement?: Announcement;
-  onSubmit: (announcement: Omit<Announcement, 'id'>) => void;
+  onSubmit: (announcement: Omit<Announcement, 'id' | 'createdAt' | 'updatedAt'>) => void;
   onCancel: () => void;
 }
 
 const AnnouncementForm: React.FC<AnnouncementFormProps> = ({ announcement, onSubmit, onCancel }) => {
   const [title, setTitle] = useState(announcement?.title || '');
   const [body, setBody] = useState(announcement?.body || '');
-  const [startDate, setStartDate] = useState<Date | undefined>(announcement?.startDate ? new Date(announcement.startDate) : undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(announcement?.endDate ? new Date(announcement.endDate) : undefined);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (title && body && startDate && endDate) {
-      onSubmit({ title, body, startDate, endDate });
+    if (title && body) {
+      onSubmit({ title, body });
     }
   };
 
@@ -218,61 +250,11 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({ announcement, onSub
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="title">Title</Label>
-        <Textarea id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
       </div>
       <div className="space-y-2">
         <Label htmlFor="body">Body</Label>
         <Textarea id="body" value={body} onChange={(e) => setBody(e.target.value)} required />
-      </div>
-      <div className="space-y-2">
-        <Label>Start Date</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full justify-start text-left font-normal",
-                !startDate && "text-muted-foreground"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {startDate ? format(startDate, "PPP") : <span>Pick a date</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={startDate}
-              onSelect={setStartDate}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
-      <div className="space-y-2">
-        <Label>End Date</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full justify-start text-left font-normal",
-                !endDate && "text-muted-foreground"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {endDate ? format(endDate, "PPP") : <span>Pick a date</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={endDate}
-              onSelect={setEndDate}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
       </div>
       <div className="flex justify-end gap-2">
         <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
