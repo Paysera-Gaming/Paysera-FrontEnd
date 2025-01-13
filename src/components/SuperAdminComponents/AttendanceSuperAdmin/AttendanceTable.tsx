@@ -63,6 +63,9 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
     if (cell.column.id === 'timeIn' || cell.column.id === 'lunchTimeIn' || cell.column.id === 'lunchTimeOut' || cell.column.id === 'timeOut') {
       return typeof value === 'string' || typeof value === 'number' ? formatTime(new Date(value)) : '';
     }
+    if (cell.column.id === 'status' && value === 'PAID_LEAVE') {
+      return 'PAID LEAVE';
+    }
     return typeof value === 'number' ? formatNumber(value) : flexRender(cell.column.columnDef.cell, cell.getContext());
   };
 
