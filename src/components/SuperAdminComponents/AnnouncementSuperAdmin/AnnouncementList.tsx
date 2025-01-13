@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { toast } from 'sonner';
 import { PlusIcon, Edit2, Trash2 } from 'lucide-react';
 import AnnouncementForm from './AnnouncementForm';
@@ -30,6 +31,8 @@ const AnnouncementList: React.FC = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const announcementsPerPage = 5;
 
   const addAnnouncementMutation = useMutation({
     mutationFn: addAnnouncement,
@@ -70,6 +73,10 @@ const AnnouncementList: React.FC = () => {
   const filteredAnnouncements = announcements.filter((announcement) =>
     announcement?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false
   );
+
+  const indexOfLastAnnouncement = currentPage * announcementsPerPage;
+  const indexOfFirstAnnouncement = indexOfLastAnnouncement - announcementsPerPage;
+  const currentAnnouncements = filteredAnnouncements.slice(indexOfFirstAnnouncement, indexOfLastAnnouncement);
 
   const handleFormSubmit = (newAnnouncement: Omit<Announcement, 'id' | 'createdAt' | 'updatedAt'>) => {
     addAnnouncementMutation.mutate(newAnnouncement);
@@ -115,7 +122,7 @@ const AnnouncementList: React.FC = () => {
 
       <Card>
         <CardContent>
-          {filteredAnnouncements.length > 0 ? (
+          {currentAnnouncements.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -125,7 +132,7 @@ const AnnouncementList: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAnnouncements.map((announcement) => (
+                {currentAnnouncements.map((announcement) => (
                   <TableRow key={announcement.id}>
                     <TableCell>{announcement.title}</TableCell>
                     <TableCell>{announcement.body}</TableCell>
@@ -156,6 +163,37 @@ const AnnouncementList: React.FC = () => {
           )}
         </CardContent>
       </Card>
+
+      {filteredAnnouncements.length > announcementsPerPage && (
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious 
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+              />
+            </PaginationItem>
+            {Array.from({ length: Math.ceil(filteredAnnouncements.length / announcementsPerPage) }, (_, i) => i + 1).map(
+              (page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink 
+                    onClick={() => setCurrentPage(page)}
+                    isActive={currentPage === page}
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              )
+            )}
+            <PaginationItem>
+              <PaginationNext 
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredAnnouncements.length / announcementsPerPage)))}
+                className={currentPage === Math.ceil(filteredAnnouncements.length / announcementsPerPage) ? 'pointer-events-none opacity-50' : ''}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent className="sm:max-w-[425px]">
@@ -206,3 +244,4 @@ const AnnouncementList: React.FC = () => {
 };
 
 export default AnnouncementList;
+

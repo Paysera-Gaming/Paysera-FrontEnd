@@ -5,8 +5,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from 'sonner';
-import { PlusIcon } from 'lucide-react';
+import { PlusIcon, CalendarIcon } from 'lucide-react';
+import { format, isSameDay, isSameMonth } from 'date-fns';
 import HolidayForm from './HolidayForm';
 import HolidayTable from './HolidayTable';
 
@@ -47,6 +51,9 @@ const HolidayList: React.FC = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedHoliday, setSelectedHoliday] = useState<Holiday | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const holidaysPerPage = 5;
 
   const addHolidayMutation = useMutation({
     mutationFn: (newHoliday: Omit<Holiday, 'id' | 'createdAt' | 'updatedAt'>) => {
@@ -83,8 +90,16 @@ const HolidayList: React.FC = () => {
   });
 
   const filteredHolidays = holidays.filter((holiday) => {
-    return holiday.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = holiday.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesDate = selectedDate
+      ? (isSameDay(holiday.date, selectedDate) || isSameMonth(holiday.date, selectedDate))
+      : true;
+    return matchesSearch && matchesDate;
   });
+
+  const indexOfLastHoliday = currentPage * holidaysPerPage;
+  const indexOfFirstHoliday = indexOfLastHoliday - holidaysPerPage;
+  const currentHolidays = filteredHolidays.slice(indexOfFirstHoliday, indexOfLastHoliday);
 
   const handleFormSubmit = (newHoliday: Omit<Holiday, 'id' | 'createdAt' | 'updatedAt'>) => {
     addHolidayMutation.mutate(newHoliday);
@@ -108,13 +123,39 @@ const HolidayList: React.FC = () => {
   return (
     <div className="p-4 space-y-4">
       <div className="flex justify-between items-center">
-        <Input
-          type="text"
-          placeholder="Search holiday..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-sm"
-        />
+        <div className="flex items-center space-x-2">
+          <Input
+            type="text"
+            placeholder="Search holiday..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="max-w-sm"
+          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {selectedDate ? format(selectedDate, 'PPP') : 'Filter by date'}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={(date) => {
+                  setSelectedDate(date);
+                  setCurrentPage(1);
+                }}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+          {selectedDate && (
+            <Button variant="ghost" onClick={() => setSelectedDate(undefined)}>
+              Clear filter
+            </Button>
+          )}
+        </div>
         <Button onClick={() => setIsFormOpen(true)}>
           <PlusIcon className="mr-2 h-4 w-4" /> Add Holiday
         </Button>
@@ -123,7 +164,7 @@ const HolidayList: React.FC = () => {
       <Card>
         <CardContent>
           <HolidayTable 
-            holidays={filteredHolidays} 
+            holidays={currentHolidays} 
             onEdit={(holiday) => {
               setSelectedHoliday(holiday);
               setIsEditOpen(true);
@@ -135,6 +176,37 @@ const HolidayList: React.FC = () => {
           />
         </CardContent>
       </Card>
+
+      {filteredHolidays.length > holidaysPerPage && (
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious 
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+              />
+            </PaginationItem>
+            {Array.from({ length: Math.ceil(filteredHolidays.length / holidaysPerPage) }, (_, i) => i + 1).map(
+              (page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink 
+                    onClick={() => setCurrentPage(page)}
+                    isActive={currentPage === page}
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              )
+            )}
+            <PaginationItem>
+              <PaginationNext 
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredHolidays.length / holidaysPerPage)))}
+                className={currentPage === Math.ceil(filteredHolidays.length / holidaysPerPage) ? 'pointer-events-none opacity-50' : ''}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent className="sm:max-w-[425px]">
@@ -185,3 +257,4 @@ const HolidayList: React.FC = () => {
 };
 
 export default HolidayList;
+
