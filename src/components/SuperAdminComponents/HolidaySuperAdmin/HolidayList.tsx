@@ -10,6 +10,7 @@ import { PlusIcon, CalendarIcon } from 'lucide-react';
 import HolidayTable from './HolidayTable';
 import HolidayDialogs from './HolidayDialogs';
 import HolidayPagination from './HolidayPagination';
+import { useTheme } from '@/components/ThemeProvider/ThemeProvider'; // Corrected import path
 
 interface Holiday {
   id: number;
@@ -42,6 +43,8 @@ const HolidayList: React.FC = () => {
     queryKey: ['holiday'],
     queryFn: fetchHolidays,
   });
+
+  const { theme } = useTheme(); // Get the current theme
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -140,14 +143,14 @@ const HolidayList: React.FC = () => {
                 {selectedMonth ? selectedMonth : 'Filter by month'}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
+            <PopoverContent className={`w-auto p-0 ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
               <select
                 value={selectedMonth}
                 onChange={(e) => {
                   setSelectedMonth(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="p-2 border rounded"
+                className={`p-2 border rounded ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-black'}`} // Apply text color based on theme
               >
                 {Array.from({ length: 12 }, (_, i) => new Date(0, i).toLocaleString('default', { month: 'long' }).toUpperCase()).map((month) => (
                   <option key={month} value={month}>
