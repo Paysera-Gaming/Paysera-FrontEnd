@@ -106,15 +106,33 @@ export default function RecentActivitiesCard() {
 
 	const dummyData: TAttendance[] = data ?? [];
 	if (isLoading) {
-		return <Skeleton className="flex-1 col-span-2 "></Skeleton>;
+		return <Skeleton className="col-span-3 row-span-3  "></Skeleton>;
 	}
 
 	if (isError) {
-		return <>An Error has occured</>;
+		return (
+			<Card className="col-span-3 row-span-3  ">
+				<CardHeader>
+					<div className="flex item-center justify-between">
+						<CardTitle> Recent Activities</CardTitle>
+						<Activity></Activity>
+					</div>
+					<CardDescription>
+						Recent activities of the employees of this department
+					</CardDescription>
+				</CardHeader>
+				<CardContent>
+					{/* <ScrollArea className="h-[200px] ">
+				<RecentActivitiesTable tableData={dummyData}></RecentActivitiesTable>
+			</ScrollArea> */}
+					WALA BOSS
+				</CardContent>
+			</Card>
+		);
 	}
 
 	return (
-		<Card className="flex-1 col-span-2 ">
+		<Card className="col-span-3 row-span-3  ">
 			<CardHeader>
 				<div className="flex item-center justify-between">
 					<CardTitle> Recent Activities</CardTitle>

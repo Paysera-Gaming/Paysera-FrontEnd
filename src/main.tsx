@@ -10,7 +10,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/ThemeProvider/ThemeProvider';
 import ProtectedRoute from './lib/AccessLevelUtils';
 // component notif
-import ConfirmationDialog from "@/lib/ConfirmationDialog.tsx";
+import ConfirmationDialog from '@/lib/ConfirmationDialog.tsx';
 
 // pages
 import LoginPage from './pages/Login/LoginPage';
@@ -47,7 +47,11 @@ const router = createBrowserRouter([
 	{
 		path: '/employee',
 		element: (
-			<ProtectedRoute page={<EmployeePage />} requiredLevel="EMPLOYEE" />
+			// <ProtectedRoute page=} requiredLevel="EMPLOYEE" />
+			<>
+				<EmployeePage />
+				<ConfirmationDialog />
+			</>
 		),
 		children: [
 			{ index: true, loader: async () => redirect('/employee/dashboard') },
