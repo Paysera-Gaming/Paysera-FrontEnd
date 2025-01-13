@@ -25,17 +25,12 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
 
         const timeIn = parseTime(editData.timeIn);
         const timeOut = parseTime(editData.timeOut);
-        const lunchTimeIn = parseTime(editData.lunchTimeIn);
-        const lunchTimeOut = parseTime(editData.lunchTimeOut);
 
-        const lunchTimeTotal = timeDifferenceInHours(lunchTimeIn, lunchTimeOut);
         const totalWorkHours = timeDifferenceInHours(timeIn, timeOut);
-        const workTimeTotal = totalWorkHours - lunchTimeTotal;
         const overTimeTotal = editData.overTimeTotal || 0;
         const totalTime = totalWorkHours + overTimeTotal;
 
-        const validWorkTimeTotal = workTimeTotal >= 0 ? workTimeTotal : null;
-        const validLunchTimeTotal = lunchTimeTotal >= 0 ? lunchTimeTotal : null;
+        const validWorkTimeTotal = totalWorkHours >= 0 ? totalWorkHours : null;
 
         const payload = {
             id: editData.id,
@@ -48,9 +43,6 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
             timeHoursWorked: validWorkTimeTotal,
             overTimeTotal: overTimeTotal,
             timeTotal: totalTime.toFixed(2), // Format total time to two decimal places
-            lunchTimeIn: formatDateTime(editData.date, lunchTimeIn),
-            lunchTimeOut: formatDateTime(editData.date, lunchTimeOut),
-            lunchTimeTotal: validLunchTimeTotal,
         };
 
         try {
@@ -112,30 +104,6 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
                                 className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
                                 value={editData.timeOut}
                                 onChange={(e) => setEditData({ ...editData, timeOut: e.target.value })}
-                            />
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <Label htmlFor="lunchTimeIn" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
-                                Lunch Time In
-                            </Label>
-                            <input
-                                type="time"
-                                id="lunchTimeIn"
-                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-                                value={editData.lunchTimeIn}
-                                onChange={(e) => setEditData({ ...editData, lunchTimeIn: e.target.value })}
-                            />
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <Label htmlFor="lunchTimeOut" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
-                                Lunch Time Out
-                            </Label>
-                            <input
-                                type="time"
-                                id="lunchTimeOut"
-                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-                                value={editData.lunchTimeOut}
-                                onChange={(e) => setEditData({ ...editData, lunchTimeOut: e.target.value })}
                             />
                         </div>
                         <div className="flex items-center space-x-4">

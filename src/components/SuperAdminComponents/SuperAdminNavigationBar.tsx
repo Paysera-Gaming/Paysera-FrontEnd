@@ -1,4 +1,4 @@
-import { Home, Users, Calendar, Building } from 'lucide-react';
+import { Home, Users, Calendar, Briefcase, CheckSquare, Bell } from 'lucide-react'; // Import necessary icons
 import { Icons } from '@/icons/Icon';
 // router
 import { NavLink } from 'react-router-dom';
@@ -17,9 +17,11 @@ interface RouteItemProps {
 function RouteItems({ links }: RouteItemProps): ReactNode {
     const iconList = [
         <Home key="home" />,
-        <Calendar key="calendar" />,
-        <Users key="users" />,
-        <Building key="building" />,
+        <Bell key="announcement" />, // Use Bell icon for announcements
+        <Calendar key="holidays" />, // Use Calendar icon for holidays
+        <CheckSquare key="attendance" />, // Use CheckSquare icon for attendance
+        <Users key="employee" />, // Use Users icon for employees
+        <Briefcase key="departments" />, // Use Briefcase icon for departments
     ];
 
     const routes = links.map((link, index) => {
@@ -42,7 +44,7 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
                         )
                     }
                     id={link}
-                    to={link}
+                    to={`/superadmin/${link}`} // Ensure the path is correct
                 >
                     {iconList[index]}
                     {link}
@@ -71,6 +73,8 @@ function ProfileHeader() {
 export default function SuperAdminNavigation() {
     const routeLinks: string[] = [
         'dashboard',
+        'announcement',
+        'holidays',
         'attendance',
         'employee',
         'departments',
@@ -79,7 +83,7 @@ export default function SuperAdminNavigation() {
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
-            <nav className="bg-card border-solid border-border border rounded-md h-[calc(100vh-40px)] w-[200px] p-5 flex flex-col fixed top-5 left-5 z-50">
+            <nav className="bg-card border-solid border-border border rounded-md h-[calc(100vh-40px)] w-[250px] p-5 flex flex-col fixed top-5 left-5 z-50">
                 {/* Profile header at the top */}
                 <ProfileHeader />
 
@@ -98,7 +102,7 @@ export default function SuperAdminNavigation() {
             </nav>
 
             {/* Main Content Area */}
-            <main className="flex-1 ml-[200px] p-1 bg-background">
+            <main className="flex-1 ml-[250px] p-1 bg-background">
                 {/* This is where the routes or content will be rendered */}
                 {/* Add your page content here */}
             </main>

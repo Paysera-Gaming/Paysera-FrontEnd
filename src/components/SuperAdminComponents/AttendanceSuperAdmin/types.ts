@@ -26,3 +26,17 @@ export interface Attendance {
   };
   employeeName: string; // Added employeeName property
 }
+
+export interface PaidLeavePayload {
+  employeeId: number;
+  date: string;
+  status: string;
+  scheduleType: string;
+  timeIn: string;
+  timeOut: string;
+  lunchTimeIn: string;
+  lunchTimeOut: string;
+  timeHoursWorked: number;
+  lunchTimeTotal: number;
+  timeTotal: number;
+}
