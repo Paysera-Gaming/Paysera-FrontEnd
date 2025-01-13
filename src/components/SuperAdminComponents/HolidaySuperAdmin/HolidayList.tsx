@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '@/api';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import { toast } from 'sonner';
 import { PlusIcon, CalendarIcon } from 'lucide-react';
-import { format, isSameDay, isSameMonth } from 'date-fns';
 import HolidayTable from './HolidayTable';
 import HolidayDialogs from './HolidayDialogs';
 import HolidayPagination from './HolidayPagination';
@@ -51,8 +49,13 @@ const HolidayList: React.FC = () => {
   const [selectedHoliday, setSelectedHoliday] = useState<Holiday | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);
   const holidaysPerPage = 5;
+
+  useEffect(() => {
+    const currentMonth = new Date().toLocaleString('default', { month: 'long' }).toUpperCase();
+    setSelectedMonth(currentMonth);
+  }, []);
 
   const addHolidayMutation = useMutation({
     mutationFn: (newHoliday: Omit<Holiday, 'id' | 'createdAt' | 'updatedAt'>) => {
@@ -90,10 +93,10 @@ const HolidayList: React.FC = () => {
 
   const filteredHolidays = holidays.filter((holiday) => {
     const matchesSearch = holiday.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesDate = selectedDate
-      ? (isSameDay(holiday.date, selectedDate) || isSameMonth(holiday.date, selectedDate))
+    const matchesMonth = selectedMonth
+      ? holiday.date.toLocaleString('default', { month: 'long' }).toUpperCase() === selectedMonth
       : true;
-    return matchesSearch && matchesDate;
+    return matchesSearch && matchesMonth;
   });
 
   const indexOfLastHoliday = currentPage * holidaysPerPage;
@@ -134,23 +137,28 @@ const HolidayList: React.FC = () => {
             <PopoverTrigger asChild>
               <Button variant="outline">
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {selectedDate ? format(selectedDate, 'PPP') : 'Filter by date'}
+                {selectedMonth ? selectedMonth : 'Filter by month'}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={(date) => {
-                  setSelectedDate(date);
+              <select
+                value={selectedMonth}
+                onChange={(e) => {
+                  setSelectedMonth(e.target.value);
                   setCurrentPage(1);
                 }}
-                initialFocus
-              />
+                className="p-2 border rounded"
+              >
+                {Array.from({ length: 12 }, (_, i) => new Date(0, i).toLocaleString('default', { month: 'long' }).toUpperCase()).map((month) => (
+                  <option key={month} value={month}>
+                    {month}
+                  </option>
+                ))}
+              </select>
             </PopoverContent>
           </Popover>
-          {selectedDate && (
-            <Button variant="ghost" onClick={() => setSelectedDate(undefined)}>
+          {selectedMonth && (
+            <Button variant="ghost" onClick={() => setSelectedMonth(undefined)}>
               Clear filter
             </Button>
           )}
