@@ -70,7 +70,9 @@ const AnnouncementList: React.FC = () => {
     },
   });
 
-  const filteredAnnouncements = announcements.filter((announcement) =>
+  const sortedAnnouncements = announcements.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  const filteredAnnouncements = sortedAnnouncements.filter((announcement) =>
     announcement?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false
   );
 
@@ -244,4 +246,3 @@ const AnnouncementList: React.FC = () => {
 };
 
 export default AnnouncementList;
-
