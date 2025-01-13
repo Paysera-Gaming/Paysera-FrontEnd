@@ -51,7 +51,6 @@ export default function Timebar() {
 
 				case 'OverTimeEnd':
 					console.log('user is now ending over time');
-
 					console.log('WALA PANG OVERTIME END');
 					break;
 			}
@@ -103,7 +102,7 @@ export default function Timebar() {
 				toast.success('User has timed out of session');
 				setOverTime(false);
 				setIsClockedIn(false);
-				mutateTime.mutate('OverTimeEnd');
+				// mutateTime.mutate('OverTimeEnd');
 				useUserStore.getState().setUserClockStatus('Clock-In');
 			},
 			onCancel: () => {
@@ -122,7 +121,7 @@ export default function Timebar() {
 			onAction: () => {
 				toast.success('User has started overtime');
 				setOverTime(true);
-				mutateTime.mutate('OverTimeStart');
+				// mutateTime.mutate('OverTimeStart');
 			},
 			onCancel: async () => {
 				// if user did not want to overtime
