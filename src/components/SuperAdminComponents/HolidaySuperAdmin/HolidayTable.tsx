@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Calendar, Edit, Trash2 } from 'lucide-react';
-import { format, isFuture } from 'date-fns';
+import { format, isFuture, isToday } from 'date-fns';
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
@@ -21,7 +21,11 @@ interface HolidayTableProps {
 }
 
 const HolidayTable: React.FC<HolidayTableProps> = ({ holidays, onEdit, onDelete }) => {
-  const isUpcoming = (date: Date) => isFuture(date);
+  const getStatus = (date: Date) => {
+    if (isToday(date)) return "Ongoing";
+    if (isFuture(date)) return "Upcoming";
+    return "Past";
+  };
 
   return (
     <Table>
@@ -35,27 +39,28 @@ const HolidayTable: React.FC<HolidayTableProps> = ({ holidays, onEdit, onDelete 
       </TableHeader>
       <TableBody>
         {holidays.map((holiday) => {
-          const upcoming = isUpcoming(new Date(holiday.date));
+          const status = getStatus(new Date(holiday.date));
           return (
             <TableRow 
               key={holiday.id} 
               className={cn(
-                upcoming && "bg-primary/10 dark:bg-primary/20"
+                status === "Upcoming" && "bg-primary/10 dark:bg-primary/20",
+                status === "Ongoing" && "bg-secondary/10 dark:bg-secondary/20"
               )}
             >
               <TableCell className="font-medium">{holiday.name}</TableCell>
               <TableCell>
                 <div className="flex items-center">
                   <Calendar className="mr-2 h-4 w-4 text-muted-foreground" />
-                  {format(new Date(holiday.date), 'MMMM d, yyyy')}
+                  {format(new Date(holiday.date), 'MMMM d')} {/* Removed the year */}
                 </div>
               </TableCell>
               <TableCell>
                 <Badge
-                  variant={upcoming ? "default" : "outline"}
+                  variant={status === "Past" ? "outline" : "default"}
                   className="capitalize"
                 >
-                  {upcoming ? "Upcoming" : "Past"}
+                  {status}
                 </Badge>
               </TableCell>
               <TableCell className="text-right">
@@ -79,4 +84,3 @@ const HolidayTable: React.FC<HolidayTableProps> = ({ holidays, onEdit, onDelete 
 };
 
 export default HolidayTable;
-
