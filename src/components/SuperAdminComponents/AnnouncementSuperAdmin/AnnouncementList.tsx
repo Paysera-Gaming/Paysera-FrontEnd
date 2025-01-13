@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { toast } from 'sonner';
 import { PlusIcon, Edit2, Trash2 } from 'lucide-react';
-import { Textarea } from "@/components/ui/textarea";
-
-const API_BASE_URL = import.meta.env.VITE_BASE_API;
+import AnnouncementForm from './AnnouncementForm';
+import { fetchAnnouncements, addAnnouncement, editAnnouncement, deleteAnnouncement } from './api';
 
 interface Announcement {
   id: number;
@@ -20,25 +17,6 @@ interface Announcement {
   createdAt: string;
   updatedAt: string;
 }
-
-const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
-});
-
-const fetchAnnouncements = async (): Promise<Announcement[]> => {
-  try {
-    const response = await axiosInstance.get('/api/announcements');
-    if (Array.isArray(response.data)) {
-      return response.data;
-    } else if (typeof response.data === 'object' && response.data !== null) {
-      return [response.data];
-    }
-    return [];
-  } catch (error) {
-    console.error('Error fetching announcements:', error);
-    throw error;
-  }
-};
 
 const AnnouncementList: React.FC = () => {
   const queryClient = useQueryClient();
@@ -54,8 +32,7 @@ const AnnouncementList: React.FC = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const addAnnouncementMutation = useMutation({
-    mutationFn: (newAnnouncement: Omit<Announcement, 'id' | 'createdAt' | 'updatedAt'>) => 
-      axiosInstance.post('/api/announcements', newAnnouncement),
+    mutationFn: addAnnouncement,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['announcements'] });
       toast.success('Announcement added successfully!');
@@ -67,8 +44,7 @@ const AnnouncementList: React.FC = () => {
   });
 
   const editAnnouncementMutation = useMutation({
-    mutationFn: (updatedAnnouncement: Announcement) => 
-      axiosInstance.put(`/api/announcements/${updatedAnnouncement.id}`, updatedAnnouncement),
+    mutationFn: editAnnouncement,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['announcements'] });
       toast.success('Announcement updated successfully!');
@@ -80,7 +56,7 @@ const AnnouncementList: React.FC = () => {
   });
 
   const deleteAnnouncementMutation = useMutation({
-    mutationFn: (id: number) => axiosInstance.delete(`/api/announcements/${id}`),
+    mutationFn: deleteAnnouncement,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['announcements'] });
       toast.success('Announcement deleted successfully!');
@@ -226,41 +202,6 @@ const AnnouncementList: React.FC = () => {
         </DialogContent>
       </Dialog>
     </div>
-  );
-};
-
-interface AnnouncementFormProps {
-  announcement?: Announcement;
-  onSubmit: (announcement: Omit<Announcement, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  onCancel: () => void;
-}
-
-const AnnouncementForm: React.FC<AnnouncementFormProps> = ({ announcement, onSubmit, onCancel }) => {
-  const [title, setTitle] = useState(announcement?.title || '');
-  const [body, setBody] = useState(announcement?.body || '');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (title && body) {
-      onSubmit({ title, body });
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
-        <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="body">Body</Label>
-        <Textarea id="body" value={body} onChange={(e) => setBody(e.target.value)} required />
-      </div>
-      <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
-        <Button type="submit">Save</Button>
-      </div>
-    </form>
   );
 };
 
