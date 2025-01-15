@@ -30,6 +30,6 @@ export async function getHolidays(): Promise<IHoliday[]> {
 	const response: AxiosResponse<IHoliday[]> = await axiosInstance.get(
 		'/api/holiday'
 	);
-	console.log('response', response.data);
+
 	return response.data;
 }

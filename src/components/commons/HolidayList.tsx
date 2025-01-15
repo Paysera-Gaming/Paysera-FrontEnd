@@ -26,11 +26,13 @@ export default function HolidayList() {
 		);
 	}
 	if (isSuccess) {
-		const list = data.map((day) => (
-			<li>
-				{day.month}/{day.day} - {day.name}
-			</li>
-		));
+		// const list = data.map((day) => (
+		// 	<li>
+		// 		{day.month}/{day.day} - {day.name}
+		// 	</li>
+		// ));
+
+		const list = <>LE LIST</>;
 
 		return (
 			<Card className="row-span-6">

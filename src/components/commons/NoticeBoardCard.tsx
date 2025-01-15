@@ -37,23 +37,24 @@ export default function NoticeBoardCard() {
 		// check if data is not empty
 
 		if (data.length != 0) {
-			const AnnouncementList = data.map((announcement) => {
-				const day = new Date(announcement.createdAt).getDate();
-				const month = new Date(announcement.createdAt).getMonth() + 1;
+			// const AnnouncementList = data.map((announcement) => {
+			// 	const day = new Date(announcement.createdAt).getDate();
+			// 	const month = new Date(announcement.createdAt).getMonth() + 1;
 
-				return (
-					<ul className="list-disc list-inside">
-						<li>
-							<p className="font-bold inline">
-								{month > 10 ? month : `${0}` + month}
-								{'/' + day} - {announcement.title}
-							</p>
-							<br />
-							<p> {announcement.body}</p>
-						</li>
-					</ul>
-				);
-			});
+			// 	return (
+			// 		<ul className="list-disc list-inside">
+			// 			<li>
+			// 				<p className="font-bold inline">
+			// 					{month > 10 ? month : `${0}` + month}
+			// 					{'/' + day} - {announcement.title}
+			// 				</p>
+			// 				<br />
+			// 				<p> {announcement.body}</p>
+			// 			</li>
+			// 		</ul>
+			// 	);
+			// });
+			const AnnouncementList = <>LE ANNOUNCEMNTS</>;
 
 			return (
 				<Card className="col-span-3 row-span-3">
