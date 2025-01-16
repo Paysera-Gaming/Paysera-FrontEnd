@@ -1,10 +1,24 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Calendar, Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2, Sun } from 'lucide-react';
 import { format, isFuture, isToday } from 'date-fns';
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import {
+  JanuaryIcon,
+  FebruaryIcon,
+  MarchIcon,
+  AprilIcon,
+  MayIcon,
+  JuneIcon,
+  JulyIcon,
+  AugustIcon,
+  SeptemberIcon,
+  OctoberIcon,
+  NovemberIcon,
+  DecemberIcon
+} from './HolidayIcons';
 
 interface Holiday {
   id: number;
@@ -19,6 +33,21 @@ interface HolidayTableProps {
   onEdit: (holiday: Holiday) => void;
   onDelete: (holiday: Holiday) => void;
 }
+
+const monthIcons: { [key: string]: React.FC } = {
+  January: JanuaryIcon,
+  February: FebruaryIcon,
+  March: MarchIcon,
+  April: AprilIcon,
+  May: MayIcon,
+  June: JuneIcon,
+  July: JulyIcon,
+  August: AugustIcon,
+  September: SeptemberIcon,
+  October: OctoberIcon,
+  November: NovemberIcon,
+  December: DecemberIcon,
+};
 
 const HolidayTable: React.FC<HolidayTableProps> = ({ holidays, onEdit, onDelete }) => {
   const getStatus = (date: Date) => {
@@ -40,6 +69,9 @@ const HolidayTable: React.FC<HolidayTableProps> = ({ holidays, onEdit, onDelete 
       <TableBody>
         {holidays.map((holiday) => {
           const status = getStatus(new Date(holiday.date));
+          const month = format(new Date(holiday.date), 'MMMM');
+          const IconComponent = monthIcons[month] || (() => <Sun className="mr-2 h-4 w-4 text-muted-foreground" />); // Default to Sun icon
+
           return (
             <TableRow 
               key={holiday.id} 
@@ -51,7 +83,7 @@ const HolidayTable: React.FC<HolidayTableProps> = ({ holidays, onEdit, onDelete 
               <TableCell className="font-medium">{holiday.name}</TableCell>
               <TableCell>
                 <div className="flex items-center">
-                  <Calendar className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <IconComponent />
                   {format(new Date(holiday.date), 'MMMM d')} {/* Removed the year */}
                 </div>
               </TableCell>
