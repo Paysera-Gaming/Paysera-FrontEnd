@@ -59,7 +59,9 @@ export default function NoticeBoardCard() {
 			return (
 				<Card className="col-span-3 row-span-3">
 					<CardHeader className="flex-row items-center justify-between w-full">
-						<CardTitle>Announcemnets</CardTitle>
+						<CardTitle className="text-base lg:text-lg xl:text-2xl  ">
+							Announcemnets
+						</CardTitle>
 						<Presentation></Presentation>
 					</CardHeader>
 					<CardContent>
@@ -71,7 +73,9 @@ export default function NoticeBoardCard() {
 			return (
 				<Card className="col-span-3 row-span-3">
 					<CardHeader className="flex-row items-center justify-between w-full">
-						<CardTitle>Announcemnets</CardTitle>
+						<CardTitle className="text-base lg:text-lg xl:text-2xl  ">
+							Announcemnets
+						</CardTitle>
 						<Presentation></Presentation>
 					</CardHeader>
 					<CardContent>No announcements yet.</CardContent>

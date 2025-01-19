@@ -26,8 +26,10 @@ export default function UserInfoCard({ className }: { className: string }) {
 
 	return (
 		<Card className={className}>
-			<CardHeader className="flex-row items-center justify-between w-full">
-				<CardTitle>Employee Info</CardTitle>
+			<CardHeader className="flex-row pb-3   items-center justify-between w-full">
+				<CardTitle className="text-base lg:text-lg xl:text-2xl  ">
+					Employee Info
+				</CardTitle>
 				<User></User>
 			</CardHeader>
 			<CardContent>

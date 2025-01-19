@@ -48,8 +48,10 @@ export default function UserScheduleInfoCard({
 
 	return (
 		<Card className={className}>
-			<CardHeader className="flex-row items-center justify-between w-full">
-				<CardTitle>Schedule Info</CardTitle>
+			<CardHeader className="flex-row items-center justify-between w-full pb-3 ">
+				<CardTitle className="text-base lg:text-lg xl:text-2xl   ">
+					Schedule Info
+				</CardTitle>
 				<Calendar></Calendar>
 			</CardHeader>
 			<CardContent>

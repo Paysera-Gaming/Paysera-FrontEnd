@@ -17,7 +17,9 @@ export default function HolidayList() {
 		return (
 			<Card className="row-span-6">
 				<CardHeader>
-					<CardTitle>Upcoming Holidays</CardTitle>
+					<CardTitle className="text-base lg:text-lg xl:text-2xl  ">
+						Upcoming Holidays
+					</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<p>FAILED TO CATCH HOLIDAYS</p>
@@ -37,7 +39,9 @@ export default function HolidayList() {
 		return (
 			<Card className="row-span-6">
 				<CardHeader>
-					<CardTitle>Upcoming Holidays</CardTitle>
+					<CardTitle className="text-base lg:text-lg xl:text-2xl  ">
+						Upcoming Holidays
+					</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<ul className="list-disc list-inside">{list}</ul>
