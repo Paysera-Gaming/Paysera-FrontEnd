@@ -118,7 +118,11 @@
         );
     };
     
-    export default function RecentActivitiesCard() {
+    interface RecentActivitiesCardProps {
+      className?: string;
+    }
+    
+    export default function RecentActivitiesCard({ className }: RecentActivitiesCardProps) {
         const [selectedOption, setSelectedOption] = useState('Paid');
         const { data: attendanceData, isLoading: isLoadingAttendance, error: attendanceError, refetch: refetchAttendance } = useQuery<Attendance[]>({
             queryKey: ['attendanceData'],
@@ -168,7 +172,7 @@
             : 'Recent activities for adding employees, sorted from latest to oldest';
     
         return (
-            <Card className="flex-1 col-span-2 p-2">
+            <Card className={`flex-1 col-span-2 p-2 ${className}`}>
                 <CardHeader className="flex flex-col md:flex-row items-center justify-between">
                     <div className="flex items-center space-x-2">
                         <Activity size={'1.8rem'} className="text-black dark:text-white" />
