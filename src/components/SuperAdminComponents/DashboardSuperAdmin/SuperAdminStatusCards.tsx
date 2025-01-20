@@ -8,7 +8,6 @@ import { Users, UserCheck, UserX } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { fetchEmployees } from '@/utils/fetchEmployees'; // Import the shared fetch function
 import { Employee } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/types'; // Adjust the import path as needed
-import AnnouncementCard from './announcement-card'; // Import the AnnouncementCard component
 
 type CardData = {
     title: string;
@@ -62,10 +61,5 @@ export default function EmployeesStatusCards() {
         </Card>
     ));
 
-    return (
-        <>
-            <AnnouncementCard /> {/* Include the AnnouncementCard component at the top */}
-            {CardItems}
-        </>
-    );
+    return <>{CardItems}</>;
 }
