@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUserStore } from '@/stores/userStore';
 import { User } from 'lucide-react';
 
+import alertTimeup from './alertTimeup';
+
 function returnRole(role: string) {
 	return role === 'ADMIN'
 		? 'Admin'
@@ -39,6 +41,8 @@ export default function UserInfoCard({ className }: { className: string }) {
 					<li>Access Level: {userInfo!.accessLevel}</li>
 					<li>Department: {userInfo!.departmentName}</li>
 				</ul>
+
+				<button onClick={alertTimeup}>TEST</button>
 			</CardContent>
 		</Card>
 	);

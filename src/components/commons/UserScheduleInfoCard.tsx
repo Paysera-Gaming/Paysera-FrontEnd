@@ -40,6 +40,8 @@ export default function UserScheduleInfoCard({
 	);
 	useEffect(() => {
 		if (useUserStore.getState()?.user?.schedule) {
+			console.log(useUserStore.getState().user);
+
 			setUserInfo(useUserStore.getState()?.user?.schedule);
 		} else {
 			setUserInfo(undefined);
