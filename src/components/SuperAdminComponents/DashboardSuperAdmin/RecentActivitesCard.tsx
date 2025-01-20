@@ -46,7 +46,7 @@
         });
     
         return (
-            <Table>
+            <Table className="text-base"> {/* Increased font size */}
                 <TableHeader>
                     <TableRow>
                         <TableHead>Last Name, First Name</TableHead>
@@ -66,20 +66,16 @@
         const renderedList = sortedData.map((employee) => (
             <TableRow key={employee.id}>
                 <TableCell>{employee.username}</TableCell>
-                <TableCell>{employee.firstName}</TableCell>
-                <TableCell>{employee.lastName}</TableCell>
                 <TableCell>{employee.accessLevel}</TableCell>
                 <TableCell>{employee.isActive ? 'Active' : 'Inactive'}</TableCell>
             </TableRow>
         ));
     
         return (
-            <Table>
+            <Table className="text-base"> {/* Increased font size */}
                 <TableHeader>
                     <TableRow>
                         <TableHead>Username</TableHead>
-                        <TableHead>First Name</TableHead>
-                        <TableHead>Last Name</TableHead>
                         <TableHead>Access Level</TableHead>
                         <TableHead>Status</TableHead>
                     </TableRow>
@@ -91,7 +87,7 @@
     
     const SkeletonCard: React.FC = () => {
         return (
-            <Card className="flex-1 col-span-2 p-3"> {/* Reduced padding */}
+            <Card className="flex-1 col-span-2 p-3">
                 <CardHeader className="flex flex-col md:flex-row items-center justify-between">
                     <div className="flex items-center space-x-2">
                         <Skeleton className="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-700" />
@@ -99,11 +95,11 @@
                     </div>
                     <Skeleton className="h-8 w-24 rounded bg-gray-200 dark:bg-gray-700 mt-2 md:mt-0" />
                 </CardHeader>
-                <CardDescription className="mt-1 text-xs text-gray-600"> {/* Reduced margin */}
+                <CardDescription className="mt-1 text-base text-gray-600"> {/* Increased font size */}
                     <Skeleton className="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-700" />
                 </CardDescription>
-                <CardContent className="mt-3"> {/* Reduced margin */}
-                    <ScrollArea className="h-[180px]"> {/* Reduced height */}
+                <CardContent className="mt-3">
+                    <ScrollArea className="h-[180px]">
                         <div className="space-y-2">
                             <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
                             <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
@@ -141,14 +137,14 @@
     
         if (attendanceError || employeeError) {
             return (
-                <Card className="flex-1 col-span-2 p-3"> {/* Reduced padding */}
+                <Card className="flex-1 col-span-2 p-3">
                     <CardHeader className="flex flex-col md:flex-row items-center justify-between">
                         <div className="flex items-center space-x-2">
                             <Activity size={'1.8rem'} className="text-black dark:text-white" />
                             <CardTitle className="text-base font-semibold">Error</CardTitle>
                         </div>
                     </CardHeader>
-                    <CardContent className="mt-3"> {/* Reduced margin */}
+                    <CardContent className="mt-3">
                         <div className="text-center">
                             <p className="text-red-500">Failed to load data. Please try again.</p>
                             <Button onClick={handleRetry} className="mt-3">Retry</Button>
@@ -170,7 +166,7 @@
             : 'Recent activities for adding employees, sorted from latest to oldest';
     
         return (
-            <Card className={`flex-1 col-span-2 p-3 ${className}`}> {/* Reduced padding */}
+            <Card className={`flex-1 col-span-2 p-3 ${className}`}>
                 <CardHeader className="flex flex-col md:flex-row items-center justify-between">
                     <div className="flex items-center space-x-2">
                         <Activity size={'1.8rem'} className="text-black dark:text-white" />
@@ -190,9 +186,9 @@
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </CardHeader>
-                <CardDescription className="mt-1 text-xs text-gray-600">{description}</CardDescription> {/* Reduced margin */}
-                <CardContent className="mt-3"> {/* Reduced margin */}
-                    <ScrollArea className="h-[170px]"> {/* Reduced height */}
+                <CardDescription className="mt-1 text-base text-gray-600">{description}</CardDescription> {/* Increased font size */}
+                <CardContent className="mt-3">
+                    <ScrollArea className="h-[170px]">
                         {selectedOption === 'Paid' ? (
                             <RecentActivitiesTable tableData={paidLeaveData} />
                         ) : (
