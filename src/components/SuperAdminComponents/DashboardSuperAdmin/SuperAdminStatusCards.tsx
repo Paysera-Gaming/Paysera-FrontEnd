@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, UserCheck, UserX } from "lucide-react"
 import { useState, useEffect } from "react"
 import { fetchEmployees } from "@/utils/fetchEmployees"
 import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types"
@@ -21,34 +20,30 @@ export default function EmployeesStatusCards() {
   const offlineCount = overallCount - onlineCount
 
   return (
-    <Card className="col-span-2">
+    <Card className="col-span-1">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold">Employee Status</CardTitle>
       </CardHeader>
-      <CardContent className="grid grid-cols-3 gap-4">
-        <div className="flex items-center justify-between space-x-4">
+      <CardContent className="flex justify-between space-x-4">
+        <div className="flex items-center space-x-2">
           <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Total Employees</p>
+            <p className="text-sm text-muted-foreground">Employees</p>
             <p className="text-2xl font-semibold">{overallCount}</p>
           </div>
-          <Users className="h-5 w-5 text-muted-foreground" />
         </div>
-        <div className="flex items-center justify-between space-x-4">
+        <div className="flex items-center space-x-2">
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Online</p>
             <p className="text-2xl font-semibold">{onlineCount}</p>
           </div>
-          <UserCheck className="h-5 w-5 text-muted-foreground" />
         </div>
-        <div className="flex items-center justify-between space-x-4">
+        <div className="flex items-center space-x-2">
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Offline</p>
             <p className="text-2xl font-semibold">{offlineCount}</p>
           </div>
-          <UserX className="h-5 w-5 text-muted-foreground" />
         </div>
       </CardContent>
     </Card>
   )
 }
-

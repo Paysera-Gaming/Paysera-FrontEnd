@@ -12,11 +12,11 @@ export default function Dashboard() {
       {/* Main content area (3 columns) */}
       <div className="col-span-3 space-y-3">
         {/* Employee Status on the left and Announcements on the right */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <div className="col-span-1">
             <SuperAdminsStatusCards />
           </div>
-          <div className="col-span-1">
+          <div className="col-span-2">
             <AnnouncementCard />
           </div>
         </div>
