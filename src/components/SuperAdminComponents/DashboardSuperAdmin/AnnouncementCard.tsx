@@ -38,7 +38,7 @@ export default function AnnouncementCard() {
   }
 
   return (
-    <Card className="col-span-2">
+    <Card className="col-span-2 min-h-[135px]"> {/* Added min-height */}
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold">Announcements</CardTitle>
       </CardHeader>
