@@ -17,10 +17,10 @@
     } from '@/components/ui/table';
     import { Activity } from 'lucide-react';
     import { useQuery } from '@tanstack/react-query';
-    import { getAttendanceList } from '@/components/SuperAdminComponents/AttendanceSuperAdmin/api'; // Corrected import path
-    import { getEmployeeList } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/api'; // Corrected import path
-    import { Attendance } from '@/components/SuperAdminComponents/AttendanceSuperAdmin/types'; // Corrected import path
-    import { Employee } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/types'; // Corrected import path
+    import { getAttendanceList } from '@/components/SuperAdminComponents/AttendanceSuperAdmin/api';
+    import { getEmployeeList } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/api';
+    import { Attendance } from '@/components/SuperAdminComponents/AttendanceSuperAdmin/types';
+    import { Employee } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/types';
     import {
         DropdownMenu,
         DropdownMenuContent,
@@ -31,11 +31,10 @@
     import { Skeleton } from '@/components/ui/skeleton';
     
     function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
-        // Sort the data by date in descending order
         const sortedData = tableData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     
         const renderedList = sortedData.map((data) => {
-            const parsedDate = new Date(data.date); // Parse the date string
+            const parsedDate = new Date(data.date);
             return (
                 <TableRow key={data.id}>
                     <TableCell>{`${data.employee.lastName}, ${data.employee.firstName}`}</TableCell>
@@ -62,7 +61,6 @@
     }
     
     function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
-        // Sort the data by id in descending order (assuming id is incremented over time)
         const sortedData = tableData.sort((a, b) => b.id - a.id);
     
         const renderedList = sortedData.map((employee) => (
@@ -93,7 +91,7 @@
     
     const SkeletonCard: React.FC = () => {
         return (
-            <Card className="flex-1 col-span-2 p-2">
+            <Card className="flex-1 col-span-2 p-3"> {/* Reduced padding */}
                 <CardHeader className="flex flex-col md:flex-row items-center justify-between">
                     <div className="flex items-center space-x-2">
                         <Skeleton className="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-700" />
@@ -101,11 +99,11 @@
                     </div>
                     <Skeleton className="h-8 w-24 rounded bg-gray-200 dark:bg-gray-700 mt-2 md:mt-0" />
                 </CardHeader>
-                <CardDescription className="mt-1 text-xs text-gray-600">
+                <CardDescription className="mt-1 text-xs text-gray-600"> {/* Reduced margin */}
                     <Skeleton className="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-700" />
                 </CardDescription>
-                <CardContent className="mt-2">
-                    <ScrollArea className="h-[150px]">
+                <CardContent className="mt-3"> {/* Reduced margin */}
+                    <ScrollArea className="h-[180px]"> {/* Reduced height */}
                         <div className="space-y-2">
                             <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
                             <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
@@ -126,12 +124,12 @@
         const [selectedOption, setSelectedOption] = useState('Paid');
         const { data: attendanceData, isLoading: isLoadingAttendance, error: attendanceError, refetch: refetchAttendance } = useQuery<Attendance[]>({
             queryKey: ['attendanceData'],
-            queryFn: getAttendanceList, // Use the imported function
+            queryFn: getAttendanceList,
         });
     
         const { data: employeeData, isLoading: isLoadingEmployee, error: employeeError, refetch: refetchEmployee } = useQuery<Employee[]>({
             queryKey: ['employeeData'],
-            queryFn: getEmployeeList, // Use the imported function
+            queryFn: getEmployeeList,
         });
     
         if (isLoadingAttendance || isLoadingEmployee) return <SkeletonCard />;
@@ -143,17 +141,17 @@
     
         if (attendanceError || employeeError) {
             return (
-                <Card className="flex-1 col-span-2 p-2">
+                <Card className="flex-1 col-span-2 p-3"> {/* Reduced padding */}
                     <CardHeader className="flex flex-col md:flex-row items-center justify-between">
                         <div className="flex items-center space-x-2">
                             <Activity size={'1.8rem'} className="text-black dark:text-white" />
                             <CardTitle className="text-base font-semibold">Error</CardTitle>
                         </div>
                     </CardHeader>
-                    <CardContent className="mt-2">
+                    <CardContent className="mt-3"> {/* Reduced margin */}
                         <div className="text-center">
                             <p className="text-red-500">Failed to load data. Please try again.</p>
-                            <Button onClick={handleRetry} className="mt-4">Retry</Button>
+                            <Button onClick={handleRetry} className="mt-3">Retry</Button>
                         </div>
                     </CardContent>
                 </Card>
@@ -172,7 +170,7 @@
             : 'Recent activities for adding employees, sorted from latest to oldest';
     
         return (
-            <Card className={`flex-1 col-span-2 p-2 ${className}`}>
+            <Card className={`flex-1 col-span-2 p-3 ${className}`}> {/* Reduced padding */}
                 <CardHeader className="flex flex-col md:flex-row items-center justify-between">
                     <div className="flex items-center space-x-2">
                         <Activity size={'1.8rem'} className="text-black dark:text-white" />
@@ -192,9 +190,9 @@
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </CardHeader>
-                <CardDescription className="mt-1 text-xs text-gray-600">{description}</CardDescription>
-                <CardContent className="mt-2">
-                    <ScrollArea className="h-[150px]">
+                <CardDescription className="mt-1 text-xs text-gray-600">{description}</CardDescription> {/* Reduced margin */}
+                <CardContent className="mt-3"> {/* Reduced margin */}
+                    <ScrollArea className="h-[170px]"> {/* Reduced height */}
                         {selectedOption === 'Paid' ? (
                             <RecentActivitiesTable tableData={paidLeaveData} />
                         ) : (
