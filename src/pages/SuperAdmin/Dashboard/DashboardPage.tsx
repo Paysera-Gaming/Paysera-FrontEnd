@@ -14,11 +14,11 @@ export default function Dashboard() {
         <SuperAdminsStatusCards />
 
         {/* Super Admin Info and Paid Leave Record side by side */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <div className="col-span-1">
             <SuperAdminInfoCard />
           </div>
-          <div className="col-span-1">
+          <div className="col-span-2">
             <RecentActivitiesCard />
           </div>
         </div>

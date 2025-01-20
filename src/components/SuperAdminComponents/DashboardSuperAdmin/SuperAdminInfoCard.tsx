@@ -27,7 +27,7 @@ function SuperAdminInfo() {
     }
 
     return (
-        <ul>
+        <ul className="text-sm"> {/* Adjusted font size */}
             <li>
                 <b>Name:</b> {info.firstName} {info.middleName} {info.lastName}
             </li>
@@ -47,7 +47,7 @@ function SuperAdminInfo() {
 export default function SuperAdminInfoCard() {
     return (
         <div className="flex flex-col gap-2">
-            <Card className="flex-1 p-0">
+            <Card className="flex-1 p-0 w-61"> {/* Adjusted width */}
                 <CardHeader className="pb-2 flex items-center justify-between flex-row">
                     <CardTitle>Super Admin Info</CardTitle>
                     <BookUser size={'1.8rem'}></BookUser>
@@ -56,7 +56,7 @@ export default function SuperAdminInfoCard() {
                     <SuperAdminInfo />
                 </CardContent>
             </Card>
-            <Card className="border-primary text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out">
+            <Card className="border-primary text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out w-61"> {/* Adjusted width */}
                 <CardHeader className="pb-0 flex flex-row items-center justify-between">
                     <CardTitle>Handbook</CardTitle>
                     <Book></Book>
