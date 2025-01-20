@@ -25,7 +25,7 @@ export default function HolidayList() {
   })
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center text-base font-semibold">
           <Calendar className="mr-2 h-5 w-5" />
@@ -33,7 +33,7 @@ export default function HolidayList() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[200px]">
+        <ScrollArea className="h-[400px]">
           <Table>
             <TableHeader>
               <TableRow>
@@ -65,4 +65,3 @@ export default function HolidayList() {
     </Card>
   )
 }
-
