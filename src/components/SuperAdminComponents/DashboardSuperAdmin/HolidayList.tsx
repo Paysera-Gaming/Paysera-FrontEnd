@@ -11,7 +11,7 @@ type Holiday = {
 }
 
 const fetchHolidays = async (): Promise<Holiday[]> => {
-  const response = await fetch(`${import.meta.env.VITE_BASE_API}/holidays`)
+  const response = await fetch(`${import.meta.env.VITE_BASE_API}api/holiday`)
   if (!response.ok) {
     throw new Error("Failed to fetch holidays")
   }
