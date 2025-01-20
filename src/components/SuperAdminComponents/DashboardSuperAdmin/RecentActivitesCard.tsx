@@ -29,6 +29,7 @@
     } from '@/components/ui/dropdown-menu';
     import { Button } from '@/components/ui/button';
     import { Skeleton } from '@/components/ui/skeleton';
+    import { Input } from '@/components/ui/input';
     
     function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
         const sortedData = tableData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -61,7 +62,15 @@
     }
     
     function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
-        const sortedData = tableData.sort((a, b) => b.id - a.id);
+        const [searchTerm, setSearchTerm] = useState('');
+        const [selectedAccessLevel, setSelectedAccessLevel] = useState('');
+    
+        const filteredData = tableData.filter((employee) =>
+            employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (selectedAccessLevel ? employee.accessLevel === selectedAccessLevel : true)
+        );
+    
+        const sortedData = filteredData.sort((a, b) => b.id - a.id);
     
         const renderedList = sortedData.map((employee) => (
             <TableRow key={employee.id}>
@@ -72,16 +81,48 @@
         ));
     
         return (
-            <Table className="text-base"> {/* Increased font size */}
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Username</TableHead>
-                        <TableHead>Access Level</TableHead>
-                        <TableHead>Status</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>{renderedList}</TableBody>
-            </Table>
+            <>
+                <div className="flex mb-4 space-x-2">
+                    <Input
+                        type="text"
+                        placeholder="Search by username"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="p-1 text-sm w-40">Access Level</Button>
+                       </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-64"> {/* Adjusted width */}
+                            <DropdownMenuItem onSelect={() => setSelectedAccessLevel('')}>
+                                All
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSelectedAccessLevel('SUPER_ADMIN')}>
+                                Super Admin
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSelectedAccessLevel('ADMIN')}>
+                                Admin
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSelectedAccessLevel('TEAM_LEADER')}>
+                                Team Leader
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSelectedAccessLevel('EMPLOYEE')}>
+                                Employee
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+                <Table className="text-base"> {/* Increased font size */}
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Username</TableHead>
+                            <TableHead>Access Level</TableHead>
+                            <TableHead>Status</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>{renderedList}</TableBody>
+                </Table>
+            </>
         );
     }
     
@@ -176,7 +217,7 @@
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" className="mt-2 md:mt-0 p-1 text-sm">Select Option</Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-48">
+                        <DropdownMenuContent className="w-64"> {/* Adjusted width */}
                             <DropdownMenuItem onSelect={() => handleDropdownChange('Paid')}>
                                 Paid
                             </DropdownMenuItem>
