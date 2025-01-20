@@ -25,7 +25,7 @@ export default function HolidayList() {
   })
 
   return (
-    <Card className="col-span-1">
+    <Card>
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center text-base font-semibold">
           <Calendar className="mr-2 h-5 w-5" />
