@@ -77,7 +77,7 @@ export const scheduleColumns: ColumnDef<TDepartmentSchedules>[] = [
 		accessorKey: 'Schedule.startTime',
 		header: 'Start Time',
 		cell: ({ row }) => {
-			return new Date(row.getValue('Schedule_startTime')).toString();
+			return dateToHours(new Date(row.getValue('Schedule_startTime')));
 		},
 	},
 	{
