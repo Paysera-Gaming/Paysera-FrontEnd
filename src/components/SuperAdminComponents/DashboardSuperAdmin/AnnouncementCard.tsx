@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 interface Announcement {
   id: number
@@ -10,39 +10,30 @@ interface Announcement {
 }
 
 export default function AnnouncementCard() {
-  const [announcements, setAnnouncements] = useState<Announcement[]>([])
-  const [error, setError] = useState<string | null>(null)
-  const baseApiUrl = import.meta.env.VITE_BASE_API
-
-  useEffect(() => {
-    const fetchAnnouncements = async () => {
-      try {
-        const response = await fetch(`${baseApiUrl}api/announcements`)
-        const data = await response.json()
-        if (Array.isArray(data)) {
-          setAnnouncements(data)
-        } else {
-          throw new Error("Unexpected response format")
-        }
-      } catch (error) {
-        console.error("Error fetching announcements:", error)
-        setError("Failed to load announcements")
-      }
-    }
-
-    fetchAnnouncements()
-  }, [baseApiUrl])
-
-  if (error) {
-    return <div className="text-red-500">{error}</div>
-  }
+  const [announcements] = useState<Announcement[]>([
+    { id: 1, title: "Announcement 1", body: "This is the body of announcement 1", createdAt: "", updatedAt: "" },
+    { id: 2, title: "Announcement 2", body: "This is the body of announcement 2", createdAt: "", updatedAt: "" },
+    { id: 3, title: "Announcement 3", body: "This is the body of announcement 3", createdAt: "", updatedAt: "" },
+    { id: 4, title: "Announcement 4", body: "This is the body of announcement 4", createdAt: "", updatedAt: "" },
+    { id: 5, title: "Announcement 5", body: "This is the body of announcement 5", createdAt: "", updatedAt: "" },
+    { id: 6, title: "Announcement 6", body: "This is the body of announcement 6", createdAt: "", updatedAt: "" },
+    { id: 7, title: "Announcement 7", body: "This is the body of announcement 7", createdAt: "", updatedAt: "" },
+    { id: 8, title: "Announcement 8", body: "This is the body of announcement 8", createdAt: "", updatedAt: "" },
+    { id: 9, title: "Announcement 9", body: "This is the body of announcement 9", createdAt: "", updatedAt: "" },
+    { id: 10, title: "Announcement 10", body: "This is the body of announcement 10", createdAt: "", updatedAt: "" },
+    { id: 11, title: "Announcement 11", body: "This is the body of announcement 11", createdAt: "", updatedAt: "" },
+    { id: 12, title: "Announcement 12", body: "This is the body of announcement 12", createdAt: "", updatedAt: "" },
+    { id: 13, title: "Announcement 13", body: "This is the body of announcement 13", createdAt: "", updatedAt: "" },
+    { id: 14, title: "Announcement 14", body: "This is the body of announcement 14", createdAt: "", updatedAt: "" },
+    { id: 15, title: "Announcement 15", body: "This is the body of announcement 15", createdAt: "", updatedAt: "" }
+  ])
 
   return (
-    <Card className="col-span-2 min-h-[135px]"> {/* Added min-height */}
+    <Card className="col-span-2 min-h-[80px]"> {/* Added min-height */}
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold">Announcements</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-2 max-h-[80px] overflow-auto"> {/* Added max-height and overflow */}
         {announcements.length > 0 ? (
           announcements.map((announcement) => (
             <div key={announcement.id} className="text-sm">
