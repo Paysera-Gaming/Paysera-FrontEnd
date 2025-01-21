@@ -80,6 +80,10 @@ export default function TimerDisplay() {
 		// OMEGA JEMPOY ALERT
 		let convertedToSecond = 0;
 		if (isSuccess && data) {
+			if (data.status === 'ONGOIG') {
+				useUserStore.getState().setUserClockStatus('Clock-In');
+			}
+			// HOLY SHIT I NEED TO FIX THIS
 			// if timeOut is present
 			if (data.timeOut) {
 				convertedToSecond = convertDateToSeconds(
@@ -89,30 +93,6 @@ export default function TimerDisplay() {
 				setTime(convertedToSecond);
 				return;
 			}
-
-			// if (data.lunchTimeOut) {
-			// 	convertedToSecond = convertDateToSeconds(
-			// 		new Date(data.timeIn),
-			// 		new Date()
-			// 	);
-			// 	setTime(convertedToSecond);
-			// 	return;
-			// }
-			// if lunchTimeOut is present but timeOut is not
-			// then we will use the lunchTimeOut to calculate the time
-			// if (data.lunchTimeIn) {
-			// 	convertedToSecond = convertDateToSeconds(
-			// 		new Date(data.timeIn),
-			// 		new Date(data.lunchTimeIn)
-			// 	);
-			// 	setTime(convertedToSecond);
-			// 	return;
-			// }
-
-			// convertedToSecond = convertDateToSeconds(
-			// 	new Date(data.timeIn),
-			// 	new Date()
-			// );
 			setTime(convertedToSecond);
 		}
 	}, [isSuccess, data]);

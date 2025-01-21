@@ -17,7 +17,7 @@ const useUserStore = create<TUserState>()(
 	persist(
 		(set, get) => ({
 			user: undefined as TUserInfo | undefined,
-			userClockStatus: 'Clock-In' as 'Clock-In' | 'Clock-Out',
+			userClockStatus: 'Clock-Out' as 'Clock-In' | 'Clock-Out',
 			setUser: (user: TUserInfo) => set({ user }),
 			getUser: () => get().user,
 			getUserClockStatus: () => get().userClockStatus,

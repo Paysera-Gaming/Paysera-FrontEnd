@@ -14,11 +14,7 @@ import ToasterSwitch from '@/lib/timeToasterUtils.ts';
 export default function Timebar() {
 	const { openConfirmation, closeConfirmation } = useConfirmationStore();
 
-	// this needs to be an await i'd rather not use a set timeout
-	// but this could be a timeout as well
-
 	const [getOverTime, setOverTime] = useState<boolean>(false);
-	const [getIsClockedIn, setIsClockedIn] = useState<boolean>(false);
 	const [getTotalHoursSufficient] = useState<number>(8);
 	const queryClient = useQueryClient();
 
@@ -75,7 +71,7 @@ export default function Timebar() {
 			return;
 		}
 		// check whether the user has already clocked in or not
-		if (!getIsClockedIn) {
+		if (useUserStore.getState().userClockStatus == 'Clock-Out') {
 			//if not clocked in proceed to the clock in dialogue
 			await closeConfirmation();
 			await confirmTimeIn();
@@ -101,9 +97,10 @@ export default function Timebar() {
 			onAction: () => {
 				toast.success('User has timed out of session');
 				setOverTime(false);
-				setIsClockedIn(false);
+				useUserStore.getState().setUserClockStatus('Clock-Out');
+				// setIsClockedIn(false);
 				// mutateTime.mutate('OverTimeEnd');
-				useUserStore.getState().setUserClockStatus('Clock-In');
+				// useUserStore.getState().setUserClockStatus('Clock-In');
 			},
 			onCancel: () => {
 				console.log('Cancel OVERTIME END');
@@ -139,10 +136,8 @@ export default function Timebar() {
 			cancelLabel: 'Cancel',
 			actionLabel: 'Continue',
 			onAction: () => {
-				setIsClockedIn(true);
+				useUserStore.getState().setUserClockStatus('Clock-In');
 				mutateTime.mutate('ClockIn');
-
-				useUserStore.getState().setUserClockStatus('Clock-Out');
 			},
 			onCancel: () => {
 				console.log('Cancel TimeIn');
@@ -159,10 +154,8 @@ export default function Timebar() {
 			onAction: () => {
 				console.log('Start TimeOut');
 				toast.success('User has timeout from the session');
-
-				setIsClockedIn(false);
 				mutateTime.mutate('ClockOut');
-				useUserStore.getState().setUserClockStatus('Clock-In');
+				useUserStore.getState().setUserClockStatus('Clock-Out');
 			},
 			onCancel: () => {
 				console.log('Cancel TimeOut');
@@ -178,7 +171,7 @@ export default function Timebar() {
 			actionLabel: 'Continue',
 			onAction: () => {
 				mutateTime.mutate('ClockOut');
-				setIsClockedIn(false);
+				useUserStore.getState().setUserClockStatus('Clock-Out');
 			},
 			onCancel: () => {
 				console.log('Cancel TimeOut');
@@ -195,7 +188,9 @@ export default function Timebar() {
 			{/*<TimeForm></TimeForm>*/}
 
 			<Button onClick={initModalValidations}>
-				{useUserStore.getState().getUserClockStatus()}
+				{useUserStore.getState().getUserClockStatus() === 'Clock-In'
+					? 'Clock-Out'
+					: 'Clock-In'}
 			</Button>
 		</header>
 	);
