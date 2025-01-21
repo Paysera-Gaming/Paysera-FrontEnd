@@ -111,21 +111,21 @@ export const scheduleColumns: ColumnDef<TDepartmentSchedules>[] = [
 		},
 	},
 
-	{
-		accessorKey: 'Schedule.lunchStartTime',
-		header: 'Lunch Start Time',
-		cell: ({ row }) => {
-			return dateToHours(new Date(row.getValue('Schedule_lunchStartTime')));
-		},
-	},
+	// {
+	// 	accessorKey: 'Schedule.lunchStartTime',
+	// 	header: 'Lunch Start Time',
+	// 	cell: ({ row }) => {
+	// 		return dateToHours(new Date(row.getValue('Schedule_lunchStartTime')));
+	// 	},
+	// },
 
-	{
-		accessorKey: 'Schedule.lunchEndTime',
-		header: 'Lunch End Time',
-		cell: ({ row }) => {
-			return dateToHours(new Date(row.getValue('Schedule_lunchEndTime')));
-		},
-	},
+	// {
+	// 	accessorKey: 'Schedule.lunchEndTime',
+	// 	header: 'Lunch End Time',
+	// 	cell: ({ row }) => {
+	// 		return dateToHours(new Date(row.getValue('Schedule_lunchEndTime')));
+	// 	},
+	// },
 	{
 		accessorKey: 'createdAt',
 		header: 'Created At',
