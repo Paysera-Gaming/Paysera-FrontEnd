@@ -1,6 +1,6 @@
 import { axiosInstance } from '.';
 import { AxiosResponse } from 'axios';
-import { set } from 'date-fns';
+import { set, addHours } from 'date-fns';
 export type TInputForm = {
 	name: string;
 	role: string;
@@ -8,6 +8,8 @@ export type TInputForm = {
 	timeOut: Date;
 	allowedOverTime: boolean;
 	scheduleType: 'FIXED' | 'SUPER_FLEXI' | 'FLEXI';
+	lunchStartTime: string;
+	lunchEndTime: string;
 };
 
 export type TDepartmentSchedules = {
@@ -67,12 +69,10 @@ export async function createSchedule(
 		schedule.scheduleType == 'FLEXI' ||
 		schedule.scheduleType == 'SUPER_FLEXI'
 	) {
-		console.log('foo');
-
-		// Create a base date (e.g., today)
+		// for flexi schedules we will automatically
+		// add 6am to 10pm for their
 		const today = new Date();
 
-		// Create the 6:00 AM date
 		const startDate = set(today, {
 			hours: 6,
 			minutes: 0,
@@ -80,7 +80,6 @@ export async function createSchedule(
 			milliseconds: 0,
 		});
 
-		// Create the 10:00 PM date
 		const endDate = set(today, {
 			hours: 22,
 			minutes: 0,
@@ -99,8 +98,8 @@ export async function createSchedule(
 				endTime: endDate,
 				limitWorkHoursDay: 8,
 				allowedOvertime: schedule.allowedOverTime,
-				lunchStartTime: schedule.timeIn,
-				lunchEndTime: schedule.timeOut,
+				lunchStartTime: new Date(),
+				lunchEndTime: addHours(new Date(), 1),
 			}
 		);
 
@@ -117,8 +116,8 @@ export async function createSchedule(
 				endTime: schedule.timeOut,
 				limitWorkHoursDay: totalHours,
 				allowedOvertime: schedule.allowedOverTime,
-				lunchStartTime: schedule.timeIn,
-				lunchEndTime: schedule.timeOut,
+				lunchStartTime: new Date(),
+				lunchEndTime: addHours(new Date(), 1),
 			}
 		);
 
@@ -144,8 +143,8 @@ export async function updateSchedule(
 			endTime: schedule.timeOut,
 			limitWorkHoursDay: totalHours,
 			allowedOvertime: schedule.allowedOverTime,
-			lunchStartTime: schedule.timeIn,
-			lunchEndTime: schedule.timeOut,
+			lunchStartTime: schedule.lunchStartTime,
+			lunchEndTime: schedule.lunchEndTime,
 		}
 	);
 	return response.status;
