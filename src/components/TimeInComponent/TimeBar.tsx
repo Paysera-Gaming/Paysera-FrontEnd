@@ -10,12 +10,18 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useUserStore } from '@/stores/userStore.ts';
 import { clockIn, clockOut } from '@/api/ClockInAPI.ts';
 import ToasterSwitch from '@/lib/timeToasterUtils.ts';
+import { TAttendance } from '@/api/AttendanceAPI';
+
+function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
+	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
+	const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
+	return differenceInSeconds;
+}
 
 export default function Timebar() {
 	const { openConfirmation, closeConfirmation } = useConfirmationStore();
 
 	const [getOverTime, setOverTime] = useState<boolean>(false);
-	const [getTotalHoursSufficient] = useState<number>(8);
 	const queryClient = useQueryClient();
 
 	const currentTime = new Date().toISOString();
@@ -77,10 +83,21 @@ export default function Timebar() {
 			await confirmTimeIn();
 		} else {
 			//     check if time worked is more than >= 8 hours
-			if (getTotalHoursSufficient >= 8) {
-				//ask for overtime
-				await closeConfirmation();
-				await startOvertimeDialogue();
+			const attendance = await queryClient.getQueryData<TAttendance>([
+				'UsersAttendance',
+			]);
+			if (attendance) {
+				// greater than
+				if (
+					convertDateToSeconds(new Date(attendance.timeIn), new Date()) >=
+					28_800
+				) {
+					//ask for overtime
+					await closeConfirmation();
+					await startOvertimeDialogue();
+				} else {
+					console.log('FOOBAR');
+				}
 			} else {
 				await closeConfirmation();
 				await warningInsufficientHoursDialogue();
