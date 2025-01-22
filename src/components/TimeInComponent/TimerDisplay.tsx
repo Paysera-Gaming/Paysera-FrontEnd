@@ -83,7 +83,6 @@ export default function TimerDisplay() {
 			if (data.status === 'ONGOIG') {
 				useUserStore.getState().setUserClockStatus('Clock-In');
 			}
-			// HOLY SHIT I NEED TO FIX THIS
 			// if timeOut is present
 			if (data.timeOut) {
 				convertedToSecond = convertDateToSeconds(
@@ -92,11 +91,19 @@ export default function TimerDisplay() {
 				);
 				setTime(convertedToSecond);
 				return;
+			} else {
+				// check the difference between the date now and the date when user timed in
+				convertedToSecond = convertDateToSeconds(
+					new Date(new Date()),
+					new Date(data.timeIn)
+				);
+				setTime(convertedToSecond);
+				return;
 			}
-			setTime(convertedToSecond);
 		}
 	}, [isSuccess, data]);
 
+	// this one is the counter
 	useEffect(() => {
 		console.log(data?.status);
 
