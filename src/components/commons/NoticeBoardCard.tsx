@@ -53,14 +53,14 @@ export default function NoticeBoardCard() {
 
 			return (
 				<Card className="col-span-3 row-span-3">
-					<CardHeader className="flex-row items-center justify-between w-full">
+					<CardHeader className=" p-3 2xl:p-5 flex-row items-center justify-between w-full">
 						<CardTitle className="text-base lg:text-lg xl:text-2xl  ">
 							Announcemnets
 						</CardTitle>
 						<Presentation></Presentation>
 					</CardHeader>
-					<CardContent>
-						<ScrollArea className="h-[250px]">
+					<CardContent className="p-3 2xl:p-5 ">
+						<ScrollArea className="h-[100px] 2xl:h-[250px]">
 							<ul className="list-disc list-inside">{AnnouncementList}</ul>
 						</ScrollArea>
 					</CardContent>

@@ -28,13 +28,13 @@ export default function UserInfoCard({ className }: { className: string }) {
 
 	return (
 		<Card className={className}>
-			<CardHeader className="flex-row pb-3   items-center justify-between w-full">
+			<CardHeader className="flex-row p-3 2xl:p-5 items-center justify-between w-full">
 				<CardTitle className="text-base lg:text-lg xl:text-2xl  ">
 					Employee Info
 				</CardTitle>
 				<User></User>
 			</CardHeader>
-			<CardContent>
+			<CardContent className=" p-3 pt-0 2xl:p-5">
 				<ul>
 					<li>Name: {userFullName}</li>
 					<li>Role: {returnRole(userInfo!.role)}</li>
@@ -42,7 +42,7 @@ export default function UserInfoCard({ className }: { className: string }) {
 					<li>Department: {userInfo!.departmentName}</li>
 				</ul>
 
-				<button onClick={alertTimeup}>TEST</button>
+				{/* <button onClick={alertTimeup}>TEST</button> */}
 			</CardContent>
 		</Card>
 	);

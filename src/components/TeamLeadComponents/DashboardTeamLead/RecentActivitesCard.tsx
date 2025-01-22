@@ -123,11 +123,12 @@ export default function RecentActivitiesCard() {
 						Recent activities of the employees of this department
 					</CardDescription>
 				</CardHeader>
-				<CardContent>
-					{/* <ScrollArea className="h-[200px] ">
-				<RecentActivitiesTable tableData={dummyData}></RecentActivitiesTable>
-			</ScrollArea> */}
-					WALA BOSS
+				<CardContent className="p-0 pb-2 ">
+					<ScrollArea className=" ">
+						<RecentActivitiesTable
+							tableData={dummyData}
+						></RecentActivitiesTable>
+					</ScrollArea>
 				</CardContent>
 			</Card>
 		);

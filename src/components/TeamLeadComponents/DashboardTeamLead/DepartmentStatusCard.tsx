@@ -49,7 +49,7 @@ export default function DepartmentStatusCard() {
 	if (isError) {
 		return (
 			<Card>
-				<CardHeader className=" pb-0 flex-row items-center justify-between w-full">
+				<CardHeader className=" pt-1 xl:pt-3 pb-0 flex-row items-center justify-between w-full">
 					<CardTitle className="text-base lg:text-lg xl:text-2xl ">
 						Department Status
 					</CardTitle>
