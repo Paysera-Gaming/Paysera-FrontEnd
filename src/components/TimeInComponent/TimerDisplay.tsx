@@ -80,7 +80,7 @@ export default function TimerDisplay() {
 		// OMEGA JEMPOY ALERT
 		let convertedToSecond = 0;
 		if (isSuccess && data) {
-			if (data.status === 'ONGOIG') {
+			if (data.status === 'ONGOING') {
 				useUserStore.getState().setUserClockStatus('Clock-In');
 			}
 			// if timeOut is present
