@@ -105,8 +105,6 @@ export default function TimerDisplay() {
 
 	// this one is the counter
 	useEffect(() => {
-		console.log(data?.status);
-
 		if (
 			isSuccess &&
 			(data.status === 'ONGOING' || data.status === 'OVERTIME')

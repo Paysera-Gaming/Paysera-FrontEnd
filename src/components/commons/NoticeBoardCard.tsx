@@ -33,9 +33,7 @@ export default function NoticeBoardCard() {
 	}
 
 	if (isSuccess) {
-		console.log(data);
 		// check if data is not empty
-
 		if (data.length != 0) {
 			const AnnouncementList = data.map((announcement, index) => {
 				const day = new Date(announcement.createdAt).getDate();
@@ -52,7 +50,6 @@ export default function NoticeBoardCard() {
 					</li>
 				);
 			});
-			// const AnnouncementList = <>LE ANNOUNCEMNTS</>;
 
 			return (
 				<Card className="col-span-3 row-span-3">

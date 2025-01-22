@@ -86,8 +86,9 @@ export default function Timebar() {
 			const attendance = await queryClient.getQueryData<TAttendance>([
 				'UsersAttendance',
 			]);
+
 			if (attendance) {
-				// greater than
+				// greater than or equal to 8 hours
 				if (
 					convertDateToSeconds(new Date(attendance.timeIn), new Date()) >=
 					28_800

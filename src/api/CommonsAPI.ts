@@ -22,7 +22,7 @@ export async function getAnnouncements(): Promise<IAnnouncements[]> {
 	const response: AxiosResponse<IAnnouncements[]> = await axiosInstance.get(
 		'/api/announcements'
 	);
-	console.log('response', response.data);
+
 	return response.data;
 }
 
