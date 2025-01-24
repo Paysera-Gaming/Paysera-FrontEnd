@@ -60,11 +60,6 @@ export async function createSchedule(
 	departmentId: number,
 	schedule: TInputForm
 ): Promise<number> {
-	const totalHours = calculateTotalHours(
-		schedule.timeIn.toDateString(),
-		schedule.timeOut.toDateString()
-	);
-
 	if (
 		schedule.scheduleType == 'FLEXI' ||
 		schedule.scheduleType == 'SUPER_FLEXI'
@@ -114,7 +109,7 @@ export async function createSchedule(
 				scheduleType: schedule.scheduleType,
 				startTime: schedule.timeIn,
 				endTime: schedule.timeOut,
-				limitWorkHoursDay: totalHours,
+				limitWorkHoursDay: 8,
 				allowedOvertime: schedule.allowedOverTime,
 				lunchStartTime: new Date(),
 				lunchEndTime: addHours(new Date(), 1),

@@ -7,7 +7,7 @@ import RecentActivitiesCard from '@/components/TeamLeadComponents/DashboardTeamL
 
 export default function Dashboard() {
 	return (
-		<div className=" w-full h-full border-border border-solid border p-5 rounded-md grid grid-flow-col grid-rows-6 gap-3">
+		<div className="min-h-0 min-w-0  w-full h-full border-border border-solid border p-5 rounded-md grid grid-flow-col grid-rows-6 gap-3">
 			<UserInfoCard className="row-span-2"></UserInfoCard>
 			<UserScheduleInfoCard className="col-span-1 row-span-3"></UserScheduleInfoCard>
 			<UserManualCard></UserManualCard>

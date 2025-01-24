@@ -82,20 +82,26 @@ export default function TimerDisplay() {
 		if (isSuccess && data) {
 			if (data.status === 'ONGOING') {
 				useUserStore.getState().setUserClockStatus('Clock-In');
+			} else {
+				useUserStore.getState().setUserClockStatus('Clock-Out');
 			}
+
+			console.log(data);
+
 			// if timeOut is present
 			if (data.timeOut) {
 				convertedToSecond = convertDateToSeconds(
 					new Date(data.timeIn),
 					new Date(data.timeOut)
 				);
+
 				setTime(convertedToSecond);
 				return;
 			} else {
-				// check the difference between the date now and the date when user timed in
+				console.log('FOO');
 				convertedToSecond = convertDateToSeconds(
-					new Date(new Date()),
-					new Date(data.timeIn)
+					new Date(data.timeIn),
+					new Date()
 				);
 				setTime(convertedToSecond);
 				return;

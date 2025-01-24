@@ -20,7 +20,7 @@ export default function NoticeBoardCard() {
 		return (
 			<Card className="col-span-3 row-span-3">
 				<CardHeader className="flex-row items-center justify-between w-full">
-					<CardTitle>Announcemnets</CardTitle>
+					<CardTitle className="text-base 2xl:text-lg">Announcemnets</CardTitle>
 					<Presentation></Presentation>
 				</CardHeader>
 				<CardContent>
@@ -54,7 +54,7 @@ export default function NoticeBoardCard() {
 			return (
 				<Card className="col-span-3 row-span-3">
 					<CardHeader className=" p-3 2xl:p-5 flex-row items-center justify-between w-full">
-						<CardTitle className="text-base lg:text-lg xl:text-2xl  ">
+						<CardTitle className="text-base  2xl:text-lg ">
 							Announcemnets
 						</CardTitle>
 						<Presentation></Presentation>
@@ -70,7 +70,7 @@ export default function NoticeBoardCard() {
 			return (
 				<Card className="col-span-3 row-span-3">
 					<CardHeader className="flex-row items-center justify-between w-full">
-						<CardTitle className="text-base lg:text-lg xl:text-2xl  ">
+						<CardTitle className="text-base 2xl:text-lg  ">
 							Announcemnets
 						</CardTitle>
 						<Presentation></Presentation>

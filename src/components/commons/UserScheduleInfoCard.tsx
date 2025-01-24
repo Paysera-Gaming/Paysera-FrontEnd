@@ -1,8 +1,14 @@
 import { TDepartmentSchedules } from '@/api/ScheduleAPI';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUserStore } from '@/stores/userStore';
+import { format } from 'date-fns';
 import { Calendar } from 'lucide-react';
 import { useEffect, useState } from 'react';
+
+function dateToHours(date: string) {
+	const translatedDate = new Date(date);
+	return format(translatedDate, 'HH:mm');
+}
 
 function ScheduleList({
 	schedule,
@@ -16,13 +22,18 @@ function ScheduleList({
 				<li>Schedule Info: {schedule.Schedule.scheduleType}</li>
 				<li>
 					Schedule Block:{' '}
-					{schedule.Schedule.startTime + ' - ' + schedule.Schedule.endTime}
+					{dateToHours(schedule.Schedule.startTime) +
+						' - ' +
+						dateToHours(schedule.Schedule.endTime)}
 				</li>
 				<li>
-					Personal Schedule Block:{' '}
-					{schedule.Schedule.startTime + ' - ' + schedule.Schedule.endTime}
+					Personal Schedule Block: SOON
+					{/* {schedule.Schedule.startTime + ' - ' + schedule.Schedule.endTime} */}
 				</li>
-				<li>Last Schedule Update: {schedule.Schedule.updatedAt}</li>
+				<li>
+					Last Schedule Update:{' '}
+					{new Date(schedule.Schedule.updatedAt).toISOString().split('T')[0]}
+				</li>
 			</ul>
 		);
 	} else {
@@ -49,7 +60,7 @@ export default function UserScheduleInfoCard({
 	return (
 		<Card className={className}>
 			<CardHeader className="flex-row p-3 2xl:p-5 items-center justify-between w-full pb-3 ">
-				<CardTitle className="text-base lg:text-lg xl:text-2xl   ">
+				<CardTitle className="text-base 2xl:text-lg    ">
 					Schedule Info
 				</CardTitle>
 				<Calendar></Calendar>

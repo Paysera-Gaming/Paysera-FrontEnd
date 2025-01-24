@@ -87,52 +87,56 @@ export const attendanceColumns: ColumnDef<TAttendance>[] = [
 		header: 'Time Worked total (in hours)',
 		cell: ({ row }) => {
 			const timeTotal = row.getValue('timeTotal');
-			const roundedTimeTotal = Number((timeTotal as number).toFixed(2));
-			return roundedTimeTotal;
+
+			if (timeTotal != null) {
+				const roundedTimeTotal = Number((timeTotal as number).toFixed(2));
+				return roundedTimeTotal;
+			}
+			return null;
 		},
 	},
-	{
-		accessorKey: 'lunchTimeIn',
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-				>
-					Lunch Time In
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
-		cell: ({ row }) => {
-			return dateToHours(new Date(row.getValue('lunchTimeIn')));
-		},
-	},
-	{
-		accessorKey: 'lunchTimeOut',
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-				>
-					Lunch Time Out
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
-		cell: ({ row }) => {
-			return dateToHours(new Date(row.getValue('lunchTimeOut')));
-		},
-	},
-	{
-		accessorKey: 'lunchTimeTotal',
-		header: 'Lunch Time Total',
-	},
-	{
-		accessorKey: 'overTimeTotal',
-		header: 'Over Time Total',
-	},
+	// {
+	// 	accessorKey: 'lunchTimeIn',
+	// 	header: ({ column }) => {
+	// 		return (
+	// 			<Button
+	// 				variant="ghost"
+	// 				onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+	// 			>
+	// 				Lunch Time In
+	// 				<ArrowUpDown className="ml-2 h-4 w-4" />
+	// 			</Button>
+	// 		);
+	// 	},
+	// 	cell: ({ row }) => {
+	// 		return dateToHours(new Date(row.getValue('lunchTimeIn')));
+	// 	},
+	// },
+	// {
+	// 	accessorKey: 'lunchTimeOut',
+	// 	header: ({ column }) => {
+	// 		return (
+	// 			<Button
+	// 				variant="ghost"
+	// 				onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+	// 			>
+	// 				Lunch Time Out
+	// 				<ArrowUpDown className="ml-2 h-4 w-4" />
+	// 			</Button>
+	// 		);
+	// 	},
+	// 	cell: ({ row }) => {
+	// 		return dateToHours(new Date(row.getValue('lunchTimeOut')));
+	// 	},
+	// },
+	// {
+	// 	accessorKey: 'lunchTimeTotal',
+	// 	header: 'Lunch Time Total',
+	// },
+	// {
+	// 	accessorKey: 'overTimeTotal',
+	// 	header: 'Over Time Total',
+	// },
 
 	{
 		accessorKey: 'updatedAt',

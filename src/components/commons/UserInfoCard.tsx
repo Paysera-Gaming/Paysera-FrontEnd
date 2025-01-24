@@ -29,7 +29,7 @@ export default function UserInfoCard({ className }: { className: string }) {
 	return (
 		<Card className={className}>
 			<CardHeader className="flex-row p-3 2xl:p-5 items-center justify-between w-full">
-				<CardTitle className="text-base lg:text-lg xl:text-2xl  ">
+				<CardTitle className="text-base 2xl:text-lg   ">
 					Employee Info
 				</CardTitle>
 				<User></User>

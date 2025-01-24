@@ -51,7 +51,7 @@ const router = createBrowserRouter([
 		element: (
 			// <ProtectedRoute page=} requiredLevel="EMPLOYEE" />
 			<>
-				<EmployeePage />
+				<ProtectedRoute page={<EmployeePage />} requiredLevel="EMPLOYEE" />
 				<ConfirmationDialog />
 			</>
 		),
@@ -65,11 +65,15 @@ const router = createBrowserRouter([
 		path: '/teamlead',
 
 		element: (
-			// <ProtectedRoute page={<TeamLeadPage />} requiredLevel="TEAM_LEADER" />
 			<>
-				<TeamLeadPage />
+				<ProtectedRoute page={<TeamLeadPage />} requiredLevel="TEAM_LEADER" />
 				<ConfirmationDialog />
 			</>
+
+			// <>
+			// 	<TeamLeadPage />
+			// 	<ConfirmationDialog />
+			// </>
 		),
 		children: [
 			{ index: true, loader: async () => redirect('/teamlead/dashboard') },
@@ -81,7 +85,12 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/superadmin',
-		element: <ProtectedRoute page={<SuperAdminPage />} requiredLevel="ADMIN" />,
+		element: (
+			<>
+				<ProtectedRoute page={<SuperAdminPage />} requiredLevel="ADMIN" />
+				<ConfirmationDialog />
+			</>
+		),
 		children: [
 			{ index: true, loader: async () => redirect('/superadmin/dashboard') },
 			{ path: 'dashboard', element: <SuperAdminDashboardPage /> },

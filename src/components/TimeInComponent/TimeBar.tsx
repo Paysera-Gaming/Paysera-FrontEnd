@@ -97,7 +97,9 @@ export default function Timebar() {
 					await closeConfirmation();
 					await startOvertimeDialogue();
 				} else {
-					console.log('FOOBAR');
+					// eto muna
+					await closeConfirmation();
+					await warningInsufficientHoursDialogue();
 				}
 			} else {
 				await closeConfirmation();
