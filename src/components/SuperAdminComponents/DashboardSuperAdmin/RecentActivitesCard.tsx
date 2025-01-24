@@ -17,10 +17,10 @@
     } from '@/components/ui/table';
     import { Activity } from 'lucide-react';
     import { useQuery } from '@tanstack/react-query';
-    import { getAttendanceList } from '@/components/SuperAdminComponents/AttendanceSuperAdmin/api'; // Corrected import path
-    import { getEmployeeList } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/api'; // Corrected import path
-    import { Attendance } from '@/components/SuperAdminComponents/AttendanceSuperAdmin/types'; // Corrected import path
-    import { Employee } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/types'; // Corrected import path
+    import { getAttendanceList } from '@/components/SuperAdminComponents/AttendanceSuperAdmin/api';
+    import { getEmployeeList } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/api';
+    import { Attendance } from '@/components/SuperAdminComponents/AttendanceSuperAdmin/types';
+    import { Employee } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/types';
     import {
         DropdownMenu,
         DropdownMenuContent,
@@ -29,13 +29,13 @@
     } from '@/components/ui/dropdown-menu';
     import { Button } from '@/components/ui/button';
     import { Skeleton } from '@/components/ui/skeleton';
+    import { Input } from '@/components/ui/input';
     
     function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
-        // Sort the data by date in descending order
         const sortedData = tableData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     
         const renderedList = sortedData.map((data) => {
-            const parsedDate = new Date(data.date); // Parse the date string
+            const parsedDate = new Date(data.date);
             return (
                 <TableRow key={data.id}>
                     <TableCell>{`${data.employee.lastName}, ${data.employee.firstName}`}</TableCell>
@@ -47,7 +47,7 @@
         });
     
         return (
-            <Table>
+            <Table className="text-base"> {/* Increased font size */}
                 <TableHeader>
                     <TableRow>
                         <TableHead>Last Name, First Name</TableHead>
@@ -62,38 +62,73 @@
     }
     
     function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
-        // Sort the data by id in descending order (assuming id is incremented over time)
-        const sortedData = tableData.sort((a, b) => b.id - a.id);
+        const [searchTerm, setSearchTerm] = useState('');
+        const [selectedAccessLevel, setSelectedAccessLevel] = useState('');
+    
+        const filteredData = tableData.filter((employee) =>
+            employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (selectedAccessLevel ? employee.accessLevel === selectedAccessLevel : true)
+        );
+    
+        const sortedData = filteredData.sort((a, b) => b.id - a.id);
     
         const renderedList = sortedData.map((employee) => (
             <TableRow key={employee.id}>
                 <TableCell>{employee.username}</TableCell>
-                <TableCell>{employee.firstName}</TableCell>
-                <TableCell>{employee.lastName}</TableCell>
                 <TableCell>{employee.accessLevel}</TableCell>
                 <TableCell>{employee.isActive ? 'Active' : 'Inactive'}</TableCell>
             </TableRow>
         ));
     
         return (
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Username</TableHead>
-                        <TableHead>First Name</TableHead>
-                        <TableHead>Last Name</TableHead>
-                        <TableHead>Access Level</TableHead>
-                        <TableHead>Status</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>{renderedList}</TableBody>
-            </Table>
+            <>
+                <div className="flex mb-4 space-x-2">
+                    <Input
+                        type="text"
+                        placeholder="Search by username"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="p-1 text-sm w-40">Access Level</Button>
+                       </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-64"> {/* Adjusted width */}
+                            <DropdownMenuItem onSelect={() => setSelectedAccessLevel('')}>
+                                All
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSelectedAccessLevel('SUPER_ADMIN')}>
+                                Super Admin
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSelectedAccessLevel('ADMIN')}>
+                                Admin
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSelectedAccessLevel('TEAM_LEADER')}>
+                                Team Leader
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSelectedAccessLevel('EMPLOYEE')}>
+                                Employee
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+                <Table className="text-base"> {/* Increased font size */}
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Username</TableHead>
+                            <TableHead>Access Level</TableHead>
+                            <TableHead>Status</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>{renderedList}</TableBody>
+                </Table>
+            </>
         );
     }
     
     const SkeletonCard: React.FC = () => {
         return (
-            <Card className="flex-1 col-span-2 p-2">
+            <Card className="flex-1 col-span-2 p-3">
                 <CardHeader className="flex flex-col md:flex-row items-center justify-between">
                     <div className="flex items-center space-x-2">
                         <Skeleton className="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-700" />
@@ -101,11 +136,11 @@
                     </div>
                     <Skeleton className="h-8 w-24 rounded bg-gray-200 dark:bg-gray-700 mt-2 md:mt-0" />
                 </CardHeader>
-                <CardDescription className="mt-1 text-xs text-gray-600">
+                <CardDescription className="mt-1 text-base text-gray-600"> {/* Increased font size */}
                     <Skeleton className="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-700" />
                 </CardDescription>
-                <CardContent className="mt-2">
-                    <ScrollArea className="h-[150px]">
+                <CardContent className="mt-3">
+                    <ScrollArea className="h-[180px]">
                         <div className="space-y-2">
                             <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
                             <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
@@ -118,16 +153,20 @@
         );
     };
     
-    export default function RecentActivitiesCard() {
+    interface RecentActivitiesCardProps {
+      className?: string;
+    }
+    
+    export default function RecentActivitiesCard({ className }: RecentActivitiesCardProps) {
         const [selectedOption, setSelectedOption] = useState('Paid');
         const { data: attendanceData, isLoading: isLoadingAttendance, error: attendanceError, refetch: refetchAttendance } = useQuery<Attendance[]>({
             queryKey: ['attendanceData'],
-            queryFn: getAttendanceList, // Use the imported function
+            queryFn: getAttendanceList,
         });
     
         const { data: employeeData, isLoading: isLoadingEmployee, error: employeeError, refetch: refetchEmployee } = useQuery<Employee[]>({
             queryKey: ['employeeData'],
-            queryFn: getEmployeeList, // Use the imported function
+            queryFn: getEmployeeList,
         });
     
         if (isLoadingAttendance || isLoadingEmployee) return <SkeletonCard />;
@@ -139,17 +178,17 @@
     
         if (attendanceError || employeeError) {
             return (
-                <Card className="flex-1 col-span-2 p-2">
+                <Card className="flex-1 col-span-2 p-3">
                     <CardHeader className="flex flex-col md:flex-row items-center justify-between">
                         <div className="flex items-center space-x-2">
                             <Activity size={'1.8rem'} className="text-black dark:text-white" />
                             <CardTitle className="text-base font-semibold">Error</CardTitle>
                         </div>
                     </CardHeader>
-                    <CardContent className="mt-2">
+                    <CardContent className="mt-3">
                         <div className="text-center">
                             <p className="text-red-500">Failed to load data. Please try again.</p>
-                            <Button onClick={handleRetry} className="mt-4">Retry</Button>
+                            <Button onClick={handleRetry} className="mt-3">Retry</Button>
                         </div>
                     </CardContent>
                 </Card>
@@ -168,7 +207,7 @@
             : 'Recent activities for adding employees, sorted from latest to oldest';
     
         return (
-            <Card className="flex-1 col-span-2 p-2">
+            <Card className={`flex-1 col-span-2 p-3 ${className}`}>
                 <CardHeader className="flex flex-col md:flex-row items-center justify-between">
                     <div className="flex items-center space-x-2">
                         <Activity size={'1.8rem'} className="text-black dark:text-white" />
@@ -178,7 +217,7 @@
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" className="mt-2 md:mt-0 p-1 text-sm">Select Option</Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-48">
+                        <DropdownMenuContent className="w-64"> {/* Adjusted width */}
                             <DropdownMenuItem onSelect={() => handleDropdownChange('Paid')}>
                                 Paid
                             </DropdownMenuItem>
@@ -188,9 +227,9 @@
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </CardHeader>
-                <CardDescription className="mt-1 text-xs text-gray-600">{description}</CardDescription>
-                <CardContent className="mt-2">
-                    <ScrollArea className="h-[150px]">
+                <CardDescription className="mt-1 text-base text-gray-600">{description}</CardDescription> {/* Increased font size */}
+                <CardContent className="mt-3">
+                    <ScrollArea className="h-[170px]">
                         {selectedOption === 'Paid' ? (
                             <RecentActivitiesTable tableData={paidLeaveData} />
                         ) : (

@@ -1,37 +1,27 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { axiosInstance } from '@/api';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { toast } from 'sonner';
-import { PlusIcon, Edit2, Trash2, CalendarIcon } from 'lucide-react';
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { format } from "date-fns"
-import { cn } from "@/lib/utils"
-import { Textarea } from "@/components/ui/textarea"; // Import the Textarea component
+import { PlusIcon, Edit2, Trash2 } from 'lucide-react';
+import AnnouncementDialogs from './AnnouncementDialogs';
+import AnnouncementPagination from './AnnouncementPagination';
+import { fetchAnnouncements, addAnnouncement, editAnnouncement, deleteAnnouncement } from './api';
 
 interface Announcement {
   id: number;
   title: string;
   body: string;
-  startDate: Date;
-  endDate: Date;
+  createdAt: string;
+  updatedAt: string;
 }
-
-const fetchAnnouncements = async (): Promise<Announcement[]> => {
-  const response = await axiosInstance.get('/api/announcement');
-  return response.data;
-};
 
 const AnnouncementList: React.FC = () => {
   const queryClient = useQueryClient();
-  const { data: announcements = [] } = useQuery<Announcement[], Error>({
-    queryKey: ['announcement'],
+  const { data: announcements = [], isLoading, isError, error } = useQuery<Announcement[], Error>({
+    queryKey: ['announcements'],
     queryFn: fetchAnnouncements,
   });
 
@@ -40,36 +30,56 @@ const AnnouncementList: React.FC = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const announcementsPerPage = 5;
 
   const addAnnouncementMutation = useMutation({
-    mutationFn: (newAnnouncement: Omit<Announcement, 'id'>) => axiosInstance.post('/api/announcement', newAnnouncement),
+    mutationFn: addAnnouncement,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['announcement'] });
+      queryClient.invalidateQueries({ queryKey: ['announcements'] });
       toast.success('Announcement added successfully!');
+    },
+    onError: (error) => {
+      console.error('Error adding announcement:', error);
+      toast.error('Failed to add announcement. Please try again.');
     },
   });
 
   const editAnnouncementMutation = useMutation({
-    mutationFn: (updatedAnnouncement: Announcement) => axiosInstance.put(`/api/announcement/${updatedAnnouncement.id}`, updatedAnnouncement),
+    mutationFn: editAnnouncement,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['announcement'] });
+      queryClient.invalidateQueries({ queryKey: ['announcements'] });
       toast.success('Announcement updated successfully!');
+    },
+    onError: (error) => {
+      console.error('Error updating announcement:', error);
+      toast.error('Failed to update announcement. Please try again.');
     },
   });
 
   const deleteAnnouncementMutation = useMutation({
-    mutationFn: (id: number) => axiosInstance.delete(`/api/announcement/${id}`),
+    mutationFn: deleteAnnouncement,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['announcement'] });
+      queryClient.invalidateQueries({ queryKey: ['announcements'] });
       toast.success('Announcement deleted successfully!');
+    },
+    onError: (error) => {
+      console.error('Error deleting announcement:', error);
+      toast.error('Failed to delete announcement. Please try again.');
     },
   });
 
-  const filteredAnnouncements = announcements.filter((announcement) => {
-    return announcement.title.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+  const sortedAnnouncements = announcements.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-  const handleFormSubmit = (newAnnouncement: Omit<Announcement, 'id'>) => {
+  const filteredAnnouncements = sortedAnnouncements.filter((announcement) =>
+    announcement?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false
+  );
+
+  const indexOfLastAnnouncement = currentPage * announcementsPerPage;
+  const indexOfFirstAnnouncement = indexOfLastAnnouncement - announcementsPerPage;
+  const currentAnnouncements = filteredAnnouncements.slice(indexOfFirstAnnouncement, indexOfLastAnnouncement);
+
+  const handleFormSubmit = (newAnnouncement: Omit<Announcement, 'id' | 'createdAt' | 'updatedAt'>) => {
     addAnnouncementMutation.mutate(newAnnouncement);
     setIsFormOpen(false);
   };
@@ -88,6 +98,14 @@ const AnnouncementList: React.FC = () => {
     }
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading announcements: {error?.message}</div>;
+  }
+
   return (
     <div className="p-4 space-y-4">
       <div className="flex justify-between items-center">
@@ -105,180 +123,70 @@ const AnnouncementList: React.FC = () => {
 
       <Card>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Body</TableHead>
-                <TableHead>Start Date</TableHead>
-                <TableHead>End Date</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredAnnouncements.map((announcement) => (
-                <TableRow key={announcement.id}>
-                  <TableCell>{announcement.title}</TableCell>
-                  <TableCell>{announcement.body}</TableCell>
-                  <TableCell>{format(new Date(announcement.startDate), "PPP")}</TableCell>
-                  <TableCell>{format(new Date(announcement.endDate), "PPP")}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={() => {
-                        setSelectedAnnouncement(announcement);
-                        setIsEditOpen(true);
-                      }}>
-                        <Edit2 size={16} className="mr-2" />
-                        Edit
-                      </Button>
-                      <Button variant="outline" size="sm" onClick={() => {
-                        setSelectedAnnouncement(announcement);
-                        setIsDeleteDialogOpen(true);
-                      }}>
-                        <Trash2 size={16} className="mr-2" />
-                        Delete
-                      </Button>
-                    </div>
-                  </TableCell>
+          {currentAnnouncements.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Body</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {currentAnnouncements.map((announcement) => (
+                  <TableRow key={announcement.id}>
+                    <TableCell>{announcement.title}</TableCell>
+                    <TableCell>{announcement.body}</TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={() => {
+                          setSelectedAnnouncement(announcement);
+                          setIsEditOpen(true);
+                        }}>
+                          <Edit2 size={16} className="mr-2" />
+                          Edit
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => {
+                          setSelectedAnnouncement(announcement);
+                          setIsDeleteDialogOpen(true);
+                        }}>
+                          <Trash2 size={16} className="mr-2" />
+                          Delete
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="text-center py-4">No announcements found.</div>
+          )}
         </CardContent>
       </Card>
 
-      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Add New Announcement</DialogTitle>
-            <DialogDescription>
-              Enter the details for your new announcement here.
-            </DialogDescription>
-          </DialogHeader>
-          <AnnouncementForm onSubmit={handleFormSubmit} onCancel={() => setIsFormOpen(false)} />
-        </DialogContent>
-      </Dialog>
-
-      {selectedAnnouncement && (
-        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Edit Announcement</DialogTitle>
-              <DialogDescription>
-                Make changes to your announcement here.
-              </DialogDescription>
-            </DialogHeader>
-            <AnnouncementForm 
-              announcement={selectedAnnouncement} 
-              onSubmit={(updatedAnnouncement) => handleEditSubmit({ ...updatedAnnouncement, id: selectedAnnouncement.id })} 
-              onCancel={() => setIsEditOpen(false)} 
-            />
-          </DialogContent>
-        </Dialog>
+      {filteredAnnouncements.length > announcementsPerPage && (
+        <AnnouncementPagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalAnnouncements={filteredAnnouncements.length}
+          announcementsPerPage={announcementsPerPage}
+        />
       )}
 
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this announcement? This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={handleDeleteConfirm}>Delete</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <AnnouncementDialogs
+        isFormOpen={isFormOpen}
+        setIsFormOpen={setIsFormOpen}
+        isEditOpen={isEditOpen}
+        setIsEditOpen={setIsEditOpen}
+        isDeleteDialogOpen={isDeleteDialogOpen}
+        setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+        selectedAnnouncement={selectedAnnouncement}
+        handleFormSubmit={handleFormSubmit}
+        handleEditSubmit={handleEditSubmit}
+        handleDeleteConfirm={handleDeleteConfirm}
+      />
     </div>
-  );
-};
-
-interface AnnouncementFormProps {
-  announcement?: Announcement;
-  onSubmit: (announcement: Omit<Announcement, 'id'>) => void;
-  onCancel: () => void;
-}
-
-const AnnouncementForm: React.FC<AnnouncementFormProps> = ({ announcement, onSubmit, onCancel }) => {
-  const [title, setTitle] = useState(announcement?.title || '');
-  const [body, setBody] = useState(announcement?.body || '');
-  const [startDate, setStartDate] = useState<Date | undefined>(announcement?.startDate ? new Date(announcement.startDate) : undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(announcement?.endDate ? new Date(announcement.endDate) : undefined);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (title && body && startDate && endDate) {
-      onSubmit({ title, body, startDate, endDate });
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
-        <Textarea id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="body">Body</Label>
-        <Textarea id="body" value={body} onChange={(e) => setBody(e.target.value)} required />
-      </div>
-      <div className="space-y-2">
-        <Label>Start Date</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full justify-start text-left font-normal",
-                !startDate && "text-muted-foreground"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {startDate ? format(startDate, "PPP") : <span>Pick a date</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={startDate}
-              onSelect={setStartDate}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
-      <div className="space-y-2">
-        <Label>End Date</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full justify-start text-left font-normal",
-                !endDate && "text-muted-foreground"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {endDate ? format(endDate, "PPP") : <span>Pick a date</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={endDate}
-              onSelect={setEndDate}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
-      <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
-        <Button type="submit">Save</Button>
-      </div>
-    </form>
   );
 };
 

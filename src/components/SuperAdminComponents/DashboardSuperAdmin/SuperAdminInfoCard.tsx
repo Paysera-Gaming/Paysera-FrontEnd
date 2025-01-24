@@ -27,7 +27,7 @@ function SuperAdminInfo() {
     }
 
     return (
-        <ul>
+        <ul className="text-sm space-y-2"> {/* Reduced spacing */}
             <li>
                 <b>Name:</b> {info.firstName} {info.middleName} {info.lastName}
             </li>
@@ -46,9 +46,9 @@ function SuperAdminInfo() {
 
 export default function SuperAdminInfoCard() {
     return (
-        <div className="flex flex-col gap-2">
-            <Card className="flex-1 p-0">
-                <CardHeader className="pb-2 flex items-center justify-between flex-row">
+        <div className="flex flex-col gap-2"> {/* Reduced gap between cards */}
+            <Card className="flex-1 p-2 w-61"> {/* Reduced padding */}
+                <CardHeader className="pb-2 flex items-center justify-between flex-row"> {/* Reduced padding */}
                     <CardTitle>Super Admin Info</CardTitle>
                     <BookUser size={'1.8rem'}></BookUser>
                 </CardHeader>
@@ -56,8 +56,8 @@ export default function SuperAdminInfoCard() {
                     <SuperAdminInfo />
                 </CardContent>
             </Card>
-            <Card className="border-primary text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out">
-                <CardHeader className="pb-0 flex flex-row items-center justify-between">
+            <Card className="border-primary text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out w-61 p-2"> {/* Reduced padding */}
+                <CardHeader className="pb-2 flex flex-row items-center justify-between"> {/* Reduced padding */}
                     <CardTitle>Handbook</CardTitle>
                     <Book></Book>
                 </CardHeader>

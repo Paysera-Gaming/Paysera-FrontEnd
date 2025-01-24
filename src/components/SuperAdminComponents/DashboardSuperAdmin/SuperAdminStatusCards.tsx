@@ -1,71 +1,49 @@
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { Users, UserCheck, UserX } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { fetchEmployees } from '@/utils/fetchEmployees'; // Import the shared fetch function
-import { Employee } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/types'; // Adjust the import path as needed
-import AnnouncementCard from './announcement-card'; // Import the AnnouncementCard component
-
-type CardData = {
-    title: string;
-    population: number;
-    icon: React.ReactNode;
-};
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect } from "react"
+import { fetchEmployees } from "@/utils/fetchEmployees"
+import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types"
 
 export default function EmployeesStatusCards() {
-    const [employees, setEmployees] = useState<Employee[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([])
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await fetchEmployees();
-            setEmployees(data);
-        };
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchEmployees()
+      setEmployees(data)
+    }
 
-        fetchData(); // Initial fetch
-    }, []);
+    fetchData()
+  }, [])
 
-    const overallCount = employees.length;
-    const onlineCount = employees.filter((emp: Employee) => emp.isActive).length;
-    const offlineCount = overallCount - onlineCount;
+  const overallCount = employees.length
+  const onlineCount = employees.filter((emp: Employee) => emp.isActive).length
+  const offlineCount = overallCount - onlineCount
 
-    const cardData: CardData[] = [
-        {
-            title: 'Total Employees',
-            population: overallCount,
-            icon: <Users></Users>,
-        },
-        {
-            title: 'Online Employees',
-            population: onlineCount,
-            icon: <UserCheck></UserCheck>,
-        },
-        {
-            title: 'Offline Employees',
-            population: offlineCount,
-            icon: <UserX></UserX>,
-        },
-    ];
-
-    const CardItems = cardData.map((card) => (
-        <Card className="flex-1 p-2 m-2 h-18" key={card.title}>
-            <CardContent className="flex items-center justify-between p-0 pb-1">
-                <p className="text-sm">{card.title}:</p>
-                {card.icon}
-            </CardContent>
-            <CardHeader className="p-0">
-                <CardTitle className="text-lg">{card.population}</CardTitle>
-            </CardHeader>
-        </Card>
-    ));
-
-    return (
-        <>
-            <AnnouncementCard /> {/* Include the AnnouncementCard component at the top */}
-            {CardItems}
-        </>
-    );
+  return (
+    <Card className="col-span-1">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base font-semibold">Employee Status</CardTitle>
+      </CardHeader>
+      <CardContent className="flex justify-between space-x-4">
+        <div className="flex items-center space-x-2">
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">Employees</p>
+            <p className="text-2xl font-semibold">{overallCount}</p>
+          </div>
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">Online</p>
+            <p className="text-2xl font-semibold">{onlineCount}</p>
+          </div>
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">Offline</p>
+            <p className="text-2xl font-semibold">{offlineCount}</p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
 }
