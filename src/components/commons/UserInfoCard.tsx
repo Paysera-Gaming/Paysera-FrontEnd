@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUserStore } from '@/stores/userStore';
 import { User } from 'lucide-react';
 
+import alertTimeup from './alertTimeup';
+
 function returnRole(role: string) {
 	return role === 'ADMIN'
 		? 'Admin'
@@ -16,7 +18,7 @@ export default function UserInfoCard({ className }: { className: string }) {
 		firstName: 'John',
 		accessLevel: 'Employee',
 		departmentName: 'DOJ',
-		role: 'gamer',
+		role: 'NOT WORKING',
 	};
 	const userFullName = userInfo!.lastName + ' ' + userInfo!.firstName;
 
@@ -26,17 +28,21 @@ export default function UserInfoCard({ className }: { className: string }) {
 
 	return (
 		<Card className={className}>
-			<CardHeader className="flex-row items-center justify-between w-full">
-				<CardTitle>Employee Info</CardTitle>
+			<CardHeader className="flex-row p-3 2xl:p-5 items-center justify-between w-full">
+				<CardTitle className="text-base lg:text-lg xl:text-2xl  ">
+					Employee Info
+				</CardTitle>
 				<User></User>
 			</CardHeader>
-			<CardContent>
+			<CardContent className=" p-3 pt-0 2xl:p-5">
 				<ul>
 					<li>Name: {userFullName}</li>
 					<li>Role: {returnRole(userInfo!.role)}</li>
 					<li>Access Level: {userInfo!.accessLevel}</li>
 					<li>Department: {userInfo!.departmentName}</li>
 				</ul>
+
+				{/* <button onClick={alertTimeup}>TEST</button> */}
 			</CardContent>
 		</Card>
 	);

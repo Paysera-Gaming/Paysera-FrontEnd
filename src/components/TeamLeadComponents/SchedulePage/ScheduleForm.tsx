@@ -135,14 +135,14 @@ export default function ScheduleForm({
 							render={({ field }) => (
 								<FormItem className="">
 									<div className="flex items-center justify-start gap-2">
-										<FormLabel>Schedule Name</FormLabel>
+										<FormLabel>Schedule Name </FormLabel>
 										<TooltipProvider>
 											<Tooltip>
 												<TooltipTrigger asChild>
 													<Info className="w-4 h-4"></Info>
 												</TooltipTrigger>
 												<TooltipContent>
-													This is the name of the schedule
+													This is the name of the schedule 
 												</TooltipContent>
 											</Tooltip>
 										</TooltipProvider>

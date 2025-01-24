@@ -80,6 +80,9 @@ export default function TimerDisplay() {
 		// OMEGA JEMPOY ALERT
 		let convertedToSecond = 0;
 		if (isSuccess && data) {
+			if (data.status === 'ONGOING') {
+				useUserStore.getState().setUserClockStatus('Clock-In');
+			}
 			// if timeOut is present
 			if (data.timeOut) {
 				convertedToSecond = convertDateToSeconds(
@@ -88,38 +91,20 @@ export default function TimerDisplay() {
 				);
 				setTime(convertedToSecond);
 				return;
+			} else {
+				// check the difference between the date now and the date when user timed in
+				convertedToSecond = convertDateToSeconds(
+					new Date(new Date()),
+					new Date(data.timeIn)
+				);
+				setTime(convertedToSecond);
+				return;
 			}
-
-			// if (data.lunchTimeOut) {
-			// 	convertedToSecond = convertDateToSeconds(
-			// 		new Date(data.timeIn),
-			// 		new Date()
-			// 	);
-			// 	setTime(convertedToSecond);
-			// 	return;
-			// }
-			// if lunchTimeOut is present but timeOut is not
-			// then we will use the lunchTimeOut to calculate the time
-			// if (data.lunchTimeIn) {
-			// 	convertedToSecond = convertDateToSeconds(
-			// 		new Date(data.timeIn),
-			// 		new Date(data.lunchTimeIn)
-			// 	);
-			// 	setTime(convertedToSecond);
-			// 	return;
-			// }
-
-			// convertedToSecond = convertDateToSeconds(
-			// 	new Date(data.timeIn),
-			// 	new Date()
-			// );
-			setTime(convertedToSecond);
 		}
 	}, [isSuccess, data]);
 
+	// this one is the counter
 	useEffect(() => {
-		console.log(data?.status);
-
 		if (
 			isSuccess &&
 			(data.status === 'ONGOING' || data.status === 'OVERTIME')

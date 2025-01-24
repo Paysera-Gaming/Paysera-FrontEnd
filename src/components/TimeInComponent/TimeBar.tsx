@@ -10,16 +10,18 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useUserStore } from '@/stores/userStore.ts';
 import { clockIn, clockOut } from '@/api/ClockInAPI.ts';
 import ToasterSwitch from '@/lib/timeToasterUtils.ts';
+import { TAttendance } from '@/api/AttendanceAPI';
+
+function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
+	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
+	const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
+	return differenceInSeconds;
+}
 
 export default function Timebar() {
 	const { openConfirmation, closeConfirmation } = useConfirmationStore();
 
-	// this needs to be an await i'd rather not use a set timeout
-	// but this could be a timeout as well
-
 	const [getOverTime, setOverTime] = useState<boolean>(false);
-	const [getIsClockedIn, setIsClockedIn] = useState<boolean>(false);
-	const [getTotalHoursSufficient] = useState<number>(8);
 	const queryClient = useQueryClient();
 
 	const currentTime = new Date().toISOString();
@@ -75,16 +77,28 @@ export default function Timebar() {
 			return;
 		}
 		// check whether the user has already clocked in or not
-		if (!getIsClockedIn) {
+		if (useUserStore.getState().userClockStatus == 'Clock-Out') {
 			//if not clocked in proceed to the clock in dialogue
 			await closeConfirmation();
 			await confirmTimeIn();
 		} else {
 			//     check if time worked is more than >= 8 hours
-			if (getTotalHoursSufficient >= 8) {
-				//ask for overtime
-				await closeConfirmation();
-				await startOvertimeDialogue();
+			const attendance = await queryClient.getQueryData<TAttendance>([
+				'UsersAttendance',
+			]);
+
+			if (attendance) {
+				// greater than or equal to 8 hours
+				if (
+					convertDateToSeconds(new Date(attendance.timeIn), new Date()) >=
+					28_800
+				) {
+					//ask for overtime
+					await closeConfirmation();
+					await startOvertimeDialogue();
+				} else {
+					console.log('FOOBAR');
+				}
 			} else {
 				await closeConfirmation();
 				await warningInsufficientHoursDialogue();
@@ -101,9 +115,10 @@ export default function Timebar() {
 			onAction: () => {
 				toast.success('User has timed out of session');
 				setOverTime(false);
-				setIsClockedIn(false);
+				useUserStore.getState().setUserClockStatus('Clock-Out');
+				// setIsClockedIn(false);
 				// mutateTime.mutate('OverTimeEnd');
-				useUserStore.getState().setUserClockStatus('Clock-In');
+				// useUserStore.getState().setUserClockStatus('Clock-In');
 			},
 			onCancel: () => {
 				console.log('Cancel OVERTIME END');
@@ -139,10 +154,8 @@ export default function Timebar() {
 			cancelLabel: 'Cancel',
 			actionLabel: 'Continue',
 			onAction: () => {
-				setIsClockedIn(true);
+				useUserStore.getState().setUserClockStatus('Clock-In');
 				mutateTime.mutate('ClockIn');
-
-				useUserStore.getState().setUserClockStatus('Clock-Out');
 			},
 			onCancel: () => {
 				console.log('Cancel TimeIn');
@@ -159,10 +172,8 @@ export default function Timebar() {
 			onAction: () => {
 				console.log('Start TimeOut');
 				toast.success('User has timeout from the session');
-
-				setIsClockedIn(false);
 				mutateTime.mutate('ClockOut');
-				useUserStore.getState().setUserClockStatus('Clock-In');
+				useUserStore.getState().setUserClockStatus('Clock-Out');
 			},
 			onCancel: () => {
 				console.log('Cancel TimeOut');
@@ -178,7 +189,7 @@ export default function Timebar() {
 			actionLabel: 'Continue',
 			onAction: () => {
 				mutateTime.mutate('ClockOut');
-				setIsClockedIn(false);
+				useUserStore.getState().setUserClockStatus('Clock-Out');
 			},
 			onCancel: () => {
 				console.log('Cancel TimeOut');
@@ -187,7 +198,7 @@ export default function Timebar() {
 	}
 
 	return (
-		<header className="border-border border-solid border w-full rounded-md p-2 px-5 flex items-center justify-between">
+		<header className=" border-border border-solid border w-full rounded-md p-2 px-5 flex items-center justify-between">
 			{/* timer display */}
 			<TimerDisplay></TimerDisplay>
 
@@ -195,7 +206,9 @@ export default function Timebar() {
 			{/*<TimeForm></TimeForm>*/}
 
 			<Button onClick={initModalValidations}>
-				{useUserStore.getState().getUserClockStatus()}
+				{useUserStore.getState().getUserClockStatus() === 'Clock-In'
+					? 'Clock-Out'
+					: 'Clock-In'}
 			</Button>
 		</header>
 	);

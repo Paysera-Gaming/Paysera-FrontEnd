@@ -23,6 +23,11 @@ export default function LoginPage() {
 	// this useEffect checks if the user is already logged in
 	// if so then they will be redirected to their respective dashboard
 	useEffect(() => {
+		// check first if there is already permission to send notifs
+		if (Notification.permission != 'granted') {
+			Notification.requestPermission();
+		}
+
 		if (useUserStore.getState().user != undefined) {
 			const userRoute = useUserStore.getState().user?.accessLevel;
 			console.log('User is logged in');

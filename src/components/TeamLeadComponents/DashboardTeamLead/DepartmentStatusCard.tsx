@@ -49,17 +49,19 @@ export default function DepartmentStatusCard() {
 	if (isError) {
 		return (
 			<Card>
-				<CardHeader className="pt-3 pb-0 flex-row items-center justify-between w-full">
-					<CardTitle>Department Status</CardTitle>
+				<CardHeader className=" pt-1 xl:pt-5  pb-0 flex-row items-center justify-between w-full">
+					<CardTitle className="text-base lg:text-lg xl:text-2xl ">
+						Department Status
+					</CardTitle>
 					<University></University>
 				</CardHeader>
 				<CardContent>
-					<ul className="list-disc list-inside">
+					<ul className="list-disc list-inside flex justify-between items-center">
 						<li className="marker:text-green-500 marker:text-2xl">
-							Online: Error
+							<b>Online:</b> 0
 						</li>
 						<li className="marker:text-red-500 marker:text-2xl">
-							Offline: Error
+							<b>Offline:</b> 0
 						</li>
 					</ul>
 				</CardContent>
@@ -69,12 +71,14 @@ export default function DepartmentStatusCard() {
 
 	return (
 		<Card>
-			<CardHeader className="pt-3 pb-0 flex-row items-center justify-between w-full">
-				<CardTitle>Department Status</CardTitle>
+			<CardHeader className=" pb-0 pt-3 px-3 xl:px-5 xl:pt-5  flex-row items-center justify-between w-full">
+				<CardTitle className="text-base lg:text-lg xl:text-2xl ">
+					Department Status
+				</CardTitle>
 				<University></University>
 			</CardHeader>
 			<CardContent>
-				<ul className="list-disc list-inside">
+				<ul className="list-disc list-inside flex justify-between items-center">
 					<li className="marker:text-green-500 marker:text-2xl">
 						Online: {userQueries[1].data?.length ?? 0}
 					</li>

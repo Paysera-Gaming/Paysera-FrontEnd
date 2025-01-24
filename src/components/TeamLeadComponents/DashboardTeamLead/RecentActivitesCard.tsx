@@ -114,18 +114,21 @@ export default function RecentActivitiesCard() {
 			<Card className="col-span-3 row-span-3  ">
 				<CardHeader>
 					<div className="flex item-center justify-between">
-						<CardTitle> Recent Activities</CardTitle>
+						<CardTitle className="text-base lg:text-lg xl:text-2xl ">
+							Recent Activities
+						</CardTitle>
 						<Activity></Activity>
 					</div>
 					<CardDescription>
 						Recent activities of the employees of this department
 					</CardDescription>
 				</CardHeader>
-				<CardContent>
-					{/* <ScrollArea className="h-[200px] ">
-				<RecentActivitiesTable tableData={dummyData}></RecentActivitiesTable>
-			</ScrollArea> */}
-					WALA BOSS
+				<CardContent className="p-0 pb-2 ">
+					<ScrollArea className=" ">
+						<RecentActivitiesTable
+							tableData={dummyData}
+						></RecentActivitiesTable>
+					</ScrollArea>
 				</CardContent>
 			</Card>
 		);
@@ -143,7 +146,7 @@ export default function RecentActivitiesCard() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<ScrollArea className="h-[200px] ">
+				<ScrollArea className="h-[150px] ">
 					<RecentActivitiesTable tableData={dummyData}></RecentActivitiesTable>
 				</ScrollArea>
 			</CardContent>
