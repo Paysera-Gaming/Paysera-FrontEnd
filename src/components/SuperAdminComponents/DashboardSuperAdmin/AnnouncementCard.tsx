@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useState, useEffect } from "react"
+import { Megaphone } from 'lucide-react'
 
 interface Announcement {
   id: number
@@ -41,9 +42,10 @@ export default function AnnouncementCard() {
   }
 
   return (
-    <Card className="col-span-2 min-h-[30px]">
-      <CardHeader className="pb-1">
+    <Card className="col-span-2 min-h-[30px] relative">
+      <CardHeader className="pb-1 relative">
         <CardTitle className="text-sm font-semibold">Announcements</CardTitle>
+        <Megaphone size={'1.8rem'} className="absolute top-2 right-2" />
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[65px]">

@@ -28,12 +28,10 @@ export default function HolidayList() {
   })
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center text-base font-semibold">
-          <Calendar className="mr-2 h-5 w-5" />
-          Upcoming Holidays
-        </CardTitle>
+    <Card className="h-full relative">
+      <CardHeader className="pb-2 relative">
+        <CardTitle className="text-base font-semibold">Upcoming Holidays</CardTitle>
+        <Calendar size={'1.8rem'} className="absolute top-2 right-2" />
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[400px]">

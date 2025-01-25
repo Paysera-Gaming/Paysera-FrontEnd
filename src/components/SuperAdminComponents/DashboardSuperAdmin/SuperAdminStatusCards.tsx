@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useState, useEffect } from "react"
 import { fetchEmployees } from "@/utils/fetchEmployees"
 import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types"
+import { Users } from 'lucide-react'
 
 export default function EmployeesStatusCards() {
   const [employees, setEmployees] = useState<Employee[]>([])
@@ -24,9 +25,10 @@ export default function EmployeesStatusCards() {
   const offlineCount = totalEmployees - onlineCount
 
   return (
-    <Card className="col-span-1">
+    <Card className="col-span-1 relative">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-semibold">Employee Status</CardTitle>
+        <Users size={'1.8rem'} className="absolute top-2 right-2" />
       </CardHeader>
       <CardContent className="flex flex-col space-y-1">
         <div className="flex items-center space-x-1">

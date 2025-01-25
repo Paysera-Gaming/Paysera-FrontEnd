@@ -2,7 +2,6 @@
     import {
         Card,
         CardContent,
-        CardDescription,
         CardHeader,
         CardTitle,
     } from '@/components/ui/card';
@@ -143,9 +142,6 @@
                     </div>
                     <Skeleton className="h-8 w-24 rounded bg-gray-200 dark:bg-gray-700 mt-2 md:mt-0" />
                 </CardHeader>
-                <CardDescription className="mt-1 text-base text-gray-600">
-                    <Skeleton className="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-700" />
-                </CardDescription>
                 <CardContent className="mt-3">
                     <ScrollArea className="h-[180px]">
                         <div className="space-y-2">
@@ -186,11 +182,9 @@
         if (attendanceError || employeeError) {
             return (
                 <Card className="flex-1 col-span-2 p-3">
-                    <CardHeader className="flex flex-col md:flex-row items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                            <Activity size={'1.8rem'} className="text-black dark:text-white" />
-                            <CardTitle className="text-base font-semibold">Error</CardTitle>
-                        </div>
+                    <CardHeader className="flex flex-col md:flex-row items-center justify-between relative">
+                        <CardTitle className="text-base font-semibold">Error</CardTitle>
+                        <Activity size={'1.8rem'} className="absolute top-2 right-2" />
                     </CardHeader>
                     <CardContent className="mt-3">
                         <div className="text-center">
@@ -209,20 +203,15 @@
         };
     
         const title = selectedOption === 'Paid Leave' ? 'Paid Leave Record' : 'Employee Record';
-        const description = selectedOption === 'Paid Leave'
-            ? 'Recent activities for paid leave of the employees of this department'
-            : 'Recent activities for adding employees, sorted from latest to oldest';
     
         return (
             <Card className={`flex-1 col-span-2 p-3 ${className}`}>
-                <CardHeader className="flex flex-col md:flex-row items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                        <Activity size={'1.8rem'} className="text-black dark:text-white" />
-                        <CardTitle className="text-base font-semibold">{title}</CardTitle>
-                    </div>
+                <CardHeader className="flex flex-col md:flex-row items-center justify-between relative">
+                    <CardTitle className="text-base font-semibold">{title}</CardTitle>
+                    <Activity size={'1.8rem'} className="absolute top-2 right-2" />
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="mt-2 md:mt-0 p-1 text-sm">Select Option</Button>
+                            <Button variant="outline" className="mt-2 md:mt-0 p-1 text-sm mr-8">Select Option</Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-64">
                             <DropdownMenuItem onSelect={() => handleDropdownChange('Paid Leave')}>
@@ -234,7 +223,6 @@
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </CardHeader>
-                <CardDescription className="mt-1 text-base text-black dark:text-white">{description}</CardDescription>
                 <CardContent className="mt-3">
                     <ScrollArea className="h-[170px]">
                         {selectedOption === 'Paid Leave' ? (
