@@ -21,7 +21,9 @@ export default function AnnouncementCard() {
         const response = await fetch(`${baseApiUrl}api/announcements`)
         const data = await response.json()
         if (Array.isArray(data)) {
-          setAnnouncements(data)
+          // Sort announcements by ID in descending order
+          const sortedAnnouncements = data.sort((a, b) => b.id - a.id)
+          setAnnouncements(sortedAnnouncements)
         } else {
           throw new Error("Unexpected response format")
         }
