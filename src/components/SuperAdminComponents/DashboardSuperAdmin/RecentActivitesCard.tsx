@@ -39,7 +39,7 @@
             const formattedTime = parsedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             return (
                 <TableRow key={data.id}>
-                    <TableCell>{`${data.employee.lastName}, ${data.employee.firstName}`}</TableCell>
+                    <TableCell>{data.employee.username}</TableCell>
                     <TableCell>{formattedDate}</TableCell>
                     <TableCell>{formattedTime}</TableCell>
                     <TableCell>{data.timeTotal} hours</TableCell>
@@ -51,7 +51,7 @@
             <Table className="text-base">
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Last Name, First Name</TableHead>
+                        <TableHead>Username</TableHead>
                         <TableHead>Date</TableHead>
                         <TableHead>Time</TableHead>
                         <TableHead>Total Hours</TableHead>
@@ -211,7 +211,7 @@
                     <Activity size={'1.8rem'} className="absolute top-2 right-2" />
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="mt-2 md:mt-0 p-1 text-sm mr-8">Select Option</Button>
+                            <Button variant="outline" className="mt-2 md:mt-0 p-1 text-sm mr-12">Select Option</Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-64">
                             <DropdownMenuItem onSelect={() => handleDropdownChange('Paid Leave')}>
