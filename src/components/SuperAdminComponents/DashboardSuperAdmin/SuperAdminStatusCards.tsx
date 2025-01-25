@@ -26,9 +26,9 @@ export default function EmployeesStatusCards() {
 
   return (
     <Card className="col-span-1 relative p-4">
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-2 flex flex-row items-center justify-between">
         <CardTitle className="text-2xl font-semibold">Employee Status</CardTitle>
-        <Users size={"1.8rem"} className="absolute top-2 right-2" />
+        <Users size={"1.8rem"} />
       </CardHeader>
       <CardContent className="flex flex-col space-y-2 mt-2">
         <div className="flex items-center space-x-1">
