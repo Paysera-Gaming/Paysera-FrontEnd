@@ -31,7 +31,7 @@ export default function HolidayList() {
     <Card className="h-full relative">
       <CardHeader className="pb-2 relative">
         <CardTitle className="text-base font-semibold">Upcoming Holidays</CardTitle>
-        <Calendar size={'1.8rem'} className="absolute top-2 right-2" />
+        <Calendar size={"1.8rem"} className="absolute top-2 right-2" />
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[400px]">
@@ -45,11 +45,15 @@ export default function HolidayList() {
             <TableBody>
               {isLoadingHolidays ? (
                 <TableRow>
-                  <TableCell colSpan={2} className="text-sm">Loading holidays...</TableCell>
+                  <TableCell colSpan={2} className="text-sm">
+                    Loading holidays...
+                  </TableCell>
                 </TableRow>
               ) : holidays.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={2} className="text-sm">No upcoming holidays</TableCell>
+                  <TableCell colSpan={2} className="text-sm">
+                    No upcoming holidays
+                  </TableCell>
                 </TableRow>
               ) : (
                 holidays.map((holiday) => (
