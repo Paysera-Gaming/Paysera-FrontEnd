@@ -4,7 +4,7 @@ import { getHolidays } from '@/api/CommonsAPI';
 import { Skeleton } from '../ui/skeleton';
 import { ScrollArea } from '../ui/scroll-area';
 
-function getMonthNumberFromName(monthName) {
+function getMonthNumberFromName(monthName: string) {
 	return new Date(`${monthName} 1, 2022`).getMonth() + 1;
 }
 export default function HolidayList() {
