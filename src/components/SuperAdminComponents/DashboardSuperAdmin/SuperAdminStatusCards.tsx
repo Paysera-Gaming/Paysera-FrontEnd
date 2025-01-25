@@ -15,9 +15,8 @@ export default function EmployeesStatusCards() {
     fetchData()
   }, [])
 
-  const overallCount = employees.length
   const onlineCount = employees.filter((emp: Employee) => emp.isActive).length
-  const offlineCount = overallCount - onlineCount
+  const offlineCount = employees.length - onlineCount
 
   return (
     <Card className="col-span-1">
@@ -26,22 +25,18 @@ export default function EmployeesStatusCards() {
       </CardHeader>
       <CardContent className="flex justify-between space-x-4">
         <div className="flex items-center space-x-2">
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Employees</p>
-            <p className="text-2xl font-semibold">{overallCount}</p>
+          <div className="flex items-center space-x-1">
+            <div className="w-3 h-3 bg-green-600 rounded-full"></div>
+            <p className="text-sm">Online</p>
           </div>
+          <p className="text-2xl font-semibold">{onlineCount}</p>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Online</p>
-            <p className="text-2xl font-semibold">{onlineCount}</p>
+          <div className="flex items-center space-x-1">
+            <div className="w-3 h-3 bg-red-600 rounded-full"></div>
+            <p className="text-sm">Offline</p>
           </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Offline</p>
-            <p className="text-2xl font-semibold">{offlineCount}</p>
-          </div>
+          <p className="text-2xl font-semibold">{offlineCount}</p>
         </div>
       </CardContent>
     </Card>
