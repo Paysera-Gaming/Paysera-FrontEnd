@@ -1,9 +1,6 @@
-import type React from "react"
-import { useState } from "react"
+import React, { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Activity } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import { getAttendanceList } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api"
 import { getEmployeeList } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/api"
@@ -12,116 +9,9 @@ import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAd
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Input } from "@/components/ui/input"
-
-function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
-  const sortedData = tableData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-
-  const renderedList = sortedData.map((data) => {
-    const parsedDate = new Date(data.date)
-    const formattedDate = parsedDate.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })
-    const formattedTime = parsedDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-    return (
-      <TableRow key={data.id}>
-        <TableCell>{data.employee.username}</TableCell>
-        <TableCell>{formattedDate}</TableCell>
-        <TableCell>{formattedTime}</TableCell>
-        <TableCell>{data.timeTotal} hours</TableCell>
-      </TableRow>
-    )
-  })
-
-  return (
-    <Table className="text-base">
-      <TableHeader>
-        <TableRow>
-          <TableHead>Username</TableHead>
-          <TableHead>Date</TableHead>
-          <TableHead>Time</TableHead>
-          <TableHead>Total Hours</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>{renderedList}</TableBody>
-    </Table>
-  )
-}
-
-function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedAccessLevel, setSelectedAccessLevel] = useState("")
-  const [selectedStatus, setSelectedStatus] = useState("")
-
-  const filteredData = tableData.filter(
-    (employee) =>
-      employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (selectedAccessLevel ? employee.accessLevel === selectedAccessLevel : true) &&
-      (selectedStatus ? (selectedStatus === "Online" ? employee.isActive : !employee.isActive) : true),
-  )
-
-  const sortedData = filteredData.sort((a, b) => b.id - a.id)
-
-  const renderedList = sortedData.map((employee) => (
-    <TableRow key={employee.id}>
-      <TableCell>{employee.username}</TableCell>
-      <TableCell>{employee.accessLevel}</TableCell>
-      <TableCell>
-        <div className="flex items-center space-x-1">
-          <div className={`w-2 h-2 rounded-full ${employee.isActive ? "bg-green-600" : "bg-red-600"}`}></div>
-          <span>{employee.isActive ? "Online" : "Offline"}</span>
-        </div>
-      </TableCell>
-    </TableRow>
-  ))
-
-  return (
-    <>
-      <div className="flex mb-4 space-x-2">
-        <Input
-          type="text"
-          placeholder="Search by username"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="p-2 text-base w-48">
-              Access Level
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-64">
-            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("")}>All</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("SUPER_ADMIN")}>Super Admin</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("ADMIN")}>Admin</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("TEAM_LEADER")}>Team Leader</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("EMPLOYEE")}>Employee</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="p-2 text-base w-48">
-              Status
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-64">
-            <DropdownMenuItem onSelect={() => setSelectedStatus("")}>All</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setSelectedStatus("Online")}>Online</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setSelectedStatus("Offline")}>Offline</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <Table className="text-base">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Username</TableHead>
-            <TableHead>Access Level</TableHead>
-            <TableHead>Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>{renderedList}</TableBody>
-      </Table>
-    </>
-  )
-}
+import { Activity } from "lucide-react"
+import RecentActivitiesTable from "./RecentActivitiesTable"
+import EmployeeListTable from "./EmployeeListTable"
 
 const SkeletonCard: React.FC = () => {
   return (
