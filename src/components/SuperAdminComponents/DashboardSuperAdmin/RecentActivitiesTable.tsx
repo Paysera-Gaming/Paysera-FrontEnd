@@ -58,17 +58,19 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Table className="text-base">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Username</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Time</TableHead>
-            <TableHead>Total Hours</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>{renderedList}</TableBody>
-      </Table>
+      <div className="overflow-y-auto h-[300px]">
+        <Table className="text-base">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Username</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Time</TableHead>
+              <TableHead>Total Hours</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>{renderedList}</TableBody>
+        </Table>
+      </div>
     </>
   )
 }
