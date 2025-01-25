@@ -17,7 +17,7 @@ export default function HolidayList() {
 		return (
 			<Card className="row-span-6">
 				<CardHeader>
-					<CardTitle className="text-base  2xl:text-lg  ">
+					<CardTitle className="text-base 2xl:text-lg">
 						Upcoming Holidays
 					</CardTitle>
 				</CardHeader>
