@@ -27,15 +27,15 @@ function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
 
   const renderedList = sortedData.map((employee) => (
     <TableRow key={employee.id}>
-      <TableCell>{employee.username}</TableCell>
-      <TableCell>
+      <TableCell className="p-4">{employee.username}</TableCell>
+      <TableCell className="p-4">
         {employee.accessLevel === "TEAM_LEADER"
           ? "Team Leader"
           : employee.accessLevel === "ADMIN"
           ? "Super Admin"
           : capitalize(employee.accessLevel)}
       </TableCell>
-      <TableCell>
+      <TableCell className="p-4">
         <div className="flex items-center space-x-1">
           <div className={`w-2 h-2 rounded-full ${employee.isActive ? "bg-green-600" : "bg-red-600"}`}></div>
           <span>{employee.isActive ? "Online" : "Offline"}</span>
@@ -46,7 +46,7 @@ function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
 
   return (
     <>
-      <div className="flex mb-4 space-x-2">
+      <div className="flex mb-4 space-x-2 p-4">
         <Input
           type="text"
           placeholder="Search by username"
@@ -79,12 +79,12 @@ function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Table className="text-base">
+      <Table className="text-base p-4">
         <TableHeader>
           <TableRow>
-            <TableHead>Username</TableHead>
-            <TableHead>Access Level</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead className="p-4">Username</TableHead>
+            <TableHead className="p-4">Access Level</TableHead>
+            <TableHead className="p-4">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>{renderedList}</TableBody>

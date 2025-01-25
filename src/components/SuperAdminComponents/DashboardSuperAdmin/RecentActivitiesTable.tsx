@@ -27,17 +27,17 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
     const formattedTime = parsedDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
     return (
       <TableRow key={data.id}>
-        <TableCell>{data.employee.username}</TableCell>
-        <TableCell>{formattedDate}</TableCell>
-        <TableCell>{formattedTime}</TableCell>
-        <TableCell>{data.timeTotal} hours</TableCell>
+        <TableCell className="p-4">{data.employee.username}</TableCell>
+        <TableCell className="p-4">{formattedDate}</TableCell>
+        <TableCell className="p-4">{formattedTime}</TableCell>
+        <TableCell className="p-4">{data.timeTotal} hours</TableCell>
       </TableRow>
     )
   })
 
   return (
     <>
-      <div className="flex mb-4 space-x-2">
+      <div className="flex mb-4 space-x-2 p-4">
         <Input
           type="text"
           placeholder="Search by username"
@@ -58,14 +58,14 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="overflow-y-auto h-[300px]">
+      <div className="overflow-y-auto h-[300px] p-4">
         <Table className="text-base">
           <TableHeader>
             <TableRow>
-              <TableHead>Username</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Time</TableHead>
-              <TableHead>Total Hours</TableHead>
+              <TableHead className="p-4">Username</TableHead>
+              <TableHead className="p-4">Date</TableHead>
+              <TableHead className="p-4">Time</TableHead>
+              <TableHead className="p-4">Total Hours</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>{renderedList}</TableBody>
