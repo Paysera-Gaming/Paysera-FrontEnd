@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Skeleton } from "@/components/ui/skeleton"
 import { useState, useEffect } from "react"
 import { Megaphone } from "lucide-react"
 
@@ -37,10 +38,6 @@ export default function AnnouncementCard() {
     fetchAnnouncements()
   }, [baseApiUrl])
 
-  if (error) {
-    return <div className="text-red-500">{error}</div>
-  }
-
   return (
     <Card className="col-span-2 min-h-[120px] relative p-4">
       <CardHeader className="pb-1 flex flex-row items-center justify-between">
@@ -49,7 +46,16 @@ export default function AnnouncementCard() {
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[80px]">
-          {announcements.length > 0 ? (
+          {error ? (
+            <>
+              <Skeleton className="h-6 w-3/4 mb-2" />
+              <Skeleton className="h-4 w-full mb-2" />
+              <Skeleton className="h-4 w-5/6 mb-2" />
+              <Skeleton className="h-6 w-3/4 mb-2" />
+              <Skeleton className="h-4 w-full mb-2" />
+              <Skeleton className="h-4 w-5/6 mb-2" />
+            </>
+          ) : announcements.length > 0 ? (
             announcements.map((announcement) => (
               <div key={announcement.id} className="mb-2 text-base">
                 <strong>{announcement.title}</strong>: {announcement.body}
