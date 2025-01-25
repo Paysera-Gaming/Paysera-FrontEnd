@@ -60,7 +60,7 @@ export default function NoticeBoardCard() {
 						<Presentation className="2xl:w-[1.25rem] 2xl:h-[1.25rem]  h-[1.5rem] w-[1.5rem]"></Presentation>
 					</CardHeader>
 					<CardContent className="p-0 pt-1">
-						<ScrollArea className="h-[100px] 2xl:h-[250px]">
+						<ScrollArea className="h-[170px]2xl:h-[250px]">
 							<ul className="list-disc list-inside text-sm 2xl:text-lg">
 								{AnnouncementList}
 							</ul>
