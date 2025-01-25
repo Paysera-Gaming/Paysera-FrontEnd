@@ -71,7 +71,7 @@ export default function SuperAdminInfoCard() {
       </Card>
       <Card className="border-primary text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out w-61 p-4 relative">
         <CardHeader className="pb-2 flex flex-row items-center justify-between">
-          <CardTitle className="text-2xl font-semibold">Handbook</CardTitle>
+          <CardTitle className="text-2xl font-semibold">Paysera Handbook</CardTitle>
           <Book size={"1.8rem"} />
         </CardHeader>
         <CardContent>
