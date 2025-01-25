@@ -39,12 +39,12 @@ export default function AnnouncementCard() {
   }
 
   return (
-    <Card className="col-span-2 min-h-[40px]">
+    <Card className="col-span-2 min-h-[30px]">
       <CardHeader className="pb-1">
         <CardTitle className="text-sm font-semibold">Announcements</CardTitle>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[80px]">
+        <ScrollArea className="h-[65px]">
           {announcements.length > 0 ? (
             announcements.map((announcement) => (
               <div key={announcement.id} className="mb-1">
