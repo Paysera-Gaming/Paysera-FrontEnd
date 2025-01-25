@@ -39,18 +39,18 @@ export default function SuperAdminInfoCard() {
   return (
     <div className="flex flex-col gap-4">
       <Card className="flex-1 p-4 relative">
-        <CardHeader className="pb-2 flex items-center justify-between flex-row relative">
+        <CardHeader className="pb-2 flex flex-row items-center justify-between">
           <CardTitle className="text-3xl font-semibold">Super Admin Info</CardTitle>
-          <BookUser size={"1.8rem"} className="absolute top-2 right-2" />
+          <BookUser size={"1.8rem"} />
         </CardHeader>
         <CardContent>
           <SuperAdminInfo />
         </CardContent>
       </Card>
       <Card className="border-primary text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out w-61 p-4 relative">
-        <CardHeader className="pb-2 flex flex-row items-center justify-between relative">
+        <CardHeader className="pb-2 flex flex-row items-center justify-between">
           <CardTitle className="text-2xl font-semibold">Handbook</CardTitle>
-          <Book size={"1.8rem"} className="absolute top-2 right-2" />
+          <Book size={"1.8rem"} />
         </CardHeader>
         <CardContent>
           <CardDescription className="text-primary">Click here to open</CardDescription>

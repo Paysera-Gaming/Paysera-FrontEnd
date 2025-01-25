@@ -43,9 +43,9 @@ export default function AnnouncementCard() {
 
   return (
     <Card className="col-span-2 min-h-[120px] relative p-4">
-      <CardHeader className="pb-1 relative">
+      <CardHeader className="pb-1 flex flex-row items-center justify-between">
         <CardTitle className="text-2xl font-semibold">Announcements</CardTitle>
-        <Megaphone size={"1.8rem"} className="absolute top-2 right-2" />
+        <Megaphone size={"1.8rem"} />
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[80px]">

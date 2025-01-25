@@ -87,7 +87,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
   if (attendanceError || employeeError || departmentError) {
     return (
       <Card className="flex-1 col-span-2 p-3">
-        <CardHeader className="flex flex-col md:flex-row items-center justify-between relative">
+        <CardHeader className="flex flex-row items-center justify-between relative">
           <CardTitle className="text-base font-semibold">Error</CardTitle>
           <Activity size={"1.8rem"} className="absolute top-2 right-2" />
         </CardHeader>
@@ -120,7 +120,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
 
   return (
     <Card className={`flex-1 col-span-2 p-4 ${className}`}>
-      <CardHeader className="flex flex-col md:flex-row items-center justify-between relative">
+      <CardHeader className="flex flex-row items-center justify-between relative">
         <CardTitle className="text-2xl font-semibold">{title}</CardTitle>
         <Activity size={"1.8rem"} className="absolute top-2 right-2" />
         <DropdownMenu>

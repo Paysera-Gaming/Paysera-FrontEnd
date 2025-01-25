@@ -29,9 +29,9 @@ export default function HolidayList() {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className="pb-2 relative flex-shrink-0">
+      <CardHeader className="pb-2 flex flex-row items-center justify-between">
         <CardTitle className="text-2xl font-semibold">Upcoming Holidays</CardTitle>
-        <Calendar size={"1.8rem"} className="absolute top-2 right-2" />
+        <Calendar size={"1.8rem"} />
       </CardHeader>
       <CardContent className="flex-grow">
         <ScrollArea className="h-[36rem] overflow-y-auto">
