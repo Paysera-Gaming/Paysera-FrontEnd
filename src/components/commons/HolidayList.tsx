@@ -40,7 +40,7 @@ export default function HolidayList() {
 		);
 	}
 	if (isSuccess) {
-		const list = data.map((day, index) => (
+		const list = data.reverse().map((day, index) => (
 			<li key={index}>
 				{getMonthNumberFromName(day.month.toLowerCase())}/{addZero(day.day)} -{' '}
 				{day.name}
@@ -58,7 +58,7 @@ export default function HolidayList() {
 				</CardHeader>
 				<CardContent className="p-0 pt-1">
 					<ScrollArea className="h-[350px]">
-						<ul className="list-disc list-inside text-sm 2xl:text-base">
+						<ul className="flex flex-col-reverse list-disc list-inside text-sm 2xl:text-base">
 							{list}
 						</ul>
 					</ScrollArea>
