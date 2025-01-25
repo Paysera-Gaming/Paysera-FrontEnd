@@ -44,7 +44,7 @@ export default function AnnouncementCard() {
   return (
     <Card className="col-span-2 min-h-[120px] relative p-4">
       <CardHeader className="pb-1 relative">
-        <CardTitle className="text-base font-semibold">Announcements</CardTitle>
+        <CardTitle className="text-2xl font-semibold">Announcements</CardTitle>
         <Megaphone size={"1.8rem"} className="absolute top-2 right-2" />
       </CardHeader>
       <CardContent>
@@ -63,4 +63,3 @@ export default function AnnouncementCard() {
     </Card>
   )
 }
-

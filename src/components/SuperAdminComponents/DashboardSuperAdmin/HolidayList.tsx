@@ -30,11 +30,11 @@ export default function HolidayList() {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-2 relative flex-shrink-0">
-        <CardTitle className="text-base font-semibold">Upcoming Holidays</CardTitle>
+        <CardTitle className="text-2xl font-semibold">Upcoming Holidays</CardTitle>
         <Calendar size={"1.8rem"} className="absolute top-2 right-2" />
       </CardHeader>
       <CardContent className="flex-grow">
-        <ScrollArea className="h-[36rem] overflow-y-auto"> {/* Adjusted height to h-[36rem] */}
+        <ScrollArea className="h-[36rem] overflow-y-auto">
           <Table>
             <TableHeader>
               <TableRow>

@@ -212,7 +212,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
   return (
     <Card className={`flex-1 col-span-2 p-4 ${className}`}>
       <CardHeader className="flex flex-col md:flex-row items-center justify-between relative">
-        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+        <CardTitle className="text-2xl font-semibold">{title}</CardTitle>
         <Activity size={"1.8rem"} className="absolute top-2 right-2" />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -238,4 +238,3 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
     </Card>
   )
 }
-

@@ -21,7 +21,7 @@ function SuperAdminInfo() {
   }
 
   return (
-    <ul className="text-base space-y-3">
+    <ul className="text-base space-y-1">
       <li>
         <b>Name:</b> {info.firstName} {info.middleName} {info.lastName}
       </li>
@@ -30,9 +30,6 @@ function SuperAdminInfo() {
       </li>
       <li>
         <b>Role:</b> <Badge className="text-sm px-2 py-1">{returnRole(info.accessLevel)}</Badge>
-      </li>
-      <li>
-        <b>Access Level:</b> {info.accessLevel}
       </li>
     </ul>
   )
@@ -43,7 +40,7 @@ export default function SuperAdminInfoCard() {
     <div className="flex flex-col gap-4">
       <Card className="flex-1 p-4 relative">
         <CardHeader className="pb-2 flex items-center justify-between flex-row relative">
-          <CardTitle className="text-base font-semibold">Super Admin Info</CardTitle>
+          <CardTitle className="text-3xl font-semibold">Super Admin Info</CardTitle>
           <BookUser size={"1.8rem"} className="absolute top-2 right-2" />
         </CardHeader>
         <CardContent>
@@ -52,7 +49,7 @@ export default function SuperAdminInfoCard() {
       </Card>
       <Card className="border-primary text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out w-61 p-4 relative">
         <CardHeader className="pb-2 flex flex-row items-center justify-between relative">
-          <CardTitle className="text-base font-semibold">Handbook</CardTitle>
+          <CardTitle className="text-2xl font-semibold">Handbook</CardTitle>
           <Book size={"1.8rem"} className="absolute top-2 right-2" />
         </CardHeader>
         <CardContent>
@@ -62,4 +59,3 @@ export default function SuperAdminInfoCard() {
     </div>
   )
 }
-
