@@ -52,30 +52,36 @@ export default function NoticeBoardCard() {
 			});
 
 			return (
-				<Card className="col-span-3 row-span-3">
-					<CardHeader className=" p-3 2xl:p-5 flex-row items-center justify-between w-full">
+				<Card className="p-2 pt-0 2xl:p-5 col-span-3 row-span-3">
+					<CardHeader className="p-0 flex-row items-end justify-between w-full">
 						<CardTitle className="text-base  2xl:text-lg ">
 							Announcemnets
 						</CardTitle>
-						<Presentation></Presentation>
+						<Presentation className="2xl:w-[1.25rem] 2xl:h-[1.25rem]  h-[1.5rem] w-[1.5rem]"></Presentation>
 					</CardHeader>
-					<CardContent className="p-3 2xl:p-5 ">
+					<CardContent className="p-0 pt-1">
 						<ScrollArea className="h-[100px] 2xl:h-[250px]">
-							<ul className="list-disc list-inside">{AnnouncementList}</ul>
+							<ul className="list-disc list-inside text-sm 2xl:text-lg">
+								{AnnouncementList}
+							</ul>
 						</ScrollArea>
 					</CardContent>
 				</Card>
 			);
 		} else {
 			return (
-				<Card className="col-span-3 row-span-3">
-					<CardHeader className="flex-row items-center justify-between w-full">
-						<CardTitle className="text-base 2xl:text-lg  ">
+				<Card className="p-2 2xl:p-5 col-span-3 row-span-3">
+					<CardHeader className="p-0 flex-row items-center justify-between w-full">
+						<CardTitle className="text-base  2xl:text-lg ">
 							Announcemnets
 						</CardTitle>
-						<Presentation></Presentation>
+						<Presentation className="2xl:w-[1.25rem] 2xl:h-[1.25rem]  h-[1.5rem] w-[1.5rem]"></Presentation>
 					</CardHeader>
-					<CardContent>No announcements yet.</CardContent>
+					<CardContent className="p-0 pt-1">
+						<ScrollArea className="h-[100px] 2xl:h-[250px] text-sm 2xl:text-lg">
+							No Announcements
+						</ScrollArea>
+					</CardContent>
 				</Card>
 			);
 		}

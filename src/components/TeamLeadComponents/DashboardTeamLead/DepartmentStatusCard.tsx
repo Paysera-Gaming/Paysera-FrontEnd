@@ -70,19 +70,19 @@ export default function DepartmentStatusCard() {
 	}
 
 	return (
-		<Card>
-			<CardHeader className=" pb-0 pt-3 px-3 xl:px-5 xl:pt-5  flex-row items-center justify-between w-full">
-				<CardTitle className="text-base lg:text-lg xl:text-2xl ">
+		<Card className="p-2 pt-0 2xl:p-5">
+			<CardHeader className="p-0 flex-row flex items-end justify-between w-full">
+				<CardTitle className="text-base 2xl:text-lg">
 					Department Status
 				</CardTitle>
-				<University></University>
+				<University className="2xl:w-[1.25rem] 2xl:h-[1.25rem]  h-[1.5rem] w-[1.5rem]"></University>
 			</CardHeader>
-			<CardContent>
+			<CardContent className="p-0">
 				<ul className="list-disc list-inside flex justify-between items-center">
-					<li className="marker:text-green-500 marker:text-2xl">
+					<li className=" text-sm marker:text-green-500 marker:text-base 2xl:marker:text-2xl ">
 						Online: {userQueries[1].data?.length ?? 0}
 					</li>
-					<li className="marker:text-red-500 marker:text-2xl">
+					<li className="text-sm 2xl:text-base marker:text-red-500 marker:text-base 2xl:marker:text-2xl">
 						Offline:{' '}
 						{(userQueries[1].data?.length ?? 0) -
 							(userQueries[0].data?.length ?? 0)}
