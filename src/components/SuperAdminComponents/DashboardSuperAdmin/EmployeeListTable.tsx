@@ -13,7 +13,11 @@ function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
   const filteredData = tableData.filter(
     (employee) =>
       employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (selectedAccessLevel ? employee.accessLevel === selectedAccessLevel : true) &&
+      (selectedAccessLevel
+        ? selectedAccessLevel === "ADMIN"
+          ? ["SUPER_ADMIN", "ADMIN"].includes(employee.accessLevel)
+          : employee.accessLevel === selectedAccessLevel
+        : true) &&
       (selectedStatus ? (selectedStatus === "Online" ? employee.isActive : !employee.isActive) : true),
   )
 
@@ -22,7 +26,7 @@ function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
   const renderedList = sortedData.map((employee) => (
     <TableRow key={employee.id}>
       <TableCell>{employee.username}</TableCell>
-      <TableCell>{employee.accessLevel}</TableCell>
+      <TableCell>{employee.accessLevel === "TEAM_LEADER" ? "Team Leader" : employee.accessLevel}</TableCell>
       <TableCell>
         <div className="flex items-center space-x-1">
           <div className={`w-2 h-2 rounded-full ${employee.isActive ? "bg-green-600" : "bg-red-600"}`}></div>
@@ -49,7 +53,6 @@ function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-64">
             <DropdownMenuItem onSelect={() => setSelectedAccessLevel("")}>All</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("SUPER_ADMIN")}>Super Admin</DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setSelectedAccessLevel("ADMIN")}>Admin</DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setSelectedAccessLevel("TEAM_LEADER")}>Team Leader</DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setSelectedAccessLevel("EMPLOYEE")}>Employee</DropdownMenuItem>
