@@ -7,7 +7,10 @@ import { Calendar } from "lucide-react"
 type Holiday = {
   id: number
   name: string
-  date: string
+  month: string
+  day: number
+  createdAt: string
+  updatedAt: string
 }
 
 const fetchHolidays = async (): Promise<Holiday[]> => {
@@ -37,24 +40,24 @@ export default function HolidayList() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Holiday</TableHead>
+                <TableHead className="text-sm">Date</TableHead>
+                <TableHead className="text-sm">Holiday</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoadingHolidays ? (
                 <TableRow>
-                  <TableCell colSpan={2}>Loading holidays...</TableCell>
+                  <TableCell colSpan={2} className="text-sm">Loading holidays...</TableCell>
                 </TableRow>
               ) : holidays.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={2}>No upcoming holidays</TableCell>
+                  <TableCell colSpan={2} className="text-sm">No upcoming holidays</TableCell>
                 </TableRow>
               ) : (
                 holidays.map((holiday) => (
                   <TableRow key={holiday.id}>
-                    <TableCell>{new Date(holiday.date).toLocaleDateString()}</TableCell>
-                    <TableCell>{holiday.name}</TableCell>
+                    <TableCell className="text-sm">{`${holiday.month} ${holiday.day}`}</TableCell>
+                    <TableCell className="text-sm">{holiday.name}</TableCell>
                   </TableRow>
                 ))
               )}
