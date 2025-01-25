@@ -4,8 +4,16 @@ import { getHolidays } from '@/api/CommonsAPI';
 import { Skeleton } from '../ui/skeleton';
 import { ScrollArea } from '../ui/scroll-area';
 
+function addZero(digit: number) {
+	if (digit < 10 && digit > 0) {
+		return '0' + digit;
+	} else {
+		return digit;
+	}
+}
+
 function getMonthNumberFromName(monthName: string) {
-	return new Date(`${monthName} 1, 2022`).getMonth() + 1;
+	return addZero(new Date(`${monthName} 1, 2022`).getMonth() + 1);
 }
 export default function HolidayList() {
 	// fetch the holidays here
@@ -34,7 +42,8 @@ export default function HolidayList() {
 	if (isSuccess) {
 		const list = data.map((day, index) => (
 			<li key={index}>
-				{getMonthNumberFromName(day.month.toLowerCase())}/{day.day} - {day.name}
+				{getMonthNumberFromName(day.month.toLowerCase())}/{addZero(day.day)} -{' '}
+				{day.name}
 			</li>
 		));
 
