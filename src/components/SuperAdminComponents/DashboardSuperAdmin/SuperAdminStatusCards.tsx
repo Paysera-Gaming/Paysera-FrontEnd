@@ -19,28 +19,32 @@ export default function EmployeesStatusCards() {
     fetchData()
   }, [])
 
+  const totalEmployees = employees.length
   const onlineCount = employees.filter((emp: Employee) => emp.isActive).length
-  const offlineCount = employees.length - onlineCount
+  const offlineCount = totalEmployees - onlineCount
 
   return (
     <Card className="col-span-1">
       <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold">Employee Status</CardTitle>
+        <CardTitle className="text-sm font-semibold">Employee Status</CardTitle>
       </CardHeader>
-      <CardContent className="flex justify-between space-x-4">
-        <div className="flex items-center space-x-2">
-          <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-green-600 rounded-full"></div>
-            <p className="text-sm">Online</p>
-          </div>
-          <p className="text-2xl font-semibold">{onlineCount}</p>
+      <CardContent className="flex flex-col space-y-1">
+        <div className="flex items-center space-x-1">
+          <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
+          <p className="text-xs">Total Employees</p>
+          <p className="text-xl font-semibold">{totalEmployees}</p>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex justify-between space-x-1">
           <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-red-600 rounded-full"></div>
-            <p className="text-sm">Offline</p>
+            <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+            <p className="text-xs">Online</p>
+            <p className="text-xl font-semibold">{onlineCount}</p>
           </div>
-          <p className="text-2xl font-semibold">{offlineCount}</p>
+          <div className="flex items-center space-x-1">
+            <div className="w-2 h-2 bg-red-600 rounded-full"></div>
+            <p className="text-xs">Offline</p>
+            <p className="text-xl font-semibold">{offlineCount}</p>
+          </div>
         </div>
       </CardContent>
     </Card>
