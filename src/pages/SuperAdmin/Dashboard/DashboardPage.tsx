@@ -6,19 +6,19 @@ import AnnouncementCard from "@/components/SuperAdminComponents/DashboardSuperAd
 
 export default function Dashboard() {
   return (
-    <div className="grid grid-cols-4 gap-4 w-full h-[150vh] border-border border-solid border p-6 rounded-lg">
+    <div className="grid grid-cols-4 gap-2 w-full h-[150vh] border-border border-solid border p-6 rounded-lg">
       {/* <h2 className="col-span-4 scroll-m-20 text-4xl font-semibold tracking-tight first:mt-0 mb-6">Dashboard</h2> */}
 
       {/* Main content area (3 columns) */}
-      <div className="col-span-3 space-y-4">
+      <div className="col-span-3 space-y-2">
         {/* Employee Status on the left and Announcements on the right */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-2">
           <EmployeesStatusCards />
           <AnnouncementCard />
         </div>
 
         {/* Super Admin Info and Recent Activities side by side */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-2">
           <SuperAdminInfoCard />
           <RecentActivitiesCard />
         </div>

@@ -37,7 +37,7 @@ function SuperAdminInfo() {
 
 function ScheduleInfo() {
   return (
-    <ul className="text-base space-y-1">
+    <ul className="text-base space-y-0">
       <li>
         <b>Schedule Type:</b> SUPER FLEXI
       </li>
@@ -50,7 +50,7 @@ function ScheduleInfo() {
 
 export default function SuperAdminInfoCard() {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <Card className="flex-1 p-4 relative">
         <CardHeader className="pb-2 flex flex-row items-center justify-between">
           <CardTitle className="text-3xl font-semibold">Super Admin Info</CardTitle>
