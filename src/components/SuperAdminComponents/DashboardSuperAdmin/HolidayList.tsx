@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Calendar } from "lucide-react"
 
@@ -32,39 +33,40 @@ export default function HolidayList() {
         <CardTitle className="text-base font-semibold">Upcoming Holidays</CardTitle>
         <Calendar size={"1.8rem"} className="absolute top-2 right-2" />
       </CardHeader>
-      <CardContent className="flex-grow overflow-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="text-sm">Date</TableHead>
-              <TableHead className="text-sm">Holiday</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoadingHolidays ? (
+      <CardContent className="flex-grow">
+        <ScrollArea className="h-[36rem] overflow-y-auto"> {/* Adjusted height to h-[36rem] */}
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={2} className="text-sm">
-                  Loading holidays...
-                </TableCell>
+                <TableHead className="text-sm">Date</TableHead>
+                <TableHead className="text-sm">Holiday</TableHead>
               </TableRow>
-            ) : holidays.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={2} className="text-sm">
-                  No upcoming holidays
-                </TableCell>
-              </TableRow>
-            ) : (
-              holidays.map((holiday) => (
-                <TableRow key={holiday.id}>
-                  <TableCell className="text-sm">{`${holiday.month} ${holiday.day}`}</TableCell>
-                  <TableCell className="text-sm">{holiday.name}</TableCell>
+            </TableHeader>
+            <TableBody>
+              {isLoadingHolidays ? (
+                <TableRow>
+                  <TableCell colSpan={2} className="text-sm">
+                    Loading holidays...
+                  </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : holidays.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={2} className="text-sm">
+                    No upcoming holidays
+                  </TableCell>
+                </TableRow>
+              ) : (
+                holidays.map((holiday) => (
+                  <TableRow key={holiday.id}>
+                    <TableCell className="text-sm">{`${holiday.month} ${holiday.day}`}</TableCell>
+                    <TableCell className="text-sm">{holiday.name}</TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </ScrollArea>
       </CardContent>
     </Card>
   )
 }
-
