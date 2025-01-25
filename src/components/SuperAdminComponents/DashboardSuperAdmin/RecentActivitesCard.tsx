@@ -65,10 +65,12 @@
     function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
         const [searchTerm, setSearchTerm] = useState('');
         const [selectedAccessLevel, setSelectedAccessLevel] = useState('');
+        const [selectedStatus, setSelectedStatus] = useState('');
     
         const filteredData = tableData.filter((employee) =>
             employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            (selectedAccessLevel ? employee.accessLevel === selectedAccessLevel : true)
+            (selectedAccessLevel ? employee.accessLevel === selectedAccessLevel : true) &&
+            (selectedStatus ? (selectedStatus === 'Online' ? employee.isActive : !employee.isActive) : true)
         );
     
         const sortedData = filteredData.sort((a, b) => b.id - a.id);
@@ -117,6 +119,22 @@
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="p-1 text-sm w-40">Status</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-64">
+                            <DropdownMenuItem onSelect={() => setSelectedStatus('')}>
+                                All
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSelectedStatus('Online')}>
+                                Online
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSelectedStatus('Offline')}>
+                                Offline
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
                 <Table className="text-base">
                     <TableHeader>
@@ -161,7 +179,7 @@
     }
     
     export default function RecentActivitiesCard({ className }: RecentActivitiesCardProps) {
-        const [selectedOption, setSelectedOption] = useState('Paid Leave');
+        const [selectedOption, setSelectedOption] = useState('Employee');
         const { data: attendanceData, isLoading: isLoadingAttendance, error: attendanceError, refetch: refetchAttendance } = useQuery<Attendance[]>({
             queryKey: ['attendanceData'],
             queryFn: getAttendanceList,
