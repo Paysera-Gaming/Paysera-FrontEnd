@@ -36,22 +36,24 @@
     
         const renderedList = sortedData.map((data) => {
             const parsedDate = new Date(data.date);
+            const formattedDate = parsedDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+            const formattedTime = parsedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             return (
                 <TableRow key={data.id}>
                     <TableCell>{`${data.employee.lastName}, ${data.employee.firstName}`}</TableCell>
-                    <TableCell>{data.status}</TableCell>
-                    <TableCell>{parsedDate.toLocaleString()}</TableCell>
+                    <TableCell>{formattedDate}</TableCell>
+                    <TableCell>{formattedTime}</TableCell>
                     <TableCell>{data.timeTotal} hours</TableCell>
                 </TableRow>
             );
         });
     
         return (
-            <Table className="text-base"> {/* Increased font size */}
+            <Table className="text-base">
                 <TableHeader>
                     <TableRow>
                         <TableHead>Last Name, First Name</TableHead>
-                        <TableHead>Status</TableHead>
+                        <TableHead>Date</TableHead>
                         <TableHead>Time</TableHead>
                         <TableHead>Total Hours</TableHead>
                     </TableRow>
@@ -76,7 +78,12 @@
             <TableRow key={employee.id}>
                 <TableCell>{employee.username}</TableCell>
                 <TableCell>{employee.accessLevel}</TableCell>
-                <TableCell>{employee.isActive ? 'Active' : 'Inactive'}</TableCell>
+                <TableCell>
+                    <div className="flex items-center space-x-1">
+                        <div className={`w-2 h-2 rounded-full ${employee.isActive ? 'bg-green-600' : 'bg-red-600'}`}></div>
+                        <span>{employee.isActive ? 'Online' : 'Offline'}</span>
+                    </div>
+                </TableCell>
             </TableRow>
         ));
     
@@ -92,8 +99,8 @@
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" className="p-1 text-sm w-40">Access Level</Button>
-                       </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-64"> {/* Adjusted width */}
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-64">
                             <DropdownMenuItem onSelect={() => setSelectedAccessLevel('')}>
                                 All
                             </DropdownMenuItem>
@@ -112,7 +119,7 @@
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <Table className="text-base"> {/* Increased font size */}
+                <Table className="text-base">
                     <TableHeader>
                         <TableRow>
                             <TableHead>Username</TableHead>
@@ -136,7 +143,7 @@
                     </div>
                     <Skeleton className="h-8 w-24 rounded bg-gray-200 dark:bg-gray-700 mt-2 md:mt-0" />
                 </CardHeader>
-                <CardDescription className="mt-1 text-base text-gray-600"> {/* Increased font size */}
+                <CardDescription className="mt-1 text-base text-gray-600">
                     <Skeleton className="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-700" />
                 </CardDescription>
                 <CardContent className="mt-3">
@@ -158,7 +165,7 @@
     }
     
     export default function RecentActivitiesCard({ className }: RecentActivitiesCardProps) {
-        const [selectedOption, setSelectedOption] = useState('Paid');
+        const [selectedOption, setSelectedOption] = useState('Paid Leave');
         const { data: attendanceData, isLoading: isLoadingAttendance, error: attendanceError, refetch: refetchAttendance } = useQuery<Attendance[]>({
             queryKey: ['attendanceData'],
             queryFn: getAttendanceList,
@@ -201,8 +208,8 @@
             setSelectedOption(value);
         };
     
-        const title = selectedOption === 'Paid' ? 'Paid Leave Record' : 'Employee Record';
-        const description = selectedOption === 'Paid'
+        const title = selectedOption === 'Paid Leave' ? 'Paid Leave Record' : 'Employee Record';
+        const description = selectedOption === 'Paid Leave'
             ? 'Recent activities for paid leave of the employees of this department'
             : 'Recent activities for adding employees, sorted from latest to oldest';
     
@@ -217,9 +224,9 @@
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" className="mt-2 md:mt-0 p-1 text-sm">Select Option</Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-64"> {/* Adjusted width */}
-                            <DropdownMenuItem onSelect={() => handleDropdownChange('Paid')}>
-                                Paid
+                        <DropdownMenuContent className="w-64">
+                            <DropdownMenuItem onSelect={() => handleDropdownChange('Paid Leave')}>
+                                Paid Leave
                             </DropdownMenuItem>
                             <DropdownMenuItem onSelect={() => handleDropdownChange('Employee')}>
                                 Employee
@@ -227,10 +234,10 @@
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </CardHeader>
-                <CardDescription className="mt-1 text-base text-gray-600">{description}</CardDescription> {/* Increased font size */}
+                <CardDescription className="mt-1 text-base text-black dark:text-white">{description}</CardDescription>
                 <CardContent className="mt-3">
                     <ScrollArea className="h-[170px]">
-                        {selectedOption === 'Paid' ? (
+                        {selectedOption === 'Paid Leave' ? (
                             <RecentActivitiesTable tableData={paidLeaveData} />
                         ) : (
                             employeeData && <EmployeeListTable tableData={employeeData} />
