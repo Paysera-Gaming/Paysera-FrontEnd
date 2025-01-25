@@ -216,7 +216,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
         <Activity size={"1.8rem"} className="absolute top-2 right-2" />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="mt-2 md:mt-0 p-2 text-base w-48">
+            <Button variant="outline" className="mt-2 md:mt-0 p-2 text-base w-32 mr-auto md:mr-4">
               Select Option
             </Button>
           </DropdownMenuTrigger>
