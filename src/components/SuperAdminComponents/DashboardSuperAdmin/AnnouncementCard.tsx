@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { useState, useEffect } from "react"
 
 interface Announcement {
@@ -38,20 +39,22 @@ export default function AnnouncementCard() {
   }
 
   return (
-    <Card className="col-span-2 min-h-[80px]"> {/* Added min-height */}
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold">Announcements</CardTitle>
+    <Card className="col-span-2 min-h-[40px]">
+      <CardHeader className="pb-1">
+        <CardTitle className="text-sm font-semibold">Announcements</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2 max-h-[80px] overflow-auto"> {/* Added max-height and overflow */}
-        {announcements.length > 0 ? (
-          announcements.map((announcement) => (
-            <div key={announcement.id} className="text-sm">
-              {announcement.title}: {announcement.body}
-            </div>
-          ))
-        ) : (
-          <div className="text-sm">No announcements available</div>
-        )}
+      <CardContent>
+        <ScrollArea className="h-[80px]">
+          {announcements.length > 0 ? (
+            announcements.map((announcement) => (
+              <div key={announcement.id} className="mb-1">
+                <strong>{announcement.title}</strong>: {announcement.body}
+              </div>
+            ))
+          ) : (
+            <div>No announcements available</div>
+          )}
+        </ScrollArea>
       </CardContent>
     </Card>
   )
