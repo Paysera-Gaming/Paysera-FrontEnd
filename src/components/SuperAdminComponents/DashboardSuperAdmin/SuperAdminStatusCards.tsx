@@ -8,8 +8,12 @@ export default function EmployeesStatusCards() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchEmployees()
-      setEmployees(data)
+      try {
+        const data = await fetchEmployees()
+        setEmployees(data)
+      } catch (error) {
+        console.error('Error fetching employees:', error)
+      }
     }
 
     fetchData()
