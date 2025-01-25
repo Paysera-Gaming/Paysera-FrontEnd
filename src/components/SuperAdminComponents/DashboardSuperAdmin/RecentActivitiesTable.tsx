@@ -52,7 +52,7 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-64">
             <DropdownMenuItem onSelect={() => setSelectedAccessLevel("")}>All</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("ADMIN")}>Admin</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("ADMIN")}>Super Admin</DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setSelectedAccessLevel("TEAM_LEADER")}>Team Leader</DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setSelectedAccessLevel("EMPLOYEE")}>Employee</DropdownMenuItem>
           </DropdownMenuContent>
