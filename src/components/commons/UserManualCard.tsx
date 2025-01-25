@@ -12,14 +12,14 @@ export default function UserManualCard() {
 		/* pdf thing  */
 	}
 	return (
-		<Card className="select-none border-primary hover:cursor-pointer text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out ">
-			<CardHeader className="pt-3 px-3 2xl:pt-5 2xl:px-5  pb-0 flex flex-row items-center justify-between">
-				<CardTitle className="text-base xl:text-xl ">
+		<Card className="p-2 pt-0 2xl:p-5 select-none border-primary hover:cursor-pointer text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out ">
+			<CardHeader className="p-0 flex flex-row items-end justify-between">
+				<CardTitle className="text-base 2xl:text-xl ">
 					Employee Handbook
 				</CardTitle>
-				<Book></Book>
+				<Book className='"2xl:w-[1.25rem] 2xl:h-[1.25rem] h-[1.5rem] w-[1.5rem]'></Book>
 			</CardHeader>
-			<CardContent className="px-3 2xl:px-5">
+			<CardContent className="p-0">
 				<CardDescription className="text-primary">
 					Click here to download
 				</CardDescription>

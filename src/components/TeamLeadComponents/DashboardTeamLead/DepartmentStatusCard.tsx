@@ -72,7 +72,7 @@ export default function DepartmentStatusCard() {
 	return (
 		<Card className="p-2 pt-0 2xl:p-5">
 			<CardHeader className="p-0 flex-row flex items-end justify-between w-full">
-				<CardTitle className="text-base 2xl:text-lg ">
+				<CardTitle className="text-base 2xl:text-lg">
 					Department Status
 				</CardTitle>
 				<University className="2xl:w-[1.25rem] 2xl:h-[1.25rem]  h-[1.5rem] w-[1.5rem]"></University>
