@@ -48,7 +48,7 @@ export default function SchedulePage() {
 	// }
 
 	return (
-		<div className=" w-full h-full border-border border-solid border p-5 rounded-md">
+		<div className="min-h-0 min-w-0 w-full h-full border-border border-solid border p-5 rounded-md">
 			{/* adjust the bloody cancel and submit button sa add schedule */}
 			<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0">
 				Manage Schedule
