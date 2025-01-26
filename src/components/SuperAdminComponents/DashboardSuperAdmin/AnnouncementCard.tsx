@@ -38,6 +38,11 @@ export default function AnnouncementCard() {
     fetchAnnouncements()
   }, [baseApiUrl])
 
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
+    return new Date(dateString).toLocaleDateString(undefined, options)
+  }
+
   return (
     <Card className="col-span-2 min-h-[120px] relative p-4">
       <CardHeader className="pb-1 flex flex-row items-center justify-between">
@@ -57,8 +62,10 @@ export default function AnnouncementCard() {
             </>
           ) : announcements.length > 0 ? (
             announcements.map((announcement) => (
-              <div key={announcement.id} className="mb-2 text-base">
-                <strong>{announcement.title}</strong>: {announcement.body}
+              <div key={announcement.id} className="mb-4 text-base">
+                <div className="text-sm">{formatDate(announcement.createdAt)}</div>
+                <div className="font-semibold">{announcement.title}</div>
+                <div>{announcement.body}</div>
               </div>
             ))
           ) : (
