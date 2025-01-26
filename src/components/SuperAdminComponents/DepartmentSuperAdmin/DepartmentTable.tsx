@@ -3,12 +3,23 @@ import type { Department } from "./api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Eye, Edit, Trash } from "lucide-react"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 
 interface DepartmentTableProps {
   currentDepartments: Department[]
   handleViewDepartment: (department: Department) => void
   handleEditDepartment: (department: Department) => void
   handleDeleteDepartment: (department: Department) => void
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
 }
 
 const DepartmentTable: React.FC<DepartmentTableProps> = ({
@@ -16,6 +27,9 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
   handleViewDepartment,
   handleEditDepartment,
   handleDeleteDepartment,
+  currentPage,
+  totalPages,
+  onPageChange,
 }) => {
   return (
     <Card className="w-full">
@@ -91,6 +105,25 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
               )}
             </tbody>
           </table>
+        </div>
+        <div className="py-4 px-2 border-t">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" onClick={() => onPageChange(currentPage - 1)} />
+              </PaginationItem>
+              {[...Array(totalPages)].map((_, index) => (
+                <PaginationItem key={index}>
+                  <PaginationLink href="#" isActive={index + 1 === currentPage} onClick={() => onPageChange(index + 1)}>
+                    {index + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext href="#" onClick={() => onPageChange(currentPage + 1)} />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </CardContent>
     </Card>

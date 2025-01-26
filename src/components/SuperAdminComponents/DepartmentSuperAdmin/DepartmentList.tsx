@@ -16,14 +16,6 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog"
 import { toast } from "sonner"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination"
 
 const DepartmentList: React.FC = () => {
   const queryClient = useQueryClient()
@@ -129,24 +121,10 @@ const DepartmentList: React.FC = () => {
         handleViewDepartment={handleViewDepartment}
         handleEditDepartment={handleEditDepartment}
         handleDeleteDepartment={handleDeleteDepartment}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
       />
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" onClick={() => handlePageChange(currentPage - 1)} />
-          </PaginationItem>
-          {[...Array(totalPages)].map((_, index) => (
-            <PaginationItem key={index}>
-              <PaginationLink href="#" isActive={index + 1 === currentPage} onClick={() => handlePageChange(index + 1)}>
-                {index + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-          <PaginationItem>
-            <PaginationNext href="#" onClick={() => handlePageChange(currentPage + 1)} />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
