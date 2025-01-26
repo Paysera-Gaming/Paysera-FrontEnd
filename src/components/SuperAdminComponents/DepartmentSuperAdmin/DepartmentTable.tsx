@@ -2,15 +2,7 @@ import type React from "react"
 import type { Department } from "./api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Eye, Edit, Trash } from "lucide-react"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination"
+import { Eye, Edit, Trash, ChevronLeft, ChevronRight } from "lucide-react"
 
 interface DepartmentTableProps {
   currentDepartments: Department[]
@@ -106,24 +98,30 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
             </tbody>
           </table>
         </div>
-        <div className="py-4 px-2 border-t">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" onClick={() => onPageChange(currentPage - 1)} />
-              </PaginationItem>
-              {[...Array(totalPages)].map((_, index) => (
-                <PaginationItem key={index}>
-                  <PaginationLink href="#" isActive={index + 1 === currentPage} onClick={() => onPageChange(index + 1)}>
-                    {index + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext href="#" onClick={() => onPageChange(currentPage + 1)} />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+        <div className="flex justify-center items-center px-2 py-4 border-t">
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              className="h-8 w-8 p-0"
+              onClick={() => onPageChange(currentPage - 1)}
+              disabled={currentPage === 1 || totalPages === 0}
+            >
+              <span className="sr-only">Go to previous page</span>
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <div className="text-sm font-medium">
+              {totalPages > 0 ? `Page ${currentPage} of ${totalPages}` : "No pages"}
+            </div>
+            <Button
+              variant="outline"
+              className="h-8 w-8 p-0"
+              onClick={() => onPageChange(currentPage + 1)}
+              disabled={currentPage === totalPages || totalPages === 0}
+            >
+              <span className="sr-only">Go to next page</span>
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
