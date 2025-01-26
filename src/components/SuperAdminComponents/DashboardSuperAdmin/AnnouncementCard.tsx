@@ -61,12 +61,17 @@ export default function AnnouncementCard() {
         <Skeleton className="h-4 w-5/6 mb-2" />
       </>
     ) : announcements.length > 0 ? (
-      announcements.map((announcement) => (
-        <div key={announcement.id} className="mb-4 text-base">
-          <div className="font-semibold">{`${formatDate(announcement.createdAt)} - ${announcement.title}`}</div>
-          <div>{announcement.body}</div>
-        </div>
-      ))
+      <ul className="list-none">
+        {announcements.map((announcement) => (
+          <li key={announcement.id} className="mb-4 text-base flex items-start">
+            <span className="mr-2">•</span>
+            <div>
+              <div className="font-semibold">{`${formatDate(announcement.createdAt)} - ${announcement.title}`}</div>
+              <div>{announcement.body}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
     ) : (
       <div>No announcements available</div>
     )}
