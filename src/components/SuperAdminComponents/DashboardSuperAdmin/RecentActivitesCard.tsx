@@ -137,7 +137,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
         </DropdownMenu>
       </CardHeader>
       <CardContent className="mt-3">
-        <ScrollArea className="h-[300px]">
+        <ScrollArea className="h-[500px]">
           {selectedOption === "Paid Leave" ? (
             <RecentActivitiesTable tableData={paidLeaveData} />
           ) : selectedOption === "Department" ? (
