@@ -16,6 +16,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { axiosInstance } from '@/api';
+import axios from 'axios';
 
 interface Employee {
     id: number;
@@ -63,18 +64,18 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
         }
     };
 
-    const handleEditSubmit = async (values: any) => {
+    const handleEditSubmit = async (values: Partial<Employee>) => {
         if (!selectedEmployee) return;
     
         try {
             await axiosInstance.put(`/api/employee/${selectedEmployee.id}`, values);
             setIsEditDialogOpen(false);
             queryClient.invalidateQueries({ queryKey: ['employees'] });
-        } catch (error: any) {
-            if (error.response) {
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error) && error.response) {
                 // Log error details returned from the server
                 console.error('Error editing the employee:', error.response.data);
-                toast.error('Error editing the employee: ' + error.response.data.message || 'Unknown error');
+                toast.error('Error editing the employee: ' + (error.response.data.message || 'Unknown error'));
             } else {
                 console.error('Error editing the employee:', error);
                 toast.error('Error editing the employee.');

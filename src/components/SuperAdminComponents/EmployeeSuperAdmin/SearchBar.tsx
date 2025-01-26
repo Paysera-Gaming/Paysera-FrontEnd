@@ -16,7 +16,7 @@ export default function SearchBar({ searchTerm, setSearchTerm, accessLevel, setA
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const handleFormSubmit = (_data: any) => {
+    const handleFormSubmit = () => {
         setIsFormOpen(false);
     };
 
