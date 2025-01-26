@@ -53,7 +53,7 @@ const HolidayList: React.FC = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);
-  const holidaysPerPage = 5;
+  const holidaysPerPage = 10;
 
   useEffect(() => {
     const currentMonth = new Date().toLocaleString('default', { month: 'long' }).toUpperCase();

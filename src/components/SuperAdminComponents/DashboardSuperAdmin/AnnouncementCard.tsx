@@ -1,5 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useState } from "react"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useState, useEffect } from "react"
+import { Megaphone } from "lucide-react"
 
 interface Announcement {
   id: number
@@ -10,39 +13,65 @@ interface Announcement {
 }
 
 export default function AnnouncementCard() {
-  const [announcements] = useState<Announcement[]>([
-    { id: 1, title: "Announcement 1", body: "This is the body of announcement 1", createdAt: "", updatedAt: "" },
-    { id: 2, title: "Announcement 2", body: "This is the body of announcement 2", createdAt: "", updatedAt: "" },
-    { id: 3, title: "Announcement 3", body: "This is the body of announcement 3", createdAt: "", updatedAt: "" },
-    { id: 4, title: "Announcement 4", body: "This is the body of announcement 4", createdAt: "", updatedAt: "" },
-    { id: 5, title: "Announcement 5", body: "This is the body of announcement 5", createdAt: "", updatedAt: "" },
-    { id: 6, title: "Announcement 6", body: "This is the body of announcement 6", createdAt: "", updatedAt: "" },
-    { id: 7, title: "Announcement 7", body: "This is the body of announcement 7", createdAt: "", updatedAt: "" },
-    { id: 8, title: "Announcement 8", body: "This is the body of announcement 8", createdAt: "", updatedAt: "" },
-    { id: 9, title: "Announcement 9", body: "This is the body of announcement 9", createdAt: "", updatedAt: "" },
-    { id: 10, title: "Announcement 10", body: "This is the body of announcement 10", createdAt: "", updatedAt: "" },
-    { id: 11, title: "Announcement 11", body: "This is the body of announcement 11", createdAt: "", updatedAt: "" },
-    { id: 12, title: "Announcement 12", body: "This is the body of announcement 12", createdAt: "", updatedAt: "" },
-    { id: 13, title: "Announcement 13", body: "This is the body of announcement 13", createdAt: "", updatedAt: "" },
-    { id: 14, title: "Announcement 14", body: "This is the body of announcement 14", createdAt: "", updatedAt: "" },
-    { id: 15, title: "Announcement 15", body: "This is the body of announcement 15", createdAt: "", updatedAt: "" }
-  ])
+  const [announcements, setAnnouncements] = useState<Announcement[]>([])
+  const [error, setError] = useState<string | null>(null)
+  const baseApiUrl = import.meta.env.VITE_BASE_API
+
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const response = await fetch(`${baseApiUrl}api/announcements`)
+        const data = await response.json()
+        if (Array.isArray(data)) {
+          // Sort announcements by ID in descending order
+          const sortedAnnouncements = data.sort((a, b) => b.id - a.id)
+          setAnnouncements(sortedAnnouncements)
+        } else {
+          throw new Error("Unexpected response format")
+        }
+      } catch (error) {
+        console.error("Error fetching announcements:", error)
+        setError("Failed to load announcements")
+      }
+    }
+
+    fetchAnnouncements()
+  }, [baseApiUrl])
+
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
+    return new Date(dateString).toLocaleDateString(undefined, options)
+  }
 
   return (
-    <Card className="col-span-2 min-h-[80px]"> {/* Added min-height */}
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold">Announcements</CardTitle>
+    <Card className="col-span-2 min-h-[120px] relative p-4">
+      <CardHeader className="pb-1 flex flex-row items-center justify-between">
+        <CardTitle className="text-2xl font-semibold">Announcements</CardTitle>
+        <Megaphone size={"1.8rem"} />
       </CardHeader>
-      <CardContent className="space-y-2 max-h-[80px] overflow-auto"> {/* Added max-height and overflow */}
-        {announcements.length > 0 ? (
-          announcements.map((announcement) => (
-            <div key={announcement.id} className="text-sm">
-              {announcement.title}: {announcement.body}
-            </div>
-          ))
-        ) : (
-          <div className="text-sm">No announcements available</div>
-        )}
+      <CardContent>
+        <ScrollArea className="h-[100px]">
+          {error ? (
+            <>
+              <Skeleton className="h-6 w-3/4 mb-2" />
+              <Skeleton className="h-4 w-full mb-2" />
+              <Skeleton className="h-4 w-5/6 mb-2" />
+              <Skeleton className="h-6 w-3/4 mb-2" />
+              <Skeleton className="h-4 w-full mb-2" />
+              <Skeleton className="h-4 w-5/6 mb-2" />
+            </>
+          ) : announcements.length > 0 ? (
+            announcements.map((announcement) => (
+              <div key={announcement.id} className="mb-4 text-base">
+                <div className="text-sm">{formatDate(announcement.createdAt)}</div>
+                <div className="font-semibold">{announcement.title}</div>
+                <div>{announcement.body}</div>
+              </div>
+            ))
+          ) : (
+            <div>No announcements available</div>
+          )}
+        </ScrollArea>
       </CardContent>
     </Card>
   )
