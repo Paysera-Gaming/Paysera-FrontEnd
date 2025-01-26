@@ -45,7 +45,7 @@ interface RecentActivitiesCardProps {
 }
 
 export default function RecentActivitiesCard({ className }: RecentActivitiesCardProps) {
-  const [selectedOption, setSelectedOption] = useState("Employee")
+  const [selectedOption, setSelectedOption] = useState("Overtime")
   const {
     data: attendanceData,
     isLoading: isLoadingAttendance,
@@ -107,6 +107,10 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
     ? attendanceData.filter((attendance: Attendance) => attendance.status === "PAID_LEAVE")
     : []
 
+  const overtimeData = Array.isArray(attendanceData)
+    ? attendanceData.filter((attendance: Attendance) => attendance.status === "OVERTIME")
+    : []
+
   const handleDropdownChange = (value: string) => {
     setSelectedOption(value)
   }
@@ -116,6 +120,8 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
       ? "Paid Leave Record"
       : selectedOption === "Department"
       ? "Department Record"
+      : selectedOption === "Overtime"
+      ? "Overtime Record"
       : "Employee Record"
 
   return (
@@ -133,6 +139,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
             <DropdownMenuItem onSelect={() => handleDropdownChange("Paid Leave")}>Paid Leave</DropdownMenuItem>
             <DropdownMenuItem onSelect={() => handleDropdownChange("Employee")}>Employee</DropdownMenuItem>
             <DropdownMenuItem onSelect={() => handleDropdownChange("Department")}>Department</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => handleDropdownChange("Overtime")}>Overtime</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </CardHeader>
@@ -142,6 +149,8 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
             <RecentActivitiesTable tableData={paidLeaveData} />
           ) : selectedOption === "Department" ? (
             departmentData && <DepartmentListTable tableData={departmentData} />
+          ) : selectedOption === "Overtime" ? (
+            <RecentActivitiesTable tableData={overtimeData} />
           ) : (
             employeeData && <EmployeeListTable tableData={employeeData} />
           )}
