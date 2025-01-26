@@ -57,7 +57,7 @@ export default function HolidayList() {
 					</CardTitle>
 				</CardHeader>
 				<CardContent className="p-0 pt-1">
-					<ScrollArea className="h-[350px]">
+					<ScrollArea className="h-[350px] 2xl:h-[600px]">
 						<ul className="flex flex-col-reverse list-disc list-inside text-sm 2xl:text-base">
 							{list}
 						</ul>

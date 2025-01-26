@@ -61,7 +61,7 @@ export default function NoticeBoardCard() {
 					</CardHeader>
 					<CardContent className="p-0 pt-1">
 						<ScrollArea className="h-[170px]2xl:h-[250px]">
-							<ul className="list-disc list-inside text-sm 2xl:text-lg">
+							<ul className="list-disc list-inside text-sm 2xl:text-base">
 								{AnnouncementList}
 							</ul>
 						</ScrollArea>
