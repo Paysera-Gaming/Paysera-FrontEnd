@@ -11,6 +11,7 @@
       const [searchTerm, setSearchTerm] = useState("")
       const [selectedStatus, setSelectedStatus] = useState("")
       const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
+      const [isCancelConfirmationOpen, setIsCancelConfirmationOpen] = useState(false)
       const [currentAttendance, setCurrentAttendance] = useState<Attendance | null>(null)
       const [newStatus, setNewStatus] = useState<string>("")
     
@@ -27,6 +28,21 @@
           )
           setData(updatedData)
           setIsConfirmationOpen(false)
+        }
+      }
+    
+      const handleCancelStatusChange = (id: number) => {
+        setCurrentAttendance(data.find((attendance) => attendance.id === id) || null)
+        setIsCancelConfirmationOpen(true)
+      }
+    
+      const confirmCancelStatusChange = () => {
+        if (currentAttendance) {
+          const updatedData = data.map((attendance) =>
+            attendance.id === currentAttendance.id ? { ...attendance, status: "PENDING" } : attendance
+          )
+          setData(updatedData)
+          setIsCancelConfirmationOpen(false)
         }
       }
     
@@ -77,7 +93,7 @@
                   <TableCell>{attendance.overTimeTotal}</TableCell>
                   <TableCell>{attendance.status}</TableCell>
                   <TableCell>
-                    {attendance.status === "PENDING" && (
+                    {attendance.status === "PENDING" ? (
                       <>
                         <Button onClick={() => handleStatusChange(attendance.id, "ACCEPTED")} className="mr-2">
                           Accept
@@ -86,6 +102,10 @@
                           Reject
                         </Button>
                       </>
+                    ) : (
+                      <Button onClick={() => handleCancelStatusChange(attendance.id)} variant="outline">
+                        Cancel
+                      </Button>
                     )}
                   </TableCell>
                 </TableRow>
@@ -108,6 +128,27 @@
                   Cancel
                 </Button>
                 <Button type="button" variant="default" onClick={confirmStatusChange} className="px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700">
+                  Confirm
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+    
+          <Dialog open={isCancelConfirmationOpen} onOpenChange={() => setIsCancelConfirmationOpen(false)}>
+            <DialogContent className="max-w-lg p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
+                  Confirmation
+                </DialogTitle>
+              </DialogHeader>
+              <div className="mt-4 text-gray-700 dark:text-gray-300">
+                Are you sure you want to cancel the status change?
+              </div>
+              <DialogFooter className="flex justify-end space-x-4 mt-6">
+                <Button type="button" variant="outline" onClick={() => setIsCancelConfirmationOpen(false)} className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md dark:text-gray-300 dark:border-gray-600">
+                  Cancel
+                </Button>
+                <Button type="button" variant="default" onClick={confirmCancelStatusChange} className="px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700">
                   Confirm
                 </Button>
               </DialogFooter>
