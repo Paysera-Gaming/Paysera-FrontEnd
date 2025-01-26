@@ -12,6 +12,19 @@ export type TInputForm = {
 	lunchEndTime: string;
 };
 
+export type TSchedule = {
+	id: number;
+	scheduleType: 'FIXED' | 'SUPER_FLEXI' | 'FLEXI';
+	startTime: string;
+	endTime: string;
+	limitWorkHoursDay: number;
+	allowedOvertime: boolean;
+	lunchStartTime: string;
+	lunchEndTime: string;
+	updatedAt: string;
+	createdAt: string;
+};
+
 export type TDepartmentSchedules = {
 	id: number;
 	name: string;
@@ -20,18 +33,7 @@ export type TDepartmentSchedules = {
 	departmentId: number;
 	updatedAt: string;
 	createdAt: string;
-	Schedule: {
-		id: number;
-		scheduleType: 'FIXED' | 'SUPER_FLEXI' | 'FLEXI';
-		startTime: string;
-		endTime: string;
-		limitWorkHoursDay: number;
-		allowedOvertime: boolean;
-		lunchStartTime: string;
-		lunchEndTime: string;
-		updatedAt: string;
-		createdAt: string;
-	};
+	Schedule: TSchedule;
 };
 
 export async function getAllSchedulesInDepartment(
