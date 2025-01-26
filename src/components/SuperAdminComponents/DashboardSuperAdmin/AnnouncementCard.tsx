@@ -50,29 +50,28 @@ export default function AnnouncementCard() {
         <Megaphone size={"1.8rem"} />
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[100px]">
-          {error ? (
-            <>
-              <Skeleton className="h-6 w-3/4 mb-2" />
-              <Skeleton className="h-4 w-full mb-2" />
-              <Skeleton className="h-4 w-5/6 mb-2" />
-              <Skeleton className="h-6 w-3/4 mb-2" />
-              <Skeleton className="h-4 w-full mb-2" />
-              <Skeleton className="h-4 w-5/6 mb-2" />
-            </>
-          ) : announcements.length > 0 ? (
-            announcements.map((announcement) => (
-              <div key={announcement.id} className="mb-4 text-base">
-                <div className="text-sm">{formatDate(announcement.createdAt)}</div>
-                <div className="font-semibold">{announcement.title}</div>
-                <div>{announcement.body}</div>
-              </div>
-            ))
-          ) : (
-            <div>No announcements available</div>
-          )}
-        </ScrollArea>
-      </CardContent>
+  <ScrollArea className="h-[100px]">
+    {error ? (
+      <>
+        <Skeleton className="h-6 w-3/4 mb-2" />
+        <Skeleton className="h-4 w-full mb-2" />
+        <Skeleton className="h-4 w-5/6 mb-2" />
+        <Skeleton className="h-6 w-3/4 mb-2" />
+        <Skeleton className="h-4 w-full mb-2" />
+        <Skeleton className="h-4 w-5/6 mb-2" />
+      </>
+    ) : announcements.length > 0 ? (
+      announcements.map((announcement) => (
+        <div key={announcement.id} className="mb-4 text-base">
+          <div className="font-semibold">{`${formatDate(announcement.createdAt)} - ${announcement.title}`}</div>
+          <div>{announcement.body}</div>
+        </div>
+      ))
+    ) : (
+      <div>No announcements available</div>
+    )}
+  </ScrollArea>
+</CardContent>
     </Card>
   )
 }
