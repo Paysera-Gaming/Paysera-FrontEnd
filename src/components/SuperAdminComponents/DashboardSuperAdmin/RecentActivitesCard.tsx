@@ -115,7 +115,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
     setSelectedOption(value)
   }
 
-  const title =
+  const subtitle =
     selectedOption === "Paid Leave"
       ? "Paid Leave Record"
       : selectedOption === "Department"
@@ -127,21 +127,26 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
   return (
     <Card className={`flex-1 col-span-2 p-4 ${className}`}>
       <CardHeader className="flex flex-row items-center justify-between relative">
-        <CardTitle className="text-2xl font-semibold">{title}</CardTitle>
-        <Activity size={"1.8rem"} className="absolute top-2 right-2" />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="mt-2 md:mt-0 p-2 text-base w-32 mr-auto md:mr-4">
-              Select Option
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-64">
-            <DropdownMenuItem onSelect={() => handleDropdownChange("Paid Leave")}>Paid Leave</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => handleDropdownChange("Employee")}>Employee</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => handleDropdownChange("Department")}>Department</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => handleDropdownChange("Overtime")}>Overtime</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div>
+          <CardTitle className="text-2xl font-semibold">Recent Activity</CardTitle>
+          <p className="text-lg font-medium">{subtitle}</p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="p-2 text-base w-32">
+                Select Option
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-64">
+              <DropdownMenuItem onSelect={() => handleDropdownChange("Paid Leave")}>Paid Leave</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => handleDropdownChange("Employee")}>Employee</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => handleDropdownChange("Department")}>Department</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => handleDropdownChange("Overtime")}>Overtime</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Activity size={"1.8rem"} />
+        </div>
       </CardHeader>
       <CardContent className="mt-3">
         <ScrollArea className="h-[500px]">
