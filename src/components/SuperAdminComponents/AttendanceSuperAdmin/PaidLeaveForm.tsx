@@ -32,7 +32,6 @@ const PaidLeaveForm: React.FC = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [scheduleType, setScheduleType] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
@@ -70,7 +69,7 @@ const PaidLeaveForm: React.FC = () => {
       employeeId: employee.id,
       date: selectedDate.toISOString(),
       status: "PAID_LEAVE",
-      scheduleType,
+      scheduleType: "FIXED", // Automatically set to FIXED
       timeIn: new Date(selectedDate.setHours(8, 0, 0)).toISOString(),
       timeOut: new Date(selectedDate.setHours(17, 0, 0)).toISOString(),
       lunchTimeIn: new Date(selectedDate.setHours(12, 0, 0)).toISOString(),
@@ -143,22 +142,6 @@ const PaidLeaveForm: React.FC = () => {
                 <div className="col-span-3">
                   <DatePickerDemo date={selectedDate} setDate={setSelectedDate} />
                 </div>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="scheduleType" className="text-right text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Schedule Type
-                </Label>
-                <select
-                  id="scheduleType"
-                  className="col-span-3 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-transparent dark:border-gray-600 dark:text-gray-300"
-                  value={scheduleType}
-                  onChange={(e) => setScheduleType(e.target.value)}
-                >
-                  <option value="" disabled className="dark:bg-gray-700 dark:text-gray-300">Select a schedule type</option>
-                  <option value="FIXED" className="dark:bg-gray-700 dark:text-gray-300">FIXED</option>
-                  <option value="FLEXI" className="dark:bg-gray-700 dark:text-gray-300">FLEXI</option>
-                  <option value="SUPER_FLEXI" className="dark:bg-gray-700 dark:text-gray-300">SUPER_FLEXI</option>
-                </select>
               </div>
             </div>
             <DialogFooter>
