@@ -59,8 +59,8 @@ function calculateTotalHours(startTime: string, endTime: string): number {
 }
 
 export async function createSchedule(
-	departmentId: number,
-	schedule: TInputForm
+	schedule: TInputForm,
+	departmentId: number
 ): Promise<number> {
 	if (
 		schedule.scheduleType == 'FLEXI' ||
