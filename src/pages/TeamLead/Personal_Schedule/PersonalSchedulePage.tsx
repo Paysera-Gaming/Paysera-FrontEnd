@@ -1,6 +1,7 @@
 import { TPersonalSchedule } from '@/api/PersonalScheduleAPI';
 import { DataTable } from '@/components/DataTable/DataTableProvider';
 import personalScheduleColumn from '@/components/DataTable/PersonalScheduleColumn';
+import AddPersonalScheduleBtn from '@/components/TeamLeadComponents/PersonalSchedule/AddPersonalScheduleBtn';
 import { Button } from '@/components/ui/button';
 
 export default function PersonalSchedulePage() {
@@ -45,13 +46,12 @@ export default function PersonalSchedulePage() {
 
 	return (
 		<div>
-			{' '}
 			Personal Schedule Page
 			<DataTable
-				addButton={<Button> TEST</Button>}
+				addButton={<AddPersonalScheduleBtn></AddPersonalScheduleBtn>}
 				columns={personalScheduleColumn()}
 				data={getUser}
-				searchQuery="lastName"
+				searchQuery="Employee_lastName"
 			></DataTable>
 		</div>
 	);

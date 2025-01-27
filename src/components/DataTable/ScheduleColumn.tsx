@@ -147,7 +147,6 @@ export const scheduleColumns: ColumnDef<TDepartmentSchedules>[] = [
 		cell: ({ row }) => {
 			const RefRemoveDialog = forwardRef(RemoveScheduleDialog);
 			const RefEditSchedule = forwardRef(EditSchedule);
-
 			return (
 				// try to make this drop down into a stupid standalone
 				<DropdownMenu>
@@ -163,13 +162,13 @@ export const scheduleColumns: ColumnDef<TDepartmentSchedules>[] = [
 						<DropdownMenuSeparator />
 
 						<DropdownMenuItem asChild>
-							<ScheduleContext.Provider value={row.original}>
+							<ScheduleContext.Provider value={'BOOBS'}>
 								<RefEditSchedule></RefEditSchedule>
 							</ScheduleContext.Provider>
 						</DropdownMenuItem>
 
 						<DropdownMenuItem asChild>
-							<ScheduleContext.Provider value={row.original}>
+							<ScheduleContext.Provider value={'BOOVS'}>
 								<RefRemoveDialog></RefRemoveDialog>
 							</ScheduleContext.Provider>
 						</DropdownMenuItem>
