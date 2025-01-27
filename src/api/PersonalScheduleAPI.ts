@@ -2,13 +2,13 @@ import { TEmployee } from '@/components/DataTable/DataColumns';
 import { TSchedule } from './ScheduleAPI';
 
 type Day =
-	| 'Monday'
-	| 'Tuesday'
-	| 'Wednesday'
-	| 'Thursday'
-	| 'Friday'
-	| 'Saturday'
-	| 'Sunday';
+	| 'MONDAY'
+	| 'TUESDAY'
+	| 'WEDNESDAY'
+	| 'THURSDAY'
+	| 'FRIDAY'
+	| 'SATURDAY'
+	| 'SUNDAY';
 
 // this will check if there are duplicates in the days
 
@@ -21,12 +21,13 @@ type NoDuplicates<T extends readonly unknown[]> = T extends [
 		: [F, ...NoDuplicates<R>] // Recur for the rest of the array
 	: T;
 
-type TWeekDaysArray = NoDuplicates<Day[]>;
+export type TWeekDaysArray = NoDuplicates<Day[]>;
 
 export type TPersonalSchedule = {
 	id: number;
 	name: string;
 	day: TWeekDaysArray;
+	scheduleId: number;
 	Schedule: TSchedule;
 	employeeId: number;
 	Employee: TEmployee;
