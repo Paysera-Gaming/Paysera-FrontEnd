@@ -7,6 +7,7 @@
     import { Button } from "@/components/ui/button";
     import { Input } from "@/components/ui/input";
     import { Skeleton } from "@/components/ui/skeleton";
+    import { format } from "date-fns";
     
     const OvertimeTable: React.FC = () => {
       const { data: attendanceData, isLoading, error } = useQuery<Attendance[]>({
@@ -15,7 +16,7 @@
       });
     
       const [searchTerm, setSearchTerm] = useState("");
-      const [selectedStatus, setSelectedStatus] = useState("");
+      const [selectedAccessLevel, setSelectedAccessLevel] = useState("");
     
       if (isLoading) {
         return (
@@ -38,15 +39,15 @@
       const filteredData = attendanceData?.filter(
         (attendance) =>
           attendance.employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          (selectedStatus ? (selectedStatus === "Online" ? attendance.employee.isActive : !attendance.employee.isActive) : true) &&
-          attendance.calculatedOverTime
+          (selectedAccessLevel ? attendance.employee.accessLevel === selectedAccessLevel : true) &&
+          attendance.overTimeTotal !== null && attendance.overTimeTotal > 0
       ) || [];
     
       const renderedList = filteredData.map((attendance) => (
         <TableRow key={attendance.id}>
           <TableCell className="p-4">{attendance.employee.username}</TableCell>
-          <TableCell className="p-4">{attendance.date}</TableCell>
-          <TableCell className="p-4">{attendance.overTimeTotal}</TableCell>
+          <TableCell className="p-4">{format(new Date(attendance.date), "MMMM dd, yyyy")}</TableCell>
+          <TableCell className="p-4">{attendance.overTimeTotal?.toFixed(2)}</TableCell>
         </TableRow>
       ));
     
@@ -62,13 +63,14 @@
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="p-2 text-base w-48">
-                  Status
+                  Access Level
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-64">
-                <DropdownMenuItem onSelect={() => setSelectedStatus("")}>All</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => setSelectedStatus("Online")}>Online</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => setSelectedStatus("Offline")}>Offline</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setSelectedAccessLevel("")}>All</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setSelectedAccessLevel("EMPLOYEE")}>Employee</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setSelectedAccessLevel("TEAM_LEADER")}>Team Leader</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setSelectedAccessLevel("ADMIN")}>Admin</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

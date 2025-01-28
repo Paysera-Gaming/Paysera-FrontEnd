@@ -1,38 +1,53 @@
-import type React from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { parseTime, timeDifferenceInHours, formatDateTime, formatTime } from "./timeUtils"
-
-import { toast } from "sonner"
-import { useQueryClient } from "@tanstack/react-query"
-import type { Attendance } from "./types"
-import { axiosInstance } from "@/api"
+import React, { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { parseTime, timeDifferenceInHours, formatDateTime, formatTime } from "./timeUtils";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import type { Attendance } from "./types";
+import { axiosInstance } from "@/api";
 
 interface EditDialogProps {
-  isOpen: boolean
-  onClose: () => void
-  editData: Attendance
-  setEditData: (data: Attendance) => void
-  attendance: Attendance
+  isOpen: boolean;
+  onClose: () => void;
+  editData: Attendance;
+  setEditData: (data: Attendance) => void;
+  attendance: Attendance;
 }
 
 const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setEditData, attendance }) => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleEditSave = async (event: React.FormEvent) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const timeIn = editData.timeIn ? parseTime(editData.timeIn) : null
-    const timeOut = editData.timeOut ? parseTime(editData.timeOut) : null
+    const timeIn = editData.timeIn ? parseTime(editData.timeIn) : null;
+    const timeOut = editData.timeOut ? parseTime(editData.timeOut) : null;
 
-    const totalWorkHours = timeIn && timeOut ? timeDifferenceInHours(timeIn, timeOut) : 0
-    const overTimeTotal = editData.overTimeTotal || 0
-    const totalTime = totalWorkHours + overTimeTotal
+    if (timeIn && timeOut) {
+      const isTimeInPM = timeIn.hours >= 12;
+      const isTimeOutAM = timeOut.hours < 12;
 
-    const validWorkTimeTotal = totalWorkHours >= 0 ? totalWorkHours : null
+      if (isTimeInPM && isTimeOutAM) {
+        setErrorMessage("Time In cannot be PM and Time Out be AM.");
+        return;
+      }
+
+      if (timeOut.hours < timeIn.hours || (timeOut.hours === timeIn.hours && timeOut.minutes < timeIn.minutes)) {
+        setErrorMessage("Time Out cannot be earlier than Time In.");
+        return;
+      }
+    }
+
+    const totalWorkHours = timeIn && timeOut ? timeDifferenceInHours(timeIn, timeOut) : 0;
+    const overTimeTotal = editData.overTimeTotal || 0;
+    const totalTime = totalWorkHours + overTimeTotal;
+
+    const validWorkTimeTotal = totalWorkHours >= 0 ? totalWorkHours : null;
 
     const payload = {
       id: editData.id,
@@ -45,18 +60,18 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
       timeHoursWorked: validWorkTimeTotal,
       overTimeTotal: overTimeTotal,
       timeTotal: totalTime.toFixed(2),
-    }
+    };
 
     try {
-      await axiosInstance.put(`/api/attendance/${attendance.id}`, payload)
-      toast.success(`Successfully updated attendance on ${attendance.date}`)
-      queryClient.invalidateQueries({ queryKey: ["attendanceList"] })
-      onClose()
+      await axiosInstance.put(`/api/attendance/${attendance.id}`, payload);
+      toast.success(`Successfully updated attendance on ${attendance.date}`);
+      queryClient.invalidateQueries({ queryKey: ["attendanceList"] });
+      onClose();
     } catch (error) {
-      toast.error("Error updating the attendance.")
-      console.error("Error updating the attendance:", error)
+      toast.error("Error updating the attendance.");
+      console.error("Error updating the attendance:", error);
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -100,15 +115,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
                 onChange={(e) => setEditData({ ...editData, timeOut: e.target.value })}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="overTimeTotal">Overtime Total (hours)</Label>
-              <Input
-                type="number"
-                id="overTimeTotal"
-                value={editData.overTimeTotal || ""}
-                onChange={(e) => setEditData({ ...editData, overTimeTotal: Number.parseFloat(e.target.value) })}
-              />
-            </div>
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>
@@ -119,8 +126,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
         </form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default EditDialog
-
+export default EditDialog;
