@@ -107,10 +107,6 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
     ? attendanceData.filter((attendance: Attendance) => attendance.status === "PAID_LEAVE")
     : [];
 
-  const overtimeData = Array.isArray(attendanceData)
-    ? attendanceData.filter((attendance: Attendance) => attendance.status === "OVERTIME")
-    : [];
-
   const handleDropdownChange = (value: string) => {
     setSelectedOption(value);
   };
@@ -155,7 +151,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
           ) : selectedOption === "Department" ? (
             departmentData && <DepartmentListTable tableData={departmentData} />
           ) : selectedOption === "Overtime" ? (
-            <RecentActivitiesTable tableData={overtimeData} />
+            <p className="text-base">This section will display recent overtime activities.</p>
           ) : (
             employeeData && <EmployeeListTable tableData={employeeData} />
           )}
