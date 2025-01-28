@@ -1,18 +1,14 @@
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import type { Department } from "@/components/SuperAdminComponents/DepartmentSuperAdmin/api";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import type { Department } from "@/components/SuperAdminComponents/DepartmentSuperAdmin/api";
 
 function DepartmentListTable({ tableData }: { tableData: Department[] }) {
   const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
 
-  const handleRowClick = (department: Department) => {
-    setSelectedDepartment(department);
-  };
-
   const renderedList = tableData.map((department) => (
-    <TableRow key={department.id} onClick={() => handleRowClick(department)} className="cursor-pointer">
+    <TableRow key={department.id} onClick={() => setSelectedDepartment(department)} className="cursor-pointer">
       <TableCell>{department.name}</TableCell>
       <TableCell>{department.Leader ? `${department.Leader.firstName} ${department.Leader.lastName}` : 'No Leader Assigned'}</TableCell>
       <TableCell>{department.Employees ? department.Employees.length : 0}</TableCell>
@@ -37,23 +33,28 @@ function DepartmentListTable({ tableData }: { tableData: Department[] }) {
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold">{selectedDepartment.name}</DialogTitle>
-              <DialogDescription className="space-y-4">
-                <div className="flex flex-col space-y-1">
-                  <span className="font-semibold">Leader:</span>
-                  <span>{selectedDepartment.Leader ? `${selectedDepartment.Leader.firstName} ${selectedDepartment.Leader.lastName}` : 'No Leader Assigned'}</span>
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <span className="font-semibold">Employees:</span>
-                  <ul className="list-disc list-inside">
-                    {selectedDepartment.Employees?.map((employee) => (
-                      <li key={employee.id}>
-                        {employee.firstName} {employee.lastName} ({employee.role})
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </DialogDescription>
             </DialogHeader>
+            <DialogDescription>
+              Details of the selected department.
+            </DialogDescription>
+            <div className="space-y-2">
+              <div>
+                <span className="font-semibold">Leader: </span>
+                <span>{selectedDepartment.Leader ? `${selectedDepartment.Leader.firstName} ${selectedDepartment.Leader.lastName}` : 'No Leader Assigned'}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Employee Count: </span>
+                <span>{selectedDepartment.Employees ? selectedDepartment.Employees.length : 0}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Employees: </span>
+                <ul>
+                  {selectedDepartment.Employees?.map(employee => (
+                    <li key={employee.id}>{`${employee.firstName} ${employee.lastName} - ${employee.role}`}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
             <DialogFooter>
               <Button onClick={() => setSelectedDepartment(null)}>Close</Button>
             </DialogFooter>

@@ -17,16 +17,7 @@ import EmployeeEdit from "./EmployeeEdit"
 import { useQueryClient } from "@tanstack/react-query"
 import { axiosInstance } from "@/api"
 import axios from "axios"
-
-interface Employee {
-  id: number
-  username: string
-  firstName: string
-  lastName: string
-  middleName?: string
-  isActive: boolean
-  accessLevel: "EMPLOYEE" | "TEAM_LEADER" | "ADMIN"
-}
+import type { Employee } from "./types" // Updated import
 
 interface EmployeeTableProps {
   employees: Employee[]
@@ -83,6 +74,10 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
     }
   }
 
+  const formatAccessLevel = (accessLevel: string) => {
+    return accessLevel.replace(/_/g, ' ')
+  }
+
   const indexOfLastEmployee = currentPage * employeesPerPage
   const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage
   const currentEmployees = employees.slice(indexOfFirstEmployee, indexOfLastEmployee)
@@ -116,7 +111,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                 </TableCell>
                 <TableCell>{emp.username}</TableCell>
                 <TableCell>{emp.isActive ? "Online" : "Offline"}</TableCell>
-                <TableCell>{emp.accessLevel}</TableCell>
+                <TableCell>{formatAccessLevel(emp.accessLevel)}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={() => handleEditClick(emp)}>
@@ -193,4 +188,3 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
 }
 
 export default EmployeeTable
-

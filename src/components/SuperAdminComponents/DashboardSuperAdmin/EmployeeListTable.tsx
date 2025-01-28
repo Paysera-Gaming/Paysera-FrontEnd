@@ -1,14 +1,30 @@
-import { useState } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types"
+import { useState, useEffect } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
+import type { Department } from "@/components/SuperAdminComponents/DepartmentSuperAdmin/api";
+import { fetchDepartments } from "@/components/SuperAdminComponents/DepartmentSuperAdmin/api";
 
-function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedAccessLevel, setSelectedAccessLevel] = useState("")
-  const [selectedStatus, setSelectedStatus] = useState("")
+interface EmployeeListTableProps {
+  tableData: Employee[];
+  departmentData?: Department[];
+}
+
+function EmployeeListTable({ tableData, departmentData }: EmployeeListTableProps) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedAccessLevel, setSelectedAccessLevel] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [departments, setDepartments] = useState<Department[]>(departmentData || []);
+
+  useEffect(() => {
+    if (!departmentData) {
+      fetchDepartments().then(setDepartments);
+    }
+  }, [departmentData]);
 
   const filteredData = tableData.filter(
     (employee) =>
@@ -18,15 +34,20 @@ function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
           ? ["SUPER_ADMIN", "ADMIN"].includes(employee.accessLevel)
           : employee.accessLevel === selectedAccessLevel
         : true) &&
-      (selectedStatus ? (selectedStatus === "Online" ? employee.isActive : !employee.isActive) : true),
-  )
+      (selectedStatus ? (selectedStatus === "Online" ? employee.isActive : !employee.isActive) : true)
+  );
 
-  const sortedData = filteredData.sort((a, b) => b.id - a.id)
+  const sortedData = filteredData.sort((a, b) => b.id - a.id);
 
-  const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+  const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+
+  const getDepartmentName = (departmentId: number) => {
+    const department = departments.find((dept) => dept.id === departmentId);
+    return department ? department.name : "Unknown";
+  };
 
   const renderedList = sortedData.map((employee) => (
-    <TableRow key={employee.id}>
+    <TableRow key={employee.id} onClick={() => setSelectedEmployee(employee)} className="cursor-pointer">
       <TableCell className="p-4">{employee.username}</TableCell>
       <TableCell className="p-4">
         {employee.accessLevel === "TEAM_LEADER"
@@ -42,7 +63,7 @@ function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
         </div>
       </TableCell>
     </TableRow>
-  ))
+  ));
 
   return (
     <>
@@ -89,8 +110,54 @@ function EmployeeListTable({ tableData }: { tableData: Employee[] }) {
         </TableHeader>
         <TableBody>{renderedList}</TableBody>
       </Table>
+
+      {selectedEmployee && (
+        <Dialog open={!!selectedEmployee} onOpenChange={() => setSelectedEmployee(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold">{selectedEmployee.username}</DialogTitle>
+            </DialogHeader>
+            <DialogDescription>
+              Details of the selected employee.
+            </DialogDescription>
+            <div className="space-y-2">
+              <div>
+                <span className="font-semibold">First Name: </span>
+                <span>{selectedEmployee.firstName}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Last Name: </span>
+                <span>{selectedEmployee.lastName}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Middle Name: </span>
+                <span>{selectedEmployee.middleName || "N/A"}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Access Level: </span>
+                <span>{capitalize(selectedEmployee.accessLevel)}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Status: </span>
+                <span>{selectedEmployee.isActive ? "Online" : "Offline"}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Role: </span>
+                <span>{selectedEmployee.role}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Department: </span>
+                <span>{getDepartmentName(selectedEmployee.departmentId)}</span>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={() => setSelectedEmployee(null)}>Close</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
-  )
+  );
 }
 
-export default EmployeeListTable
+export default EmployeeListTable;

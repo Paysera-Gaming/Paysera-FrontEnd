@@ -6,6 +6,8 @@ export interface Employee {
     middleName?: string;
     accessLevel: 'EMPLOYEE' | 'TEAM_LEADER' | 'ADMIN';
     isActive: boolean;
+    departmentId: number;
+    role: string;
 }
 
 export interface EmployeeCounts {
