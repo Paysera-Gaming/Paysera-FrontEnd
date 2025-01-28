@@ -106,16 +106,10 @@ export default function PersonalScheduleForm({
 	const mutation = useMutation({
 		mutationFn: () => fetchRequest(form.getValues()),
 		onSuccess: () => {
-			toast.success('Schedule created successfully!');
 			updateParentState(false);
 		},
 		onError: (error) => {
 			console.log(error);
-			const errorMessage =
-				typeof error === 'object' && error?.message
-					? error.message
-					: 'An unknown error occurred';
-			toast.error(errorMessage);
 		},
 	});
 	// do them submit shits here

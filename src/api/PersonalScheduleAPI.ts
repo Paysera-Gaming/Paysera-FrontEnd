@@ -82,8 +82,6 @@ export async function getAllPersonalSchedules() {
 
 // post
 export async function postPersonalSchedule(form: TPersonalSchedForms) {
-	console.log(form);
-
 	const response: AxiosResponse<TPersonalSchedForms> = await axiosInstance.post(
 		'/api/personal-schedule',
 		{
@@ -95,6 +93,7 @@ export async function postPersonalSchedule(form: TPersonalSchedForms) {
 			scheduleType: form.scheduleType,
 		}
 	);
+
 	return response.status;
 }
 
