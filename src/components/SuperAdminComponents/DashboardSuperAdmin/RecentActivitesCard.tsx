@@ -15,6 +15,7 @@ import { Activity } from "lucide-react";
 import RecentActivitiesTable from "./RecentActivitiesTable";
 import EmployeeListTable from "./EmployeeListTable";
 import DepartmentListTable from "./DepartmentListTable";
+import OvertimeTable from "./OvertimeTable";
 
 const SkeletonCard: React.FC = () => {
   return (
@@ -151,7 +152,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
           ) : selectedOption === "Department" ? (
             departmentData && <DepartmentListTable tableData={departmentData} />
           ) : selectedOption === "Overtime" ? (
-            <p className="text-base">This section will display recent overtime activities.</p>
+            <OvertimeTable />
           ) : (
             employeeData && <EmployeeListTable tableData={employeeData} />
           )}
