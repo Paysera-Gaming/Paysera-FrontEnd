@@ -34,7 +34,7 @@ export default function HolidayList() {
         <Calendar size={"1.8rem"} />
       </CardHeader>
       <CardContent className="flex-grow">
-        <ScrollArea className="h-[50rem] overflow-y-auto">
+        <ScrollArea className="h-[40rem] overflow-y-auto">
           <Table>
             <TableHeader>
               <TableRow>

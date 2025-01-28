@@ -19,7 +19,7 @@ import OvertimeTable from "./OvertimeTable";
 
 const SkeletonCard: React.FC = () => {
   return (
-    <Card className="flex-1 col-span-2 p-3">
+    <Card className="flex-1 col-span-2 p-2">
       <CardHeader className="flex flex-col md:flex-row items-center justify-between">
         <div className="flex items-center space-x-2">
           <Skeleton className="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-700" />
@@ -27,7 +27,7 @@ const SkeletonCard: React.FC = () => {
         </div>
         <Skeleton className="h-8 w-24 rounded bg-gray-200 dark:bg-gray-700 mt-2 md:mt-0" />
       </CardHeader>
-      <CardContent className="mt-3">
+      <CardContent className="mt-2">
         <ScrollArea className="h-[180px]">
           <div className="space-y-2">
             <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
@@ -87,15 +87,15 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
 
   if (attendanceError /* || employeeError || departmentError */) {
     return (
-      <Card className="flex-1 col-span-2 p-3">
+      <Card className="flex-1 col-span-2 p-2">
         <CardHeader className="flex flex-row items-center justify-between relative">
           <CardTitle className="text-base font-semibold">Error</CardTitle>
           <Activity size={"1.8rem"} className="absolute top-2 right-2" />
         </CardHeader>
-        <CardContent className="mt-3">
+        <CardContent className="mt-2">
           <div className="text-center">
             <p className="text-red-500">Failed to load data. Please try again.</p>
-            <Button onClick={handleRetry} className="mt-3">
+            <Button onClick={handleRetry} className="mt-2">
               Retry
             </Button>
           </div>
@@ -122,10 +122,10 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
       : "Employee Record";
 
   return (
-    <Card className={`flex-1 col-span-2 p-4 ${className}`}>
+    <Card className={`flex-1 col-span-2 p-2 ${className}`}>
       <CardHeader className="flex flex-row items-center justify-between relative">
         <div>
-          <CardTitle className="text-2xl font-semibold">Recent Activity</CardTitle>
+          <CardTitle className="text-xl font-semibold">Recent Activity</CardTitle>
           <p className="text-lg font-medium">{subtitle}</p>
         </div>
         <div className="flex items-center space-x-2">
@@ -145,8 +145,8 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
           <Activity size={"1.8rem"} />
         </div>
       </CardHeader>
-      <CardContent className="mt-3">
-        <ScrollArea className="h-[500px]">
+      <CardContent className="mt-2">
+        <ScrollArea className="h-[400px]">
           {selectedOption === "Paid Leave" ? (
             <RecentActivitiesTable tableData={paidLeaveData} />
           ) : selectedOption === "Department" ? (

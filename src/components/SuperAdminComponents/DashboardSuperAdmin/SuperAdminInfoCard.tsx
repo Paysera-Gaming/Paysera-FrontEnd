@@ -21,7 +21,7 @@ function SuperAdminInfo() {
   }
 
   return (
-    <ul className="text-base space-y-1">
+    <ul className="text-sm space-y-1">
       <li>
         <b>Name:</b> {info.firstName} {info.middleName} {info.lastName}
       </li>
@@ -29,7 +29,7 @@ function SuperAdminInfo() {
         <b>Username:</b> {info.username}
       </li>
       <li>
-        <b>Role:</b> <Badge className="text-sm px-2 py-1">{returnRole(info.accessLevel)}</Badge>
+        <b>Role:</b> <Badge className="text-xs px-2 py-1">{returnRole(info.accessLevel)}</Badge>
       </li>
     </ul>
   )
@@ -37,7 +37,7 @@ function SuperAdminInfo() {
 
 function ScheduleInfo() {
   return (
-    <ul className="text-base space-y-0">
+    <ul className="text-sm space-y-0">
       <li>
         <b>Schedule Type:</b> SUPER FLEXI
       </li>
@@ -51,28 +51,28 @@ function ScheduleInfo() {
 export default function SuperAdminInfoCard() {
   return (
     <div className="flex flex-col gap-2">
-      <Card className="flex-1 p-4 relative">
-        <CardHeader className="pb-2 flex flex-row items-center justify-between">
-          <CardTitle className="text-3xl font-semibold">Super Admin Info</CardTitle>
-          <BookUser size={"1.8rem"} />
+      <Card className="flex-1 p-2 relative">
+        <CardHeader className="pb-1 flex flex-row items-center justify-between">
+          <CardTitle className="text-xl font-semibold">Super Admin Info</CardTitle>
+          <BookUser size={"1.5rem"} />
         </CardHeader>
         <CardContent>
           <SuperAdminInfo />
         </CardContent>
       </Card>
-      <Card className="flex-1 p-4 relative">
-        <CardHeader className="pb-2 flex flex-row items-center justify-between">
-          <CardTitle className="text-2xl font-semibold">Schedule Info</CardTitle>
-          <Calendar size={"1.8rem"} />
+      <Card className="flex-1 p-2 relative">
+        <CardHeader className="pb-1 flex flex-row items-center justify-between">
+          <CardTitle className="text-xl font-semibold">Schedule Info</CardTitle>
+          <Calendar size={"1.5rem"} />
         </CardHeader>
         <CardContent>
           <ScheduleInfo />
         </CardContent>
       </Card>
-      <Card className="border-primary text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out w-61 p-4 relative">
-        <CardHeader className="pb-2 flex flex-row items-center justify-between">
-          <CardTitle className="text-2xl font-semibold">Paysera Handbook</CardTitle>
-          <Book size={"1.8rem"} />
+      <Card className="border-primary text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out w-61 p-2 relative">
+        <CardHeader className="pb-1 flex flex-row items-center justify-between">
+          <CardTitle className="text-xl font-semibold">Paysera Handbook</CardTitle>
+          <Book size={"1.5rem"} />
         </CardHeader>
         <CardContent>
           <CardDescription className="text-primary">Click here to open</CardDescription>
