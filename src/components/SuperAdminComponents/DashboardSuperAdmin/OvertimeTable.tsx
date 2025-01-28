@@ -39,7 +39,7 @@
         (attendance) =>
           attendance.employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
           (selectedStatus ? (selectedStatus === "Online" ? attendance.employee.isActive : !attendance.employee.isActive) : true) &&
-          attendance.overTimeTotal !== null
+          attendance.calculatedOverTime
       ) || [];
     
       const renderedList = filteredData.map((attendance) => (
