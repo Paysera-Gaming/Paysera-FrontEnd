@@ -175,8 +175,7 @@ export default function PersonalScheduleForm({
 						render={() => (
 							<FormItem>
 								<div className="mb-4">
-									<FormLabel className="text-base">Days</FormLabel>
-									<FormDescription>Select the day</FormDescription>
+									<FormLabel className="text-sm">Allowed Days</FormLabel>
 								</div>
 								{items.map((item, index) => (
 									<FormField
@@ -204,8 +203,11 @@ export default function PersonalScheduleForm({
 															}}
 														/>
 													</FormControl>
-													<FormLabel className="text-sm font-normal capitalize">
-														{item}
+													<FormLabel className="text-sm font-normal ">
+														<p className="capitalize">
+															{' '}
+															{item.toLocaleLowerCase()}
+														</p>
 													</FormLabel>
 												</FormItem>
 											);
