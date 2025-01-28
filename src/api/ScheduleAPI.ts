@@ -8,8 +8,8 @@ export type TInputForm = {
 	timeOut: Date;
 	allowedOverTime: boolean;
 	scheduleType: 'FIXED' | 'SUPER_FLEXI' | 'FLEXI';
-	lunchStartTime: string;
-	lunchEndTime: string;
+	// lunchStartTime: string;
+	// lunchEndTime: string;
 };
 
 export type TSchedule = {
@@ -59,8 +59,8 @@ function calculateTotalHours(startTime: string, endTime: string): number {
 }
 
 export async function createSchedule(
-	departmentId: number,
-	schedule: TInputForm
+	schedule: TInputForm,
+	departmentId: number
 ): Promise<number> {
 	if (
 		schedule.scheduleType == 'FLEXI' ||
@@ -123,8 +123,8 @@ export async function createSchedule(
 }
 
 export async function updateSchedule(
-	departmentScheduleId: number,
-	schedule: TInputForm
+	schedule: TInputForm,
+	departmentScheduleId: number
 ): Promise<number> {
 	const totalHours = calculateTotalHours(
 		schedule.timeIn.toDateString(),
@@ -140,8 +140,8 @@ export async function updateSchedule(
 			endTime: schedule.timeOut,
 			limitWorkHoursDay: totalHours,
 			allowedOvertime: schedule.allowedOverTime,
-			lunchStartTime: schedule.lunchStartTime,
-			lunchEndTime: schedule.lunchEndTime,
+			lunchStartTime: new Date(),
+			lunchEndTime: addHours(new Date(), 1),
 		}
 	);
 	return response.status;

@@ -37,6 +37,7 @@ import { ScheduleContext } from '@/components/DataTable/ScheduleColumn';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useUserStore } from '@/stores/userStore';
+import { TInputForm } from '@/api/ScheduleAPI';
 
 const formSchema = z.object({
 	name: z.string().min(2).max(50),
@@ -51,10 +52,7 @@ const formSchema = z.object({
 
 interface IScheduleFormProps {
 	updateParentState: (value: boolean) => void;
-	fetchRequest: (
-		id: number,
-		schedule: z.infer<typeof formSchema>
-	) => Promise<number>;
+	fetchRequest: (schedule: TInputForm, id: number) => Promise<number>;
 	isPost: boolean;
 }
 
@@ -95,14 +93,14 @@ export default function ScheduleForm({
 				if (scheduleId === undefined) {
 					return Promise.reject(new Error('Schedule ID is undefined'));
 				}
-				return fetchRequest(scheduleId, form.getValues());
+				return fetchRequest(form.getValues(), scheduleId);
 			} else {
 				// postt request
 				const departmentId = useUserStore.getState().user?.departmentId;
 				if (departmentId === undefined) {
 					return Promise.reject(new Error('Department ID is undefined'));
 				}
-				return fetchRequest(departmentId, form.getValues());
+				return fetchRequest(form.getValues(), departmentId);
 			}
 		},
 		onSuccess: () => {
@@ -142,7 +140,7 @@ export default function ScheduleForm({
 													<Info className="w-4 h-4"></Info>
 												</TooltipTrigger>
 												<TooltipContent>
-													This is the name of the schedule 
+													This is the name of the schedule
 												</TooltipContent>
 											</Tooltip>
 										</TooltipProvider>
@@ -207,7 +205,7 @@ export default function ScheduleForm({
 									>
 										<FormControl>
 											<SelectTrigger>
-												<SelectValue placeholder="Select a verified email to display" />
+												<SelectValue placeholder="Select a Schedule Type" />
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent>
