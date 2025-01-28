@@ -52,6 +52,10 @@
         </TableRow>
       ));
     
+      const noRecordsMessage = selectedAccessLevel
+        ? `No overtime records found for the selected access level: ${selectedAccessLevel.replace("_", " ").toLowerCase()}.`
+        : "No overtime records found.";
+    
       return (
         <>
           <div className="flex mb-4 space-x-2">
@@ -84,7 +88,20 @@
                 <TableHead className="p-4">Time Total</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>{renderedList}</TableBody>
+            <TableBody>
+              {renderedList.length > 0 ? (
+                renderedList
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center p-4">
+                    <div className="text-foreground">
+                      <p className="font-semibold">{noRecordsMessage}</p>
+                      <p className="text-sm">Please adjust your filters or try a different search term.</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
           </Table>
         </>
       );
