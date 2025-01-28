@@ -48,6 +48,7 @@
           <TableCell className="p-4">{attendance.employee.username}</TableCell>
           <TableCell className="p-4">{format(new Date(attendance.date), "MMMM dd, yyyy")}</TableCell>
           <TableCell className="p-4">{attendance.overTimeTotal?.toFixed(2)}</TableCell>
+          <TableCell className="p-4">{attendance.timeTotal.toFixed(2)}</TableCell>
         </TableRow>
       ));
     
@@ -80,6 +81,7 @@
                 <TableHead className="p-4">Username</TableHead>
                 <TableHead className="p-4">Date</TableHead>
                 <TableHead className="p-4">Overtime Total</TableHead>
+                <TableHead className="p-4">Time Total</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>{renderedList}</TableBody>
