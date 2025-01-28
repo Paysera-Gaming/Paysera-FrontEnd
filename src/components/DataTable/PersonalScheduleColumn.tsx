@@ -1,5 +1,5 @@
 import { ArrowUpDown } from 'lucide-react';
-import { createContext, forwardRef } from 'react';
+import { forwardRef } from 'react';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -8,13 +8,15 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
+import { PersonalScheduleContext } from '@/stores/context';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import { format } from 'date-fns';
 import { Badge } from '../ui/badge';
-import { TPersonalSchedule, TWeekDaysArray } from '@/api/PersonalScheduleAPI';
+import { TDay, TPersonalSchedule } from '@/api/PersonalScheduleAPI';
 import { Button } from '../ui/button';
+import RemovePersonalScheduleDialog from '../TeamLeadComponents/PersonalSchedule/RemovePersonalScheduleDialog';
+import EditPersonalSchedule from '../TeamLeadComponents/PersonalSchedule/EditPersonalSchedule';
 
 function formatDate(date: Date): string {
 	const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
@@ -86,7 +88,7 @@ export default function personalScheduleColumn(): ColumnDef<TPersonalSchedule>[]
 					SUNDAY: 'Sun',
 				};
 
-				const days = row.getValue('day') as TWeekDaysArray;
+				const days = row.getValue('day') as TDay[];
 				const dayBadges = days.map((day, index) => {
 					return (
 						<Badge key={index} className="mx-1">
@@ -135,8 +137,10 @@ export default function personalScheduleColumn(): ColumnDef<TPersonalSchedule>[]
 		{
 			id: 'actions',
 			cell: ({ row }) => {
-				// const RefRemoveDialog = forwardRef(RemoveScheduleDialog);
-				// const RefEditSchedule = forwardRef(EditSchedule);
+				const RefRemovePersonalScheduleDialog = forwardRef(
+					RemovePersonalScheduleDialog
+				);
+				const RefEditPersonalSchedule = forwardRef(EditPersonalSchedule);
 
 				return (
 					// try to make this drop down into a stupid standalone
@@ -153,16 +157,16 @@ export default function personalScheduleColumn(): ColumnDef<TPersonalSchedule>[]
 							<DropdownMenuSeparator />
 
 							<DropdownMenuItem asChild>
-								{/* <ScheduleContext.Provider value={row.original}>
-									<RefEditSchedule></RefEditSchedule>
-								</ScheduleContext.Provider> */}
+								<PersonalScheduleContext.Provider value={row.original}>
+									<RefEditPersonalSchedule></RefEditPersonalSchedule>
+								</PersonalScheduleContext.Provider>
 								amazing
 							</DropdownMenuItem>
 
 							<DropdownMenuItem asChild>
-								{/* <ScheduleContext.Provider value={row.original}>
-									<RefRemoveDialog></RefRemoveDialog>
-								</ScheduleContext.Provider> */}
+								<PersonalScheduleContext.Provider value={row.original}>
+									<RefRemovePersonalScheduleDialog></RefRemovePersonalScheduleDialog>
+								</PersonalScheduleContext.Provider>
 								amazing 2
 							</DropdownMenuItem>
 						</DropdownMenuContent>
