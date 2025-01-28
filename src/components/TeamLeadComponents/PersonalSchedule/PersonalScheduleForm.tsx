@@ -81,7 +81,7 @@ export default function PersonalScheduleForm({
 		'WEDNESDAY',
 		'THURSDAY',
 		'FRIDAY',
-		'SATERDAY',
+		'SATURDAY',
 		'SUNDAY',
 	] as const;
 
@@ -96,135 +96,153 @@ export default function PersonalScheduleForm({
 	return (
 		<>
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)}>
-					<FormField
-						control={form.control}
-						name="name"
-						render={({ field }) => {
-							return (
-								<FormItem>
-									<div className="flex items-center justify-start gap-2">
-										<FormLabel>Personal Schedule Name</FormLabel>
-
-										<TooltipProvider>
-											<Tooltip>
-												<TooltipTrigger asChild>
-													<Info className="w-4 h-4"></Info>
-												</TooltipTrigger>
-												<TooltipContent>
-													Adds a name for the personal schedule
-												</TooltipContent>
-											</Tooltip>
-										</TooltipProvider>
-									</div>
-									<FormControl>
-										<Input placeholder="E.g. 'Manager' " {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							);
-						}}
-					/>
-					{/* select input for users */}
-					<FormField
-						control={form.control}
-						name="employeeId"
-						render={({ field }) => {
-							//     check if time worked is more than >= 8 hours
-							return (
-								<FormItem>
-									<div className="flex items-center justify-start gap-2">
-										<FormLabel>Employee Name</FormLabel>
-										<TooltipProvider>
-											<Tooltip>
-												<TooltipTrigger asChild>
-													<Info className="w-4 h-4"></Info>
-												</TooltipTrigger>
-												<TooltipContent>
-													This chooses the employee that will have the personal
-													schedule
-												</TooltipContent>
-											</Tooltip>
-										</TooltipProvider>
-									</div>
-									<Select onValueChange={(value) => field.onChange(value)}>
+				<form
+					className="p-2 px-3 grid gap-2 grid-cols-2"
+					onSubmit={form.handleSubmit(onSubmit)}
+				>
+					<div className="col-span-2 flex items-center justify-between gap-2">
+						{/* name */}
+						<FormField
+							control={form.control}
+							name="name"
+							render={({ field }) => {
+								return (
+									<FormItem className="w-full">
+										<div className="flex items-center justify-start gap-2">
+											<FormLabel>Personal Schedule Name</FormLabel>
+											<TooltipProvider>
+												<Tooltip>
+													<TooltipTrigger asChild>
+														<Info className="w-4 h-4"></Info>
+													</TooltipTrigger>
+													<TooltipContent>
+														Adds a name for the personal schedule
+													</TooltipContent>
+												</Tooltip>
+											</TooltipProvider>
+										</div>
 										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder="Select An Employee" />
-											</SelectTrigger>
+											<Input placeholder="E.g. 'Manager' " {...field} />
 										</FormControl>
-										<SelectContent>
-											{employees?.map((item) => (
-												<SelectItem key={item.id} value={item.id.toString()}>
-													{item.lastName} {item.firstName}
-												</SelectItem>
-											)) || 'No Employees Found'}
-										</SelectContent>
-									</Select>
-									<FormMessage />
-								</FormItem>
-							);
-						}}
-					/>
+										<FormMessage />
+									</FormItem>
+								);
+							}}
+						/>
+						{/* select input for users */}
+						<FormField
+							control={form.control}
+							name="employeeId"
+							render={({ field }) => {
+								//     check if time worked is more than >= 8 hours
+								return (
+									<FormItem className="w-full">
+										<div className="flex items-center justify-start gap-2">
+											<FormLabel>Employee Name</FormLabel>
+											<TooltipProvider>
+												<Tooltip>
+													<TooltipTrigger asChild>
+														<Info className="w-4 h-4"></Info>
+													</TooltipTrigger>
+													<TooltipContent>
+														This chooses the employee that will have the
+														personal schedule
+													</TooltipContent>
+												</Tooltip>
+											</TooltipProvider>
+										</div>
+										<Select onValueChange={(value) => field.onChange(value)}>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Select An Employee" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{employees?.map((item) => (
+													<SelectItem key={item.id} value={item.id.toString()}>
+														{item.lastName} {item.firstName}
+													</SelectItem>
+												)) || 'No Employees Found'}
+											</SelectContent>
+										</Select>
+										<FormMessage />
+									</FormItem>
+								);
+							}}
+						/>
+					</div>
 
 					{/* check box for days */}
-
 					<FormField
 						control={form.control}
 						name="day"
 						render={() => (
-							<FormItem>
-								<div className="mb-4">
-									<FormLabel className="text-sm">Allowed Days</FormLabel>
+							<FormItem className="col-span-2">
+								<div className="flex items-center justify-start gap-2">
+									<FormLabel>Allowed Days</FormLabel>
+
+									<TooltipProvider>
+										<Tooltip>
+											<TooltipTrigger asChild>
+												<Info className="w-4 h-4"></Info>
+											</TooltipTrigger>
+											<TooltipContent>
+												This will dictate when this schedule be used when taking
+												an attendance
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
 								</div>
-								{items.map((item, index) => (
-									<FormField
-										key={index}
-										control={form.control}
-										name="day"
-										render={({ field }) => {
-											return (
-												<FormItem
-													key={index}
-													className="flex flex-row items-start space-x-3 space-y-0"
-												>
-													<FormControl>
-														<Checkbox
-															checked={field.value?.includes(item)}
-															onCheckedChange={(checked) => {
-																return checked
-																	? field.onChange([...field.value, item])
-																	: field.onChange(
-																			field.value?.filter(
-																				(value) => value !== item
-																			)
-																			// eslint-disable-next-line no-mixed-spaces-and-tabs
-																	  );
-															}}
-														/>
-													</FormControl>
-													<FormLabel className="text-sm font-normal ">
-														<p className="capitalize">
-															{' '}
-															{item.toLocaleLowerCase()}
-														</p>
-													</FormLabel>
-												</FormItem>
-											);
-										}}
-									/>
-								))}
+								<div className="flex flex-wrap items-stretch justify-stretch gap-2">
+									{items.map((item, index) => (
+										<FormField
+											key={index}
+											control={form.control}
+											name="day"
+											render={({ field }) => {
+												return (
+													<FormItem
+														key={index}
+														className="flex flex-row items-start space-x-3 space-y-0"
+													>
+														<FormControl>
+															<Checkbox
+																checked={field.value?.includes(item)}
+																onCheckedChange={(checked) => {
+																	return checked
+																		? field.onChange([...field.value, item])
+																		: field.onChange(
+																				field.value?.filter(
+																					(value) => value !== item
+																				)
+																				// eslint-disable-next-line no-mixed-spaces-and-tabs
+																		  );
+																}}
+															/>
+														</FormControl>
+														<FormLabel className="text-sm font-normal ">
+															<p className="capitalize">
+																{' '}
+																{item.toLocaleLowerCase()}
+															</p>
+														</FormLabel>
+													</FormItem>
+												);
+											}}
+										/>
+									))}
+								</div>
+
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
-
 					{/* schedule type */}
 					<FormField
 						control={form.control}
 						name="scheduleType"
 						render={({ field }) => (
-							<FormItem>
+							<FormItem className="col-span-2">
 								<div className="flex items-center justify-start gap-2">
 									<FormLabel>Type</FormLabel>
 									<TooltipProvider>
@@ -299,7 +317,7 @@ export default function PersonalScheduleForm({
 					)}
 
 					{/* submit */}
-					<div className="col-span-2 flex items-center justify-end gap-2">
+					<div className="col-span-2 flex items-center justify-end gap-2 mt-2">
 						<Button
 							onClick={() => {
 								updateParentState(false);
