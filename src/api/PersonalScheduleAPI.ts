@@ -3,6 +3,7 @@ import { TSchedule } from './ScheduleAPI';
 
 import { axiosInstance } from '.';
 import { AxiosResponse } from 'axios';
+import { set } from 'date-fns';
 
 type TDay =
 	| 'MONDAY'
@@ -25,41 +26,6 @@ export type TPersonalSchedule = {
 	updatedAt: Date;
 };
 
-// "id": 0,
-//     "name": "Personal Schedule",
-//     "day": [
-//       "MONDAY"
-//     ],
-//     "scheduleId": 0,
-//     "Schedule": {
-//       "id": 0,
-//       "scheduleType": "FIXED",
-//       "startTime": "2025-01-26T05:55:21.310Z",
-//       "endTime": "2025-01-26T05:55:21.310Z",
-//       "startTimeLimit": "2025-01-26T05:55:21.310Z",
-//       "limitWorkHoursDay": 0,
-//       "allowedOvertime": true,
-//       "lunchStartTime": "2025-01-26T05:55:21.310Z",
-//       "lunchEndTime": "2025-01-26T05:55:21.310Z",
-//       "lunchTimeTotal": 0,
-//       "updatedAt": "2025-01-26T05:55:21.310Z",
-//       "createdAt": "2025-01-26T05:55:21.310Z"
-//     },
-//     "employeeId": 0,
-//     "Employee": {
-//       "id": 1,
-//       "accessLevel": "ADMIN",
-//       "departmentId": 1,
-//       "isActive": false,
-//       "username": "pangilinan2002",
-//       "firstName": "Ervin",
-//       "lastName": "Pangilinan",
-//       "middleName": "Capili",
-//       "role": "Software Engineer"
-//     },
-//     "createdAt": "2025-01-26T05:55:21.310Z",
-//     "updatedAt": "2025-01-26T05:55:21.310Z"
-
 type TPersonalSchedForms = {
 	name: string;
 	day: TDay[];
@@ -71,30 +37,46 @@ type TPersonalSchedForms = {
 
 // get
 export async function getAllPersonalSchedules() {
+	console.log('BAR');
 	const response: AxiosResponse<TPersonalSchedule[]> = await axiosInstance.get(
 		'/api/personal-schedule'
 	);
-	console.log('BAR');
-
 	console.log(response);
 	return response.data;
 }
 
 // post
 export async function postPersonalSchedule(form: TPersonalSchedForms) {
-	const response: AxiosResponse<TPersonalSchedForms> = await axiosInstance.post(
-		'/api/personal-schedule',
-		{
-			name: form.name,
-			day: form.day,
-			employeeId: form.employeeId,
-			timeIn: form.timeIn,
-			timeOut: form.timeOut,
-			scheduleType: form.scheduleType,
-		}
-	);
+	if (form.scheduleType == 'FLEXI' || form.scheduleType == 'SUPER_FLEXI') {
+		// for flexi schedules we will automatically
+		// add 6am to 10pm for their
+		const today = new Date();
 
-	return response.status;
+		const startDate = set(today, {
+			hours: 6,
+			minutes: 0,
+			seconds: 0,
+			milliseconds: 0,
+		});
+
+		const endDate = set(today, {
+			hours: 22,
+			minutes: 0,
+			seconds: 0,
+			milliseconds: 0,
+		});
+		const response: AxiosResponse<TPersonalSchedForms> =
+			await axiosInstance.post('/api/personal-schedule', {
+				name: form.name,
+				day: form.day,
+				employeeId: form.employeeId,
+				timeIn: form.timeIn,
+				timeOut: form.timeOut,
+				scheduleType: form.scheduleType,
+			});
+
+		return response.status;
+	}
 }
 
 // delete

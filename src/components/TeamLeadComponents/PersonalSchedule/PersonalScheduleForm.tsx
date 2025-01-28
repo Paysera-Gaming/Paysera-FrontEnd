@@ -31,7 +31,6 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TEmployee } from '@/components/DataTable/DataColumns';
-import { toast } from 'sonner';
 
 const formSchema = z.object({
 	name: z.string().min(2).max(50),
@@ -58,16 +57,6 @@ const formSchema = z.object({
 	scheduleType: z.enum(['FIXED', 'SUPER_FLEXI', 'FLEXI']),
 });
 
-// const poop = {
-// 	name: 'Personal Schedule',
-// 	day: ['MONDAY'],
-// 	employeeId: 0,
-// 	startTime: '2024-09-06T09:00:00Z',
-// 	endTime: '2024-09-06T18:00:00Z',
-// 	limitWorkHoursDay: 8,
-// 	allowedOvertime: false,
-// };
-
 interface IPersonalScheduleFormProps {
 	updateParentState: (value: boolean) => void;
 	fetchRequest: (schedule: z.infer<typeof formSchema>) => Promise<number>;
@@ -78,6 +67,8 @@ export default function PersonalScheduleForm({
 	fetchRequest,
 }: IPersonalScheduleFormProps) {
 	const queryClient = useQueryClient();
+	console.log('I AM FETCHING');
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -191,7 +182,7 @@ export default function PersonalScheduleForm({
 													<SelectItem key={item.id} value={item.id.toString()}>
 														{item.lastName} {item.firstName}
 													</SelectItem>
-												)) || 'No Employees Found'}
+												)) || <SelectItem value={'6'}>TEST</SelectItem>}
 											</SelectContent>
 										</Select>
 										<FormMessage />
