@@ -38,13 +38,15 @@
       const filteredData = attendanceData?.filter(
         (attendance) =>
           attendance.employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          (selectedStatus ? (selectedStatus === "Online" ? attendance.employee.isActive : !attendance.employee.isActive) : true)
+          (selectedStatus ? (selectedStatus === "Online" ? attendance.employee.isActive : !attendance.employee.isActive) : true) &&
+          attendance.overTimeTotal !== null
       ) || [];
     
       const renderedList = filteredData.map((attendance) => (
         <TableRow key={attendance.id}>
           <TableCell className="p-4">{attendance.employee.username}</TableCell>
           <TableCell className="p-4">{attendance.date}</TableCell>
+          <TableCell className="p-4">{attendance.overTimeTotal}</TableCell>
         </TableRow>
       ));
     
@@ -75,6 +77,7 @@
               <TableRow>
                 <TableHead className="p-4">Username</TableHead>
                 <TableHead className="p-4">Date</TableHead>
+                <TableHead className="p-4">Overtime Total</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>{renderedList}</TableBody>
