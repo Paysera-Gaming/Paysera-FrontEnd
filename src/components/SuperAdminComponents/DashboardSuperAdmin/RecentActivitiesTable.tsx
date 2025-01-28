@@ -1,13 +1,13 @@
-import { useState } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types"
+import { useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
 
 function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedAccessLevel, setSelectedAccessLevel] = useState("")
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedAccessLevel, setSelectedAccessLevel] = useState("");
 
   const filteredData = tableData.filter(
     (data) =>
@@ -16,15 +16,15 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
         ? selectedAccessLevel === "ADMIN"
           ? ["SUPER_ADMIN", "ADMIN"].includes(data.employee.accessLevel)
           : data.employee.accessLevel === selectedAccessLevel
-        : true),
-  )
+        : true)
+  );
 
-  const sortedData = filteredData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  const sortedData = filteredData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const renderedList = sortedData.map((data) => {
-    const parsedDate = new Date(data.date)
-    const formattedDate = parsedDate.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })
-    const formattedTime = parsedDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    const parsedDate = new Date(data.date);
+    const formattedDate = parsedDate.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    const formattedTime = parsedDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     return (
       <TableRow key={data.id}>
         <TableCell className="p-4">{data.employee.username}</TableCell>
@@ -32,8 +32,8 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
         <TableCell className="p-4">{formattedTime}</TableCell>
         <TableCell className="p-4">{data.timeTotal} hours</TableCell>
       </TableRow>
-    )
-  })
+    );
+  });
 
   return (
     <>
@@ -58,7 +58,7 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="overflow-y-auto h-[300px] p-4">
+      <div className="p-4">
         <Table className="text-base">
           <TableHeader>
             <TableRow>
@@ -72,7 +72,7 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
         </Table>
       </div>
     </>
-  )
+  );
 }
 
-export default RecentActivitiesTable
+export default RecentActivitiesTable;
