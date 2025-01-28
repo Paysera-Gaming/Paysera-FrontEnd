@@ -205,7 +205,7 @@ export default function ScheduleForm({
 									>
 										<FormControl>
 											<SelectTrigger>
-												<SelectValue placeholder="Select a verified email to display" />
+												<SelectValue placeholder="Select a Schedule Type" />
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent>

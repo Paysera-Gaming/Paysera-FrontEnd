@@ -9,10 +9,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useUserStore } from '@/stores/userStore';
 import ErrorDisplay from '@/components/ErrorComponent/ErrorDisplay';
 
-// todo's
-// need to add edit employee in department - doing
-// remove employee in department
-
 export default function ManagePage() {
 	const { data, isError, isLoading } = useQuery({
 		queryKey: ['EmployeesInfo'],

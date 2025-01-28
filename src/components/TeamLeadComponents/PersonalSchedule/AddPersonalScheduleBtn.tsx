@@ -9,6 +9,7 @@ import {
 
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import PersonalScheduleForm from './PersonalScheduleForm';
 
 export default function AddPersonalScheduleBtn() {
 	const [openAlert, setAlert] = useState<boolean>(false);
@@ -28,7 +29,7 @@ export default function AddPersonalScheduleBtn() {
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				{/* form here */}
-				Test
+				<PersonalScheduleForm updateParentState={setAlert} isPost={false} />
 				{/* 
 				<ScheduleForm
 					isPost={true}

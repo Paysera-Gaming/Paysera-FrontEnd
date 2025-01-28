@@ -87,8 +87,12 @@ export default function personalScheduleColumn(): ColumnDef<TPersonalSchedule>[]
 				};
 
 				const days = row.getValue('day') as TWeekDaysArray;
-				const dayBadges = days.map((day) => {
-					return <Badge className="mx-1">{lookUpDay[day]}</Badge>;
+				const dayBadges = days.map((day, index) => {
+					return (
+						<Badge key={index} className="mx-1">
+							{lookUpDay[day]}
+						</Badge>
+					);
 				});
 				return <div> {dayBadges} </div>;
 			},
