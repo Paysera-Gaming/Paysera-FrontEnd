@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import PersonalScheduleForm from './PersonalScheduleForm';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { postPersonalSchedule } from '@/api/PersonalScheduleAPI';
 
 export default function AddPersonalScheduleBtn() {
 	const [openAlert, setAlert] = useState<boolean>(false);
@@ -30,15 +30,10 @@ export default function AddPersonalScheduleBtn() {
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				{/* form here */}
-
-				<PersonalScheduleForm updateParentState={setAlert} isPost={false} />
-
-				{/* 
-				<ScheduleForm
-					isPost={true}
-					fetchRequest={createSchedule}
+				<PersonalScheduleForm
+					fetchRequest={postPersonalSchedule}
 					updateParentState={setAlert}
-				></ScheduleForm> */}
+				/>
 			</AlertDialogContent>
 		</AlertDialog>
 	);

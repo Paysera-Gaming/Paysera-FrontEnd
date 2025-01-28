@@ -281,7 +281,7 @@ export default function ScheduleForm({
 						)}
 					/>
 
-					<div className="col-span-2 flex items-center justify-end gap-2">
+					<div className="col-span-2 flex items-center justify-end gap-2 mt-2">
 						<Button
 							onClick={() => {
 								updateParentState(false);

@@ -29,14 +29,27 @@ import {
 import { TimePicker } from '@/components/ui/time-picker';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TEmployee } from '@/components/DataTable/DataColumns';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
 	name: z.string().min(2).max(50),
-	day: z.array(z.string()).refine((value) => value.some((item) => item), {
-		message: 'You have to select at least one item.',
-	}),
+	day: z
+		.array(
+			z.enum([
+				'MONDAY',
+				'TUESDAY',
+				'WEDNESDAY',
+				'THURSDAY',
+				'FRIDAY',
+				'SATURDAY',
+				'SUNDAY',
+			])
+		)
+		.refine((value) => value.some((item) => item), {
+			message: 'You have to select at least one item.',
+		}),
 	employeeId: z.number(),
 
 	timeIn: z.date(),
@@ -58,18 +71,21 @@ const formSchema = z.object({
 interface IPersonalScheduleFormProps {
 	updateParentState: (value: boolean) => void;
 	fetchRequest: (schedule: z.infer<typeof formSchema>) => Promise<number>;
-	isPost: boolean;
 }
 
 export default function PersonalScheduleForm({
 	updateParentState,
 	fetchRequest,
-	isPost,
 }: IPersonalScheduleFormProps) {
 	const queryClient = useQueryClient();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
+			name: '',
+			employeeId: undefined,
+			scheduleType: undefined,
+			timeIn: new Date(new Date().setHours(0, 0, 0, 0)),
+			timeOut: new Date(new Date().setHours(0, 0, 0, 0)),
 			day: [],
 		},
 		// todo add default values
@@ -87,11 +103,28 @@ export default function PersonalScheduleForm({
 
 	const employees = queryClient.getQueryData<TEmployee[]>(['EmployeesInfo']);
 
+	const mutation = useMutation({
+		mutationFn: () => fetchRequest(form.getValues()),
+		onSuccess: () => {
+			toast.success('Schedule created successfully!');
+			updateParentState(false);
+		},
+		onError: (error) => {
+			console.log(error);
+			const errorMessage =
+				typeof error === 'object' && error?.message
+					? error.message
+					: 'An unknown error occurred';
+			toast.error(errorMessage);
+		},
+	});
 	// do them submit shits here
 	function onSubmit() {
 		updateParentState(false);
-		// mutation.mutate();
+		console.log(form.getValues());
+		mutation.mutate();
 	}
+
 	const watchedType = form.watch('scheduleType');
 	return (
 		<>
@@ -151,7 +184,9 @@ export default function PersonalScheduleForm({
 												</Tooltip>
 											</TooltipProvider>
 										</div>
-										<Select onValueChange={(value) => field.onChange(value)}>
+										<Select
+											onValueChange={(value) => field.onChange(parseInt(value))}
+										>
 											<FormControl>
 												<SelectTrigger>
 													<SelectValue placeholder="Select An Employee" />

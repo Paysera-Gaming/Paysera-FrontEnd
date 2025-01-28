@@ -1,7 +1,10 @@
 import { TEmployee } from '@/components/DataTable/DataColumns';
 import { TSchedule } from './ScheduleAPI';
 
-type Day =
+import { axiosInstance } from '.';
+import { AxiosResponse } from 'axios';
+
+type TDay =
 	| 'MONDAY'
 	| 'TUESDAY'
 	| 'WEDNESDAY'
@@ -10,23 +13,10 @@ type Day =
 	| 'SATURDAY'
 	| 'SUNDAY';
 
-// this will check if there are duplicates in the days
-
-type NoDuplicates<T extends readonly unknown[]> = T extends [
-	infer F,
-	...infer R
-]
-	? F extends R[number]
-		? never // Duplicate found
-		: [F, ...NoDuplicates<R>] // Recur for the rest of the array
-	: T;
-
-export type TWeekDaysArray = NoDuplicates<Day[]>;
-
 export type TPersonalSchedule = {
 	id: number;
 	name: string;
-	day: TWeekDaysArray;
+	day: TDay[];
 	scheduleId: number;
 	Schedule: TSchedule;
 	employeeId: number;
@@ -34,6 +24,7 @@ export type TPersonalSchedule = {
 	createdAt: Date;
 	updatedAt: Date;
 };
+
 // "id": 0,
 //     "name": "Personal Schedule",
 //     "day": [
@@ -68,3 +59,44 @@ export type TPersonalSchedule = {
 //     },
 //     "createdAt": "2025-01-26T05:55:21.310Z",
 //     "updatedAt": "2025-01-26T05:55:21.310Z"
+
+type TPersonalSchedForms = {
+	name: string;
+	day: TDay[];
+	employeeId: number;
+	timeIn: Date;
+	timeOut: Date;
+	scheduleType: 'FIXED' | 'SUPER_FLEXI' | 'FLEXI';
+};
+
+// get
+export async function getAllPersonalSchedules() {
+	const response: AxiosResponse<TPersonalSchedule[]> = await axiosInstance.get(
+		'/api/personal-schedule'
+	);
+	console.log('BAR');
+
+	console.log(response);
+	return response.data;
+}
+
+// post
+export async function postPersonalSchedule(form: TPersonalSchedForms) {
+	console.log(form);
+
+	const response: AxiosResponse<TPersonalSchedForms> = await axiosInstance.post(
+		'/api/personal-schedule',
+		{
+			name: form.name,
+			day: form.day,
+			employeeId: form.employeeId,
+			timeIn: form.timeIn,
+			timeOut: form.timeOut,
+			scheduleType: form.scheduleType,
+		}
+	);
+	return response.status;
+}
+
+// delete
+// edit
