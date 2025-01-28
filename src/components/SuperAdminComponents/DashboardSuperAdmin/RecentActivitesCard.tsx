@@ -3,18 +3,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { getAttendanceList } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api";
-import { getEmployeeList } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/api";
-import { fetchDepartments } from "@/components/SuperAdminComponents/DepartmentSuperAdmin/api";
+// import { getEmployeeList } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/api";
+// import { fetchDepartments } from "@/components/SuperAdminComponents/DepartmentSuperAdmin/api";
 import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
-import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
-import type { Department } from "@/components/SuperAdminComponents/DepartmentSuperAdmin/api";
+// import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
+// import type { Department } from "@/components/SuperAdminComponents/DepartmentSuperAdmin/api";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Activity } from "lucide-react";
 import RecentActivitiesTable from "./RecentActivitiesTable";
-import EmployeeListTable from "./EmployeeListTable";
-import DepartmentListTable from "./DepartmentListTable";
+// import EmployeeListTable from "./EmployeeListTable";
+// import DepartmentListTable from "./DepartmentListTable";
 import OvertimeTable from "./OvertimeTable";
 
 const SkeletonCard: React.FC = () => {
@@ -57,35 +57,35 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
     queryFn: getAttendanceList,
   });
 
-  const {
-    data: employeeData,
-    isLoading: isLoadingEmployee,
-    error: employeeError,
-    refetch: refetchEmployee,
-  } = useQuery<Employee[]>({
-    queryKey: ["employeeData"],
-    queryFn: getEmployeeList,
-  });
+  // const {
+  //   data: employeeData,
+  //   isLoading: isLoadingEmployee,
+  //   error: employeeError,
+  //   refetch: refetchEmployee,
+  // } = useQuery<Employee[]>({
+  //   queryKey: ["employeeData"],
+  //   queryFn: getEmployeeList,
+  // });
 
-  const {
-    data: departmentData,
-    isLoading: isLoadingDepartment,
-    error: departmentError,
-    refetch: refetchDepartment,
-  } = useQuery<Department[]>({
-    queryKey: ["departmentData"],
-    queryFn: fetchDepartments,
-  });
+  // const {
+  //   data: departmentData,
+  //   isLoading: isLoadingDepartment,
+  //   error: departmentError,
+  //   refetch: refetchDepartment,
+  // } = useQuery<Department[]>({
+  //   queryKey: ["departmentData"],
+  //   queryFn: fetchDepartments,
+  // });
 
-  if (isLoadingAttendance || isLoadingEmployee || isLoadingDepartment) return <SkeletonCard />;
+  if (isLoadingAttendance /* || isLoadingEmployee || isLoadingDepartment */) return <SkeletonCard />;
 
   const handleRetry = () => {
     if (attendanceError) refetchAttendance();
-    if (employeeError) refetchEmployee();
-    if (departmentError) refetchDepartment();
+    // if (employeeError) refetchEmployee();
+    // if (departmentError) refetchDepartment();
   };
 
-  if (attendanceError || employeeError || departmentError) {
+  if (attendanceError /* || employeeError || departmentError */) {
     return (
       <Card className="flex-1 col-span-2 p-3">
         <CardHeader className="flex flex-row items-center justify-between relative">
@@ -137,8 +137,8 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-64">
               <DropdownMenuItem onSelect={() => handleDropdownChange("Paid Leave")}>Paid Leave</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => handleDropdownChange("Employee")}>Employee</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => handleDropdownChange("Department")}>Department</DropdownMenuItem>
+              {/* <DropdownMenuItem onSelect={() => handleDropdownChange("Employee")}>Employee</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => handleDropdownChange("Department")}>Department</DropdownMenuItem> */}
               <DropdownMenuItem onSelect={() => handleDropdownChange("Overtime")}>Overtime</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -150,11 +150,13 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
           {selectedOption === "Paid Leave" ? (
             <RecentActivitiesTable tableData={paidLeaveData} />
           ) : selectedOption === "Department" ? (
-            departmentData && <DepartmentListTable tableData={departmentData} />
+            /* departmentData && <DepartmentListTable tableData={departmentData} /> */
+            <p>Department data fetching is disabled</p>
           ) : selectedOption === "Overtime" ? (
             <OvertimeTable />
           ) : (
-            employeeData && <EmployeeListTable tableData={employeeData} />
+            /* employeeData && <EmployeeListTable tableData={employeeData} /> */
+            <p>Employee data fetching is disabled</p>
           )}
         </ScrollArea>
       </CardContent>
