@@ -72,8 +72,8 @@ export async function postPersonalSchedule(
 				name: form.name,
 				day: form.day,
 				employeeId: form.employeeId,
-				timeIn: startDate,
-				timeOut: endDate,
+				startTime: startDate,
+				endTime: endDate,
 				scheduleType: form.scheduleType,
 			});
 
@@ -84,8 +84,8 @@ export async function postPersonalSchedule(
 				name: form.name,
 				day: form.day,
 				employeeId: form.employeeId,
-				timeIn: form.timeIn,
-				timeOut: form.timeOut,
+				startTime: form.timeIn,
+				endTime: form.timeOut,
 				scheduleType: form.scheduleType,
 			});
 
