@@ -20,7 +20,7 @@
     
       if (isLoading) {
         return (
-          <div className="flex-1 col-span-2">
+          <div className="flex-1 col-span-2 p-4">
             <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
             <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
             <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
@@ -30,7 +30,7 @@
     
       if (error) {
         return (
-          <div className="flex-1 col-span-2">
+          <div className="flex-1 col-span-2 p-4">
             <p className="text-red-500">Failed to load data. Please try again.</p>
           </div>
         );
@@ -59,7 +59,7 @@
     
       return (
         <>
-          <div className="flex mb-4 space-x-2">
+          <div className="flex mb-4 space-x-2 p-4">
             <Input
               type="text"
               placeholder="Search by username"
@@ -80,30 +80,32 @@
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <Table className="text-base">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="p-4">Username</TableHead>
-                <TableHead className="p-4">Date</TableHead>
-                <TableHead className="p-4">Overtime Total</TableHead>
-                <TableHead className="p-4">Time Total</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {renderedList.length > 0 ? (
-                renderedList
-              ) : (
+          <div className="p-4">
+            <Table className="text-base">
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center p-4">
-                    <div className="text-foreground">
-                      <p className="font-semibold">{noRecordsMessage}</p>
-                      <p className="text-sm">Please adjust your filters or try a different search term.</p>
-                    </div>
-                  </TableCell>
+                  <TableHead className="p-4">Username</TableHead>
+                  <TableHead className="p-4">Date</TableHead>
+                  <TableHead className="p-4">Overtime Total</TableHead>
+                  <TableHead className="p-4">Time Total</TableHead>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {renderedList.length > 0 ? (
+                  renderedList
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center p-4">
+                      <div className="text-foreground">
+                        <p className="font-semibold">{noRecordsMessage}</p>
+                        <p className="text-sm">Please adjust your filters or try a different search term.</p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </>
       );
     };

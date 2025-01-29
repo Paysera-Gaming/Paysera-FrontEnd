@@ -15,14 +15,14 @@ import AttendanceTable from "./AttendanceTable";
 const SkeletonCard: React.FC = () => {
   return (
     <Card className="flex-1 col-span-2 p-2">
-      <CardHeader className="flex flex-col md:flex-row items-center justify-between">
+      <CardHeader className="flex flex-col md:flex-row items-center justify-between p-2">
         <div className="flex items-center space-x-2">
           <Skeleton className="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-700" />
           <Skeleton className="h-6 w-32 rounded bg-gray-200 dark:bg-gray-700" />
         </div>
         <Skeleton className="h-8 w-24 rounded bg-gray-200 dark:bg-gray-700 mt-2 md:mt-0" />
       </CardHeader>
-      <CardContent className="mt-2">
+      <CardContent className="mt-2 p-2">
         <ScrollArea className="h-[180px]">
           <div className="space-y-2">
             <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
@@ -61,11 +61,11 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
   if (attendanceError) {
     return (
       <Card className="flex-1 col-span-2 p-2">
-        <CardHeader className="flex flex-row items-center justify-between relative">
+        <CardHeader className="flex flex-row items-center justify-between relative p-2">
           <CardTitle className="text-base font-semibold">Error</CardTitle>
           <Activity size={"1.8rem"} className="absolute top-2 right-2" />
         </CardHeader>
-        <CardContent className="mt-2">
+        <CardContent className="mt-2 p-2">
           <div className="text-center">
             <p className="text-red-500">Failed to load data. Please try again.</p>
             <Button onClick={handleRetry} className="mt-2">
@@ -96,7 +96,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
 
   return (
     <Card className={`flex-1 col-span-2 p-2 ${className}`}>
-      <CardHeader className="flex flex-row items-center justify-between relative">
+      <CardHeader className="flex flex-row items-center justify-between relative p-2">
         <div>
           <CardTitle className="text-xl font-semibold">Recent Activity</CardTitle>
           <p className="text-lg font-medium">{subtitle}</p>
@@ -117,7 +117,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
           <Activity size={"1.8rem"} />
         </div>
       </CardHeader>
-      <CardContent className="mt-2">
+      <CardContent className="mt-2 p-2">
         <ScrollArea className="h-[400px]">
           {selectedOption === "Paid Leave" ? (
             <RecentActivitiesTable tableData={paidLeaveData} />
