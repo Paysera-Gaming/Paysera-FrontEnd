@@ -117,18 +117,16 @@ export default function personalScheduleColumn(): ColumnDef<TPersonalSchedule>[]
 			},
 		},
 		{
-			accessorKey: 'createdAt',
 			header: 'Created At',
 			cell: ({ row }) => {
-				const date = row.getValue('createdAt');
+				const date = row.original.Schedule.createdAt;
 				return formatDate(new Date(date as string));
 			},
 		},
 		{
-			accessorKey: 'updatedAt',
 			header: 'Last Update',
 			cell: ({ row }) => {
-				const date = row.getValue('updatedAt');
+				const date = row.original.Schedule.updatedAt;
 				return formatDate(new Date(date as string));
 			},
 		},
