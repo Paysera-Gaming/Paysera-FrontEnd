@@ -4,6 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
+import { isToday } from "date-fns";
 
 function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -11,6 +12,7 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
 
   const filteredData = tableData.filter(
     (data) =>
+      isToday(new Date(data.date)) &&
       data.employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (selectedAccessLevel
         ? selectedAccessLevel === "ADMIN"
@@ -24,13 +26,10 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
   const renderedList = sortedData.map((data) => {
     const parsedDate = new Date(data.date);
     const formattedDate = parsedDate.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
-    const formattedTime = parsedDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     return (
       <TableRow key={data.id}>
         <TableCell className="p-4">{data.employee.username}</TableCell>
         <TableCell className="p-4">{formattedDate}</TableCell>
-        <TableCell className="p-4">{formattedTime}</TableCell>
-        <TableCell className="p-4">{data.timeTotal} hours</TableCell>
       </TableRow>
     );
   });
@@ -64,8 +63,6 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
             <TableRow>
               <TableHead className="p-4">Username</TableHead>
               <TableHead className="p-4">Date</TableHead>
-              <TableHead className="p-4">Time</TableHead>
-              <TableHead className="p-4">Total Hours</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>{renderedList}</TableBody>

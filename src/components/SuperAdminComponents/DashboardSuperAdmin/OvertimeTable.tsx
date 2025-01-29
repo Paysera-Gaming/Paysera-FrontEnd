@@ -7,7 +7,7 @@
     import { Button } from "@/components/ui/button";
     import { Input } from "@/components/ui/input";
     import { Skeleton } from "@/components/ui/skeleton";
-    import { format } from "date-fns";
+    import { format, isToday } from "date-fns";
     
     const OvertimeTable: React.FC = () => {
       const { data: attendanceData, isLoading, error } = useQuery<Attendance[]>({
@@ -38,6 +38,7 @@
     
       const filteredData = attendanceData?.filter(
         (attendance) =>
+          isToday(new Date(attendance.date)) &&
           attendance.employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
           (selectedAccessLevel ? attendance.employee.accessLevel === selectedAccessLevel : true) &&
           attendance.overTimeTotal !== null && attendance.overTimeTotal > 0
