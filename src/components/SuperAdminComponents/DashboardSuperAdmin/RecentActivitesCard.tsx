@@ -41,7 +41,7 @@ interface RecentActivitiesCardProps {
 }
 
 export default function RecentActivitiesCard({ className }: RecentActivitiesCardProps) {
-  const [selectedOption, setSelectedOption] = useState("Overtime");
+  const [selectedOption, setSelectedOption] = useState("Attendance");
   const {
     data: attendanceData,
     isLoading: isLoadingAttendance,
