@@ -31,6 +31,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TEmployee } from '@/components/DataTable/DataColumns';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
 	name: z.string().min(2).max(50),
@@ -97,7 +98,9 @@ export default function PersonalScheduleForm({
 	const mutation = useMutation({
 		mutationFn: () => fetchRequest(form.getValues()),
 		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['PersonalSchedule'] });
 			updateParentState(false);
+			toast.success('Schedule has been updated!');
 		},
 		onError: (error) => {
 			console.log(error);
