@@ -32,6 +32,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TEmployee } from '@/components/DataTable/DataColumns';
 import { toast } from 'sonner';
+import { useContext } from 'react';
+import { PersonalScheduleContext } from '@/stores/context';
 
 const formSchema = z.object({
 	name: z.string().min(2).max(50),
@@ -60,27 +62,39 @@ const formSchema = z.object({
 
 interface IPersonalScheduleFormProps {
 	updateParentState: (value: boolean) => void;
-	fetchRequest: (schedule: z.infer<typeof formSchema>) => Promise<number>;
+	fetchRequest: (
+		schedule: z.infer<typeof formSchema>,
+		id?: number
+	) => Promise<number>;
+	isPost: boolean;
+}
+
+function isValidDate(date: string | undefined) {
+	if (date == undefined) return undefined;
+	else return new Date(date);
 }
 
 export default function PersonalScheduleForm({
 	updateParentState,
 	fetchRequest,
+	isPost,
 }: IPersonalScheduleFormProps) {
 	const queryClient = useQueryClient();
-	console.log('I AM FETCHING');
-
+	const PersonalScheduleSub = useContext(PersonalScheduleContext);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			name: '',
-			employeeId: undefined,
-			scheduleType: undefined,
-			timeIn: new Date(new Date().setHours(0, 0, 0, 0)),
-			timeOut: new Date(new Date().setHours(0, 0, 0, 0)),
-			day: [],
+			name: PersonalScheduleSub?.name ?? '',
+			employeeId: PersonalScheduleSub?.employeeId ?? undefined,
+			scheduleType: PersonalScheduleSub?.Schedule.scheduleType ?? undefined,
+			timeIn:
+				isValidDate(PersonalScheduleSub?.Schedule.startTime as string) ??
+				new Date(new Date().setHours(0, 0, 0, 0)),
+			timeOut:
+				isValidDate(PersonalScheduleSub?.Schedule.endTime as string) ??
+				new Date(new Date().setHours(0, 0, 0, 0)),
+			day: PersonalScheduleSub?.day || [],
 		},
-		// todo add default values
 	});
 
 	const items = [
@@ -96,7 +110,12 @@ export default function PersonalScheduleForm({
 	const employees = queryClient.getQueryData<TEmployee[]>(['EmployeesInfo']);
 
 	const mutation = useMutation({
-		mutationFn: () => fetchRequest(form.getValues()),
+		mutationFn: () => {
+			if (isPost == false) {
+				return fetchRequest(form.getValues(), PersonalScheduleSub?.id);
+			}
+			return fetchRequest(form.getValues());
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['PersonalSchedule'] });
 			updateParentState(false);
@@ -119,7 +138,10 @@ export default function PersonalScheduleForm({
 			<Form {...form}>
 				<form
 					className="p-2 px-3 grid gap-2 grid-cols-2"
-					onSubmit={form.handleSubmit(onSubmit)}
+					onSubmit={form.handleSubmit(
+						onSubmit,
+						(errors) => console.log('Form errors:', errors) // Debugging
+					)}
 				>
 					<div className="col-span-2 flex items-center justify-between gap-2">
 						{/* name */}
@@ -185,7 +207,7 @@ export default function PersonalScheduleForm({
 													<SelectItem key={item.id} value={item.id.toString()}>
 														{item.lastName} {item.firstName}
 													</SelectItem>
-												)) || <SelectItem value={'6'}>TEST</SelectItem>}
+												)) || <p>No Employees found.</p>}
 											</SelectContent>
 										</Select>
 										<FormMessage />

@@ -96,7 +96,8 @@ export async function postPersonalSchedule(
 // edit
 // NOTE NOT FINISHED YET
 export async function putPersonalSchedule(
-	form: TPersonalSchedForms
+	form: TPersonalSchedForms,
+	id: number
 ): Promise<number> {
 	if (form.scheduleType == 'FLEXI' || form.scheduleType == 'SUPER_FLEXI') {
 		// for flexi schedules we will automatically
@@ -117,19 +118,19 @@ export async function putPersonalSchedule(
 			milliseconds: 0,
 		});
 		const response: AxiosResponse<TPersonalSchedForms> =
-			await axiosInstance.put(`/api/personal-schedule/${form.employeeId}`, {
+			await axiosInstance.put(`/api/personal-schedule/${id}`, {
 				name: form.name,
 				day: form.day,
 				employeeId: form.employeeId,
-				timeIn: startDate,
-				timeOut: endDate,
+				startTime: startDate,
+				endTime: endDate,
 				scheduleType: form.scheduleType,
 			});
 
 		return response.status;
 	} else {
 		const response: AxiosResponse<TPersonalSchedForms> =
-			await axiosInstance.post('/api/personal-schedule', {
+			await axiosInstance.post(`/api/personal-schedule/${id}`, {
 				name: form.name,
 				day: form.day,
 				employeeId: form.employeeId,

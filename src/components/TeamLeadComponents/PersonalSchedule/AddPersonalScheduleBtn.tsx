@@ -31,6 +31,7 @@ export default function AddPersonalScheduleBtn() {
 				</AlertDialogHeader>
 				{/* form here */}
 				<PersonalScheduleForm
+					isPost={true}
 					fetchRequest={postPersonalSchedule}
 					updateParentState={setAlert}
 				/>
