@@ -148,7 +148,7 @@ export default function RecentActivitiesCard() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent className="p-0">
-				<ScrollArea className="h-[150px] xl:h-[200px] ">
+				<ScrollArea className="h-[150px] 2xl:h-[200px] ">
 					<RecentActivitiesTable tableData={dummyData}></RecentActivitiesTable>
 				</ScrollArea>
 			</CardContent>
