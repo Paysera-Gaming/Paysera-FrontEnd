@@ -158,14 +158,12 @@ export default function personalScheduleColumn(): ColumnDef<TPersonalSchedule>[]
 								<PersonalScheduleContext.Provider value={row.original}>
 									<RefEditPersonalSchedule></RefEditPersonalSchedule>
 								</PersonalScheduleContext.Provider>
-								amazing
 							</DropdownMenuItem>
 
 							<DropdownMenuItem asChild>
 								<PersonalScheduleContext.Provider value={row.original}>
 									<RefRemovePersonalScheduleDialog></RefRemovePersonalScheduleDialog>
 								</PersonalScheduleContext.Provider>
-								amazing 2
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
