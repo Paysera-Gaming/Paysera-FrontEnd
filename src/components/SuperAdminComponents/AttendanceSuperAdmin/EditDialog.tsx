@@ -66,15 +66,20 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
       await axiosInstance.put(`/api/attendance/${attendance.id}`, payload);
       toast.success(`Successfully updated attendance on ${attendance.date}`);
       queryClient.invalidateQueries({ queryKey: ["attendanceList"] });
-      onClose();
+      handleClose();
     } catch (error) {
       toast.error("Error updating the attendance.");
       console.error("Error updating the attendance:", error);
     }
   };
 
+  const handleClose = () => {
+    setErrorMessage("");
+    onClose();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
@@ -118,7 +123,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={handleClose}>
               Cancel
             </Button>
             <Button type="submit">Save changes</Button>
