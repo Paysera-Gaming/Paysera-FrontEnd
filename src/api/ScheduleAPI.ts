@@ -6,7 +6,7 @@ export type TInputForm = {
 	role: string;
 	timeIn: Date;
 	timeOut: Date;
-	allowedOverTime: boolean;
+	// allowedOverTime: boolean;
 	scheduleType: 'FIXED' | 'SUPER_FLEXI' | 'FLEXI';
 	// lunchStartTime: string;
 	// lunchEndTime: string;
@@ -94,7 +94,7 @@ export async function createSchedule(
 				startTime: startDate,
 				endTime: endDate,
 				limitWorkHoursDay: 8,
-				allowedOvertime: schedule.allowedOverTime,
+				// allowedOvertime: schedule.allowedOverTime,
 				lunchStartTime: new Date(),
 				lunchEndTime: addHours(new Date(), 1),
 			}
@@ -112,7 +112,7 @@ export async function createSchedule(
 				startTime: schedule.timeIn,
 				endTime: schedule.timeOut,
 				limitWorkHoursDay: 8,
-				allowedOvertime: schedule.allowedOverTime,
+				// allowedOvertime: schedule.allowedOverTime,
 				lunchStartTime: new Date(),
 				lunchEndTime: addHours(new Date(), 1),
 			}
@@ -139,7 +139,7 @@ export async function updateSchedule(
 			startTime: schedule.timeIn,
 			endTime: schedule.timeOut,
 			limitWorkHoursDay: totalHours,
-			allowedOvertime: schedule.allowedOverTime,
+			// allowedOvertime: schedule.allowedOverTime,
 			lunchStartTime: new Date(),
 			lunchEndTime: addHours(new Date(), 1),
 		}

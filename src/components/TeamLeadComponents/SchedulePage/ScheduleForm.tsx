@@ -30,7 +30,7 @@ import {
 	TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-import { Checkbox } from '@/components/ui/checkbox';
+// import { Checkbox } from '@/components/ui/checkbox';
 import { Info } from 'lucide-react';
 import { useContext } from 'react';
 import { ScheduleContext } from '@/components/DataTable/ScheduleColumn';
@@ -46,7 +46,7 @@ const formSchema = z.object({
 	timeIn: z.date(),
 	timeOut: z.date(),
 
-	allowedOverTime: z.boolean(),
+	// allowedOverTime: z.boolean(),
 	scheduleType: z.enum(['FIXED', 'SUPER_FLEXI', 'FLEXI']),
 });
 
@@ -76,7 +76,7 @@ export default function ScheduleForm({
 				ScheduleSub?.Schedule.endTime ?? new Date().setHours(0, 0, 0, 0)
 			),
 
-			allowedOverTime: ScheduleSub?.Schedule.allowedOvertime ?? false,
+			// allowedOverTime: ScheduleSub?.Schedule.allowedOvertime ?? false,
 			scheduleType: ScheduleSub?.Schedule.scheduleType,
 		},
 	});
@@ -259,7 +259,7 @@ export default function ScheduleForm({
 							/>
 						</>
 					)}
-					<FormField
+					{/* <FormField
 						control={form.control}
 						name="allowedOverTime"
 						render={({ field }) => (
@@ -279,7 +279,7 @@ export default function ScheduleForm({
 								<FormMessage />
 							</FormItem>
 						)}
-					/>
+					/> */}
 
 					<div className="col-span-2 flex items-center justify-end gap-2 mt-2">
 						<Button
