@@ -173,48 +173,58 @@ export default function PersonalScheduleForm({
 							}}
 						/>
 						{/* select input for users */}
-						<FormField
-							control={form.control}
-							name="employeeId"
-							render={({ field }) => {
-								//     check if time worked is more than >= 8 hours
-								return (
-									<FormItem className="w-full">
-										<div className="flex items-center justify-start gap-2">
-											<FormLabel>Employee Name</FormLabel>
-											<TooltipProvider>
-												<Tooltip>
-													<TooltipTrigger asChild>
-														<Info className="w-4 h-4"></Info>
-													</TooltipTrigger>
-													<TooltipContent>
-														This chooses the employee that will have the
-														personal schedule
-													</TooltipContent>
-												</Tooltip>
-											</TooltipProvider>
-										</div>
-										<Select
-											onValueChange={(value) => field.onChange(parseInt(value))}
-										>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="Select An Employee" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												{employees?.map((item) => (
-													<SelectItem key={item.id} value={item.id.toString()}>
-														{item.lastName} {item.firstName}
-													</SelectItem>
-												)) || <p>No Employees found.</p>}
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								);
-							}}
-						/>
+
+						{isPost && (
+							<FormField
+								control={form.control}
+								name="employeeId"
+								render={({ field }) => {
+									//     check if time worked is more than >= 8 hours
+									return (
+										<FormItem className="w-full">
+											<div className="flex items-center justify-start gap-2">
+												<FormLabel>Employee Name</FormLabel>
+												<TooltipProvider>
+													<Tooltip>
+														<TooltipTrigger asChild>
+															<Info className="w-4 h-4"></Info>
+														</TooltipTrigger>
+														<TooltipContent>
+															This chooses the employee that will have the
+															personal schedule
+														</TooltipContent>
+													</Tooltip>
+												</TooltipProvider>
+											</div>
+
+											<Select
+												disabled={!isPost}
+												onValueChange={(value) =>
+													field.onChange(parseInt(value))
+												}
+											>
+												<FormControl>
+													<SelectTrigger>
+														<SelectValue placeholder="Select An Employee" />
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{employees?.map((item) => (
+														<SelectItem
+															key={item.id}
+															value={item.id.toString()}
+														>
+															{item.lastName} {item.firstName}
+														</SelectItem>
+													)) || <p>No Employees found.</p>}
+												</SelectContent>
+											</Select>
+											<FormMessage />
+										</FormItem>
+									);
+								}}
+							/>
+						)}
 					</div>
 
 					{/* check box for days */}
@@ -283,6 +293,7 @@ export default function PersonalScheduleForm({
 						)}
 					/>
 					{/* schedule type */}
+
 					<FormField
 						control={form.control}
 						name="scheduleType"
@@ -320,6 +331,7 @@ export default function PersonalScheduleForm({
 							</FormItem>
 						)}
 					/>
+
 					{/* time in */}
 					{/* time out */}
 					{watchedType === 'FIXED' && (

@@ -8,12 +8,6 @@ import { Badge } from '../ui/badge';
 
 type UserStatus = 'OVERTIME' | 'DONE' | 'ONGOING';
 
-function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
-	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
-	const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
-	return differenceInSeconds;
-}
-
 function IconVariant(status: UserStatus) {
 	switch (status) {
 		case 'ONGOING':
@@ -54,6 +48,11 @@ function statusVariant(status: UserStatus) {
 		default:
 			return 'Offline';
 	}
+}
+function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
+	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
+	const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
+	return differenceInSeconds;
 }
 
 export default function TimerDisplay() {
@@ -111,10 +110,7 @@ export default function TimerDisplay() {
 
 	// this one is the counter
 	useEffect(() => {
-		if (
-			isSuccess &&
-			(data.status === 'ONGOING' || data.status === 'OVERTIME')
-		) {
+		if (isSuccess && data.status === 'ONGOING') {
 			// starts the time
 			timerIntervalId.current = setInterval(() => {
 				setTime((time) => time + 1);
@@ -145,7 +141,9 @@ export default function TimerDisplay() {
 						className={cn('inline', {
 							'bg-primary outline-ring': data.status === 'ONGOING',
 							'bg-destructive outline-destructive': data.status != 'ONGOING',
-							'bg-violet-500 outline-violet-500': data.status == 'OVERTIME',
+							'bg-violet-500 outline-violet-500':
+								convertDateToSeconds(new Date(data.timeIn), new Date()) >=
+								28_800,
 						})}
 					>
 						{statusVariant(data.status as UserStatus)}
@@ -157,7 +155,9 @@ export default function TimerDisplay() {
 						{
 							'bg-primary outline-ring': data.status === 'ONGOING',
 							'bg-destructive outline-destructive': data.status != 'ONGOING',
-							'bg-violet-500 outline-violet-500': data.status == 'OVERTIME',
+							'bg-violet-500 outline-violet-500':
+								convertDateToSeconds(new Date(data.timeIn), new Date()) >=
+								28_800,
 						}
 					)}
 				>
