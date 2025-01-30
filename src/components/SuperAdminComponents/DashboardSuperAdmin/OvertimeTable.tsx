@@ -1,161 +1,113 @@
-    import React, { useState } from "react"
-    import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-    import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types"
-    import { Button } from "@/components/ui/button"
-    import { Input } from "@/components/ui/input"
-    import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-    import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+    import React, { useState } from "react";
+    import { useQuery } from "@tanstack/react-query";
+    import { getAttendanceList } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api";
+    import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
+    import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+    import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+    import { Button } from "@/components/ui/button";
+    import { Input } from "@/components/ui/input";
+    import { Skeleton } from "@/components/ui/skeleton";
+    import { format, isToday } from "date-fns";
     
     const OvertimeTable: React.FC = () => {
-      const [data, setData] = useState<Attendance[]>([])
-      const [searchTerm, setSearchTerm] = useState("")
-      const [selectedStatus, setSelectedStatus] = useState("")
-      const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
-      const [isCancelConfirmationOpen, setIsCancelConfirmationOpen] = useState(false)
-      const [currentAttendance, setCurrentAttendance] = useState<Attendance | null>(null)
-      const [newStatus, setNewStatus] = useState<string>("")
+      const { data: attendanceData, isLoading, error } = useQuery<Attendance[]>({
+        queryKey: ["attendanceData"],
+        queryFn: getAttendanceList,
+      });
     
-      const handleStatusChange = (id: number, newStatus: string) => {
-        setCurrentAttendance(data.find((attendance) => attendance.id === id) || null)
-        setNewStatus(newStatus)
-        setIsConfirmationOpen(true)
+      const [searchTerm, setSearchTerm] = useState("");
+      const [selectedAccessLevel, setSelectedAccessLevel] = useState("");
+    
+      if (isLoading) {
+        return (
+          <div className="flex-1 col-span-2 p-4">
+            <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
+            <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
+            <Skeleton className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
+          </div>
+        );
       }
     
-      const confirmStatusChange = () => {
-        if (currentAttendance) {
-          const updatedData = data.map((attendance) =>
-            attendance.id === currentAttendance.id ? { ...attendance, status: newStatus } : attendance
-          )
-          setData(updatedData)
-          setIsConfirmationOpen(false)
-        }
+      if (error) {
+        return (
+          <div className="flex-1 col-span-2 p-4">
+            <p className="text-red-500">Failed to load data. Please try again.</p>
+          </div>
+        );
       }
     
-      const handleCancelStatusChange = (id: number) => {
-        setCurrentAttendance(data.find((attendance) => attendance.id === id) || null)
-        setIsCancelConfirmationOpen(true)
-      }
-    
-      const confirmCancelStatusChange = () => {
-        if (currentAttendance) {
-          const updatedData = data.map((attendance) =>
-            attendance.id === currentAttendance.id ? { ...attendance, status: "PENDING" } : attendance
-          )
-          setData(updatedData)
-          setIsCancelConfirmationOpen(false)
-        }
-      }
-    
-      const filteredData = data.filter(
+      const filteredData = attendanceData?.filter(
         (attendance) =>
-          attendance.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          (selectedStatus ? attendance.status === selectedStatus : true)
-      )
+          isToday(new Date(attendance.date)) &&
+          attendance.employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          (selectedAccessLevel ? attendance.employee.accessLevel === selectedAccessLevel : true) &&
+          attendance.overTimeTotal !== null && attendance.overTimeTotal > 0
+      ) || [];
+    
+      const renderedList = filteredData.map((attendance) => (
+        <TableRow key={attendance.id}>
+          <TableCell className="p-4">{attendance.employee.username}</TableCell>
+          <TableCell className="p-4">{format(new Date(attendance.date), "MMMM dd, yyyy")}</TableCell>
+          <TableCell className="p-4">{attendance.overTimeTotal?.toFixed(2)}</TableCell>
+          <TableCell className="p-4">{attendance.timeTotal.toFixed(2)}</TableCell>
+        </TableRow>
+      ));
+    
+      const noRecordsMessage = selectedAccessLevel
+        ? `No overtime records found for the selected access level: ${selectedAccessLevel.replace("_", " ").toLowerCase()}.`
+        : "No overtime records found.";
     
       return (
         <>
           <div className="flex mb-4 space-x-2 p-4">
             <Input
               type="text"
-              placeholder="Search by employee name"
+              placeholder="Search by username"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="p-2 text-base w-48">
-                  Status
+                  Access Level
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-64">
-                <DropdownMenuItem onSelect={() => setSelectedStatus("")}>All</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => setSelectedStatus("PENDING")}>Pending</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => setSelectedStatus("ACCEPTED")}>Accepted</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => setSelectedStatus("REJECTED")}>Rejected</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setSelectedAccessLevel("")}>All</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setSelectedAccessLevel("EMPLOYEE")}>Employee</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setSelectedAccessLevel("TEAM_LEADER")}>Team Leader</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setSelectedAccessLevel("ADMIN")}>Admin</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Employee</TableHead>
-                <TableHead>Overtime Hours</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredData.map((attendance) => (
-                <TableRow key={attendance.id}>
-                  <TableCell>{attendance.date}</TableCell>
-                  <TableCell>{attendance.employeeName}</TableCell>
-                  <TableCell>{attendance.overTimeTotal}</TableCell>
-                  <TableCell>{attendance.status}</TableCell>
-                  <TableCell>
-                    {attendance.status === "PENDING" ? (
-                      <>
-                        <Button onClick={() => handleStatusChange(attendance.id, "ACCEPTED")} className="mr-2">
-                          Accept
-                        </Button>
-                        <Button onClick={() => handleStatusChange(attendance.id, "REJECTED")} variant="destructive">
-                          Reject
-                        </Button>
-                      </>
-                    ) : (
-                      <Button onClick={() => handleCancelStatusChange(attendance.id)} variant="outline">
-                        Cancel
-                      </Button>
-                    )}
-                  </TableCell>
+          <div className="p-4">
+            <Table className="text-base">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="p-4">Username</TableHead>
+                  <TableHead className="p-4">Date</TableHead>
+                  <TableHead className="p-4">Overtime Total</TableHead>
+                  <TableHead className="p-4">Time Total</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-    
-          <Dialog open={isConfirmationOpen} onOpenChange={() => setIsConfirmationOpen(false)}>
-            <DialogContent className="max-w-lg p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
-              <DialogHeader>
-                <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Confirmation
-                </DialogTitle>
-              </DialogHeader>
-              <div className="mt-4 text-gray-700 dark:text-gray-300">
-                Are you sure this employee is allowed to overtime?
-              </div>
-              <DialogFooter className="flex justify-end space-x-4 mt-6">
-                <Button type="button" variant="outline" onClick={() => setIsConfirmationOpen(false)} className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md dark:text-gray-300 dark:border-gray-600">
-                  Cancel
-                </Button>
-                <Button type="button" variant="default" onClick={confirmStatusChange} className="px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700">
-                  Confirm
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-    
-          <Dialog open={isCancelConfirmationOpen} onOpenChange={() => setIsCancelConfirmationOpen(false)}>
-            <DialogContent className="max-w-lg p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
-              <DialogHeader>
-                <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Confirmation
-                </DialogTitle>
-              </DialogHeader>
-              <div className="mt-4 text-gray-700 dark:text-gray-300">
-                Are you sure you want to cancel the status change?
-              </div>
-              <DialogFooter className="flex justify-end space-x-4 mt-6">
-                <Button type="button" variant="outline" onClick={() => setIsCancelConfirmationOpen(false)} className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md dark:text-gray-300 dark:border-gray-600">
-                  Cancel
-                </Button>
-                <Button type="button" variant="default" onClick={confirmCancelStatusChange} className="px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700">
-                  Confirm
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+              </TableHeader>
+              <TableBody>
+                {renderedList.length > 0 ? (
+                  renderedList
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center p-4">
+                      <div className="text-foreground">
+                        <p className="font-semibold">{noRecordsMessage}</p>
+                        <p className="text-sm">Please adjust your filters or try a different search term.</p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </>
-      )
-    }
+      );
+    };
     
-    export default OvertimeTable
+    export default OvertimeTable;

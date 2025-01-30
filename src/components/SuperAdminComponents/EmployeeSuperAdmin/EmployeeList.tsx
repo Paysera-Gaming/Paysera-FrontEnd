@@ -55,10 +55,16 @@ const EmployeeList: React.FC = () => {
     setIsFormOpen(false);
   };
 
-  const handleEditSubmit = (updatedEmployee: Employee) => {
-    editEmployeeMutation.mutate(updatedEmployee);
-    setIsEditOpen(false);
-    setSelectedEmployee(null);
+  const handleEditSubmit = (values: { accessLevel?: 'EMPLOYEE' | 'TEAM_LEADER' | 'ADMIN'; username?: string; firstName?: string; lastName?: string; middleName?: string; password?: string; confirmPassword?: string; }) => {
+    if (selectedEmployee) {
+      const updatedEmployee: Employee = {
+        ...selectedEmployee,
+        ...values,
+      };
+      editEmployeeMutation.mutate(updatedEmployee);
+      setIsEditOpen(false);
+      setSelectedEmployee(null);
+    }
   };
 
   const filteredEmployees = employees

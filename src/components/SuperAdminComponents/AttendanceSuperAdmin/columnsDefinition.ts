@@ -34,10 +34,10 @@ export const columns: ColumnDef<Attendance>[] = [
         header: 'Time Out',
         cell: ({ row }) => formatTime(row.original.timeOut),
     },
-    {
-        accessorKey: 'lunchTimeTotal',
-        header: 'Lunch Time Total',
-    },
+    // {
+    //     accessorKey: 'lunchTimeTotal',
+    //     header: 'Lunch Time Total',
+    // },
     {
         accessorKey: 'timeHoursWorked',
         header: 'Work Time Total',

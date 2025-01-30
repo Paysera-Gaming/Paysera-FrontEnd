@@ -1,14 +1,9 @@
 import { useEffect } from 'react';
-// zod
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
-
-// import { Toaster } from "@/components/ui/sonner";
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
-
-// shad ui
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -42,22 +37,19 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-// Lucide icons
 import { User, Lock } from 'lucide-react';
-
-// TanStack Query
 import { useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '@/api';
+import axios from 'axios'; // Import axios
+import { Employee } from './types';
 
-// schema for the form
 const formSchema = z
     .object({
         username: z
             .string()
             .min(8, { message: 'Username must be at least 8 characters.' })
             .optional(),
-		firstName: z
+        firstName: z
             .string()
             .min(2, { message: 'First name must be at least 2 characters.' })
             .optional(),
@@ -82,7 +74,7 @@ const formSchema = z
             .enum(['TEAM_LEADER', 'EMPLOYEE', 'ADMIN'], {
                 required_error: 'Access level is required.',
             })
-            .optional(), // Added access level field
+            .optional(),
     })
     .refine(
         (data) =>
@@ -95,17 +87,19 @@ const formSchema = z
         }
     );
 
+interface EmployeeEditProps {
+    onSubmit: (values: z.infer<typeof formSchema>) => void;
+    isOpen: boolean;
+    onClose: () => void;
+    employee: Employee;
+}
+
 export default function EmployeeEdit({
     onSubmit,
     isOpen,
     onClose,
     employee,
-}: {
-    onSubmit: (values: any) => void;
-    isOpen: boolean;
-    onClose: () => void;
-    employee: any;
-}) {
+}: EmployeeEditProps) {
     console.log('Employee ID:', employee.id);
 
     const queryClient = useQueryClient();
@@ -116,10 +110,10 @@ export default function EmployeeEdit({
             username: employee.username,
             firstName: employee.firstName,
             lastName: employee.lastName,
-            middleName: employee.middleName || 'N/A', // Handle optional middle name
+            middleName: employee.middleName || 'N/A',
             password: '',
             confirmPassword: '',
-            accessLevel: employee.accessLevel || 'EMPLOYEE', // Default access level
+            accessLevel: employee.accessLevel || 'EMPLOYEE',
         },
     });
 
@@ -128,51 +122,48 @@ export default function EmployeeEdit({
             username: employee.username,
             firstName: employee.firstName,
             lastName: employee.lastName,
-            middleName: employee.middleName || 'N/A', // Handle optional middle name
+            middleName: employee.middleName || 'N/A',
             password: '',
             confirmPassword: '',
-            accessLevel: employee.accessLevel || 'EMPLOYEE', // Default access level
+            accessLevel: employee.accessLevel || 'EMPLOYEE',
         });
     }, [employee, form]);
 
     async function handleSubmit(values: z.infer<typeof formSchema>) {
-        const updatedFields: any = {};
+        const updatedFields: Partial<Employee> = {};
         if (values.username) updatedFields.username = values.username;
         if (values.firstName) updatedFields.firstName = values.firstName;
         if (values.lastName) updatedFields.lastName = values.lastName;
-        updatedFields.middleName = values.middleName || 'N/A'; // Handle optional middle name
-        if (values.password) updatedFields.passwordCredentials = values.password;
-        if (values.accessLevel) updatedFields.accessLevel = values.accessLevel; // Handle access level
-    
+        updatedFields.middleName = values.middleName || 'N/A';
+        if (values.accessLevel) updatedFields.accessLevel = values.accessLevel;
+
         try {
             const response = await axiosInstance.put(
                 `/api/employee/${employee.id}`,
                 {
                     ...updatedFields,
-                    isActive: employee.isActive, // Preserve the current isActive status
+                    password: values.password, // Handle password separately
+                    isActive: employee.isActive,
                 }
             );
-    
+
             if (response.status === 200) {
                 toast.success(`Successfully edited ${employee.firstName} ${employee.lastName}`);
-                onSubmit(response.data); // Call the onSubmit callback
-                queryClient.invalidateQueries({ queryKey: ['employees'] }); // Invalidate the employee query
-                handleClose(); // Close the dialog
+                onSubmit(response.data);
+                queryClient.invalidateQueries({ queryKey: ['employees'] });
+                handleClose();
             }
         } catch (error) {
-            // Handle specific error cases
-            if ((error as any).response && (error as any).response.status === 400) {
+            if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
                 toast.error('Invalid employee ID.');
             } else {
                 toast.error('Failed to update the employee. Please try again.');
             }
             console.error('Error editing the employee:', error);
-    
-            // Keep the dialog open and reset form state if there's an error
-            form.reset(form.getValues()); // Reset the form to the current values
+            form.reset(form.getValues());
         }
     }
-    
+
     function handleClose() {
         form.reset();
         onClose();
@@ -181,8 +172,6 @@ export default function EmployeeEdit({
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
             <DialogContent className="max-w-2xl mx-auto">
-                {' '}
-                {/* Adjusted width */}
                 <DialogHeader>
                     <DialogTitle>Edit Employee</DialogTitle>
                     <DialogDescription>

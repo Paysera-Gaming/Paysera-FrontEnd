@@ -14,6 +14,7 @@ export interface Attendance {
   lunchTimeTotal: number;
   createdAt: string;
   updatedAt: string;
+  calculatedOverTime: boolean; // Added calculatedOverTime property
   employee: {
     id: number;
     username: string;
@@ -23,6 +24,7 @@ export interface Attendance {
     role: string;
     accessLevel: string;
     isActive: boolean;
+    department: string; // Changed department property to string
   };
   employeeName: string; // Added employeeName property
 }

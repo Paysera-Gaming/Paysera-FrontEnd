@@ -53,7 +53,7 @@ const HolidayTable: React.FC<HolidayTableProps> = ({ holidays, onEdit, onDelete 
   const getStatus = (date: Date) => {
     if (isToday(date)) return "Ongoing";
     if (isFuture(date)) return "Upcoming";
-    return "Past";
+    return "Done";
   };
 
   return (
@@ -89,7 +89,7 @@ const HolidayTable: React.FC<HolidayTableProps> = ({ holidays, onEdit, onDelete 
               </TableCell>
               <TableCell>
                 <Badge
-                  variant={status === "Past" ? "outline" : "default"}
+                  variant={status === "Done" ? "outline" : "default"}
                   className="capitalize"
                 >
                   {status}
