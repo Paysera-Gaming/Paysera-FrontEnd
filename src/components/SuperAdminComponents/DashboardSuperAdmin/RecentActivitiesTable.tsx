@@ -33,7 +33,7 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
       </TableRow>
     );
   });
-
+  
   return (
     <>
       <div className="flex mb-4 space-x-2 p-4">
@@ -57,6 +57,7 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
       <div className="p-4">
         <Table className="text-base">
           <TableHeader>

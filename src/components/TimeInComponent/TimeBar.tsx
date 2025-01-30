@@ -11,7 +11,8 @@ import { useUserStore } from '@/stores/userStore.ts';
 import { clockIn, clockOut } from '@/api/ClockInAPI.ts';
 import ToasterSwitch from '@/lib/timeToasterUtils.ts';
 import { TAttendance } from '@/api/AttendanceAPI';
-
+import { Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
 	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
 	const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
@@ -27,11 +28,15 @@ export default function Timebar() {
 	const currentTime = new Date().toISOString();
 	const employeeId = useUserStore.getState().user?.id;
 
+	const [getIsLoading, setIsLoading] = useState<boolean>(false);
+	const [getCanProceed, setCanProceed] = useState<boolean>(false);
 	// when user times in
 	const mutateTime = useMutation({
 		mutationFn: async (
 			fetchType: 'ClockIn' | 'ClockOut' | 'OverTimeStart' | 'OverTimeEnd'
 		) => {
+			setIsLoading(true);
+
 			//checks if the user has an ID
 			if (employeeId === undefined) {
 				throw new Error('Employee ID is undefined');
@@ -58,14 +63,14 @@ export default function Timebar() {
 			}
 		},
 		onSuccess: async () => {
-			queryClient
-				.invalidateQueries({ queryKey: ['UsersAttendance'] })
-				.then(() => {
-					ToasterSwitch('Clock-In', currentTime);
-				});
+			setIsLoading(false);
+			setCanProceed(true);
+			queryClient.invalidateQueries({ queryKey: ['UsersAttendance'] });
 		},
 		onError: (e: ErrorEvent) => {
+			setIsLoading(false);
 			console.error('An Error has occurred ' + e);
+			setCanProceed(false);
 		},
 	});
 	async function initModalValidations() {
@@ -115,11 +120,15 @@ export default function Timebar() {
 			cancelLabel: 'Cancel',
 			actionLabel: 'Continue',
 			onAction: () => {
-				toast.success('User has timed out of session');
-				setOverTime(false);
-				useUserStore.getState().setUserClockStatus('Clock-Out');
-				// setIsClockedIn(false);
 				// mutateTime.mutate('OverTimeEnd');
+				if (getCanProceed == true) {
+					toast.success('User has timed out of session');
+					setOverTime(false);
+					useUserStore.getState().setUserClockStatus('Clock-Out');
+				}
+
+				// setIsClockedIn(false);
+
 				// useUserStore.getState().setUserClockStatus('Clock-In');
 			},
 			onCancel: () => {
@@ -155,9 +164,12 @@ export default function Timebar() {
 			description: 'Are you sure you want to start your timein?',
 			cancelLabel: 'Cancel',
 			actionLabel: 'Continue',
-			onAction: () => {
-				useUserStore.getState().setUserClockStatus('Clock-In');
-				mutateTime.mutate('ClockIn');
+			onAction: async () => {
+				await mutateTime.mutate('ClockIn');
+				if (getCanProceed == true) {
+					useUserStore.getState().setUserClockStatus('Clock-In');
+				}
+				setCanProceed(false);
 			},
 			onCancel: () => {
 				console.log('Cancel TimeIn');
@@ -171,11 +183,13 @@ export default function Timebar() {
 			description: 'Are you sure you want to clock out?',
 			cancelLabel: 'Cancel',
 			actionLabel: 'Continue',
-			onAction: () => {
-				console.log('Start TimeOut');
-				toast.success('User has timeout from the session');
-				mutateTime.mutate('ClockOut');
-				useUserStore.getState().setUserClockStatus('Clock-Out');
+			onAction: async () => {
+				await mutateTime.mutate('ClockOut');
+				if (getCanProceed == true) {
+					toast.success('User has timeout from the session');
+					useUserStore.getState().setUserClockStatus('Clock-Out');
+				}
+				setCanProceed(false);
 			},
 			onCancel: () => {
 				console.log('Cancel TimeOut');
@@ -189,9 +203,12 @@ export default function Timebar() {
 			description: 'Are you sure you want to clock out?',
 			cancelLabel: 'Cancel',
 			actionLabel: 'Continue',
-			onAction: () => {
-				mutateTime.mutate('ClockOut');
-				useUserStore.getState().setUserClockStatus('Clock-Out');
+			onAction: async () => {
+				await mutateTime.mutate('ClockOut');
+				if (getCanProceed == true) {
+					useUserStore.getState().setUserClockStatus('Clock-Out');
+				}
+				setCanProceed(false);
 			},
 			onCancel: () => {
 				console.log('Cancel TimeOut');
@@ -207,7 +224,11 @@ export default function Timebar() {
 			{/* form */}
 			{/*<TimeForm></TimeForm>*/}
 
-			<Button onClick={initModalValidations}>
+			<Button disabled={getIsLoading} onClick={initModalValidations}>
+				<Loader2
+					className={cn(getIsLoading == false && 'hidden', 'animate-spin mr-1')}
+				/>
+
 				{useUserStore.getState().getUserClockStatus() === 'Clock-In'
 					? 'Clock-Out'
 					: 'Clock-In'}

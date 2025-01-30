@@ -17,22 +17,17 @@ function ScheduleList({
 }) {
 	if (schedule?.Schedule != undefined) {
 		return (
-			<ul>
-				<li>Schedule Type: {schedule.name}</li>
-				<li>Schedule Info: {schedule.Schedule.scheduleType}</li>
+			<ul className="text-sm 2xl:text-base w-full">
+				<li>Schedule Type: {schedule.Schedule.scheduleType}</li>
 				<li>
-					Schedule Block:{' '}
+					Schedule Info:{' '}
 					{dateToHours(schedule.Schedule.startTime) +
-						' - ' +
+						'-' +
 						dateToHours(schedule.Schedule.endTime)}
 				</li>
 				<li>
-					Personal Schedule Block: SOON
+					Personal Schedule Info: SOON
 					{/* {schedule.Schedule.startTime + ' - ' + schedule.Schedule.endTime} */}
-				</li>
-				<li>
-					Last Schedule Update:{' '}
-					{new Date(schedule.Schedule.updatedAt).toISOString().split('T')[0]}
 				</li>
 			</ul>
 		);
@@ -58,14 +53,12 @@ export default function UserScheduleInfoCard({
 	}, [getUserInfo]);
 
 	return (
-		<Card className={className}>
-			<CardHeader className="flex-row p-3 2xl:p-5 items-center justify-between w-full pb-3 ">
-				<CardTitle className="text-base 2xl:text-lg    ">
-					Schedule Info
-				</CardTitle>
-				<Calendar></Calendar>
+		<Card className={className + 'p-2 pt-0 2xl:p-5'}>
+			<CardHeader className="flex flex-row p-0 items-end justify-between w-full ">
+				<CardTitle className="text-base 2xl:text-lg">Schedule Info</CardTitle>
+				<Calendar className="2xl:w-[1.25rem] 2xl:h-[1.25rem] h-[1.5rem] w-[1.5rem]"></Calendar>
 			</CardHeader>
-			<CardContent className=" p-3 pt-0 pb-1 2xl:p-5">
+			<CardContent className="p-0">
 				<ScheduleList schedule={getUserInfo}></ScheduleList>
 			</CardContent>
 		</Card>
