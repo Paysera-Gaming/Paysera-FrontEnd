@@ -41,6 +41,11 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
         setErrorMessage("Time Out cannot be earlier than Time In.");
         return;
       }
+
+      if (timeIn.hours === timeOut.hours && timeIn.minutes === timeOut.minutes) {
+        setErrorMessage("Time In and Time Out cannot be the same.");
+        return;
+      }
     }
 
     const totalWorkHours = timeIn && timeOut ? timeDifferenceInHours(timeIn, timeOut) : 0;
