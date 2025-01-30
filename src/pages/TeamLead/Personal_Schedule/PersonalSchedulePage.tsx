@@ -1,31 +1,25 @@
 import {
-	getAllSchedulesInDepartment,
-	TDepartmentSchedules,
-} from '@/api/ScheduleAPI';
+	getAllPersonalSchedules,
+	TPersonalSchedule,
+} from '@/api/PersonalScheduleAPI';
 import { DataTable } from '@/components/DataTable/DataTableProvider';
-import { scheduleColumns } from '@/components/DataTable/ScheduleColumn';
+import personalScheduleColumn from '@/components/DataTable/PersonalScheduleColumn';
 import ErrorDisplay from '@/components/ErrorComponent/ErrorDisplay';
-import AddScheduleBtn from '@/components/TeamLeadComponents/SchedulePage/AddScheduleBtn';
+import AddPersonalScheduleBtn from '@/components/TeamLeadComponents/PersonalSchedule/AddPersonalScheduleBtn';
+
 import { Skeleton } from '@/components/ui/skeleton';
-import { useUserStore } from '@/stores/userStore';
 import { useQuery } from '@tanstack/react-query';
 
-export default function SchedulePage() {
-	const { data, isError, isLoading } = useQuery({
-		queryKey: ['Schedule'],
-		queryFn: () => {
-			const user = useUserStore.getState().getUser();
-			const departmentId = user?.departmentId;
-			if (departmentId !== undefined) {
-				return getAllSchedulesInDepartment(departmentId);
-			} else {
-				throw new Error('No Department Id Found');
-			}
-		},
+export default function PersonalSchedulePage() {
+	const { data, isError, isLoading, isFetching, isRefetching } = useQuery({
+		queryKey: ['PersonalSchedule'],
+		queryFn: () => getAllPersonalSchedules(),
+		staleTime: 0,
+		enabled: true, // Ensure fetching is not disabled
 	});
 
-	const scheduleData: TDepartmentSchedules[] = data ?? [];
-	// remove comments later
+	const personalScheduleData: TPersonalSchedule[] = data ?? [];
+
 	if (isError) {
 		return <ErrorDisplay />;
 	}
@@ -34,7 +28,7 @@ export default function SchedulePage() {
 		return (
 			<div className=" w-full h-full border-border border-solid border p-5 rounded-md ">
 				<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0">
-					Manage Schedule
+					Personal Schedule
 				</h2>
 				<div className="grid grid-cols-5 w-full mt-2 gap-2">
 					<Skeleton className="col-span-5 h-10" />
@@ -50,13 +44,13 @@ export default function SchedulePage() {
 	return (
 		<div className="min-h-0 min-w-0 w-full h-full border-border border-solid border p-5 rounded-md">
 			<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0">
-				Manage Schedule
+				Personal Schedule Page
 			</h2>
 			<DataTable
-				addButton={<AddScheduleBtn />}
-				columns={scheduleColumns}
-				data={scheduleData}
-				searchQuery="name"
+				addButton={<AddPersonalScheduleBtn></AddPersonalScheduleBtn>}
+				columns={personalScheduleColumn()}
+				data={personalScheduleData}
+				searchQuery="Employee_lastName"
 			></DataTable>
 		</div>
 	);

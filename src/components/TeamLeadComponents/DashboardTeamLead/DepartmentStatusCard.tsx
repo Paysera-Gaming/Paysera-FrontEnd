@@ -84,8 +84,8 @@ export default function DepartmentStatusCard() {
 					</li>
 					<li className="text-sm 2xl:text-base marker:text-red-500 marker:text-base 2xl:marker:text-2xl">
 						Offline:{' '}
-						{(userQueries[1].data?.length ?? 0) -
-							(userQueries[0].data?.length ?? 0)}
+						{(userQueries[0].data?.length ?? 0) -
+							(userQueries[1].data?.length ?? 0)}
 					</li>
 				</ul>
 			</CardContent>

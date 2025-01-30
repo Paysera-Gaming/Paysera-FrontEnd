@@ -31,6 +31,7 @@ import SuperAdminHolidayDashboard from './pages/SuperAdmin/Holiday/SuperAdminHol
 import SuperAdminAnnouncementDashboard from './pages/SuperAdmin/Announcement/SuperAdminAnnouncementDashboard';
 
 import './index.css';
+import PersonalSchedulePage from './pages/TeamLead/Personal_Schedule/PersonalSchedulePage';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -49,11 +50,7 @@ const router = createBrowserRouter([
 	{
 		path: '/employee',
 		element: (
-			// <ProtectedRoute page=} requiredLevel="EMPLOYEE" />
-			<>
-				<ProtectedRoute page={<EmployeePage />} requiredLevel="EMPLOYEE" />
-				<ConfirmationDialog />
-			</>
+			<ProtectedRoute page={<EmployeePage />} requiredLevel="EMPLOYEE" />
 		),
 		children: [
 			{ index: true, loader: async () => redirect('/employee/dashboard') },
@@ -65,15 +62,8 @@ const router = createBrowserRouter([
 		path: '/teamlead',
 
 		element: (
-			<>
-				<ProtectedRoute page={<TeamLeadPage />} requiredLevel="TEAM_LEADER" />
-				<ConfirmationDialog />
-			</>
-
-			// <>
-			// 	<TeamLeadPage />
-			// 	<ConfirmationDialog />
-			// </>
+			// <ProtectedRoute page={<TeamLeadPage />} requiredLevel="TEAM_LEADER" />
+			<TeamLeadPage />
 		),
 		children: [
 			{ index: true, loader: async () => redirect('/teamlead/dashboard') },
@@ -81,16 +71,15 @@ const router = createBrowserRouter([
 			{ path: 'manage', element: <ManagePage /> },
 			{ path: 'schedule', element: <SchedulePage /> },
 			{ path: 'attendance', element: <AttendancePage /> },
+			{
+				path: 'personal',
+				element: <PersonalSchedulePage></PersonalSchedulePage>,
+			},
 		],
 	},
 	{
 		path: '/superadmin',
-		element: (
-			<>
-				<ProtectedRoute page={<SuperAdminPage />} requiredLevel="ADMIN" />
-				<ConfirmationDialog />
-			</>
-		),
+		element: <ProtectedRoute page={<SuperAdminPage />} requiredLevel="ADMIN" />,
 		children: [
 			{ index: true, loader: async () => redirect('/superadmin/dashboard') },
 			{ path: 'dashboard', element: <SuperAdminDashboardPage /> },
@@ -125,6 +114,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 						},
 					}}
 				/>
+				<ConfirmationDialog />
 			</ThemeProvider>
 		</QueryClientProvider>
 	</React.StrictMode>
