@@ -3,12 +3,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getEmployeeDetails } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/api";
 import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
+import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
 import { isToday } from "date-fns";
+import EmployeeDialog from "./EmployeeDialog";
 
 function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAccessLevel, setSelectedAccessLevel] = useState("");
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const filteredData = tableData.filter(
     (data) =>
@@ -23,17 +28,23 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
 
   const sortedData = filteredData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
+  const handleRowClick = async (employeeId: number) => {
+    const employeeDetails = await getEmployeeDetails(employeeId);
+    setSelectedEmployee(employeeDetails);
+    setIsDialogOpen(true);
+  };
+
   const renderedList = sortedData.map((data) => {
     const parsedDate = new Date(data.date);
     const formattedDate = parsedDate.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
     return (
-      <TableRow key={data.id}>
+      <TableRow key={data.id} onClick={() => handleRowClick(data.employee.id)}>
         <TableCell className="p-4">{data.employee.username}</TableCell>
         <TableCell className="p-4">{formattedDate}</TableCell>
       </TableRow>
     );
   });
-  
+
   return (
     <>
       <div className="flex mb-4 space-x-2 p-4">
@@ -69,6 +80,11 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
           <TableBody>{renderedList}</TableBody>
         </Table>
       </div>
+      <EmployeeDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        employee={selectedEmployee}
+      />
     </>
   );
 }
