@@ -21,8 +21,6 @@ function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
 
 export default function Timebar() {
 	const { openConfirmation, closeConfirmation } = useConfirmationStore();
-
-	const [getOverTime, setOverTime] = useState<boolean>(false);
 	const queryClient = useQueryClient();
 
 	const currentTime = new Date().toISOString();
@@ -32,9 +30,7 @@ export default function Timebar() {
 	const [getCanProceed, setCanProceed] = useState<boolean>(false);
 	// when user times in
 	const mutateTime = useMutation({
-		mutationFn: async (
-			fetchType: 'ClockIn' | 'ClockOut' | 'OverTimeStart' | 'OverTimeEnd'
-		) => {
+		mutationFn: async (fetchType: 'ClockIn' | 'ClockOut') => {
 			setIsLoading(true);
 
 			//checks if the user has an ID
@@ -50,16 +46,6 @@ export default function Timebar() {
 				case 'ClockOut':
 					console.log('user is now clocking out');
 					return clockOut({ employeeId: employeeId, timeStamp: currentTime });
-
-				case 'OverTimeStart':
-					console.log('user is now starting over time');
-					console.log('WALA PANG OVERTIME START');
-					break;
-
-				case 'OverTimeEnd':
-					console.log('user is now ending over time');
-					console.log('WALA PANG OVERTIME END');
-					break;
 			}
 		},
 		onSuccess: async () => {
@@ -75,12 +61,7 @@ export default function Timebar() {
 	});
 	async function initModalValidations() {
 		// check first user is on overtime
-		if (getOverTime) {
-			await closeConfirmation();
-			await endOvertimeDialogue();
 
-			return;
-		}
 		// check whether the user has already clocked in or not
 		if (useUserStore.getState().userClockStatus == 'Clock-Out') {
 			//if not clocked in proceed to the clock in dialogue
@@ -98,64 +79,15 @@ export default function Timebar() {
 					convertDateToSeconds(new Date(attendance.timeIn), new Date()) >=
 					28_800
 				) {
-					//ask for overtime
 					await closeConfirmation();
-					await startOvertimeDialogue();
+					await confirmTimeOut();
 				} else {
 					// eto muna
 					await closeConfirmation();
 					await warningInsufficientHoursDialogue();
 				}
-			} else {
-				await closeConfirmation();
-				await warningInsufficientHoursDialogue();
 			}
 		}
-	}
-
-	function endOvertimeDialogue() {
-		openConfirmation({
-			title: 'Finish Over Time?',
-			description: 'Are you sure you want to timeout and end your overtime?',
-			cancelLabel: 'Cancel',
-			actionLabel: 'Continue',
-			onAction: () => {
-				// mutateTime.mutate('OverTimeEnd');
-				if (getCanProceed == true) {
-					toast.success('User has timed out of session');
-					setOverTime(false);
-					useUserStore.getState().setUserClockStatus('Clock-Out');
-				}
-
-				// setIsClockedIn(false);
-
-				// useUserStore.getState().setUserClockStatus('Clock-In');
-			},
-			onCancel: () => {
-				console.log('Cancel OVERTIME END');
-			},
-		});
-	}
-
-	async function startOvertimeDialogue() {
-		openConfirmation({
-			title: 'Would You Like to start your OverTime?',
-			description:
-				'Pressing the continue button will proceed for your overtime?',
-			cancelLabel: 'Cancel',
-			actionLabel: 'Continue',
-			onAction: () => {
-				toast.success('User has started overtime');
-				setOverTime(true);
-				// mutateTime.mutate('OverTimeStart');
-			},
-			onCancel: async () => {
-				// if user did not want to overtime
-				console.log('CANCELED START OVERTIME');
-				await closeConfirmation();
-				await confirmTimeOut();
-			},
-		});
 	}
 
 	function confirmTimeIn() {
