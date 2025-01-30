@@ -69,7 +69,8 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
 
     try {
       await axiosInstance.put(`/api/attendance/${attendance.id}`, payload);
-      toast.success(`Successfully updated attendance on ${attendance.date}`);
+      const formattedDate = new Date(attendance.date).toLocaleDateString('default', { month: 'long', day: 'numeric' });
+      toast.success(`Successfully updated attendance on ${formattedDate}`);
       queryClient.invalidateQueries({ queryKey: ["attendanceList"] });
       handleClose();
     } catch (error) {
