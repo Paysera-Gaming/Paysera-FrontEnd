@@ -110,6 +110,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 				<Toaster
 					richColors
 					closeButton
+					position={'top-center'}
 					toastOptions={{
 						classNames: {
 							error: 'bg-red-400',
