@@ -11,7 +11,7 @@ export default function DepartmentStatusCard() {
 		queries: [
 			// this gets the attendance of the department
 			{
-				queryKey: ['AttendanceToady', 1],
+				queryKey: ['AttendanceToday', 1],
 				queryFn: () => {
 					const user = useUserStore.getState().getUser();
 					const departmentId = user?.departmentId;
@@ -80,12 +80,12 @@ export default function DepartmentStatusCard() {
 			<CardContent className="p-0">
 				<ul className="list-disc list-inside flex justify-between items-center">
 					<li className=" text-sm marker:text-green-500 marker:text-base 2xl:marker:text-2xl ">
-						Online: {userQueries[1].data?.length ?? 0}
+						Online: {userQueries[0].data?.length ?? 0}
 					</li>
 					<li className="text-sm 2xl:text-base marker:text-red-500 marker:text-base 2xl:marker:text-2xl">
 						Offline:{' '}
-						{(userQueries[0].data?.length ?? 0) -
-							(userQueries[1].data?.length ?? 0)}
+						{(userQueries[1].data?.length ?? 0) -
+							(userQueries[0].data?.length ?? 0)}
 					</li>
 				</ul>
 			</CardContent>

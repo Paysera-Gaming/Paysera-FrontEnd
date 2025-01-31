@@ -95,7 +95,7 @@ export default function TeamLeadNavigation() {
 		'Dashboard',
 		'Manage Users',
 		'Attendance',
-		'Schedules',
+		'Role Schedules',
 		'Personal Schedules',
 		'Overtime Approval',
 	];
