@@ -54,7 +54,7 @@ export default function AnnouncementCard({ className }: AnnouncementCardProps) {
         <Megaphone size={"1.5rem"} />
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[100px]">
+        <ScrollArea className="h-[150px]">
           {error ? (
             <>
               <Skeleton className="h-6 w-3/4 mb-2" />
