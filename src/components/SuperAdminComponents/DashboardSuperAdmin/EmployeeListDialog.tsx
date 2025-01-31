@@ -1,5 +1,5 @@
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
@@ -66,7 +66,6 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose
             {renderTable(regularEmployees)}
           </TabsContent>
         </Tabs>
-        <DialogClose>Close</DialogClose>
       </DialogContent>
     </Dialog>
   );
