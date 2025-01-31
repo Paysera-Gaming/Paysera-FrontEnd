@@ -5,6 +5,7 @@ import { fetchDepartments } from "@/components/SuperAdminComponents/DepartmentSu
 import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
 import type { Department } from "@/components/SuperAdminComponents/DepartmentSuperAdmin/api";
 import { Building } from "lucide-react";
+import EmployeeListDialog from "./EmployeeListDialog";
 
 type EmployeesStatusCardsProps = {
   className?: string;
@@ -13,6 +14,7 @@ type EmployeesStatusCardsProps = {
 export default function EmployeesStatusCards({ className }: EmployeesStatusCardsProps) {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,31 +38,34 @@ export default function EmployeesStatusCards({ className }: EmployeesStatusCards
   const offlineCount = totalEmployees - onlineCount;
 
   return (
-    <Card className={`col-span-1 relative p-4 ${className}`}>
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-2xl font-semibold">Paysera Status</CardTitle>
-            <Building size={"1.8rem"} />
-          </CardHeader>
-          <CardContent className="flex flex-col space-y-2 mt-2">
+    <>
+      <Card className={`col-span-1 relative p-4 ${className}`}>
+        <CardHeader className="pb-2 flex flex-row items-center justify-between">
+          <CardTitle className="text-2xl font-semibold">Paysera Status</CardTitle>
+          <Building size={"1.8rem"} />
+        </CardHeader>
+        <CardContent className="flex flex-col space-y-2 mt-2">
+          <div className="flex items-center space-x-1">
+            <div className="w-3 h-3 bg-gray-600 rounded-full"></div>
+            <p className="text-x2 cursor-pointer" onClick={() => setIsDialogOpen(true)}>Total Employees: {totalEmployees}</p>
+          </div>
+          <div className="flex items-center space-x-1">
+            <div className="w-3 h-3 bg-gray-600 rounded-full"></div>
+            <p className="text-x2">Total Departments: {totalDepartments}</p>
+          </div>
+          <div className="flex justify-between space-x-1">
             <div className="flex items-center space-x-1">
-              <div className="w-3 h-3 bg-gray-600 rounded-full"></div>
-              <p className="text-x2">Total Employees: {totalEmployees}</p>
+              <div className="w-3 h-3 bg-green-600 rounded-full"></div>
+              <p className="text-x2">Online: {onlineCount}</p>
             </div>
             <div className="flex items-center space-x-1">
-              <div className="w-3 h-3 bg-gray-600 rounded-full"></div>
-              <p className="text-x2">Total Departments: {totalDepartments}</p>
+              <div className="w-3 h-3 bg-red-600 rounded-full"></div>
+              <p className="text-x2">Offline: {offlineCount}</p>
             </div>
-            <div className="flex justify-between space-x-1">
-              <div className="flex items-center space-x-1">
-                <div className="w-3 h-3 bg-green-600 rounded-full"></div>
-                <p className="text-x2">Online: {onlineCount}</p>
-              </div>
-              <div className="flex items-center space-x-1">
-                <div className="w-3 h-3 bg-red-600 rounded-full"></div>
-                <p className="text-x2">Offline: {offlineCount}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
+      <EmployeeListDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} employees={employees} />
+    </>
   );
 }
