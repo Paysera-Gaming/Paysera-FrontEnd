@@ -1,34 +1,38 @@
-import { useQuery } from "@tanstack/react-query"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Calendar } from "lucide-react"
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Calendar } from "lucide-react";
 
 type Holiday = {
-  id: number
-  name: string
-  month: string
-  day: number
-  createdAt: string
-  updatedAt: string
-}
+  id: number;
+  name: string;
+  month: string;
+  day: number;
+  createdAt: string;
+  updatedAt: string;
+};
 
 const fetchHolidays = async (): Promise<Holiday[]> => {
-  const response = await fetch(`${import.meta.env.VITE_BASE_API}api/holiday`)
+  const response = await fetch(`${import.meta.env.VITE_BASE_API}api/holiday`);
   if (!response.ok) {
-    throw new Error("Failed to fetch holidays")
+    throw new Error("Failed to fetch holidays");
   }
-  return response.json()
-}
+  return response.json();
+};
 
-export default function HolidayList() {
+type HolidayListProps = {
+  className?: string;
+};
+
+export default function HolidayList({ className }: HolidayListProps) {
   const { data: holidays = [], isLoading: isLoadingHolidays } = useQuery<Holiday[]>({
     queryKey: ["holidays"],
     queryFn: fetchHolidays,
-  })
+  });
 
   return (
-    <Card className="h-full flex flex-col">
+    <Card className={`h-full flex flex-col ${className}`}>
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
         <CardTitle className="text-2xl font-semibold">Upcoming Holidays</CardTitle>
         <Calendar size={"1.8rem"} />
@@ -68,5 +72,5 @@ export default function HolidayList() {
         </ScrollArea>
       </CardContent>
     </Card>
-  )
+  );
 }

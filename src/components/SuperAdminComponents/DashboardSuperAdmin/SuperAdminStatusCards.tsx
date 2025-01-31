@@ -1,31 +1,35 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useState, useEffect } from "react"
-import { fetchEmployees } from "@/utils/fetchEmployees"
-import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types"
-import { Users } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { fetchEmployees } from "@/utils/fetchEmployees";
+import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
+import { Users } from "lucide-react";
 
-export default function EmployeesStatusCards() {
-  const [employees, setEmployees] = useState<Employee[]>([])
+type EmployeesStatusCardsProps = {
+  className?: string;
+};
+
+export default function EmployeesStatusCards({ className }: EmployeesStatusCardsProps) {
+  const [employees, setEmployees] = useState<Employee[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchEmployees()
-        setEmployees(data)
+        const data = await fetchEmployees();
+        setEmployees(data);
       } catch (error) {
-        console.error("Error fetching employees:", error)
+        console.error("Error fetching employees:", error);
       }
-    }
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
-  const totalEmployees = employees.length
-  const onlineCount = employees.filter((emp: Employee) => emp.isActive).length
-  const offlineCount = totalEmployees - onlineCount
+  const totalEmployees = employees.length;
+  const onlineCount = employees.filter((emp: Employee) => emp.isActive).length;
+  const offlineCount = totalEmployees - onlineCount;
 
   return (
-    <Card className="col-span-1 relative p-4">
+    <Card className={`col-span-1 relative p-4 ${className}`}>
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
         <CardTitle className="text-2xl font-semibold">Employee Status</CardTitle>
         <Users size={"1.8rem"} />
@@ -50,5 +54,5 @@ export default function EmployeesStatusCards() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
