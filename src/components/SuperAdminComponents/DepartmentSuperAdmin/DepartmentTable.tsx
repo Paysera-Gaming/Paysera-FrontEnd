@@ -47,7 +47,7 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
             <tbody>
               {currentDepartments.length > 0 ? (
                 currentDepartments.map((department: Department) => (
-                  <tr key={department.id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <tr key={department.id} className="hover:bg-gray-100 dark:hover:bg-stone-800">
                     <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
                       {department.name}
                     </td>
