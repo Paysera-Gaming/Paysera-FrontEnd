@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Calendar } from "lucide-react";
+import { useState, useEffect } from "react";
 
 type Holiday = {
   id: number;
@@ -31,6 +32,17 @@ export default function HolidayList({ className }: HolidayListProps) {
     queryFn: fetchHolidays,
   });
 
+  const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const currentMonth = new Date().toLocaleString('default', { month: 'long' }).toUpperCase();
+    setSelectedMonth(currentMonth);
+  }, []);
+
+  const filteredHolidays = holidays.filter((holiday) => {
+    return holiday.month.toUpperCase() === selectedMonth;
+  });
+
   return (
     <Card className={`h-full flex flex-col ${className}`}>
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
@@ -53,14 +65,14 @@ export default function HolidayList({ className }: HolidayListProps) {
                     Loading holidays...
                   </TableCell>
                 </TableRow>
-              ) : holidays.length === 0 ? (
+              ) : filteredHolidays.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={2} className="text-sm">
                     No upcoming holidays
                   </TableCell>
                 </TableRow>
               ) : (
-                holidays.map((holiday) => (
+                filteredHolidays.map((holiday) => (
                   <TableRow key={holiday.id}>
                     <TableCell className="text-sm">{`${holiday.month} ${holiday.day}`}</TableCell>
                     <TableCell className="text-sm">{holiday.name}</TableCell>
