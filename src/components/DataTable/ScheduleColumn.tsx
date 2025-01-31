@@ -88,10 +88,10 @@ export const scheduleColumns: ColumnDef<TDepartmentSchedules>[] = [
 		},
 	},
 
-	{
-		accessorKey: 'Schedule.limitWorkHoursDay',
-		header: 'Work Hours Limit',
-	},
+	// {
+	// 	accessorKey: 'Schedule.limitWorkHoursDay',
+	// 	header: 'Work Hours Limit',
+	// },
 
 	// {
 	// 	accessorKey: 'Schedule.allowedOvertime',

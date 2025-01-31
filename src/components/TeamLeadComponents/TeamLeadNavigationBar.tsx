@@ -4,6 +4,7 @@ import {
 	FolderKanban,
 	UserCheck,
 	UsersIcon,
+	AlarmClockPlus,
 } from 'lucide-react';
 import { Icons } from '@/icons/Icon';
 // router
@@ -29,6 +30,7 @@ function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 		<UserCheck></UserCheck>,
 		<Calendar></Calendar>,
 		<UsersIcon></UsersIcon>,
+		<AlarmClockPlus></AlarmClockPlus>,
 	];
 
 	const routes = links.map((link, index) => {
@@ -86,6 +88,7 @@ export default function TeamLeadNavigation() {
 		'attendance',
 		'schedule',
 		'personal',
+		'overtime',
 	];
 
 	const routeNames: string[] = [
@@ -94,6 +97,7 @@ export default function TeamLeadNavigation() {
 		'Attendance',
 		'Schedules',
 		'Personal Schedules',
+		'Overtime Approval',
 	];
 
 	return (

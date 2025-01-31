@@ -32,6 +32,7 @@ import SuperAdminAnnouncementDashboard from './pages/SuperAdmin/Announcement/Sup
 
 import './index.css';
 import PersonalSchedulePage from './pages/TeamLead/Personal_Schedule/PersonalSchedulePage';
+import OvertimePage from './pages/TeamLead/OverTime/OverTimePage';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
 			{
 				path: 'personal',
 				element: <PersonalSchedulePage></PersonalSchedulePage>,
+			},
+			{
+				path: 'overtime',
+				element: <OvertimePage></OvertimePage>,
 			},
 		],
 	},

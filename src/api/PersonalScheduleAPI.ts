@@ -99,6 +99,8 @@ export async function putPersonalSchedule(
 	form: TPersonalSchedForms,
 	id: number
 ): Promise<number> {
+	console.log('BURGER');
+
 	if (form.scheduleType == 'FLEXI' || form.scheduleType == 'SUPER_FLEXI') {
 		// for flexi schedules we will automatically
 		// add 6am to 10pm for their
@@ -130,12 +132,12 @@ export async function putPersonalSchedule(
 		return response.status;
 	} else {
 		const response: AxiosResponse<TPersonalSchedForms> =
-			await axiosInstance.post(`/api/personal-schedule/${id}`, {
+			await axiosInstance.put(`/api/personal-schedule/${id}`, {
 				name: form.name,
 				day: form.day,
 				employeeId: form.employeeId,
-				timeIn: form.timeIn,
-				timeOut: form.timeOut,
+				startTime: form.timeIn,
+				endTime: form.timeOut,
 				scheduleType: form.scheduleType,
 			});
 
