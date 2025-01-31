@@ -115,12 +115,12 @@ export default function RecentActivitiesCard() {
 				<CardHeader>
 					<div className="flex item-center justify-between">
 						<CardTitle className="text-base lg:text-lg xl:text-2xl ">
-							Recent Activities
+							Attendance History Today
 						</CardTitle>
 						<Activity></Activity>
 					</div>
 					<CardDescription>
-						Recent activities of the employees of this department
+						See who checked in today and review attendance details at a glance
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="p-0 pb-2 ">
@@ -139,12 +139,12 @@ export default function RecentActivitiesCard() {
 			<CardHeader className="p-0">
 				<div className="flex items-end justify-between">
 					<CardTitle className="text-base 2xl:text-lg">
-						Recent Activities
+						Attendance History Today
 					</CardTitle>
 					<Activity className="2xl:w-[1.25rem] 2xl:h-[1.25rem]  h-[1.5rem] w-[1.5rem]"></Activity>
 				</div>
 				<CardDescription className="!m-0 text-xs 2xl:text-sm">
-					Recent activities of the employees of this department
+					See who checked in today and review attendance details at a glance
 				</CardDescription>
 			</CardHeader>
 			<CardContent className="p-0">
