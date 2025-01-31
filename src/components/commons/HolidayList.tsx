@@ -4,7 +4,6 @@ import { getHolidays, IHoliday } from '@/api/CommonsAPI';
 import { Skeleton } from '../ui/skeleton';
 import { ScrollArea } from '../ui/scroll-area';
 import { addMonths } from 'date-fns';
-import { Badge } from '../ui/badge';
 function addZero(digit: number) {
 	if (digit < 10 && digit > 0) {
 		return '0' + digit;
