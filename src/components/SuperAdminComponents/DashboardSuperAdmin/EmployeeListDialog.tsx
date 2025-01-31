@@ -28,21 +28,24 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose
           </TabsList>
           <TabsContent value="admin">
             {admins.map((employee) => (
-              <div key={employee.id}>
+              <div key={employee.id} className="flex items-center space-x-2">
+                <span className={`w-3 h-3 rounded-full ${employee.isActive ? 'bg-green-600' : 'bg-red-600'}`}></span>
                 <strong>{employee.username}</strong> - {employee.firstName} {employee.lastName}
               </div>
             ))}
           </TabsContent>
           <TabsContent value="team_leader">
             {teamLeaders.map((employee) => (
-              <div key={employee.id}>
+              <div key={employee.id} className="flex items-center space-x-2">
+                <span className={`w-3 h-3 rounded-full ${employee.isActive ? 'bg-green-600' : 'bg-red-600'}`}></span>
                 <strong>{employee.username}</strong> - {employee.firstName} {employee.lastName}
               </div>
             ))}
           </TabsContent>
           <TabsContent value="employee">
             {regularEmployees.map((employee) => (
-              <div key={employee.id}>
+              <div key={employee.id} className="flex items-center space-x-2">
+                <span className={`w-3 h-3 rounded-full ${employee.isActive ? 'bg-green-600' : 'bg-red-600'}`}></span>
                 <strong>{employee.username}</strong> - {employee.firstName} {employee.lastName}
               </div>
             ))}
