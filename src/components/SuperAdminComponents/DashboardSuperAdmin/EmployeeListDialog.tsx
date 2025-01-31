@@ -1,30 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area"; // Import ScrollArea
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { getEmployeeDetails } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/api";
 import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
 
 interface EmployeeListDialogProps {
   isOpen: boolean;
   onClose: () => void;
   employees: Employee[];
-  title: string; // Added title prop
+  title: string;
 }
 
 const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose, employees, title }) => {
-  const admins = employees.filter(emp => emp.accessLevel === 'ADMIN');
-  const teamLeaders = employees.filter(emp => emp.accessLevel === 'TEAM_LEADER');
-  const regularEmployees = employees.filter(emp => emp.accessLevel === 'EMPLOYEE');
+  const [detailedEmployees, setDetailedEmployees] = useState<Employee[]>([]);
 
-  const renderTable = (employees: Employee[]) => (
-    <ScrollArea className="h-[300px]"> {/* Ensure ScrollArea is scrollable */}
+  useEffect(() => {
+    const fetchEmployeeDetails = async () => {
+      const detailedEmployees = await Promise.all(
+        employees.map(async (employee) => {
+          const detailedEmployee = await getEmployeeDetails(employee.id);
+          return detailedEmployee;
+        })
+      );
+      setDetailedEmployees(detailedEmployees);
+    };
+
+    if (isOpen) {
+      fetchEmployeeDetails();
+    }
+  }, [isOpen, employees]);
+
+  const admins = detailedEmployees.filter(emp => emp.accessLevel === 'ADMIN');
+  const teamLeaders = detailedEmployees.filter(emp => emp.accessLevel === 'TEAM_LEADER');
+  const regularEmployees = detailedEmployees.filter(emp => emp.accessLevel === 'EMPLOYEE');
+
+  const renderTable = (employees: Employee[], showDepartment: boolean) => (
+    <ScrollArea className="h-[300px]">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="text-sm">Status</TableHead>
             <TableHead className="text-sm">Username</TableHead>
             <TableHead className="text-sm">Name</TableHead>
+            {showDepartment && <TableHead className="text-sm">Department</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -41,6 +61,11 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose
               <TableCell className="text-sm">
                 {employee.firstName} {employee.lastName}
               </TableCell>
+              {showDepartment && (
+                <TableCell className="text-sm">
+                  {employee.departmentName ? employee.departmentName : 'No Department'}
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>
@@ -52,7 +77,7 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle> {/* Updated to use title prop */}
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <Tabs defaultValue="admin">
           <TabsList className="flex justify-between">
@@ -61,13 +86,13 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose
             <TabsTrigger value="employee" className="flex-1">Employee</TabsTrigger>
           </TabsList>
           <TabsContent value="admin">
-            {renderTable(admins)}
+            {renderTable(admins, false)}
           </TabsContent>
           <TabsContent value="team_leader">
-            {renderTable(teamLeaders)}
+            {renderTable(teamLeaders, true)}
           </TabsContent>
           <TabsContent value="employee">
-            {renderTable(regularEmployees)}
+            {renderTable(regularEmployees, true)}
           </TabsContent>
         </Tabs>
       </DialogContent>
