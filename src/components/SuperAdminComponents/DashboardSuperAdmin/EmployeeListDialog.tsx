@@ -94,12 +94,13 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose
             Detailed list of employees.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex mb-4 space-x-2 p-4">
+        <div className="flex mb-2 space-x-2">
           <Input
             type="text"
             placeholder="Search by username"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1"
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -116,6 +117,10 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+        </div>
+        <div className="flex mb-2 space-x-4">
+          <p className="text-sm"><strong>Filters:</strong></p>
+          <p className="text-sm">Department: <strong>{selectedDepartment || "All"}</strong></p>
         </div>
         <Tabs defaultValue="admin">
           <TabsList className="flex justify-between">
