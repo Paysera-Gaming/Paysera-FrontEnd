@@ -54,7 +54,8 @@ function UseEmployeeListItem() {
 	const cachedData = queryClient.getQueryData<TDepartmentSchedules[]>([
 		'Schedule',
 	]);
-	// todo this shit finish it list all those retard
+	// todo this shit finish it list all those retards
+	// also tomorrow lue you will ask if there are any cached data
 }
 
 function UseRoleListItem() {
@@ -82,11 +83,13 @@ function UseRoleListItem() {
 	}
 
 	return (
-		data?.map((item, index) => (
-			<SelectItem key={index} value={item.role}>
-				{item.role}
-			</SelectItem>
-		)) || <p>No Roles Found</p>
+		<SelectGroup>
+			{data?.map((item, index) => (
+				<SelectItem key={index} value={item.role}>
+					{item.role}
+				</SelectItem>
+			)) || <p>No Roles Found</p>}
+		</SelectGroup>
 	);
 }
 
@@ -172,16 +175,14 @@ export default function AddEmployee() {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Designated Role</FormLabel>
-
-									<Select
-										onValueChange={(value) => field.onChange(parseInt(value))}
-									>
+									<Select onValueChange={(value) => field.onChange(value)}>
 										<FormControl>
 											<SelectTrigger>
 												<SelectValue placeholder="Select a department role" />
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent>
+											<SelectLabel> Department Roles</SelectLabel>
 											<UseRoleListItem></UseRoleListItem>
 										</SelectContent>
 									</Select>

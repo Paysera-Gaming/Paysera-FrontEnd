@@ -26,6 +26,8 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
+	SelectGroup,
+	SelectLabel,
 } from '@/components/ui/select';
 import { TimePicker } from '@/components/ui/time-picker';
 import { Button } from '@/components/ui/button';
@@ -99,11 +101,14 @@ const UseRenderSelect = () => {
 	}
 
 	return (
-		data?.map((item) => (
-			<SelectItem key={item.id} value={item.id.toString()}>
-				{item.lastName} {item.firstName}
-			</SelectItem>
-		)) || <p>No Employees found.</p>
+		<SelectGroup>
+			<SelectLabel>Department Employees</SelectLabel>
+			{data?.map((item) => (
+				<SelectItem key={item.id} value={item.id.toString()}>
+					{item.lastName} {item.firstName}
+				</SelectItem>
+			)) || <p>No Employees found.</p>}
+		</SelectGroup>
 	);
 };
 
