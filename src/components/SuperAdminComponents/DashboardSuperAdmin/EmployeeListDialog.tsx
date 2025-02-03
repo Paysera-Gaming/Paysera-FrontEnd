@@ -38,9 +38,10 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose
   }, [isOpen, employees]);
 
   const filteredEmployees = detailedEmployees.filter((employee) => {
+    const departmentName = employee.departmentName || 'No Department';
     return (
       employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (selectedDepartment ? employee.departmentName === selectedDepartment : true)
+      (selectedDepartment ? departmentName === selectedDepartment : true)
     );
   });
 
@@ -110,9 +111,9 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-64">
               <DropdownMenuItem onSelect={() => setSelectedDepartment("")}>All</DropdownMenuItem>
-              {Array.from(new Set(detailedEmployees.map(emp => emp.departmentName))).map(department => (
-                <DropdownMenuItem key={department} onSelect={() => setSelectedDepartment(department || 'No Department')}>
-                  {department || 'No Department'}
+              {Array.from(new Set(detailedEmployees.map(emp => emp.departmentName || 'No Department'))).map(department => (
+                <DropdownMenuItem key={department} onSelect={() => setSelectedDepartment(department)}>
+                  {department}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
@@ -124,9 +125,9 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose
         </div>
         <Tabs defaultValue="admin">
           <TabsList className="flex justify-between">
-            <TabsTrigger value="admin" className="flex-1">Admin</TabsTrigger>
-            <TabsTrigger value="team_leader" className="flex-1">Team Leader</TabsTrigger>
-            <TabsTrigger value="employee" className="flex-1">Employee</TabsTrigger>
+            <TabsTrigger value="admin" className="flex-1">Admin ({admins.length})</TabsTrigger>
+            <TabsTrigger value="team_leader" className="flex-1">Team Leader ({teamLeaders.length})</TabsTrigger>
+            <TabsTrigger value="employee" className="flex-1">Employee ({regularEmployees.length})</TabsTrigger>
           </TabsList>
           <TabsContent value="admin">
             {renderTable(admins, false)}
