@@ -32,15 +32,28 @@ export default function HolidayList({ className }: HolidayListProps) {
     queryFn: fetchHolidays,
   });
 
-  const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);
+  const [currentMonth, setCurrentMonth] = useState<number | undefined>(undefined);
+  const [nextMonth, setNextMonth] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    const currentMonth = new Date().toLocaleString('default', { month: 'long' }).toUpperCase();
-    setSelectedMonth(currentMonth);
+    const month = new Date().getMonth(); // getMonth() returns 0 for January, 1 for February, etc.
+    setCurrentMonth(month);
+    setNextMonth((month + 1) % 12); // Next month, wrap around to January if December
   }, []);
 
-  const filteredHolidays = holidays.filter((holiday) => {
-    return holiday.month.toUpperCase() === selectedMonth;
+  const sortedHolidays = holidays.sort((a, b) => {
+    const monthOrder = (month: string) => new Date(`${month} 1, 2000`).getMonth();
+    const monthA = monthOrder(a.month);
+    const monthB = monthOrder(b.month);
+    return monthA - monthB;
+  });
+
+  const currentMonthHolidays = sortedHolidays.filter((holiday) => {
+    return new Date(`${holiday.month} 1, 2000`).getMonth() === currentMonth;
+  });
+
+  const nextMonthHolidays = sortedHolidays.filter((holiday) => {
+    return new Date(`${holiday.month} 1, 2000`).getMonth() === nextMonth;
   });
 
   return (
@@ -65,19 +78,47 @@ export default function HolidayList({ className }: HolidayListProps) {
                     Loading holidays...
                   </TableCell>
                 </TableRow>
-              ) : filteredHolidays.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={2} className="text-sm">
-                    No upcoming holidays
-                  </TableCell>
-                </TableRow>
               ) : (
-                filteredHolidays.map((holiday) => (
-                  <TableRow key={holiday.id}>
-                    <TableCell className="text-sm">{`${holiday.month} ${holiday.day}`}</TableCell>
-                    <TableCell className="text-sm">{holiday.name}</TableCell>
+                <>
+                  <TableRow>
+                    <TableCell colSpan={2} className="text-lg font-semibold">
+                      This Month
+                    </TableCell>
                   </TableRow>
-                ))
+                  {currentMonthHolidays.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={2} className="text-sm">
+                        No holidays this month
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    currentMonthHolidays.map((holiday) => (
+                      <TableRow key={holiday.id}>
+                        <TableCell className="text-sm">{`${holiday.month} ${holiday.day}`}</TableCell>
+                        <TableCell className="text-sm">{holiday.name}</TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                  <TableRow>
+                    <TableCell colSpan={2} className="text-lg font-semibold">
+                      Next Month
+                    </TableCell>
+                  </TableRow>
+                  {nextMonthHolidays.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={2} className="text-sm">
+                        No holidays next month
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    nextMonthHolidays.map((holiday) => (
+                      <TableRow key={holiday.id}>
+                        <TableCell className="text-sm">{`${holiday.month} ${holiday.day}`}</TableCell>
+                        <TableCell className="text-sm">{holiday.name}</TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </>
               )}
             </TableBody>
           </Table>
