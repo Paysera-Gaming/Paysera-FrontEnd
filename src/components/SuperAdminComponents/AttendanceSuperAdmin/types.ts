@@ -15,6 +15,7 @@ export interface Attendance {
   createdAt: string;
   updatedAt: string;
   calculatedOverTime: boolean; // Added calculatedOverTime property
+  paidLeave: number; // Add this line
   employee: {
     id: number;
     username: string;
