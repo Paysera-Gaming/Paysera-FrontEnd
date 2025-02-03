@@ -49,7 +49,13 @@ const formSchemaAddEmployee = z.object({
 	role: z.string(),
 });
 
-function UseEmployeeListItem() {}
+function UseEmployeeListItem() {
+	const queryClient = useQueryClient();
+	const cachedData = queryClient.getQueryData<TDepartmentSchedules[]>([
+		'Schedule',
+	]);
+	// todo this shit finish it list all those retard
+}
 
 function UseRoleListItem() {
 	const queryClient = useQueryClient();
