@@ -59,7 +59,7 @@ const AttendanceTable: React.FC = () => {
     <TableRow key={attendance.id} onClick={() => handleRowClick(attendance.employee.id)}>
       <TableCell className="p-4">{attendance.employee.username}</TableCell>
       <TableCell className="p-4">{format(new Date(attendance.date), "MMMM dd")}</TableCell>
-      <TableCell className="p-4">{attendance.status}</TableCell>
+      <TableCell className="p-4">{attendance.status.replace("_", " ")}</TableCell>
       <TableCell className="p-4">{attendance.scheduleType.replace("_", " ")}</TableCell>
       <TableCell className="p-4">{attendance.timeHoursWorked?.toFixed(2)}</TableCell>
       <TableCell className="p-4">{attendance.timeTotal.toFixed(2)}</TableCell>

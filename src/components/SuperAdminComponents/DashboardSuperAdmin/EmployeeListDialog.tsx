@@ -3,6 +3,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { getEmployeeDetails } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/api";
 import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
 
@@ -15,6 +18,8 @@ interface EmployeeListDialogProps {
 
 const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose, employees, title }) => {
   const [detailedEmployees, setDetailedEmployees] = useState<Employee[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("");
 
   useEffect(() => {
     const fetchEmployeeDetails = async () => {
@@ -32,9 +37,16 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose
     }
   }, [isOpen, employees]);
 
-  const admins = detailedEmployees.filter(emp => emp.accessLevel === 'ADMIN');
-  const teamLeaders = detailedEmployees.filter(emp => emp.accessLevel === 'TEAM_LEADER');
-  const regularEmployees = detailedEmployees.filter(emp => emp.accessLevel === 'EMPLOYEE');
+  const filteredEmployees = detailedEmployees.filter((employee) => {
+    return (
+      employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (selectedDepartment ? employee.departmentName === selectedDepartment : true)
+    );
+  });
+
+  const admins = filteredEmployees.filter(emp => emp.accessLevel === 'ADMIN');
+  const teamLeaders = filteredEmployees.filter(emp => emp.accessLevel === 'TEAM_LEADER');
+  const regularEmployees = filteredEmployees.filter(emp => emp.accessLevel === 'EMPLOYEE');
 
   const renderTable = (employees: Employee[], showDepartment: boolean) => (
     <ScrollArea className="h-[300px]">
@@ -82,6 +94,29 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose
             Detailed list of employees.
           </DialogDescription>
         </DialogHeader>
+        <div className="flex mb-4 space-x-2 p-4">
+          <Input
+            type="text"
+            placeholder="Search by username"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="p-2 text-base w-48">
+                Department
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-64">
+              <DropdownMenuItem onSelect={() => setSelectedDepartment("")}>All</DropdownMenuItem>
+              {Array.from(new Set(detailedEmployees.map(emp => emp.departmentName))).map(department => (
+                <DropdownMenuItem key={department} onSelect={() => setSelectedDepartment(department || 'No Department')}>
+                  {department || 'No Department'}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <Tabs defaultValue="admin">
           <TabsList className="flex justify-between">
             <TabsTrigger value="admin" className="flex-1">Admin</TabsTrigger>
