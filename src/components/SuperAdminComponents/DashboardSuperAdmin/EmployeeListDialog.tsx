@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -75,9 +75,12 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({ isOpen, onClose
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl">
+      <DialogContent aria-describedby="employee-list-dialog-description" className="max-w-4xl">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
+          <DialogDescription id="employee-list-dialog-description">
+            Detailed list of employees.
+          </DialogDescription>
         </DialogHeader>
         <Tabs defaultValue="admin">
           <TabsList className="flex justify-between">
