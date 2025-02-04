@@ -13,6 +13,8 @@ import ToasterSwitch from '@/lib/timeToasterUtils.ts';
 import { TAttendance } from '@/api/AttendanceAPI';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { RequestOverTimeButton } from './RequestOverTimeButton';
+
 function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
 	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
 	const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
@@ -155,16 +157,22 @@ export default function Timebar() {
 
 			{/* form */}
 			{/*<TimeForm></TimeForm>*/}
+			<div className="flex gap-2">
+				<RequestOverTimeButton></RequestOverTimeButton>
 
-			<Button disabled={getIsLoading} onClick={initModalValidations}>
-				<Loader2
-					className={cn(getIsLoading == false && 'hidden', 'animate-spin mr-1')}
-				/>
+				<Button disabled={getIsLoading} onClick={initModalValidations}>
+					<Loader2
+						className={cn(
+							getIsLoading == false && 'hidden',
+							'animate-spin mr-1'
+						)}
+					/>
 
-				{useUserStore.getState().getUserClockStatus() === 'Clock-In'
-					? 'Clock-Out'
-					: 'Clock-In'}
-			</Button>
+					{useUserStore.getState().getUserClockStatus() === 'Clock-In'
+						? 'Clock-Out'
+						: 'Clock-In'}
+				</Button>
+			</div>
 		</header>
 	);
 }
