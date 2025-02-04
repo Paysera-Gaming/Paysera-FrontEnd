@@ -18,13 +18,21 @@ export async function getAllEmployees(): Promise<TEmployee[]> {
 	return response.data;
 }
 
+export async function getAllEmployeesWithNoDepartment(): Promise<TEmployee[]> {
+	const response: AxiosResponse<TEmployee[]> = await axiosInstance.get(
+		'/api/employee/?department=null'
+	);
+	console.log('response', response.data);
+	return response.data;
+}
+
 export async function getAllEmployeesInDepartment(
 	department: string
 ): Promise<TEmployee[]> {
 	const response: AxiosResponse<TEmployee[]> = await axiosInstance.get(
 		`/api/department/${department}/employee`
 	);
-	console.log(response.data);
+
 	return response.data;
 }
 
