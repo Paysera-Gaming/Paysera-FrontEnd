@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useUserStore } from '@/stores/userStore';
 
 import {
 	Form,
@@ -25,15 +26,18 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
+	SelectGroup,
+	SelectLabel,
 } from '@/components/ui/select';
 import { TimePicker } from '@/components/ui/time-picker';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TEmployee } from '@/components/DataTable/DataColumns';
 import { toast } from 'sonner';
 import { useContext } from 'react';
 import { PersonalScheduleContext } from '@/stores/context';
+import { getAllEmployeesInDepartment } from '@/api/EmployeeAPI';
 
 const formSchema = z.object({
 	name: z.string().min(2).max(50),
@@ -73,6 +77,40 @@ function isValidDate(date: string | undefined) {
 	if (date == undefined) return undefined;
 	else return new Date(date);
 }
+const UseRenderSelect = () => {
+	const queryClient = useQueryClient();
+	const employees = queryClient.getQueryData<TEmployee[]>(['EmployeesInfo']);
+
+	const { data, isLoading } = useQuery({
+		queryKey: ['EmployeesInfo'],
+		queryFn: () => {
+			const user = useUserStore.getState().getUser();
+			const departmentId = user?.departmentId;
+
+			if (departmentId !== undefined) {
+				return getAllEmployeesInDepartment(departmentId.toString());
+			} else {
+				throw new Error('No Department Id Found');
+			}
+		},
+		initialData: employees,
+	});
+
+	if (isLoading) {
+		return <p>loading</p>;
+	}
+
+	return (
+		<SelectGroup>
+			<SelectLabel>Department Employees</SelectLabel>
+			{data?.map((item) => (
+				<SelectItem key={item.id} value={item.id.toString()}>
+					{item.lastName} {item.firstName}
+				</SelectItem>
+			)) || <p>No Employees found.</p>}
+		</SelectGroup>
+	);
+};
 
 export default function PersonalScheduleForm({
 	updateParentState,
@@ -107,7 +145,7 @@ export default function PersonalScheduleForm({
 		'SUNDAY',
 	] as const;
 
-	const employees = queryClient.getQueryData<TEmployee[]>(['EmployeesInfo']);
+	// const employees = queryClient.getQueryData<TEmployee[]>(['EmployeesInfo']);
 
 	const mutation = useMutation({
 		mutationFn: () => {
@@ -209,14 +247,7 @@ export default function PersonalScheduleForm({
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
-													{employees?.map((item) => (
-														<SelectItem
-															key={item.id}
-															value={item.id.toString()}
-														>
-															{item.lastName} {item.firstName}
-														</SelectItem>
-													)) || <p>No Employees found.</p>}
+													<UseRenderSelect></UseRenderSelect>
 												</SelectContent>
 											</Select>
 											<FormMessage />

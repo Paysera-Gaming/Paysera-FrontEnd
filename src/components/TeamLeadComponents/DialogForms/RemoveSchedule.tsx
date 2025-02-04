@@ -21,7 +21,8 @@ export default function RemoveScheduleDialog() {
 	const mutation = useMutation({
 		mutationFn: () => {
 			if (ScheduleSub?.id !== undefined) {
-				return deleteSchedule(ScheduleSub.scheduleId);
+				console.log('FOO BAR');
+				return deleteSchedule(ScheduleSub.id);
 			}
 			throw new Error('Schedule ID is undefined');
 		},
