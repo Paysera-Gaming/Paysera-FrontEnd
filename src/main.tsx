@@ -1,19 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
-	createBrowserRouter,
-	RouterProvider,
-	redirect,
+    createBrowserRouter,
+    RouterProvider,
+    redirect,
 } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/ThemeProvider/ThemeProvider';
 import ProtectedRoute from './lib/AccessLevelUtils';
-// component notif
 import ConfirmationDialog from '@/lib/ConfirmationDialog.tsx';
 
 // pages
 import LoginPage from './pages/Login/LoginPage';
+import ForgotPasswordPage from './pages/ForgotPassword/ForgotPasswordPage';
 import EmployeePage from './pages/Employee/EmployeePage';
 import EmployeeDashboardPage from './pages/Employee/Dashboard/DashboardPage';
 import RequestPage from './pages/Employee/Request/RequestPage';
@@ -39,89 +39,91 @@ const queryClient = new QueryClient();
 queryClient.setDefaultOptions({});
 
 const router = createBrowserRouter([
-	{
-		path: '/',
-		element: <></>,
-		children: [{ index: true, loader: () => redirect('/login') }],
-	},
-	{
-		path: '/login',
-		element: <LoginPage />,
-	},
-	{
-		path: '/employee',
-		element: (
-			<ProtectedRoute page={<EmployeePage />} requiredLevel="EMPLOYEE" />
-		),
-		children: [
-			{ index: true, loader: async () => redirect('/employee/dashboard') },
-			{ path: 'dashboard', element: <EmployeeDashboardPage /> },
-			{ path: 'request', element: <RequestPage /> },
-		],
-	},
-	{
-		path: '/teamlead',
-
-		element: (
-			// <ProtectedRoute page={<TeamLeadPage />} requiredLevel="TEAM_LEADER" />
-			<TeamLeadPage />
-		),
-		children: [
-			{ index: true, loader: async () => redirect('/teamlead/dashboard') },
-			{ path: 'dashboard', element: <TeamLeadDashboardPage /> },
-			{ path: 'manage', element: <ManagePage /> },
-			{ path: 'schedule', element: <SchedulePage /> },
-			{ path: 'attendance', element: <AttendancePage /> },
-			{
-				path: 'personal',
-				element: <PersonalSchedulePage></PersonalSchedulePage>,
-			},
-			{
-				path: 'overtime',
-				element: <OvertimePage></OvertimePage>,
-			},
-		],
-	},
-	{
-		path: '/superadmin',
-		element: <ProtectedRoute page={<SuperAdminPage />} requiredLevel="ADMIN" />,
-		children: [
-			{ index: true, loader: async () => redirect('/superadmin/dashboard') },
-			{ path: 'dashboard', element: <SuperAdminDashboardPage /> },
-			{ path: 'announcement', element: <SuperAdminAnnouncementDashboard /> },
-			{ path: 'holidays', element: <SuperAdminHolidayDashboard /> },
-			{ path: 'schedule', element: <SchedulePage /> },
-			{ path: 'attendance', element: <AttendanceDashboard /> },
-			{ path: 'employee', element: <SuperAdminEmployeeDashboard /> },
-			{ path: 'departments', element: <SuperAdminDepartmentDashboard /> },
-		],
-	},
-	{
-		path: '*',
-		loader: () => redirect('/login'),
-	},
+    {
+        path: '/',
+        element: <></>,
+        children: [{ index: true, loader: () => redirect('/login') }],
+    },
+    {
+        path: '/login',
+        element: <LoginPage />,
+    },
+    {
+        path: '/forgot-password',
+        element: <ForgotPasswordPage />,
+    },
+    {
+        path: '/employee',
+        element: (
+            <ProtectedRoute page={<EmployeePage />} requiredLevel="EMPLOYEE" />
+        ),
+        children: [
+            { index: true, loader: async () => redirect('/employee/dashboard') },
+            { path: 'dashboard', element: <EmployeeDashboardPage /> },
+            { path: 'request', element: <RequestPage /> },
+        ],
+    },
+    {
+        path: '/teamlead',
+        element: (
+            <ProtectedRoute page={<TeamLeadPage />} requiredLevel="TEAM_LEADER" />
+        ),
+        children: [
+            { index: true, loader: async () => redirect('/teamlead/dashboard') },
+            { path: 'dashboard', element: <TeamLeadDashboardPage /> },
+            { path: 'manage', element: <ManagePage /> },
+            { path: 'schedule', element: <SchedulePage /> },
+            { path: 'attendance', element: <AttendancePage /> },
+            {
+                path: 'personal',
+                element: <PersonalSchedulePage />,
+            },
+            {
+                path: 'overtime',
+                element: <OvertimePage />,
+            },
+        ],
+    },
+    {
+        path: '/superadmin',
+        element: <ProtectedRoute page={<SuperAdminPage />} requiredLevel="ADMIN" />,
+        children: [
+            { index: true, loader: async () => redirect('/superadmin/dashboard') },
+            { path: 'dashboard', element: <SuperAdminDashboardPage /> },
+            { path: 'announcement', element: <SuperAdminAnnouncementDashboard /> },
+            { path: 'holidays', element: <SuperAdminHolidayDashboard /> },
+            { path: 'schedule', element: <SchedulePage /> },
+            { path: 'attendance', element: <AttendanceDashboard /> },
+            { path: 'employee', element: <SuperAdminEmployeeDashboard /> },
+            { path: 'departments', element: <SuperAdminDepartmentDashboard /> },
+        ],
+    },
+    {
+        path: '*',
+        loader: () => redirect('/login'),
+    },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	<React.StrictMode>
-		<QueryClientProvider client={queryClient}>
-			<ThemeProvider>
-				<RouterProvider router={router} />
-				<Toaster
-					richColors
-					closeButton
-					position={'top-center'}
-					toastOptions={{
-						classNames: {
-							error: 'bg-red-400',
-							success: 'text-green-400',
-							warning: 'text-yellow-400',
-							info: 'bg-blue-400',
-						},
-					}}
-				/>
-				<ConfirmationDialog />
-			</ThemeProvider>
-		</QueryClientProvider>
-	</React.StrictMode>
+    <React.StrictMode>
+        <QueryClientProvider client={queryClient}>
+            <ThemeProvider>
+                <RouterProvider router={router} />
+                <Toaster
+                    richColors
+                    closeButton
+                    position={'top-center'}
+                    toastOptions={{
+                        classNames: {
+                            error: 'bg-red-400',
+                            success: 'text-green-400',
+                            warning: 'text-yellow-400',
+                            info: 'bg-blue-400',
+                        },
+                    }}
+                />
+                <ConfirmationDialog />
+            </ThemeProvider>
+        </QueryClientProvider>
+    </React.StrictMode>
 );
