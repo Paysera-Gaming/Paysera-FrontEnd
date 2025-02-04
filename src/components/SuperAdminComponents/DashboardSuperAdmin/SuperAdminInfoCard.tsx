@@ -1,23 +1,23 @@
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Book, BookUser, Calendar } from "lucide-react"
-import { useUserStore } from "@/stores/userStore"
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Book, BookUser, Calendar } from "lucide-react";
+import { useUserStore } from "@/stores/userStore";
 
 function returnRole(role: string): string {
   return role === "SUPER_ADMIN"
     ? "Super Admin"
     : role === "ADMIN"
-      ? "Admin"
-      : role === "TEAM_LEADER"
-        ? "Team Leader"
-        : "Employee"
+    ? "Admin"
+    : role === "TEAM_LEADER"
+    ? "Team Leader"
+    : "Employee";
 }
 
 function SuperAdminInfo() {
-  const info = useUserStore.getState().user
+  const info = useUserStore.getState().user;
 
   if (!info || info.accessLevel !== "ADMIN") {
-    return <p>error</p>
+    return <p>error</p>;
   }
 
   return (
@@ -32,7 +32,7 @@ function SuperAdminInfo() {
         <b>Role:</b> <Badge className="text-xs px-2 py-1">{returnRole(info.accessLevel)}</Badge>
       </li>
     </ul>
-  )
+  );
 }
 
 function ScheduleInfo() {
@@ -45,12 +45,16 @@ function ScheduleInfo() {
         <b>Schedule Info:</b> Anytime
       </li>
     </ul>
-  )
+  );
 }
 
-export default function SuperAdminInfoCard() {
+type SuperAdminInfoCardProps = {
+  className?: string;
+};
+
+export default function SuperAdminInfoCard({ className }: SuperAdminInfoCardProps) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={`flex flex-col gap-2 ${className}`}>
       <Card className="flex-1 p-2 relative">
         <CardHeader className="pb-1 flex flex-row items-center justify-between">
           <CardTitle className="text-xl font-semibold">Super Admin Info</CardTitle>
@@ -79,5 +83,5 @@ export default function SuperAdminInfoCard() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

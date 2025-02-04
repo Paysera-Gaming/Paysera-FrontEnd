@@ -1,60 +1,60 @@
-import type React from "react"
-import { useState } from "react"
-import { flexRender, useReactTable, type ColumnDef, getCoreRowModel, type Cell } from "@tanstack/react-table"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import type { Attendance } from "./types"
-import { format } from "date-fns"
-import AttendanceActions from "./AttendanceActions"
-import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import type React from "react";
+import { useState } from "react";
+import { flexRender, useReactTable, type ColumnDef, getCoreRowModel, type Cell } from "@tanstack/react-table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import type { Attendance } from "./types";
+import { format } from "date-fns";
+import AttendanceActions from "./AttendanceActions";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface AttendanceTableProps {
-  data: Attendance[]
-  columns: ColumnDef<Attendance>[]
-  dateRange: { from: Date | undefined; to: Date | undefined } | undefined
-  activeFilter: string
-  searchQuery: string
+  data: Attendance[];
+  columns: ColumnDef<Attendance>[];
+  dateRange: { from: Date | undefined; to: Date | undefined } | undefined;
+  activeFilter: string;
+  searchQuery: string;
 }
 
 const formatNumber = (value: number) => {
-  return value.toFixed(2)
-}
+  return value.toFixed(2);
+};
 
 const formatTime = (date: Date | null) => {
-  if (!date) return ""
-  return format(date, "HH:mm") // 24-hour format
-}
+  if (!date) return "";
+  return format(date, "HH:mm"); // 24-hour format
+};
 
 const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRange, activeFilter, searchQuery }) => {
-  const [currentPage, setCurrentPage] = useState(1)
-  const recordsPerPage = 10
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 10;
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-  })
+  });
 
-  const formattedFromDate = dateRange?.from ? format(dateRange.from, "LLL dd, y") : "N/A"
-  const formattedToDate = dateRange?.to ? format(dateRange.to, "LLL dd, y") : "N/A"
+  const formattedFromDate = dateRange?.from ? format(dateRange.from, "LLL dd, y") : "N/A";
+  const formattedToDate = dateRange?.to ? format(dateRange.to, "LLL dd, y") : "N/A";
 
-  const indexOfLastRecord = currentPage * recordsPerPage
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage
-  const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord)
-  const totalPages = Math.max(1, Math.ceil(data.length / recordsPerPage))
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
+  const totalPages = Math.max(1, Math.ceil(data.length / recordsPerPage));
 
   const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber)
-  }
+    setCurrentPage(pageNumber);
+  };
 
   const renderCellValue = (cell: Cell<Attendance, unknown>) => {
-    const value = cell.getValue()
+    const value = cell.getValue();
     if (value === null || value === undefined) {
-      return ""
+      return "";
     }
     if (typeof value === "string" && (value === "7:30 AM" || value === "07:30 AM")) {
-      return "0.00"
+      return "0.00";
     }
     if (
       cell.column.id === "timeIn" ||
@@ -62,13 +62,13 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
       cell.column.id === "lunchTimeOut" ||
       cell.column.id === "timeOut"
     ) {
-      return typeof value === "string" || typeof value === "number" ? formatTime(new Date(value)) : ""
+      return typeof value === "string" || typeof value === "number" ? formatTime(new Date(value)) : "";
     }
     if (cell.column.id === "status" && value === "PAID_LEAVE") {
-      return "PAID LEAVE"
+      return "PAID LEAVE";
     }
-    return typeof value === "number" ? formatNumber(value) : flexRender(cell.column.columnDef.cell, cell.getContext())
-  }
+    return typeof value === "number" ? formatNumber(value) : flexRender(cell.column.columnDef.cell, cell.getContext());
+  };
 
   return (
     <Card className="w-full">
@@ -98,7 +98,7 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
                   <TableRow key={rowIndex}>
                     {table
                       .getRowModel()
-                      .rows[rowIndex].getVisibleCells()
+                      .rows.slice(indexOfFirstRecord, indexOfLastRecord)[rowIndex].getVisibleCells()
                       .map((cell) => (
                         <TableCell key={cell.id} className="w-[calc(100%/columns.length)] text-sm">
                           {renderCellValue(cell)}
@@ -162,8 +162,7 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
         </div>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default AttendanceTable
-
+export default AttendanceTable;

@@ -1,13 +1,16 @@
     import React, { useState } from "react";
     import { useQuery } from "@tanstack/react-query";
     import { getAttendanceList } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api";
+    import { getEmployeeDetails } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/api";
     import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
+    import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
     import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
     import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
     import { Button } from "@/components/ui/button";
     import { Input } from "@/components/ui/input";
     import { Skeleton } from "@/components/ui/skeleton";
     import { format, isToday } from "date-fns";
+    import EmployeeDialog from "./EmployeeDialog";
     
     const OvertimeTable: React.FC = () => {
       const { data: attendanceData, isLoading, error } = useQuery<Attendance[]>({
@@ -17,6 +20,8 @@
     
       const [searchTerm, setSearchTerm] = useState("");
       const [selectedAccessLevel, setSelectedAccessLevel] = useState("");
+      const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+      const [isDialogOpen, setIsDialogOpen] = useState(false);
     
       if (isLoading) {
         return (
@@ -44,8 +49,14 @@
           attendance.overTimeTotal !== null && attendance.overTimeTotal > 0
       ) || [];
     
+      const handleRowClick = async (employeeId: number) => {
+        const employeeDetails = await getEmployeeDetails(employeeId);
+        setSelectedEmployee(employeeDetails);
+        setIsDialogOpen(true);
+      };
+    
       const renderedList = filteredData.map((attendance) => (
-        <TableRow key={attendance.id}>
+        <TableRow key={attendance.id} onClick={() => handleRowClick(attendance.employee.id)}>
           <TableCell className="p-4">{attendance.employee.username}</TableCell>
           <TableCell className="p-4">{format(new Date(attendance.date), "MMMM dd, yyyy")}</TableCell>
           <TableCell className="p-4">{attendance.overTimeTotal?.toFixed(2)}</TableCell>
@@ -106,6 +117,11 @@
               </TableBody>
             </Table>
           </div>
+          <EmployeeDialog
+            isOpen={isDialogOpen}
+            onClose={() => setIsDialogOpen(false)}
+            employee={selectedEmployee}
+          />
         </>
       );
     };

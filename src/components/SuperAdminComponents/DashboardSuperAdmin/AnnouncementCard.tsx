@@ -12,7 +12,11 @@ interface Announcement {
   updatedAt: string;
 }
 
-export default function AnnouncementCard() {
+type AnnouncementCardProps = {
+  className?: string;
+};
+
+export default function AnnouncementCard({ className }: AnnouncementCardProps) {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [error, setError] = useState<string | null>(null);
   const baseApiUrl = import.meta.env.VITE_BASE_API;
@@ -44,13 +48,13 @@ export default function AnnouncementCard() {
   };
 
   return (
-    <Card className="col-span-2 min-h-[120px] relative p-2">
+    <Card className={`col-span-2 min-h-[120px] relative p-2 ${className}`}>
       <CardHeader className="pb-1 flex flex-row items-center justify-between">
         <CardTitle className="text-xl font-semibold">Announcements</CardTitle>
         <Megaphone size={"1.5rem"} />
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[100px]">
+        <ScrollArea className="h-[150px]">
           {error ? (
             <>
               <Skeleton className="h-6 w-3/4 mb-2" />

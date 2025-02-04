@@ -41,6 +41,11 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
         setErrorMessage("Time Out cannot be earlier than Time In.");
         return;
       }
+
+      if (timeIn.hours === timeOut.hours && timeIn.minutes === timeOut.minutes) {
+        setErrorMessage("Time In and Time Out cannot be the same.");
+        return;
+      }
     }
 
     const totalWorkHours = timeIn && timeOut ? timeDifferenceInHours(timeIn, timeOut) : 0;
@@ -64,17 +69,23 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
 
     try {
       await axiosInstance.put(`/api/attendance/${attendance.id}`, payload);
-      toast.success(`Successfully updated attendance on ${attendance.date}`);
+      const formattedDate = new Date(attendance.date).toLocaleDateString('default', { month: 'long', day: 'numeric' });
+      toast.success(`Successfully updated attendance on ${formattedDate}`);
       queryClient.invalidateQueries({ queryKey: ["attendanceList"] });
-      onClose();
+      handleClose();
     } catch (error) {
       toast.error("Error updating the attendance.");
       console.error("Error updating the attendance:", error);
     }
   };
 
+  const handleClose = () => {
+    setErrorMessage("");
+    onClose();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
@@ -118,7 +129,7 @@ const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setE
             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={handleClose}>
               Cancel
             </Button>
             <Button type="submit">Save changes</Button>
