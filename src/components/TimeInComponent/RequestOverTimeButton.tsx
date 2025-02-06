@@ -1,30 +1,31 @@
-import { requestOvertime } from "@/api/OvertimeAPI";
-import { Button } from "@/components/ui/button";
+import { requestOvertime } from '@/api/OvertimeAPI';
+import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useUserStore } from "@/stores/userStore.ts";
-import { cn } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
-import { useState } from "react";
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
+import { useUserStore } from '@/stores/userStore.ts';
+import { cn } from '@/lib/utils';
+import { useMutation } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 // get
 // get attendance today
@@ -34,89 +35,92 @@ import { useState } from "react";
 // teamlead can descerne if the request is rejected or not
 
 export function RequestOverTimeButton() {
-  const [getHours, setHours] = useState<number>(0);
+	const [getHours, setHours] = useState<number>(0);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  function handleSubmit() {
-    setIsLoading(true);
-    mutation.mutate();
-  }
+	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	function handleSubmit() {
+		setIsLoading(true);
+		mutation.mutate();
+	}
 
-  const employeeId = useUserStore.getState().user?.id;
+	const employeeId = useUserStore.getState().user?.id;
 
-  const mutation = useMutation({
-    mutationFn: () => {
-      console.log(employeeId);
+	const mutation = useMutation({
+		mutationFn: () => {
+			console.log(employeeId);
 
-      if (employeeId === undefined) {
-        throw new Error("Employee ID is undefined");
-      }
-      return requestOvertime({
-        employeeId: employeeId,
-        timeStamp: new Date(),
-        limitOvertime: getHours,
-      });
-    },
-    onSettled: () => {
-      setIsLoading(false);
-      setIsOpen(false);
-    },
-  });
+			if (employeeId === undefined) {
+				throw new Error('Employee ID is undefined');
+			}
+			return requestOvertime({
+				employeeId: employeeId,
+				timeStamp: new Date(),
+				limitOvertime: getHours,
+			});
+		},
+		onSuccess: () => {
+			toast.success('Request for overtime has successfully submitted');
+		},
+		onSettled: () => {
+			setIsLoading(false);
+			setIsOpen(false);
+		},
+	});
 
-  return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-violet-500 hover:bg-violet-500">
-          Request Overtime
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Requesting of overtime form</DialogTitle>
-          <DialogDescription>
-            Select the amount of hours to render for your request. Click submit
-            when you're done.
-          </DialogDescription>
-        </DialogHeader>
+	return (
+		<Dialog open={isOpen} onOpenChange={setIsOpen}>
+			<DialogTrigger asChild>
+				<Button className="bg-violet-500 hover:bg-violet-500">
+					Request Overtime
+				</Button>
+			</DialogTrigger>
+			<DialogContent className="sm:max-w-[425px]">
+				<DialogHeader>
+					<DialogTitle>Requesting of overtime form</DialogTitle>
+					<DialogDescription>
+						Select the amount of hours to render for your request. Click submit
+						when you're done.
+					</DialogDescription>
+				</DialogHeader>
 
-        <Label htmlFor="name" className="">
-          How many hours to render
-        </Label>
+				<Label htmlFor="name" className="">
+					How many hours to render
+				</Label>
 
-        <div className="flex gap-2">
-          <Select onValueChange={(value) => setHours(Number(value))}>
-            <SelectTrigger className="w-[280px]">
-              <SelectValue placeholder="Select hours to render on overtime" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Available hours</SelectLabel>
-                <SelectItem value="1">1</SelectItem>
-                <SelectItem value="2">2</SelectItem>
-                <SelectItem value="3">3</SelectItem>
-                <SelectItem value="4">4</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+				<div className="flex gap-2">
+					<Select onValueChange={(value) => setHours(Number(value))}>
+						<SelectTrigger className="w-[280px]">
+							<SelectValue placeholder="Select hours to render on overtime" />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectGroup>
+								<SelectLabel>Available hours</SelectLabel>
+								<SelectItem value="1">1</SelectItem>
+								<SelectItem value="2">2</SelectItem>
+								<SelectItem value="3">3</SelectItem>
+								<SelectItem value="4">4</SelectItem>
+							</SelectGroup>
+						</SelectContent>
+					</Select>
 
-          <DialogFooter>
-            <Button
-              onClick={handleSubmit}
-              disabled={getHours == 0 || isLoading}
-              type="submit"
-            >
-              <Loader2
-                className={cn(
-                  isLoading == false && "hidden",
-                  "animate-spin mr-1"
-                )}
-              />
-              Submit
-            </Button>
-          </DialogFooter>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
+					<DialogFooter>
+						<Button
+							onClick={handleSubmit}
+							disabled={getHours == 0 || isLoading}
+							type="submit"
+						>
+							<Loader2
+								className={cn(
+									isLoading == false && 'hidden',
+									'animate-spin mr-1'
+								)}
+							/>
+							Submit
+						</Button>
+					</DialogFooter>
+				</div>
+			</DialogContent>
+		</Dialog>
+	);
 }
