@@ -22,7 +22,7 @@ type ToasterStringLiteral =
 
 function stupidAssAlert(timeStamp: string | undefined) {
 	//this shit will check if you added a timestamp string
-	if (timeStamp == undefined) throw new Error('ADD A DESCRIPTION ASS HAT');
+	if (timeStamp == undefined) throw new Error('ADD A DESCRIPTION');
 }
 
 export default function ToasterSwitch(
