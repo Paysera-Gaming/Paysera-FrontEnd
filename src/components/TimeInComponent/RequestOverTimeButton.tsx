@@ -8,7 +8,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 import {
@@ -20,7 +19,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-
 export function RequestOverTimeButton() {
 	return (
 		<Dialog>
@@ -42,7 +40,7 @@ export function RequestOverTimeButton() {
 					How many hours to render
 				</Label>
 
-				<div className="flex gap-2">
+				<div className="flex gap-2                 ">
 					<Select>
 						<SelectTrigger className="w-[280px]">
 							<SelectValue placeholder="Select hours to render on overtime" />
