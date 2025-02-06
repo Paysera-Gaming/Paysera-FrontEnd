@@ -43,8 +43,10 @@ function PersonalScheduleList({
 				<li>Schedule Type: {personalSchedule.Schedule.scheduleType}</li>
 				<li>
 					Availability:{' '}
-					{personalSchedule.day.map((days) => (
-						<Badge className="mx-[0.05rem]">{lookUpDay[days]}</Badge>
+					{personalSchedule.day.map((days, index) => (
+						<Badge className="mx-[0.05rem]" key={index}>
+							{lookUpDay[days]}
+						</Badge>
 					))}
 				</li>
 			</>
