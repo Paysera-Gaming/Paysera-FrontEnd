@@ -5,16 +5,16 @@ import { formatDate } from './DataColumns';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { TAttendance } from '@/api/AttendanceAPI';
-import { useMutation } from '@tanstack/react-query';
+import {
+	QueryClient,
+	useMutation,
+	useQueryClient,
+} from '@tanstack/react-query';
 import { handleOvertimeRequest, TAcceptOvertime } from '@/api/OvertimeAPI';
 import useConfirmationStore from '@/stores/GlobalAlertStore';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Badge } from '../ui/badge';
-
-function dateToHours(date: Date) {
-	return format(date, 'HH:mm');
-}
 
 //  overtime approval
 // isAllowedOvertime: boolean;
@@ -100,6 +100,7 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 		header: 'Handle Request',
 		// do apporval post here
 		cell: ({ row }) => {
+			const queryClient = useQueryClient();
 			// eslint-disable-next-line react-hooks/rules-of-hooks
 			const mutation = useMutation({
 				mutationFn: (body: TAcceptOvertime) =>
@@ -111,6 +112,8 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 				},
 				onSuccess: () => {
 					toast.success('Request handled successfully');
+					queryClient.invalidateQueries({ queryKey: ['AttendanceToday'] });
+					queryClient.invalidateQueries({ queryKey: ['Attendance'] });
 				},
 			});
 			const { openConfirmation, closeConfirmation } = useConfirmationStore();
