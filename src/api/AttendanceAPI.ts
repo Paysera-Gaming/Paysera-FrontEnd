@@ -2,6 +2,7 @@ import { axiosInstance } from '.';
 import { AxiosResponse } from 'axios';
 
 export type TAttendance = {
+	// employee
 	id: number;
 	employeeId: number;
 	employee: {
@@ -15,6 +16,9 @@ export type TAttendance = {
 		middleName: string;
 		role: string;
 	};
+
+	// overtime
+	limitOvertime: number;
 	date: string;
 	status: string;
 	timeIn: string;
@@ -22,11 +26,20 @@ export type TAttendance = {
 	timeHoursWorked: number;
 	overTimeTotal: number;
 	timeTotal: number;
+
+	// lunch this is like deprecated i think
 	lunchTimeIn: string;
 	lunchTimeOut: string;
 	lunchTimeTotal: number;
+
+	// when this was created and updated
 	createdAt: string;
 	updatedAt: string;
+
+	//  overtime approval
+	isAllowedOvertime: boolean;
+	isRequestingOvertime: boolean;
+	isRejectedOvertime: boolean;
 };
 
 export async function getAttendance(

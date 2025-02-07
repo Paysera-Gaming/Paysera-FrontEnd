@@ -11,11 +11,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useQuery } from '@tanstack/react-query';
 
 export default function PersonalSchedulePage() {
-	const { data, isError, isLoading, isFetching, isRefetching } = useQuery({
+	const { data, isError, isLoading } = useQuery({
 		queryKey: ['PersonalSchedule'],
 		queryFn: () => getAllPersonalSchedules(),
-		staleTime: 0,
-		enabled: true, // Ensure fetching is not disabled
 	});
 
 	const personalScheduleData: TPersonalSchedule[] = data ?? [];

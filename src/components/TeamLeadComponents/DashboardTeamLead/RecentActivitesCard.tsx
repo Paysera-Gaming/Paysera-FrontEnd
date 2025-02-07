@@ -91,7 +91,7 @@ function RecentActivitiesTable({ tableData }: { tableData: TAttendance[] }) {
 
 export default function RecentActivitiesCard() {
 	const { data, isError, isLoading } = useQuery({
-		queryKey: ['AttendanceToady'],
+		queryKey: ['AttendanceToday'],
 		queryFn: () => {
 			const user = useUserStore.getState().getUser();
 			const departmentId = user?.departmentId;
