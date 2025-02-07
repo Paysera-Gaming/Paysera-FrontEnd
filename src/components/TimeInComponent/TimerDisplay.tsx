@@ -44,7 +44,7 @@ function statusVariant(status: UserStatus) {
 			return 'overtime';
 
 		case 'DONE':
-			return 'Offline';
+			return 'DONE';
 		default:
 			return 'Offline';
 	}
@@ -142,8 +142,8 @@ export default function TimerDisplay() {
 							'bg-primary outline-ring': data.status === 'ONGOING',
 							'bg-destructive outline-destructive': data.status != 'ONGOING',
 							'bg-violet-500 outline-violet-500':
-								convertDateToSeconds(new Date(data.timeIn), new Date()) >=
-								28_800,
+								convertDateToSeconds(new Date(data.timeIn), new Date()) >
+								32_400,
 						})}
 					>
 						{statusVariant(data.status as UserStatus)}
@@ -156,8 +156,8 @@ export default function TimerDisplay() {
 							'bg-primary outline-ring': data.status === 'ONGOING',
 							'bg-destructive outline-destructive': data.status != 'ONGOING',
 							'bg-violet-500 outline-violet-500':
-								convertDateToSeconds(new Date(data.timeIn), new Date()) >=
-								28_800,
+								convertDateToSeconds(new Date(data.timeIn), new Date()) >
+								32_400,
 						}
 					)}
 				>

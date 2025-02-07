@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { formatDate } from './DataColumns';
@@ -5,7 +6,11 @@ import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { TAttendance } from '@/api/AttendanceAPI';
 import { useMutation } from '@tanstack/react-query';
-import { handleOvertimeRequest } from '@/api/OvertimeAPI';
+import { handleOvertimeRequest, TAcceptOvertime } from '@/api/OvertimeAPI';
+import useConfirmationStore from '@/stores/GlobalAlertStore';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '../ui/badge';
 
 function dateToHours(date: Date) {
 	return format(date, 'HH:mm');
@@ -97,22 +102,87 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 		cell: ({ row }) => {
 			// eslint-disable-next-line react-hooks/rules-of-hooks
 			const mutation = useMutation({
-				mutationFn: () =>
+				mutationFn: (body: TAcceptOvertime) =>
 					handleOvertimeRequest({
-						employeeId: row.original.employeeId,
-						isAllowedOvertime: true,
-						isRejectedOvertime: false,
-						limitOvertime: row.original.limitOvertime,
-						timeStamp: new Date(),
+						...body,
 					}),
+				onSettled: () => {
+					setIsDisabled(false);
+				},
+				onSuccess: () => {
+					toast.success('Request handled successfully');
+				},
 			});
+			const { openConfirmation, closeConfirmation } = useConfirmationStore();
+			const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
-			return (
-				<div className="flex gap-2">
-					<Button>Approve</Button>
-					<Button variant="destructive">Reject</Button>
-				</div>
-			);
+			if (row.original.isRejectedOvertime == true) {
+				return <Badge variant="destructive"> Rejected</Badge>;
+			} else {
+				return (
+					<div className="flex gap-2">
+						<Button
+							disabled={isDisabled}
+							onClick={() => {
+								openConfirmation({
+									title: `Approve ${row.original.employee.firstName}  ${
+										row.original.employee.lastName + "'s"
+									} Overtime Request?`,
+									description:
+										'Are you sure you would like to approve this overtime?',
+									cancelLabel: 'Cancel',
+									actionLabel: 'Approve Overtime',
+									onAction: () => {
+										setIsDisabled(true);
+										mutation.mutate({
+											employeeId: row.original.employeeId,
+											isAllowedOvertime: true,
+											limitOvertime: row.original.limitOvertime,
+											isRejectedOvertime: false,
+											timeStamp: new Date(),
+										});
+									},
+									onCancel: () => {
+										closeConfirmation();
+									},
+								});
+							}}
+						>
+							Approve
+						</Button>
+						<Button
+							disabled={isDisabled}
+							onClick={() => {
+								openConfirmation({
+									title: `Reject  ${row.original.employee.firstName}  ${
+										row.original.employee.lastName + "'s"
+									} Overtime Request?`,
+									description:
+										'By clicking reject overtime, you are rejecting the overtime of the employee in his attendance?',
+									cancelLabel: 'Cancel',
+									actionLabel: 'Reject Overtime',
+									onAction: () => {
+										setIsDisabled(true);
+										mutation.mutate({
+											employeeId: row.original.employeeId,
+											isAllowedOvertime: false,
+											limitOvertime: row.original.limitOvertime,
+											isRejectedOvertime: true,
+											timeStamp: new Date(),
+										});
+									},
+									onCancel: () => {
+										closeConfirmation();
+									},
+								});
+							}}
+							variant="destructive"
+						>
+							Reject
+						</Button>
+					</div>
+				);
+			}
 		},
 	},
 ];
