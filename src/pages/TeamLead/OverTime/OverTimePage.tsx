@@ -1,6 +1,7 @@
 import { getAttendanceToday, TAttendance } from '@/api/AttendanceAPI';
 import { overtimeRequestColumns } from '@/components/DataTable/OverTimeApprovalColumn';
 import { OverTimeApprovalTable } from '@/components/DataTable/OverTimeApprovalTable';
+import ErrorDisplay from '@/components/ErrorComponent/ErrorDisplay';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useUserStore } from '@/stores/userStore';
 import { useQuery } from '@tanstack/react-query';
@@ -20,6 +21,10 @@ export default function OvertimePage() {
 		},
 		select: (data) => data.filter((user) => user.isRequestingOvertime),
 	});
+
+	if (isError) {
+		return <ErrorDisplay />;
+	}
 
 	if (isLoading) {
 		return (

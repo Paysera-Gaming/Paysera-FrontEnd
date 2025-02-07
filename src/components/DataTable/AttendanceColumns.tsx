@@ -4,6 +4,7 @@ import { formatDate } from './DataColumns';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { TAttendance } from '@/api/AttendanceAPI';
+import { Badge } from '../ui/badge';
 
 function dateToHours(date: Date) {
 	return format(date, 'HH:mm');
@@ -84,7 +85,7 @@ export const attendanceColumns: ColumnDef<TAttendance>[] = [
 	},
 	{
 		accessorKey: 'timeTotal',
-		header: 'Time Worked total (in hours)',
+		header: 'Hours Spent (including lunch)',
 		cell: ({ row }) => {
 			const timeTotal = row.getValue('timeTotal');
 
@@ -133,10 +134,32 @@ export const attendanceColumns: ColumnDef<TAttendance>[] = [
 	// 	accessorKey: 'lunchTimeTotal',
 	// 	header: 'Lunch Time Total',
 	// },
-	// {
-	// 	accessorKey: 'overTimeTotal',
-	// 	header: 'Over Time Total',
-	// },
+	{
+		accessorKey: 'timeHoursWorked',
+		header: 'Total Hours Worked',
+	},
+
+	{
+		accessorKey: 'overTimeTotal',
+		header: 'Overtime Hours',
+	},
+	{
+		accessorKey: 'isAllowedOvertime',
+		header: 'Overtime Approval',
+	},
+	{
+		accessorKey: 'status',
+		header: 'Attendance Status',
+		cell: ({ row }) => {
+			return (
+				<Badge
+					variant={row.original.status == 'DONE' ? 'default' : 'secondary'}
+				>
+					{row.original.status}
+				</Badge>
+			);
+		},
+	},
 
 	{
 		accessorKey: 'updatedAt',
