@@ -4,6 +4,8 @@ import { formatDate } from './DataColumns';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { TAttendance } from '@/api/AttendanceAPI';
+import { useMutation } from '@tanstack/react-query';
+import { handleOvertimeRequest } from '@/api/OvertimeAPI';
 
 function dateToHours(date: Date) {
 	return format(date, 'HH:mm');
@@ -92,5 +94,25 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 		id: 'requests',
 		header: 'Handle Request',
 		// do apporval post here
+		cell: ({ row }) => {
+			// eslint-disable-next-line react-hooks/rules-of-hooks
+			const mutation = useMutation({
+				mutationFn: () =>
+					handleOvertimeRequest({
+						employeeId: row.original.employeeId,
+						isAllowedOvertime: true,
+						isRejectedOvertime: false,
+						limitOvertime: row.original.limitOvertime,
+						timeStamp: new Date(),
+					}),
+			});
+
+			return (
+				<div className="flex gap-2">
+					<Button>Approve</Button>
+					<Button variant="destructive">Reject</Button>
+				</div>
+			);
+		},
 	},
 ];
