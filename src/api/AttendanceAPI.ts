@@ -17,10 +17,11 @@ export type TAttendance = {
 		role: string;
 	};
 
-	// overtime
+	status: string;
+
+	// time
 	limitOvertime: number;
 	date: string;
-	status: string;
 	timeIn: string;
 	timeOut: string;
 	timeHoursWorked: number;

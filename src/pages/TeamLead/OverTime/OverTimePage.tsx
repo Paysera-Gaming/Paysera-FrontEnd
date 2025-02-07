@@ -1,4 +1,7 @@
-import { getAttendanceToday } from '@/api/AttendanceAPI';
+import { getAttendanceToday, TAttendance } from '@/api/AttendanceAPI';
+import { overtimeRequestColumns } from '@/components/DataTable/OverTimeApprovalColumn';
+import { OverTimeApprovalTable } from '@/components/DataTable/OverTimeApprovalTable';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useUserStore } from '@/stores/userStore';
 import { useQuery } from '@tanstack/react-query';
 
@@ -18,13 +21,33 @@ export default function OvertimePage() {
 		select: (data) => data.filter((user) => user.isRequestingOvertime),
 	});
 
-	console.log(data);
+	if (isLoading) {
+		return (
+			<div className="min-h-0 min-w-0 w-full h-full border-border border-solid border p-5 rounded-md ">
+				<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0">
+					Attendance
+				</h2>
+				<div className="grid grid-cols-5 w-full mt-2 gap-2">
+					<Skeleton className="col-span-5 h-10" />
+					<Skeleton className="col-span-5 h-72" />
+					<div className="col-span-3"></div>
+					<Skeleton className="col-span-1 h-10" />
+					<Skeleton className="col-span-1 h-10" />
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className=" min-h-0 min-w-0 w-full h-full border-border border-solid border p-5 rounded-md">
 			<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0 mb-5">
 				Overtime Approval
 			</h2>
+
+			<OverTimeApprovalTable
+				data={data as TAttendance[]}
+				columns={overtimeRequestColumns}
+			></OverTimeApprovalTable>
 		</div>
 	);
 }
