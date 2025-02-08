@@ -14,6 +14,7 @@ import ConfirmationDialog from '@/lib/ConfirmationDialog.tsx';
 // pages
 import LoginPage from './pages/Login/LoginPage';
 import ForgotPasswordPage from './pages/ForgotPassword/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPassword/ResetPasswordPage';
 import EmployeePage from './pages/Employee/EmployeePage';
 import EmployeeDashboardPage from './pages/Employee/Dashboard/DashboardPage';
 import RequestPage from './pages/Employee/Request/RequestPage';
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
     {
         path: '/forgot-password',
         element: <ForgotPasswordPage />,
+    },
+        {
+        path: '/reset-password', // Add the reset-password route
+        element: <ResetPasswordPage />,
     },
     {
         path: '/employee',
