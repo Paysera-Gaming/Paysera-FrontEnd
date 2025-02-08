@@ -15,10 +15,11 @@ import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { RequestOverTimeButton } from './RequestOverTimeButton';
 
+
 function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
-	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
-	const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
-	return differenceInSeconds;
+  const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
+  const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
+  return differenceInSeconds;
 }
 
 export default function Timebar() {
@@ -174,4 +175,5 @@ export default function Timebar() {
 			</div>
 		</header>
 	);
+
 }
