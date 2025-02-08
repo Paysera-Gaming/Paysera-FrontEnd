@@ -37,7 +37,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({ announcement, onSub
       </div>
       <div className="space-y-2">
         <Label htmlFor="body">Body</Label>
-        <Textarea id="body" value={body} onChange={(e) => setBody(e.target.value)} required />
+        <Textarea id="body" value={body} onChange={(e) => setBody(e.target.value)} required className="h-64" />
       </div>
       <div className="flex justify-end gap-2">
         <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>

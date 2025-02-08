@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button"; // Add this import
+import { Button } from "@/components/ui/button";
 import AnnouncementForm from './AnnouncementForm';
 
 interface Announcement {
@@ -39,7 +39,7 @@ const AnnouncementDialogs: React.FC<AnnouncementDialogsProps> = ({
   return (
     <>
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[800px] sm:max-h-[800px]">
           <DialogHeader>
             <DialogTitle>Add New Announcement</DialogTitle>
             <DialogDescription>
@@ -52,7 +52,7 @@ const AnnouncementDialogs: React.FC<AnnouncementDialogsProps> = ({
 
       {selectedAnnouncement && (
         <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[800px] sm:max-h-[800px]">
             <DialogHeader>
               <DialogTitle>Edit Announcement</DialogTitle>
               <DialogDescription>
@@ -69,7 +69,7 @@ const AnnouncementDialogs: React.FC<AnnouncementDialogsProps> = ({
       )}
 
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[800px] sm:max-h-[800px]">
           <DialogHeader>
             <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogDescription>
