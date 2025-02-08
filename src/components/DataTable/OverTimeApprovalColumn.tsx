@@ -78,7 +78,7 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 	{ accessorKey: 'limitOvertime', header: 'Requested Hours To Work' },
 	{
 		accessorKey: 'timeHoursWorked',
-		header: 'Hours Worked (No overtime calculated)',
+		header: 'Net Work Hours',
 	},
 
 	{

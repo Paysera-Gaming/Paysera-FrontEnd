@@ -18,15 +18,18 @@ export default function alertTimeup() {
 	if (Notification.permission === 'granted') {
 		new Notification('(Paysera Attendace) Your Time Is Up!', {
 			body: 'Either clock out or begin your overtime',
-			badge: '/Alert.svg',
+			badge: 'Alert.svg',
 		});
 	}
 
-	toast.warning('Your Time Is Up Please Proceed to your overtime or clockout', {
-		duration: Infinity,
-		onDismiss: () => {
-			document.title = 'Paysera Attendance';
-			changeFavicon('/PayseraIcon.svg');
-		},
-	});
+	toast.warning(
+		'Your time is up please proceed to request your overtime or clock out',
+		{
+			duration: Infinity,
+			onDismiss: () => {
+				document.title = 'Paysera Attendance';
+				changeFavicon('/PayseraIcon.svg');
+			},
+		}
+	);
 }

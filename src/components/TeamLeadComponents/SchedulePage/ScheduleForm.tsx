@@ -174,7 +174,11 @@ export default function ScheduleForm({
 										</TooltipProvider>
 									</div>
 									<FormControl>
-										<Input placeholder="E.g. 'Manager' " {...field} />
+										<Input
+											className="uppercase"
+											placeholder="E.g. 'MANAGER' "
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>

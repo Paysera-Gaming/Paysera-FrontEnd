@@ -3,6 +3,7 @@ import { useUserStore } from '@/stores/userStore';
 import { User } from 'lucide-react';
 
 import alertTimeup from './alertTimeup';
+import { useEffect } from 'react';
 
 function returnRole(role: string) {
 	return role === 'ADMIN'
@@ -13,6 +14,10 @@ function returnRole(role: string) {
 }
 
 export default function UserInfoCard({ className }: { className: string }) {
+	// useEffect(() => {
+	// 	alertTimeup();
+	// }, []);
+
 	const userInfo = useUserStore.getState()?.user || {
 		lastName: 'Doe',
 		firstName: 'John',
