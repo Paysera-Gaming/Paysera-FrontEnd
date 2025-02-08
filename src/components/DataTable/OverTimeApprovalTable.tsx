@@ -17,8 +17,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { DatePicker } from '../TeamLeadComponents/AttendancePage/DatePicker';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import {
 	Table,
@@ -36,7 +35,7 @@ interface DataTableProps<TData, TValue> {
 	data: TData[];
 }
 
-export function AttendanceTable<TData, TValue>({
+export function OverTimeApprovalTable<TData, TValue>({
 	columns,
 	data,
 }: DataTableProps<TData, TValue>) {
@@ -44,7 +43,7 @@ export function AttendanceTable<TData, TValue>({
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[]
 	);
-	const [selectedDate, setDate] = React.useState<string>();
+
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
 	const table = useReactTable({
@@ -64,33 +63,9 @@ export function AttendanceTable<TData, TValue>({
 		},
 	});
 
-	function checkDate(date: string) {
-		setDate(date);
-	}
-
-	useEffect(() => {
-		console.log(selectedDate);
-		if (selectedDate) {
-			table.getColumn('createdAt')?.setFilterValue(selectedDate);
-		}
-	}, [selectedDate, table]);
-
 	return (
 		<div className=" w-full flex items-center justify-center flex-col gap-4 mt-1">
 			<div className="w-full flex items-center justify-between">
-				<div className="flex items-center justify-center">
-					<DatePicker updateParentState={checkDate}></DatePicker>
-					<Button
-						variant="outline"
-						onClick={() => {
-							table.getColumn('createdAt')?.setFilterValue('');
-						}}
-						className="ml-3"
-					>
-						Reset
-					</Button>
-				</div>
-
 				<div className="flex items-center justify-center gap-2">
 					<Input
 						placeholder="Filter Employee via Last Name"

@@ -93,8 +93,8 @@ export default function TeamLeadNavigation() {
 
 	const routeNames: string[] = [
 		'Dashboard',
-		'Manage Users',
-		'Attendance',
+		'Manage Employees',
+		'Attendance History',
 		'Role Schedules',
 		'Personal Schedules',
 		'Overtime Approval',

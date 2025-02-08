@@ -4,6 +4,7 @@ import { formatDate } from './DataColumns';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { TAttendance } from '@/api/AttendanceAPI';
+import { Badge } from '../ui/badge';
 
 function dateToHours(date: Date) {
 	return format(date, 'HH:mm');
@@ -84,7 +85,7 @@ export const attendanceColumns: ColumnDef<TAttendance>[] = [
 	},
 	{
 		accessorKey: 'timeTotal',
-		header: 'Time Worked total (in hours)',
+		header: 'Gross Work Hours',
 		cell: ({ row }) => {
 			const timeTotal = row.getValue('timeTotal');
 
@@ -95,48 +96,48 @@ export const attendanceColumns: ColumnDef<TAttendance>[] = [
 			return null;
 		},
 	},
-	// {
-	// 	accessorKey: 'lunchTimeIn',
-	// 	header: ({ column }) => {
-	// 		return (
-	// 			<Button
-	// 				variant="ghost"
-	// 				onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-	// 			>
-	// 				Lunch Time In
-	// 				<ArrowUpDown className="ml-2 h-4 w-4" />
-	// 			</Button>
-	// 		);
-	// 	},
-	// 	cell: ({ row }) => {
-	// 		return dateToHours(new Date(row.getValue('lunchTimeIn')));
-	// 	},
-	// },
-	// {
-	// 	accessorKey: 'lunchTimeOut',
-	// 	header: ({ column }) => {
-	// 		return (
-	// 			<Button
-	// 				variant="ghost"
-	// 				onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-	// 			>
-	// 				Lunch Time Out
-	// 				<ArrowUpDown className="ml-2 h-4 w-4" />
-	// 			</Button>
-	// 		);
-	// 	},
-	// 	cell: ({ row }) => {
-	// 		return dateToHours(new Date(row.getValue('lunchTimeOut')));
-	// 	},
-	// },
-	// {
-	// 	accessorKey: 'lunchTimeTotal',
-	// 	header: 'Lunch Time Total',
-	// },
-	// {
-	// 	accessorKey: 'overTimeTotal',
-	// 	header: 'Over Time Total',
-	// },
+
+	{
+		accessorKey: 'timeHoursWorked',
+		header: 'Net Work Hours',
+	},
+
+	{
+		accessorKey: 'overTimeTotal',
+		header: 'Overtime Hours',
+
+		cell: ({ row }) => {
+			if (row.original.overTimeTotal == undefined) {
+				return 0;
+			} else {
+				return row.original.overTimeTotal;
+			}
+		},
+	},
+	{
+		accessorKey: 'isAllowedOvertime',
+		header: 'Overtime Approval',
+		cell: ({ row }) => {
+			if (row.original.isRejectedOvertime == true) {
+				return <Badge variant="destructive">Rejected</Badge>;
+			} else if (row.original.isAllowedOvertime == true) {
+				return <Badge>Approved</Badge>;
+			} else return <Badge variant="outline">Pending</Badge>;
+		},
+	},
+	{
+		accessorKey: 'status',
+		header: 'Attendance Status',
+		cell: ({ row }) => {
+			return (
+				<Badge
+					variant={row.original.status == 'DONE' ? 'default' : 'secondary'}
+				>
+					{row.original.status}
+				</Badge>
+			);
+		},
+	},
 
 	{
 		accessorKey: 'updatedAt',
