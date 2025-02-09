@@ -2,9 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUserStore } from '@/stores/userStore';
 import { User } from 'lucide-react';
 
-import alertTimeup from './alertTimeup';
-import { useEffect } from 'react';
-
 function returnRole(role: string) {
 	return role === 'ADMIN'
 		? 'Admin'
