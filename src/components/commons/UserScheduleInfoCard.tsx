@@ -101,8 +101,6 @@ export default function UserScheduleInfoCard({
 
 	useEffect(() => {
 		if (useUserStore.getState()?.user) {
-			console.log('TITE');
-
 			console.log(useUserStore.getState()?.user?.personalSchedule);
 
 			setUserPersonalSchedule(useUserStore.getState()?.user?.personalSchedule);

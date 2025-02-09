@@ -77,6 +77,7 @@ export default function useAlertTimeup() {
 		} else if (userDepartmentSchedule) {
 			validateSchedType(userDepartmentSchedule.Schedule);
 		}
+		return;
 	}
 
 	function validateSchedType(schedule: TSchedule) {
@@ -84,7 +85,9 @@ export default function useAlertTimeup() {
 		// compare the date today and the date of the said schedule
 		// if user not fixed compare when the time started
 
-		if (!userAttendance) return;
+		if (!userAttendance) {
+			return;
+		}
 		// if user has already timed out then this will return
 		if (userAttendance?.timeOut) return;
 
