@@ -57,7 +57,7 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 		accessorKey: 'timeIn',
 		header: 'Time Starts At',
 		cell: ({ row }) => {
-			const date = row.original.timeOut;
+			const date = row.original.timeIn;
 			return format(new Date(date as string), 'HH:mm') ?? 'NAH';
 		},
 	},
@@ -65,7 +65,7 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 		accessorKey: 'timeOut',
 		header: 'Time Ends At',
 		cell: ({ row }) => {
-			const date = row.original.timeIn;
+			const date = row.original.timeOut;
 			return format(new Date(date as string), 'HH:mm') ?? 'NAH';
 		},
 	},
@@ -128,9 +128,8 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 							disabled={isDisabled}
 							onClick={() => {
 								openConfirmation({
-									title: `Approve ${row.original.employee.firstName}  ${
-										row.original.employee.lastName + "'s"
-									} Overtime Request?`,
+									title: `Approve ${row.original.employee.firstName}  ${row.original.employee.lastName + "'s"
+										} Overtime Request?`,
 									description:
 										'Are you sure you would like to approve this overtime?',
 									cancelLabel: 'Cancel',
@@ -157,9 +156,8 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 							disabled={isDisabled}
 							onClick={() => {
 								openConfirmation({
-									title: `Reject  ${row.original.employee.firstName}  ${
-										row.original.employee.lastName + "'s"
-									} Overtime Request?`,
+									title: `Reject  ${row.original.employee.firstName}  ${row.original.employee.lastName + "'s"
+										} Overtime Request?`,
 									description:
 										'By clicking reject overtime, you are rejecting the overtime of the employee in his attendance?',
 									cancelLabel: 'Cancel',

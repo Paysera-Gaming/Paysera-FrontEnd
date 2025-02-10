@@ -92,7 +92,11 @@ export default function useAlertTimeup() {
 		if (userAttendance?.timeOut) return;
 
 		if (schedule.scheduleType === 'FIXED') {
-			if (isNineHoursApart(new Date(schedule.startTime), new Date())) {
+			const scheduleStartTime = new Date(schedule.startTime);
+			const now = new Date();
+			scheduleStartTime.setFullYear(now.getFullYear(), now.getMonth(), now.getDate());
+
+			if (isNineHoursApart(scheduleStartTime, now)) {
 				return startAlarm();
 			}
 		} else {
