@@ -8,6 +8,7 @@ const Experiment: React.FC = () => {
     city?: string;
     address?: string;
   } | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const getLocation = () => {
     if (navigator.geolocation) {
@@ -21,30 +22,36 @@ const Experiment: React.FC = () => {
             const response = await axios.get(
               `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=636dd746b49b4c059b04228348c37d0b`
             );
-            const result = response.data.results[0];
-            const city =
-              result.components.city ||
-              result.components.town ||
-              result.components.village;
-            const address = result.formatted;
-            setLocation((prevLocation) => ({
-              latitude: prevLocation?.latitude ?? latitude,
-              longitude: prevLocation?.longitude ?? longitude,
-              city,
-              address,
-            }));
-            console.log(`City: ${city}`);
-            console.log(`Address: ${address}`);
+            if (response.data.results.length > 0) {
+              const result = response.data.results[0];
+              const city =
+                result.components.city ||
+                result.components.town ||
+                result.components.village;
+              const address = result.formatted;
+              setLocation((prevLocation) => ({
+                latitude: prevLocation?.latitude ?? latitude,
+                longitude: prevLocation?.longitude ?? longitude,
+                city,
+                address,
+              }));
+              console.log(`City: ${city}`);
+              console.log(`Address: ${address}`);
+            } else {
+              setError("No results found for the given coordinates.");
+            }
           } catch (error) {
+            setError("Error fetching location details.");
             console.error("Error fetching location details:", error);
           }
         },
         (error) => {
+          setError("Error getting location.");
           console.error("Error getting location:", error);
         }
       );
     } else {
-      console.error("Geolocation is not supported by this browser.");
+      setError("Geolocation is not supported by this browser.");
     }
   };
 
@@ -65,6 +72,7 @@ const Experiment: React.FC = () => {
           {location.address && <p>Address: {location.address}</p>}
         </div>
       )}
+      {error && <p className="mt-4 text-red-500">{error}</p>}
     </div>
   );
 };
