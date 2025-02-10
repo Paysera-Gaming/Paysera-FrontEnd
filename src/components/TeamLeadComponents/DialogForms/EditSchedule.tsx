@@ -26,15 +26,21 @@ export default function EditSchedule() {
 				<DialogHeader>
 					<DialogTitle>Edit Schedule</DialogTitle>
 					<DialogDescription>
-						<p>	Make changes to schedule. Click save when you're done.
-						</p>
+						Make changes to schedule. Click save when you're done.
+
 						<br></br>
-						<ul>
-							<h4 className='text-bold'>Schedule Information</h4>
-							<li>Fixed: Clock in and out at specified times.</li>
-							<li>Flexible: Clock in between 6 AM and 10 AM.</li>
-							<li>Super Flexible: As long as the employee renders 8 hours within the day.</li>
-						</ul>
+
+						<span className='text-bold'>Schedule Information</span>
+						<br></br>
+
+						<span>Fixed: Clock in and out at specified times.</span>
+						<br></br>
+
+						<span>Flexible: Clock in between 6 AM and 10 AM.</span>
+						<br></br>
+
+						<span>Super Flexible: As long as the employee renders 8 hours within the day.</span>
+
 					</DialogDescription>
 				</DialogHeader>
 				<ScheduleForm

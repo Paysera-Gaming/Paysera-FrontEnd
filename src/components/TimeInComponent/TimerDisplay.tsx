@@ -63,7 +63,6 @@ export default function TimerDisplay() {
 	);
 
 	const user = useUserStore.getState().user;
-
 	const { data, isSuccess } = useQuery({
 		queryKey: ['UsersAttendance'],
 		queryFn: () => {
@@ -73,6 +72,7 @@ export default function TimerDisplay() {
 
 			return getTodaysAttendance(user.id);
 		},
+		staleTime: 0, // This will make the query always stale
 	});
 
 	useEffect(() => {

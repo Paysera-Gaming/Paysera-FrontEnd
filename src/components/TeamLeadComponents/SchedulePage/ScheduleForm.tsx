@@ -95,7 +95,7 @@ export default function ScheduleForm({
 				}
 				return fetchRequest(form.getValues(), scheduleId);
 			} else {
-				// postt request
+				// post request
 				const departmentId = useUserStore.getState().user?.departmentId;
 				if (departmentId === undefined) {
 					return Promise.reject(new Error('Department ID is undefined'));
@@ -109,7 +109,8 @@ export default function ScheduleForm({
 		},
 		onError: (error) => {
 			console.log(error);
-			console.log(ScheduleSub);
+
+
 		},
 	});
 
