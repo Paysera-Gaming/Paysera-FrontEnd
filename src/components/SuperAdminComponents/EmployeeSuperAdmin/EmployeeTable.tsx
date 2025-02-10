@@ -1,9 +1,16 @@
-import type React from "react"
-import { useState } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, Edit2, Trash2, Circle } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import type React from "react";
+import { useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, Edit2, Trash2, Circle } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -11,81 +18,91 @@ import {
   DialogTitle,
   DialogFooter,
   DialogDescription,
-} from "@/components/ui/dialog"
-import { toast } from "sonner"
-import EmployeeEdit from "./EmployeeEdit"
-import { useQueryClient } from "@tanstack/react-query"
-import { axiosInstance } from "@/api"
-import axios from "axios"
-import type { Employee } from "./types" // Updated import
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
+import EmployeeEdit from "./EmployeeEdit";
+import { useQueryClient } from "@tanstack/react-query";
+import { axiosInstance } from "@/api";
+import axios from "axios";
+import type { Employee } from "./types"; // Updated import
 
 interface EmployeeTableProps {
-  employees: Employee[]
+  employees: Employee[];
 }
 
 const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
-  const queryClient = useQueryClient()
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
-  const employeesPerPage = 10
+  const queryClient = useQueryClient();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+    null
+  );
+  const [currentPage, setCurrentPage] = useState(1);
+  const employeesPerPage = 10;
 
   const handleDeleteClick = (employee: Employee) => {
-    setSelectedEmployee(employee)
-    setIsDialogOpen(true)
-  }
+    setSelectedEmployee(employee);
+    setIsDialogOpen(true);
+  };
 
   const handleEditClick = (employee: Employee) => {
-    setSelectedEmployee(employee)
-    setIsEditDialogOpen(true)
-  }
+    setSelectedEmployee(employee);
+    setIsEditDialogOpen(true);
+  };
 
   const handleConfirmDelete = async () => {
-    if (!selectedEmployee) return
+    if (!selectedEmployee) return;
 
     try {
-      await axiosInstance.delete(`/api/employee/${selectedEmployee.id}`)
-      toast.success(`Successfully deleted ${selectedEmployee.firstName} ${selectedEmployee.lastName}`)
-      setIsDialogOpen(false)
-      queryClient.invalidateQueries({ queryKey: ["employees"] })
+      await axiosInstance.delete(`/api/employee/${selectedEmployee.id}`);
+      toast.success(
+        `Successfully deleted ${selectedEmployee.firstName} ${selectedEmployee.lastName}`
+      );
+      setIsDialogOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
     } catch (error) {
-      toast.error("Error deleting the employee.")
-      console.error("Error deleting the employee:", error)
+      toast.error("Error deleting the employee.");
+      console.error("Error deleting the employee:", error);
     }
-  }
+  };
 
   const handleEditSubmit = async (values: Partial<Employee>) => {
-    if (!selectedEmployee) return
+    if (!selectedEmployee) return;
 
     try {
-      await axiosInstance.put(`/api/employee/${selectedEmployee.id}`, values)
-      setIsEditDialogOpen(false)
-      queryClient.invalidateQueries({ queryKey: ["employees"] })
+      await axiosInstance.put(`/api/employee/${selectedEmployee.id}`, values);
+      setIsEditDialogOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         // Log error details returned from the server
-        console.error("Error editing the employee:", error.response.data)
-        toast.error("Error editing the employee: " + (error.response.data.message || "Unknown error"))
+        console.error("Error editing the employee:", error.response.data);
+        toast.error(
+          "Error editing the employee: " +
+            (error.response.data.message || "Unknown error")
+        );
       } else {
-        console.error("Error editing the employee:", error)
-        toast.error("Error editing the employee.")
+        console.error("Error editing the employee:", error);
+        toast.error("Error editing the employee.");
       }
     }
-  }
+  };
 
   const formatAccessLevel = (accessLevel: string) => {
-    return accessLevel.replace(/_/g, ' ')
-  }
+    return accessLevel.replace(/_/g, " ");
+  };
 
-  const indexOfLastEmployee = currentPage * employeesPerPage
-  const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage
-  const currentEmployees = employees.slice(indexOfFirstEmployee, indexOfLastEmployee)
-  const totalPages = Math.ceil(employees.length / employeesPerPage)
+  const indexOfLastEmployee = currentPage * employeesPerPage;
+  const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
+  const currentEmployees = employees.slice(
+    indexOfFirstEmployee,
+    indexOfLastEmployee
+  );
+  const totalPages = Math.ceil(employees.length / employeesPerPage);
 
   const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber)
-  }
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <Card>
@@ -105,21 +122,42 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
               <TableRow key={emp.id}>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <Circle size={16} color={emp.isActive ? "green" : "red"} fill={emp.isActive ? "green" : "red"} />
-                    {`${emp.lastName}, ${emp.firstName} ${emp.middleName || ""}`}
+                    <Circle
+                      size={16}
+                      color={
+                        emp.attendanceStatus === "ONGOING" ? "green" : "red"
+                      }
+                      fill={
+                        emp.attendanceStatus === "ONGOING" ? "green" : "red"
+                      }
+                    />
+                    {`${emp.lastName}, ${emp.firstName} ${
+                      emp.middleName || ""
+                    }`}
                   </div>
                 </TableCell>
                 <TableCell>{emp.username}</TableCell>
-                <TableCell>{emp.isActive ? "Online" : "Offline"}</TableCell>
+                <TableCell>
+                  {emp.attendanceStatus === "ONGOING" ? "Online" : "Offline"}
+                </TableCell>
                 <TableCell>{formatAccessLevel(emp.accessLevel)}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => handleEditClick(emp)}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEditClick(emp)}
+                    >
                       <Edit2 size={16} />
                       Edit
                     </Button>
                     {emp.accessLevel !== "ADMIN" && (
-                      <Button variant="outline" size="sm" color="red" onClick={() => handleDeleteClick(emp)}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        color="red"
+                        onClick={() => handleDeleteClick(emp)}
+                      >
                         <Trash2 size={16} />
                         Delete
                       </Button>
@@ -142,7 +180,9 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <div className="text-sm font-medium">
-              {totalPages > 0 ? `Page ${currentPage} of ${totalPages}` : "No pages"}
+              {totalPages > 0
+                ? `Page ${currentPage} of ${totalPages}`
+                : "No pages"}
             </div>
             <Button
               variant="outline"
@@ -161,7 +201,8 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
           <DialogHeader>
             <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete {selectedEmployee?.firstName} {selectedEmployee?.lastName}?
+              Are you sure you want to delete {selectedEmployee?.firstName}{" "}
+              {selectedEmployee?.lastName}?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -184,7 +225,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
         />
       )}
     </Card>
-  )
-}
+  );
+};
 
-export default EmployeeTable
+export default EmployeeTable;

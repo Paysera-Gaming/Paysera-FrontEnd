@@ -10,7 +10,9 @@ export interface Employee {
   departmentId: number;
   departmentName?: string;
   role: string;
+  attendanceStatus: string; // Add this line
 }
+
 export interface EmployeeCounts {
   overall: {
     employee: number;
@@ -59,7 +61,7 @@ export function getEmployeeCounts(employees: Employee[]): EmployeeCounts {
     }
 
     // Online/Offline counts
-    if (employee.isActive) {
+    if (employee.attendanceStatus === "ONGOING") {
       if (employee.accessLevel === "EMPLOYEE") {
         counts.online.employee++;
       } else if (employee.accessLevel === "TEAM_LEADER") {
