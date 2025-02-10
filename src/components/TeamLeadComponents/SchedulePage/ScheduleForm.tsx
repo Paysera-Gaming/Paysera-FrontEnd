@@ -169,12 +169,17 @@ export default function ScheduleForm({
 												</TooltipTrigger>
 												<TooltipContent>
 													Applies the schedule to the employee with this role
+
 												</TooltipContent>
 											</Tooltip>
 										</TooltipProvider>
 									</div>
 									<FormControl>
-										<Input placeholder="E.g. 'Manager' " {...field} />
+										<Input
+											className="uppercase"
+											placeholder="E.g. 'MANAGER' "
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -195,6 +200,14 @@ export default function ScheduleForm({
 												</TooltipTrigger>
 												<TooltipContent>
 													This dictates the flexibility of the schedule
+													<br></br>
+
+													<ul>
+														<h4 className='font-bold'>Schedule Information</h4>
+														<li>Fixed: Clock in and out at specified times.</li>
+														<li>Flexible: Clock in between 6 AM and 10 AM.</li>
+														<li>Super Flexible: As long as the employee renders 8 hours within the day.</li>
+													</ul>
 												</TooltipContent>
 											</Tooltip>
 										</TooltipProvider>

@@ -29,7 +29,15 @@ export default function AddScheduleBtn() {
 				<AlertDialogHeader>
 					<AlertDialogTitle>Adding Schedule</AlertDialogTitle>
 					<AlertDialogDescription>
-						You are now adding a schedule into your department
+						<p>You are now adding a schedule into your department
+						</p>
+						<br></br>
+						<ul>
+							<h4 className='text-bold'>Schedule Information</h4>
+							<li>Fixed: Clock in and out at specified times.</li>
+							<li>Flexible: Clock in between 6 AM and 10 AM.</li>
+							<li>Super Flexible: As long as the employee renders 8 hours within the day.</li>
+						</ul>
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				{/* form here */}

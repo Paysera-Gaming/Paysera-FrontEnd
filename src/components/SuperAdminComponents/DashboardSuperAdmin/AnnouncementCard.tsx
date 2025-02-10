@@ -3,6 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 import { Megaphone } from "lucide-react";
+import { io } from "socket.io-client";
 
 interface Announcement {
   id: number;
@@ -15,32 +16,47 @@ interface Announcement {
 type AnnouncementCardProps = {
   className?: string;
 };
+const API_BASE_URL = import.meta.env.VITE_BASE_API;
+
+const baseApiUrl = import.meta.env.VITE_BASE_API;
+const socket = io(API_BASE_URL);
+
 
 export default function AnnouncementCard({ className }: AnnouncementCardProps) {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const baseApiUrl = import.meta.env.VITE_BASE_API;
+
+
+  const fetchAnnouncements = async () => {
+    try {
+      const response = await fetch(`${baseApiUrl}api/announcements`);
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        // Sort announcements by ID in descending order
+        const sortedAnnouncements = data.sort((a, b) => b.id - a.id);
+        setAnnouncements(sortedAnnouncements);
+      } else {
+        throw new Error("Unexpected response format");
+      }
+    } catch (error) {
+      console.error("Error fetching announcements:", error);
+      setError("Failed to load announcements");
+    }
+  };
 
   useEffect(() => {
-    const fetchAnnouncements = async () => {
-      try {
-        const response = await fetch(`${baseApiUrl}api/announcements`);
-        const data = await response.json();
-        if (Array.isArray(data)) {
-          // Sort announcements by ID in descending order
-          const sortedAnnouncements = data.sort((a, b) => b.id - a.id);
-          setAnnouncements(sortedAnnouncements);
-        } else {
-          throw new Error("Unexpected response format");
-        }
-      } catch (error) {
-        console.error("Error fetching announcements:", error);
-        setError("Failed to load announcements");
-      }
-    };
-
     fetchAnnouncements();
-  }, [baseApiUrl]);
+
+
+    socket.on('announcements', () => {
+      console.log('Announcement event received');
+      fetchAnnouncements();
+    });
+
+    return () => {
+      socket.off('announcements');
+    }
+  }, []);
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };

@@ -2,8 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUserStore } from '@/stores/userStore';
 import { User } from 'lucide-react';
 
-import alertTimeup from './alertTimeup';
-
 function returnRole(role: string) {
 	return role === 'ADMIN'
 		? 'Admin'
@@ -13,6 +11,10 @@ function returnRole(role: string) {
 }
 
 export default function UserInfoCard({ className }: { className: string }) {
+	// useEffect(() => {
+	// 	alertTimeup();
+	// }, []);
+
 	const userInfo = useUserStore.getState()?.user || {
 		lastName: 'Doe',
 		firstName: 'John',

@@ -79,14 +79,14 @@ export default function HolidayList() {
 				<CardContent className="p-0 pt-1">
 					<ScrollArea className="h-[350px] 2xl:h-[600px]">
 						<ul className="flex flex-col list-disc list-inside text-sm 2xl:text-base">
-							{currentMonthList}
+							{currentMonthList.length != 0 ? currentMonthList : 'No Holidays'}
 
 							<h3 className="text-base 2xl:text-lg font-semibold scroll-m-20 tracking-tight py-1">
 								Next Month{' '}
 								{`(${nextMonth.toLocaleString('default', { month: 'long' })})`}
 							</h3>
 
-							{nextMonthList}
+							{nextMonthList.length != 0 ? nextMonthList : 'No Holidays'}
 						</ul>
 					</ScrollArea>
 				</CardContent>

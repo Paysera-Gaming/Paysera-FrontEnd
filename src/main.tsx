@@ -5,6 +5,7 @@ import {
     RouterProvider,
     redirect,
 } from 'react-router-dom';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/ThemeProvider/ThemeProvider';
@@ -36,8 +37,15 @@ import PersonalSchedulePage from './pages/TeamLead/Personal_Schedule/PersonalSch
 import OvertimePage from './pages/TeamLead/OverTime/OverTimePage';
 
 // Create a client
-const queryClient = new QueryClient();
-queryClient.setDefaultOptions({});
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 1000 * 60 * 5, // 5 minutes before queries become stale
+			refetchOnWindowFocus: true, // Refetch when window is focused
+			refetchOnReconnect: true, // Refetch when network reconnects
+		},
+	},
+});
 
 const router = createBrowserRouter([
     {
@@ -110,25 +118,26 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <QueryClientProvider client={queryClient}>
-            <ThemeProvider>
-                <RouterProvider router={router} />
-                <Toaster
-                    richColors
-                    closeButton
-                    position={'top-center'}
-                    toastOptions={{
-                        classNames: {
-                            error: 'bg-red-400',
-                            success: 'text-green-400',
-                            warning: 'text-yellow-400',
-                            info: 'bg-blue-400',
-                        },
-                    }}
-                />
-                <ConfirmationDialog />
-            </ThemeProvider>
-        </QueryClientProvider>
-    </React.StrictMode>
+	<React.StrictMode>
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider>
+				<RouterProvider router={router} />
+				<Toaster
+					richColors
+					closeButton
+					position={'top-center'}
+					toastOptions={{
+						classNames: {
+							error: 'bg-red-400',
+							success: 'text-green-400',
+							warning: 'text-yellow-400',
+							info: 'bg-blue-400',
+						},
+					}}
+				/>
+				<ConfirmationDialog />
+			</ThemeProvider>
+			<ReactQueryDevtools initialIsOpen={true} />
+		</QueryClientProvider>
+	</React.StrictMode>
 );

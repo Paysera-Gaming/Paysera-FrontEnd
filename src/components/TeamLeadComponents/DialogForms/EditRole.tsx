@@ -27,6 +27,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 	SelectLabel,
+	SelectGroup,
 } from '@/components/ui/select';
 
 function UseRoleListItem() {
@@ -54,11 +55,14 @@ function UseRoleListItem() {
 	}
 
 	return (
-		data?.map((item, index) => (
-			<SelectItem key={index} value={item.role}>
-				{item.role}
-			</SelectItem>
-		)) || <p>No Roles Found</p>
+		<SelectGroup>
+			<SelectLabel> Department Roles</SelectLabel>
+			{data?.map((item, index) => (
+				<SelectItem key={index} value={item.role}>
+					{item.role}
+				</SelectItem>
+			)) || <p>No Roles Found</p>}
+		</SelectGroup>
 	);
 }
 
@@ -97,6 +101,7 @@ const EditRole = forwardRef<HTMLDivElement, { employeeInfo: TEmployee }>(
 					}}
 				>
 					<p>Edit Role</p>
+
 				</div>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
@@ -119,7 +124,6 @@ const EditRole = forwardRef<HTMLDivElement, { employeeInfo: TEmployee }>(
 								</SelectTrigger>
 
 								<SelectContent>
-									<SelectLabel> Department Roles</SelectLabel>
 									<UseRoleListItem></UseRoleListItem>
 								</SelectContent>
 							</Select>

@@ -4,7 +4,7 @@
 import TimerDisplay from '@/components/TimeInComponent/TimerDisplay';
 import { Button } from '@/components/ui/button.tsx';
 import useConfirmationStore from '@/stores/GlobalAlertStore.ts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useUserStore } from '@/stores/userStore.ts';
@@ -13,6 +13,8 @@ import ToasterSwitch from '@/lib/timeToasterUtils.ts';
 import { TAttendance } from '@/api/AttendanceAPI';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { RequestOverTimeButton } from './RequestOverTimeButton';
+import useAlertTimeup from '@/hooks/useAlertTimeup';
 function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
 	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
 	const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
@@ -22,6 +24,7 @@ function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
 export default function Timebar() {
 	const { openConfirmation, closeConfirmation } = useConfirmationStore();
 	const queryClient = useQueryClient();
+	const { evaluateAlarmType } = useAlertTimeup();
 
 	const currentTime = new Date().toISOString();
 	const employeeId = useUserStore.getState().user?.id;
@@ -74,10 +77,9 @@ export default function Timebar() {
 			]);
 
 			if (attendance) {
-				// greater than or equal to 8 hours
+				// greater than or equal to 9 hours
 				if (
-					convertDateToSeconds(new Date(attendance.timeIn), new Date()) >=
-					28_800
+					convertDateToSeconds(new Date(attendance.timeIn), new Date()) > 32_400
 				) {
 					await closeConfirmation();
 					await confirmTimeOut();
@@ -148,6 +150,15 @@ export default function Timebar() {
 		});
 	}
 
+	useEffect(() => {
+		evaluateAlarmType();
+		// this will check every 30 mins is user is timed up
+		const interval = setInterval(() => {
+			evaluateAlarmType();
+		}, 1800000);
+		return () => clearInterval(interval);
+	}, [evaluateAlarmType]);
+
 	return (
 		<header className=" border-border border-solid border w-full rounded-md p-2 px-5 flex items-center justify-between">
 			{/* timer display */}
@@ -155,16 +166,22 @@ export default function Timebar() {
 
 			{/* form */}
 			{/*<TimeForm></TimeForm>*/}
+			<div className="flex gap-2">
+				<RequestOverTimeButton></RequestOverTimeButton>
 
-			<Button disabled={getIsLoading} onClick={initModalValidations}>
-				<Loader2
-					className={cn(getIsLoading == false && 'hidden', 'animate-spin mr-1')}
-				/>
+				<Button disabled={getIsLoading} onClick={initModalValidations}>
+					<Loader2
+						className={cn(
+							getIsLoading == false && 'hidden',
+							'animate-spin mr-1'
+						)}
+					/>
 
-				{useUserStore.getState().getUserClockStatus() === 'Clock-In'
-					? 'Clock-Out'
-					: 'Clock-In'}
-			</Button>
+					{useUserStore.getState().getUserClockStatus() === 'Clock-In'
+						? 'Clock-Out'
+						: 'Clock-In'}
+				</Button>
+			</div>
 		</header>
 	);
 }
