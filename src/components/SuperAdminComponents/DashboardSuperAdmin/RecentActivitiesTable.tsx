@@ -1,6 +1,18 @@
 import { useState } from "react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getEmployeeDetails } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/api";
@@ -12,7 +24,11 @@ import EmployeeDialog from "./EmployeeDialog";
 function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAccessLevel, setSelectedAccessLevel] = useState("");
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+    null
+  );
+  const [selectedAttendance, setSelectedAttendance] =
+    useState<Attendance | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const filteredData = tableData.filter(
@@ -26,19 +42,26 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
         : true)
   );
 
-  const sortedData = filteredData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const sortedData = filteredData.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
 
-  const handleRowClick = async (employeeId: number) => {
-    const employeeDetails = await getEmployeeDetails(employeeId);
+  const handleRowClick = async (attendance: Attendance) => {
+    const employeeDetails = await getEmployeeDetails(attendance.employee.id);
     setSelectedEmployee(employeeDetails);
+    setSelectedAttendance(attendance);
     setIsDialogOpen(true);
   };
 
   const renderedList = sortedData.map((data) => {
     const parsedDate = new Date(data.date);
-    const formattedDate = parsedDate.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    const formattedDate = parsedDate.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
     return (
-      <TableRow key={data.id} onClick={() => handleRowClick(data.employee.id)}>
+      <TableRow key={data.id} onClick={() => handleRowClick(data)}>
         <TableCell className="p-4">{data.employee.username}</TableCell>
         <TableCell className="p-4">{formattedDate}</TableCell>
       </TableRow>
@@ -61,10 +84,22 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-64">
-            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("")}>All</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("ADMIN")}>Super Admin</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("TEAM_LEADER")}>Team Leader</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("EMPLOYEE")}>Employee</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("")}>
+              All
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setSelectedAccessLevel("ADMIN")}>
+              Super Admin
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={() => setSelectedAccessLevel("TEAM_LEADER")}
+            >
+              Team Leader
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={() => setSelectedAccessLevel("EMPLOYEE")}
+            >
+              Employee
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -84,6 +119,7 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         employee={selectedEmployee}
+        attendance={selectedAttendance}
       />
     </>
   );

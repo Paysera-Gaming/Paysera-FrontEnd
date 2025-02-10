@@ -40,6 +40,8 @@ const AttendanceTable: React.FC = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
   );
+  const [selectedAttendance, setSelectedAttendance] =
+    useState<Attendance | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   if (isLoading) {
@@ -72,17 +74,15 @@ const AttendanceTable: React.FC = () => {
           : true)
     ) || [];
 
-  const handleRowClick = async (employeeId: number) => {
-    const employeeDetails = await getEmployeeDetails(employeeId);
+  const handleRowClick = async (attendance: Attendance) => {
+    const employeeDetails = await getEmployeeDetails(attendance.employee.id);
     setSelectedEmployee(employeeDetails);
+    setSelectedAttendance(attendance);
     setIsDialogOpen(true);
   };
 
   const renderedList = filteredData.map((attendance) => (
-    <TableRow
-      key={attendance.id}
-      onClick={() => handleRowClick(attendance.employee.id)}
-    >
+    <TableRow key={attendance.id} onClick={() => handleRowClick(attendance)}>
       <TableCell className="p-4">{attendance.employee.username}</TableCell>
       <TableCell className="p-4">
         {format(new Date(attendance.date), "MMMM dd")}
@@ -275,7 +275,7 @@ const AttendanceTable: React.FC = () => {
                 {
                   filteredData.filter(
                     (attendance) =>
-                      attendance.scheduleType === "SUPER FLEXI" &&
+                      attendance.scheduleType === "SUPER_FLEXI" &&
                       attendance.status === "ONGOING"
                   ).length
                 }
@@ -285,7 +285,7 @@ const AttendanceTable: React.FC = () => {
                 {
                   filteredData.filter(
                     (attendance) =>
-                      attendance.scheduleType === "SUPER FLEXI" &&
+                      attendance.scheduleType === "SUPER_FLEXI" &&
                       attendance.status === "DONE"
                   ).length
                 }
@@ -295,7 +295,7 @@ const AttendanceTable: React.FC = () => {
                 {
                   filteredData.filter(
                     (attendance) =>
-                      attendance.scheduleType === "SUPER FLEXI" &&
+                      attendance.scheduleType === "SUPER_FLEXI" &&
                       attendance.status === "PAID_LEAVE"
                   ).length
                 }
@@ -338,6 +338,7 @@ const AttendanceTable: React.FC = () => {
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         employee={selectedEmployee}
+        attendance={selectedAttendance}
       />
     </>
   );
