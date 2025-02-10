@@ -6,6 +6,7 @@ const Experiment: React.FC = () => {
     latitude: number;
     longitude: number;
     city?: string;
+    address?: string;
   } | null>(null);
 
   const getLocation = () => {
@@ -20,16 +21,22 @@ const Experiment: React.FC = () => {
             const response = await axios.get(
               `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=636dd746b49b4c059b04228348c37d0b`
             );
-            const city = response.data.results[0].components.city;
+            const result = response.data.results[0];
+            const city =
+              result.components.city ||
+              result.components.town ||
+              result.components.village;
+            const address = result.formatted;
             setLocation((prevLocation) => ({
-              ...prevLocation,
-              latitude,
-              longitude,
+              latitude: prevLocation?.latitude ?? latitude,
+              longitude: prevLocation?.longitude ?? longitude,
               city,
+              address,
             }));
             console.log(`City: ${city}`);
+            console.log(`Address: ${address}`);
           } catch (error) {
-            console.error("Error fetching city name:", error);
+            console.error("Error fetching location details:", error);
           }
         },
         (error) => {
@@ -55,6 +62,7 @@ const Experiment: React.FC = () => {
           <p>Latitude: {location.latitude}</p>
           <p>Longitude: {location.longitude}</p>
           {location.city && <p>City: {location.city}</p>}
+          {location.address && <p>Address: {location.address}</p>}
         </div>
       )}
     </div>
