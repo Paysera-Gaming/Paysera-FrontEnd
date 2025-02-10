@@ -98,7 +98,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({
                   <strong>Department:</strong>
                 </TableCell>
                 <TableCell className="text-sm">
-                  {employee.departmentName}
+                  {employee.departmentName || "No department"}
                 </TableCell>
               </TableRow>
               <TableRow>
