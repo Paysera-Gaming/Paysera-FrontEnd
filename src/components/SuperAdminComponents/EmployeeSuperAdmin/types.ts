@@ -1,14 +1,16 @@
 export interface Employee {
   id: number;
+  email: string; // Add email field
   username: string;
   firstName: string;
   lastName: string;
   middleName?: string;
-  accessLevel: 'EMPLOYEE' | 'TEAM_LEADER' | 'ADMIN';
+  accessLevel: "EMPLOYEE" | "TEAM_LEADER" | "ADMIN";
   isActive: boolean;
   departmentId: number;
-  departmentName?: string; // Add departmentName
+  departmentName?: string;
   role: string;
+  attendanceStatus: string; // Add this line
 }
 
 export interface EmployeeCounts {
@@ -48,31 +50,31 @@ export function getEmployeeCounts(employees: Employee[]): EmployeeCounts {
     },
   };
 
-  employees.forEach(employee => {
+  employees.forEach((employee) => {
     // Overall counts
-    if (employee.accessLevel === 'EMPLOYEE') {
+    if (employee.accessLevel === "EMPLOYEE") {
       counts.overall.employee++;
-    } else if (employee.accessLevel === 'TEAM_LEADER') {
+    } else if (employee.accessLevel === "TEAM_LEADER") {
       counts.overall.teamLeader++;
-    } else if (employee.accessLevel === 'ADMIN') {
+    } else if (employee.accessLevel === "ADMIN") {
       counts.overall.admin++;
     }
 
     // Online/Offline counts
-    if (employee.isActive) {
-      if (employee.accessLevel === 'EMPLOYEE') {
+    if (employee.attendanceStatus === "ONGOING") {
+      if (employee.accessLevel === "EMPLOYEE") {
         counts.online.employee++;
-      } else if (employee.accessLevel === 'TEAM_LEADER') {
+      } else if (employee.accessLevel === "TEAM_LEADER") {
         counts.online.teamLeader++;
-      } else if (employee.accessLevel === 'ADMIN') {
+      } else if (employee.accessLevel === "ADMIN") {
         counts.online.admin++;
       }
     } else {
-      if (employee.accessLevel === 'EMPLOYEE') {
+      if (employee.accessLevel === "EMPLOYEE") {
         counts.offline.employee++;
-      } else if (employee.accessLevel === 'TEAM_LEADER') {
+      } else if (employee.accessLevel === "TEAM_LEADER") {
         counts.offline.teamLeader++;
-      } else if (employee.accessLevel === 'ADMIN') {
+      } else if (employee.accessLevel === "ADMIN") {
         counts.offline.admin++;
       }
     }
