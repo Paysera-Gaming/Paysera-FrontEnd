@@ -9,9 +9,11 @@ const Experiment: React.FC = () => {
     address?: string;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const getLocation = () => {
     if (navigator.geolocation) {
+      setLoading(true);
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
@@ -20,7 +22,7 @@ const Experiment: React.FC = () => {
 
           try {
             const response = await axios.get(
-              `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=636dd746b49b4c059b04228348c37d0b`
+              `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=636dd746b49b4c059b04228348c37d0b&address_only=1`
             );
             if (response.data.results.length > 0) {
               const result = response.data.results[0];
@@ -43,11 +45,14 @@ const Experiment: React.FC = () => {
           } catch (error) {
             setError("Error fetching location details.");
             console.error("Error fetching location details:", error);
+          } finally {
+            setLoading(false);
           }
         },
         (error) => {
           setError("Error getting location.");
           console.error("Error getting location:", error);
+          setLoading(false);
         }
       );
     } else {
@@ -56,13 +61,14 @@ const Experiment: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Hello, welcome to experiment</h1>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Hello, welcome to experiment</h1>
       <button
         onClick={getLocation}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        disabled={loading}
       >
-        Get Location
+        {loading ? "Getting Location..." : "Get Location"}
       </button>
       {location && (
         <div className="mt-4">
