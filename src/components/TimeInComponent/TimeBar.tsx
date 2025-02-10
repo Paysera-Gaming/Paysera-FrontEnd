@@ -28,6 +28,7 @@ export default function Timebar() {
 
 	const currentTime = new Date().toISOString();
 	const employeeId = useUserStore.getState().user?.id;
+	const employeeAccessLevel = useUserStore.getState().user?.accessLevel
 
 	const [getIsLoading, setIsLoading] = useState<boolean>(false);
 	const [getCanProceed, setCanProceed] = useState<boolean>(false);
@@ -95,7 +96,7 @@ export default function Timebar() {
 	function confirmTimeIn() {
 		openConfirmation({
 			title: 'Start TimeIn?',
-			description: 'Are you sure you want to start your timein?',
+			description: 'Are you sure you want to start your time-in?',
 			cancelLabel: 'Cancel',
 			actionLabel: 'Continue',
 			onAction: async () => {
@@ -167,7 +168,9 @@ export default function Timebar() {
 			{/* form */}
 			{/*<TimeForm></TimeForm>*/}
 			<div className="flex gap-2">
-				<RequestOverTimeButton></RequestOverTimeButton>
+
+				{employeeAccessLevel != 'ADMIN' && <RequestOverTimeButton></RequestOverTimeButton>
+				}
 
 				<Button disabled={getIsLoading} onClick={initModalValidations}>
 					<Loader2
