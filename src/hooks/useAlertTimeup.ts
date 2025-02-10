@@ -91,7 +91,7 @@ export default function useAlertTimeup() {
 		// if user has already timed out then this will return
 		if (userAttendance?.timeOut) return;
 
-		if (schedule.scheduleType === 'FIXED') {
+		if (schedule?.scheduleType === 'FIXED') {
 			const scheduleStartTime = new Date(schedule.startTime);
 			const now = new Date();
 			scheduleStartTime.setFullYear(now.getFullYear(), now.getMonth(), now.getDate());

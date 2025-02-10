@@ -130,6 +130,7 @@ export async function updateSchedule(
 		schedule.timeIn.toDateString(),
 		schedule.timeOut.toDateString()
 	);
+
 	const response: AxiosResponse<TInputForm> = await axiosInstance.put(
 		`/api/department-schedule/${departmentScheduleId}`,
 		{
@@ -145,6 +146,7 @@ export async function updateSchedule(
 		}
 	);
 	return response.status;
+
 }
 
 export async function deleteSchedule(

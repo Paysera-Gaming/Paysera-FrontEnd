@@ -1,6 +1,3 @@
-// icons
-// import TimeForm from './TimeForm';
-
 import TimerDisplay from '@/components/TimeInComponent/TimerDisplay';
 import { Button } from '@/components/ui/button.tsx';
 import useConfirmationStore from '@/stores/GlobalAlertStore.ts';
@@ -15,6 +12,7 @@ import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { RequestOverTimeButton } from './RequestOverTimeButton';
 import useAlertTimeup from '@/hooks/useAlertTimeup';
+
 function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
 	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
 	const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
@@ -27,17 +25,17 @@ export default function Timebar() {
 	const { evaluateAlarmType } = useAlertTimeup();
 
 	const currentTime = new Date().toISOString();
-	const employeeId = useUserStore.getState().user?.id;
-	const employeeAccessLevel = useUserStore.getState().user?.accessLevel
+	const { user, getUserClockStatus, setUserClockStatus } = useUserStore();
+	const employeeId = user?.id;
+	const employeeAccessLevel = user?.accessLevel;
 
 	const [getIsLoading, setIsLoading] = useState<boolean>(false);
 	const [getCanProceed, setCanProceed] = useState<boolean>(false);
-	// when user times in
+
 	const mutateTime = useMutation({
 		mutationFn: async (fetchType: 'ClockIn' | 'ClockOut') => {
 			setIsLoading(true);
 
-			//checks if the user has an ID
 			if (employeeId === undefined) {
 				throw new Error('Employee ID is undefined');
 			}
@@ -63,29 +61,23 @@ export default function Timebar() {
 			setCanProceed(false);
 		},
 	});
-	async function initModalValidations() {
-		// check first user is on overtime
 
-		// check whether the user has already clocked in or not
-		if (useUserStore.getState().userClockStatus == 'Clock-Out') {
-			//if not clocked in proceed to the clock in dialogue
+	async function initModalValidations() {
+		if (getUserClockStatus() == 'Clock-Out') {
 			await closeConfirmation();
 			await confirmTimeIn();
 		} else {
-			//     check if time worked is more than >= 8 hours
 			const attendance = await queryClient.getQueryData<TAttendance>([
 				'UsersAttendance',
 			]);
 
 			if (attendance) {
-				// greater than or equal to 9 hours
 				if (
 					convertDateToSeconds(new Date(attendance.timeIn), new Date()) > 32_400
 				) {
 					await closeConfirmation();
 					await confirmTimeOut();
 				} else {
-					// eto muna
 					await closeConfirmation();
 					await warningInsufficientHoursDialogue();
 				}
@@ -102,7 +94,7 @@ export default function Timebar() {
 			onAction: async () => {
 				await mutateTime.mutate('ClockIn');
 				if (getCanProceed == true) {
-					useUserStore.getState().setUserClockStatus('Clock-In');
+					setUserClockStatus('Clock-In');
 				}
 				setCanProceed(false);
 			},
@@ -122,7 +114,7 @@ export default function Timebar() {
 				await mutateTime.mutate('ClockOut');
 				if (getCanProceed == true) {
 					toast.success('User has timeout from the session');
-					useUserStore.getState().setUserClockStatus('Clock-Out');
+					setUserClockStatus('Clock-Out');
 				}
 				setCanProceed(false);
 			},
@@ -141,7 +133,7 @@ export default function Timebar() {
 			onAction: async () => {
 				await mutateTime.mutate('ClockOut');
 				if (getCanProceed == true) {
-					useUserStore.getState().setUserClockStatus('Clock-Out');
+					setUserClockStatus('Clock-Out');
 				}
 				setCanProceed(false);
 			},
@@ -153,7 +145,6 @@ export default function Timebar() {
 
 	useEffect(() => {
 		evaluateAlarmType();
-		// this will check every 30 mins is user is timed up
 		const interval = setInterval(() => {
 			evaluateAlarmType();
 		}, 1800000);
@@ -161,17 +152,10 @@ export default function Timebar() {
 	}, [evaluateAlarmType]);
 
 	return (
-		<header className=" border-border border-solid border w-full rounded-md p-2 px-5 flex items-center justify-between">
-			{/* timer display */}
-			<TimerDisplay></TimerDisplay>
-
-			{/* form */}
-			{/*<TimeForm></TimeForm>*/}
+		<header className="border-border border-solid border w-full rounded-md p-2 px-5 flex items-center justify-between">
+			<TimerDisplay />
 			<div className="flex gap-2">
-
-				{employeeAccessLevel != 'ADMIN' && <RequestOverTimeButton></RequestOverTimeButton>
-				}
-
+				{employeeAccessLevel != 'ADMIN' && <RequestOverTimeButton />}
 				<Button disabled={getIsLoading} onClick={initModalValidations}>
 					<Loader2
 						className={cn(
@@ -179,10 +163,7 @@ export default function Timebar() {
 							'animate-spin mr-1'
 						)}
 					/>
-
-					{useUserStore.getState().getUserClockStatus() === 'Clock-In'
-						? 'Clock-Out'
-						: 'Clock-In'}
+					{getUserClockStatus() === 'Clock-In' ? 'Clock-Out' : 'Clock-In'}
 				</Button>
 			</div>
 		</header>

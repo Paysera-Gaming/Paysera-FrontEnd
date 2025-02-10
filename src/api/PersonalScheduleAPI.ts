@@ -97,7 +97,7 @@ export async function postPersonalSchedule(
 // NOTE NOT FINISHED YET
 export async function putPersonalSchedule(
 	form: TPersonalSchedForms,
-	id: number
+	id?: number
 ): Promise<number> {
 	console.log('BURGER');
 
