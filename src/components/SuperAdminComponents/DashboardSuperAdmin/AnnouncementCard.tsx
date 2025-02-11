@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Megaphone } from "lucide-react";
-import { io } from "socket.io-client";
+import { useWebSocketFetch } from "@/hooks/useWebSocket";
 
 interface Announcement {
   id: number;
@@ -16,10 +16,8 @@ interface Announcement {
 type AnnouncementCardProps = {
   className?: string;
 };
-const API_BASE_URL = import.meta.env.VITE_BASE_API;
 
 const baseApiUrl = import.meta.env.VITE_BASE_API;
-const socket = io(API_BASE_URL);
 
 
 export default function AnnouncementCard({ className }: AnnouncementCardProps) {
@@ -47,16 +45,10 @@ export default function AnnouncementCard({ className }: AnnouncementCardProps) {
   useEffect(() => {
     fetchAnnouncements();
 
-
-    socket.on('announcements', () => {
-      console.log('Announcement event received');
-      fetchAnnouncements();
-    });
-
-    return () => {
-      socket.off('announcements');
-    }
   }, []);
+
+  useWebSocketFetch("announcements", fetchAnnouncements);
+
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
