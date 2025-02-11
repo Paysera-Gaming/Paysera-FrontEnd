@@ -46,6 +46,7 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
   const [attendanceData, setAttendanceData] = useState<Attendance[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
 
   useEffect(() => {
     const fetchEmployeeDetails = async () => {
@@ -78,9 +79,11 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
 
   const filteredEmployees = detailedEmployees.filter((employee) => {
     const departmentName = employee.departmentName || "No Department";
+    const status = getEmployeeStatus(employee.id);
     return (
       employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (selectedDepartment ? departmentName === selectedDepartment : true)
+      (selectedDepartment ? departmentName === selectedDepartment : true) &&
+      (selectedStatus ? status === selectedStatus : true)
     );
   });
 
@@ -185,6 +188,24 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="p-2 text-base w-48">
+                Status
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-64">
+              <DropdownMenuItem onSelect={() => setSelectedStatus("")}>
+                All
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedStatus("Online")}>
+                Online
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedStatus("Offline")}>
+                Offline
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <div className="flex mb-2 space-x-4">
           <p className="text-sm">
@@ -192,6 +213,9 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
           </p>
           <p className="text-sm">
             Department: <strong>{selectedDepartment || "All"}</strong>
+          </p>
+          <p className="text-sm">
+            Status: <strong>{selectedStatus || "All"}</strong>
           </p>
         </div>
         <Tabs defaultValue="admin">
