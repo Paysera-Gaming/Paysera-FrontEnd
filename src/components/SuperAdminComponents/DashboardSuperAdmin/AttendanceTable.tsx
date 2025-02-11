@@ -37,6 +37,7 @@ const AttendanceTable: React.FC = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAccessLevel, setSelectedAccessLevel] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
   );
@@ -71,7 +72,8 @@ const AttendanceTable: React.FC = () => {
           .includes(searchTerm.toLowerCase()) &&
         (selectedAccessLevel
           ? attendance.employee.accessLevel === selectedAccessLevel
-          : true)
+          : true) &&
+        (selectedStatus ? attendance.status === selectedStatus : true)
     ) || [];
 
   const handleRowClick = async (attendance: Attendance) => {
@@ -161,6 +163,24 @@ const AttendanceTable: React.FC = () => {
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setSelectedAccessLevel("ADMIN")}>
               Admin
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="p-2 text-base w-48">
+              Status
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-64">
+            <DropdownMenuItem onSelect={() => setSelectedStatus("")}>
+              All
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setSelectedStatus("ONGOING")}>
+              Ongoing
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setSelectedStatus("DONE")}>
+              Done
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
