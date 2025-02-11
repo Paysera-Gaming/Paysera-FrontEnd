@@ -3,7 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 import { Megaphone } from "lucide-react";
-import { useWebSocketFetch } from "@/hooks/useWebSocket";
+import { useWebSocket } from "@/hooks/useWebSocket";
 
 interface Announcement {
   id: number;
@@ -47,7 +47,7 @@ export default function AnnouncementCard({ className }: AnnouncementCardProps) {
 
   }, []);
 
-  useWebSocketFetch("announcements", fetchAnnouncements);
+  useWebSocket("announcements", fetchAnnouncements);
 
 
   const formatDate = (dateString: string) => {
