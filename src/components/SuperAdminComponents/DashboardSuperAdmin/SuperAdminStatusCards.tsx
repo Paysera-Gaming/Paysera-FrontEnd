@@ -1,65 +1,106 @@
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { Users, UserCheck, UserX } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { fetchEmployees } from '@/utils/fetchEmployees'; // Import the shared fetch function
-import { Employee } from '@/components/SuperAdminComponents/EmployeeSuperAdmin/types'; // Adjust the import path as needed
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { fetchEmployees } from "@/utils/fetchEmployees";
+import { fetchDepartments } from "@/components/SuperAdminComponents/DepartmentSuperAdmin/api";
+import { getAttendanceList } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api";
+import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
+import type { Department } from "@/components/SuperAdminComponents/DepartmentSuperAdmin/api";
+import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
+import { Building } from "lucide-react";
+import EmployeeListDialog from "./EmployeeListDialog";
 
-type CardData = {
-    title: string;
-    population: number;
-    icon: React.ReactNode;
+type EmployeesStatusCardsProps = {
+  className?: string;
 };
 
-export default function EmployeesStatusCards() {
-    const [employees, setEmployees] = useState<Employee[]>([]);
+export default function EmployeesStatusCards({
+  className,
+}: EmployeesStatusCardsProps) {
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [attendanceData, setAttendanceData] = useState<Attendance[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState<string>("");
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await fetchEmployees();
-            setEmployees(data);
-        };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const employeeData = await fetchEmployees();
+        setEmployees(employeeData);
 
-        fetchData(); // Initial fetch
-    }, []);
+        const departmentData = await fetchDepartments();
+        setDepartments(departmentData);
 
-    const overallCount = employees.length;
-    const onlineCount = employees.filter((emp: Employee) => emp.isActive).length;
-    const offlineCount = overallCount - onlineCount;
+        const attendanceData = await getAttendanceList();
+        setAttendanceData(attendanceData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-    const cardData: CardData[] = [
-        {
-            title: 'Total Employees',
-            population: overallCount,
-            icon: <Users></Users>,
-        },
-        {
-            title: 'Online Employees',
-            population: onlineCount,
-            icon: <UserCheck></UserCheck>,
-        },
-        {
-            title: 'Offline Employees',
-            population: offlineCount,
-            icon: <UserX></UserX>,
-        },
-    ];
+    fetchData();
+  }, []);
 
-    const CardItems = cardData.map((card) => (
-        <Card className="flex-1 p-2 m-2 h-18" key={card.title}>
-            <CardContent className="flex items-center justify-between p-0 pb-1">
-                <p className="text-sm">{card.title}:</p>
-                {card.icon}
-            </CardContent>
-            <CardHeader className="p-0">
-                <CardTitle className="text-lg">{card.population}</CardTitle>
-            </CardHeader>
-        </Card>
-    ));
+  const totalEmployees = employees.length;
+  const totalDepartments = departments.length;
+  const onlineCount = attendanceData.filter(
+    (attendance) => attendance.status === "ONGOING"
+  ).length;
+  const offlineCount = totalEmployees - onlineCount;
 
-    return <>{CardItems}</>;
+  const handleDialogOpen = (title: string) => {
+    setDialogTitle(title);
+    setIsDialogOpen(true);
+  };
+
+  return (
+    <>
+      <Card className={`col-span-1 relative p-4 ${className}`}>
+        <CardHeader className="pb-2 flex flex-row items-center justify-between">
+          <CardTitle className="text-2xl font-semibold">
+            Paysera Status
+          </CardTitle>
+          <Building size={"1.8rem"} />
+        </CardHeader>
+        <CardContent className="flex flex-col space-y-2 mt-2">
+          <div
+            className="flex items-center space-x-1 cursor-pointer"
+            onClick={() => handleDialogOpen("Total Employees")}
+          >
+            <div className="w-3 h-3 bg-gray-600 rounded-full"></div>
+            <p className="text-x2">Total Employees: {totalEmployees}</p>
+          </div>
+          <div
+            className="flex items-center space-x-1 cursor-pointer"
+            onClick={() => handleDialogOpen("Total Departments")}
+          >
+            <div className="w-3 h-3 bg-gray-600 rounded-full"></div>
+            <p className="text-x2">Total Departments: {totalDepartments}</p>
+          </div>
+          <div className="flex justify-between space-x-1">
+            <div
+              className="flex items-center space-x-1 cursor-pointer"
+              onClick={() => handleDialogOpen("Online Employees")}
+            >
+              <div className="w-3 h-3 bg-green-600 rounded-full"></div>
+              <p className="text-x2">Online: {onlineCount}</p>
+            </div>
+            <div
+              className="flex items-center space-x-1 cursor-pointer"
+              onClick={() => handleDialogOpen("Offline Employees")}
+            >
+              <div className="w-3 h-3 bg-red-600 rounded-full"></div>
+              <p className="text-x2">Offline: {offlineCount}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      <EmployeeListDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        employees={employees}
+        title={dialogTitle}
+      />
+    </>
+  );
 }

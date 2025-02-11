@@ -91,7 +91,7 @@ function RecentActivitiesTable({ tableData }: { tableData: TAttendance[] }) {
 
 export default function RecentActivitiesCard() {
 	const { data, isError, isLoading } = useQuery({
-		queryKey: ['AttendanceToady'],
+		queryKey: ['AttendanceToday'],
 		queryFn: () => {
 			const user = useUserStore.getState().getUser();
 			const departmentId = user?.departmentId;
@@ -106,26 +106,49 @@ export default function RecentActivitiesCard() {
 
 	const dummyData: TAttendance[] = data ?? [];
 	if (isLoading) {
-		return <Skeleton className="flex-1 col-span-2 "></Skeleton>;
+		return <Skeleton className="col-span-3 row-span-3  "></Skeleton>;
 	}
 
 	if (isError) {
-		return <>An Error has occured</>;
+		return (
+			<Card className="col-span-3 row-span-3  ">
+				<CardHeader>
+					<div className="flex item-center justify-between">
+						<CardTitle className="text-base lg:text-lg xl:text-2xl ">
+							Attendance History Today
+						</CardTitle>
+						<Activity></Activity>
+					</div>
+					<CardDescription>
+						See who checked in today and review attendance details at a glance
+					</CardDescription>
+				</CardHeader>
+				<CardContent className="p-0 pb-2 ">
+					<ScrollArea className=" ">
+						<RecentActivitiesTable
+							tableData={dummyData}
+						></RecentActivitiesTable>
+					</ScrollArea>
+				</CardContent>
+			</Card>
+		);
 	}
 
 	return (
-		<Card className="flex-1 col-span-2 ">
-			<CardHeader>
-				<div className="flex item-center justify-between">
-					<CardTitle> Recent Activities</CardTitle>
-					<Activity></Activity>
+		<Card className="p-2 pt-1 2xl:p-5 col-span-3 row-span-3  ">
+			<CardHeader className="p-0">
+				<div className="flex items-end justify-between">
+					<CardTitle className="text-base 2xl:text-lg">
+						Attendance History Today
+					</CardTitle>
+					<Activity className="2xl:w-[1.25rem] 2xl:h-[1.25rem]  h-[1.5rem] w-[1.5rem]"></Activity>
 				</div>
-				<CardDescription>
-					Recent activities of the employees of this department
+				<CardDescription className="!m-0 text-xs 2xl:text-sm">
+					See who checked in today and review attendance details at a glance
 				</CardDescription>
 			</CardHeader>
-			<CardContent>
-				<ScrollArea className="h-[200px] ">
+			<CardContent className="p-0">
+				<ScrollArea className="h-[150px] 2xl:h-[200px] ">
 					<RecentActivitiesTable tableData={dummyData}></RecentActivitiesTable>
 				</ScrollArea>
 			</CardContent>

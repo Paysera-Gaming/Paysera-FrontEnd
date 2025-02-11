@@ -14,7 +14,7 @@ import {
 // button
 import { Button } from '@/components/ui/button';
 import { useUserStore } from '@/stores/userStore';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 // logout
 import { LogOut } from 'lucide-react';
 
@@ -29,10 +29,17 @@ import { toast } from 'sonner';
 
 export default function LogOutButton() {
 	const navigate = useNavigate();
-
+	const queryClient = useQueryClient();
 	const mutateLogout = useMutation({
 		mutationFn: logout,
 		onSuccess: () => {
+			queryClient.removeQueries();
+			useUserStore.getState().clearUser();
+			localStorage.clear();
+			document.cookie.split(";").forEach((c) => {
+				c = c.trim();
+				document.cookie = c.substring(0, c.indexOf("=")) + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";
+			});
 			navigate('/login');
 		},
 		onError: (error) => {
@@ -40,9 +47,8 @@ export default function LogOutButton() {
 		},
 	});
 	function logOutUser() {
-		useUserStore.getState().clearUser();
 		mutateLogout.mutate();
-		navigate('/login');
+
 	}
 
 	return (

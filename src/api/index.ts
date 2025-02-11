@@ -23,6 +23,8 @@ axiosInstance.interceptors.response.use(
 
 		if (!error.response) {
 			toast.error('Network Error');
+			console.log(error);
+
 			return Promise.reject(error);
 		}
 

@@ -1,4 +1,11 @@
-import { Home, Calendar, FolderKanban, UserCheck } from 'lucide-react';
+import {
+	Home,
+	Calendar,
+	FolderKanban,
+	UserCheck,
+	UsersIcon,
+	AlarmClockPlus,
+} from 'lucide-react';
 import { Icons } from '@/icons/Icon';
 // router
 import { NavLink } from 'react-router-dom';
@@ -13,18 +20,17 @@ import { ModeToggle } from '../ThemeProvider/ThemeSwitch';
 import { cn } from '@/lib/utils';
 interface RouteItemProps {
 	links: string[];
+	routeNames: string[];
 }
 
-// this is me rendering the routes list
-// you could also use a map for this, map the name and corrolate them
-// with the route given
-// might to this later
-function RouteItems({ links }: RouteItemProps): ReactNode {
+function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 	const iconList = [
 		<Home></Home>,
 		<FolderKanban></FolderKanban>,
 		<UserCheck></UserCheck>,
 		<Calendar></Calendar>,
+		<UsersIcon></UsersIcon>,
+		<AlarmClockPlus></AlarmClockPlus>,
 	];
 
 	const routes = links.map((link, index) => {
@@ -51,7 +57,7 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
 					to={link}
 				>
 					{iconList[index]}
-					{link}
+					{routeNames[index]}
 				</NavLink>
 			</li>
 		);
@@ -81,6 +87,17 @@ export default function TeamLeadNavigation() {
 		'manage',
 		'attendance',
 		'schedule',
+		'personal',
+		'overtime',
+	];
+
+	const routeNames: string[] = [
+		'Dashboard',
+		'Manage Employees',
+		'Attendance History',
+		'Role Schedules',
+		'Personal Schedules',
+		'Overtime Approval',
 	];
 
 	return (
@@ -92,7 +109,7 @@ export default function TeamLeadNavigation() {
 				<p className="text-muted-foreground text-base font-semibold ml-2 ">
 					Navigation
 				</p>
-				<RouteItems links={routeLinks} />
+				<RouteItems links={routeLinks} routeNames={routeNames} />
 			</ul>
 			{/* {then eto} */}
 			<LogOutButton></LogOutButton>

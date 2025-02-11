@@ -21,6 +21,10 @@ function ScheduleInfo() {
 		return (
 			<ul>
 				<li>
+					<b>Schedule Type:</b>
+					{dateToHours(schedule.scheduleType)}
+				</li>
+				<li>
 					<b>Time Starts at: </b>
 					{dateToHours(schedule.startTime)}
 				</li>
@@ -28,14 +32,7 @@ function ScheduleInfo() {
 					<b>Time Ends at: </b>
 					{dateToHours(schedule.endTime)}
 				</li>
-				<li>
-					<b>Lunchtime Starts at: </b>
-					{dateToHours(schedule.lunchStartTime)}
-				</li>
-				<li>
-					<b>Lunchtime Ends at: </b>
-					{dateToHours(schedule.lunchEndTime)}
-				</li>
+				{/* add overtime i guess */}
 			</ul>
 		);
 	}

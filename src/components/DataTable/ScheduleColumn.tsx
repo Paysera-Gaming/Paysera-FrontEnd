@@ -16,7 +16,7 @@ import { MoreHorizontal } from 'lucide-react';
 import EditSchedule from '../TeamLeadComponents/DialogForms/EditSchedule';
 import RemoveScheduleDialog from '../TeamLeadComponents/DialogForms/RemoveSchedule';
 import { formatDate } from './DataColumns';
-import { Badge } from '../ui/badge';
+// import { Badge } from '../ui/badge';
 import { TDepartmentSchedules } from '@/api/ScheduleAPI';
 import { format } from 'date-fns';
 export const ScheduleContext = createContext<TDepartmentSchedules | undefined>(
@@ -77,7 +77,7 @@ export const scheduleColumns: ColumnDef<TDepartmentSchedules>[] = [
 		accessorKey: 'Schedule.startTime',
 		header: 'Start Time',
 		cell: ({ row }) => {
-			return dateToHours(new Date(row.getValue('Schedule_startTime')));
+			return dateToHours(new Date(row.original.Schedule.startTime));
 		},
 	},
 	{
@@ -88,44 +88,44 @@ export const scheduleColumns: ColumnDef<TDepartmentSchedules>[] = [
 		},
 	},
 
-	{
-		accessorKey: 'Schedule.limitWorkHoursDay',
-		header: 'Work Hours Limit',
-	},
+	// {
+	// 	accessorKey: 'Schedule.limitWorkHoursDay',
+	// 	header: 'Work Hours Limit',
+	// },
 
-	{
-		accessorKey: 'Schedule.allowedOvertime',
-		header: 'Allowed Overtime',
-		cell: ({ row }) => {
-			const isAllowed: boolean = row.getValue('Schedule_allowedOvertime');
+	// {
+	// 	accessorKey: 'Schedule.allowedOvertime',
+	// 	header: 'Allowed Overtime',
+	// 	cell: ({ row }) => {
+	// 		const isAllowed: boolean = row.getValue('Schedule_allowedOvertime');
 
-			return (
-				<Badge
-					variant={
-						row.getValue('Schedule_allowedOvertime') ? 'default' : 'destructive'
-					}
-				>
-					{isAllowed ? 'Yes' : 'No'}
-				</Badge>
-			);
-		},
-	},
+	// 		return (
+	// 			<Badge
+	// 				variant={
+	// 					row.getValue('Schedule_allowedOvertime') ? 'default' : 'destructive'
+	// 				}
+	// 			>
+	// 				{isAllowed ? 'Yes' : 'No'}
+	// 			</Badge>
+	// 		);
+	// 	},
+	// },
 
-	{
-		accessorKey: 'Schedule.lunchStartTime',
-		header: 'Lunch Start Time',
-		cell: ({ row }) => {
-			return dateToHours(new Date(row.getValue('Schedule_lunchStartTime')));
-		},
-	},
+	// {
+	// 	accessorKey: 'Schedule.lunchStartTime',
+	// 	header: 'Lunch Start Time',
+	// 	cell: ({ row }) => {
+	// 		return dateToHours(new Date(row.getValue('Schedule_lunchStartTime')));
+	// 	},
+	// },
 
-	{
-		accessorKey: 'Schedule.lunchEndTime',
-		header: 'Lunch End Time',
-		cell: ({ row }) => {
-			return dateToHours(new Date(row.getValue('Schedule_lunchEndTime')));
-		},
-	},
+	// {
+	// 	accessorKey: 'Schedule.lunchEndTime',
+	// 	header: 'Lunch End Time',
+	// 	cell: ({ row }) => {
+	// 		return dateToHours(new Date(row.getValue('Schedule_lunchEndTime')));
+	// 	},
+	// },
 	{
 		accessorKey: 'createdAt',
 		header: 'Created At',

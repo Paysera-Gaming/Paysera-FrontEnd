@@ -30,13 +30,14 @@ import {
 	TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-import { Checkbox } from '@/components/ui/checkbox';
+// import { Checkbox } from '@/components/ui/checkbox';
 import { Info } from 'lucide-react';
 import { useContext } from 'react';
 import { ScheduleContext } from '@/components/DataTable/ScheduleColumn';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useUserStore } from '@/stores/userStore';
+import { TInputForm } from '@/api/ScheduleAPI';
 
 const formSchema = z.object({
 	name: z.string().min(2).max(50),
@@ -44,19 +45,14 @@ const formSchema = z.object({
 
 	timeIn: z.date(),
 	timeOut: z.date(),
-	lunchTimeIn: z.date(),
-	lunchTimeOut: z.date(),
 
-	allowedOverTime: z.boolean(),
+	// allowedOverTime: z.boolean(),
 	scheduleType: z.enum(['FIXED', 'SUPER_FLEXI', 'FLEXI']),
 });
 
 interface IScheduleFormProps {
 	updateParentState: (value: boolean) => void;
-	fetchRequest: (
-		id: number,
-		schedule: z.infer<typeof formSchema>
-	) => Promise<number>;
+	fetchRequest: (schedule: TInputForm, id: number) => Promise<number>;
 	isPost: boolean;
 }
 
@@ -79,16 +75,13 @@ export default function ScheduleForm({
 			timeOut: new Date(
 				ScheduleSub?.Schedule.endTime ?? new Date().setHours(0, 0, 0, 0)
 			),
-			lunchTimeIn: new Date(
-				ScheduleSub?.Schedule.lunchStartTime ?? new Date().setHours(0, 0, 0, 0)
-			),
-			lunchTimeOut: new Date(
-				ScheduleSub?.Schedule.lunchEndTime ?? new Date().setHours(0, 0, 0, 0)
-			),
-			allowedOverTime: ScheduleSub?.Schedule.allowedOvertime ?? false,
+
+			// allowedOverTime: ScheduleSub?.Schedule.allowedOvertime ?? false,
 			scheduleType: ScheduleSub?.Schedule.scheduleType,
 		},
 	});
+
+	const watchedType = form.watch('scheduleType');
 
 	const queryClient = useQueryClient();
 
@@ -100,14 +93,14 @@ export default function ScheduleForm({
 				if (scheduleId === undefined) {
 					return Promise.reject(new Error('Schedule ID is undefined'));
 				}
-				return fetchRequest(scheduleId, form.getValues());
+				return fetchRequest(form.getValues(), scheduleId);
 			} else {
-				// postt request
+				// post request
 				const departmentId = useUserStore.getState().user?.departmentId;
 				if (departmentId === undefined) {
 					return Promise.reject(new Error('Department ID is undefined'));
 				}
-				return fetchRequest(departmentId, form.getValues());
+				return fetchRequest(form.getValues(), departmentId);
 			}
 		},
 		onSuccess: () => {
@@ -116,7 +109,8 @@ export default function ScheduleForm({
 		},
 		onError: (error) => {
 			console.log(error);
-			console.log(ScheduleSub);
+
+
 		},
 	});
 
@@ -140,7 +134,7 @@ export default function ScheduleForm({
 							render={({ field }) => (
 								<FormItem className="">
 									<div className="flex items-center justify-start gap-2">
-										<FormLabel>Schedule Name</FormLabel>
+										<FormLabel>Schedule Name </FormLabel>
 										<TooltipProvider>
 											<Tooltip>
 												<TooltipTrigger asChild>
@@ -176,12 +170,17 @@ export default function ScheduleForm({
 												</TooltipTrigger>
 												<TooltipContent>
 													Applies the schedule to the employee with this role
+
 												</TooltipContent>
 											</Tooltip>
 										</TooltipProvider>
 									</div>
 									<FormControl>
-										<Input placeholder="E.g. 'Manager' " {...field} />
+										<Input
+											className="uppercase"
+											placeholder="E.g. 'MANAGER' "
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -202,6 +201,14 @@ export default function ScheduleForm({
 												</TooltipTrigger>
 												<TooltipContent>
 													This dictates the flexibility of the schedule
+													<br></br>
+
+													<ul>
+														<h4 className='font-bold'>Schedule Information</h4>
+														<li>Fixed: Clock in and out at specified times.</li>
+														<li>Flexible: Clock in between 6 AM and 10 AM.</li>
+														<li>Super Flexible: As long as the employee renders 8 hours within the day.</li>
+													</ul>
 												</TooltipContent>
 											</Tooltip>
 										</TooltipProvider>
@@ -212,7 +219,7 @@ export default function ScheduleForm({
 									>
 										<FormControl>
 											<SelectTrigger>
-												<SelectValue placeholder="Select a verified email to display" />
+												<SelectValue placeholder="Select a Schedule Type" />
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent>
@@ -228,77 +235,45 @@ export default function ScheduleForm({
 					</div>
 
 					{/* time */}
-					<FormField
-						control={form.control}
-						name="timeIn"
-						render={({ field }) => (
-							<FormItem className="border border-border border-solid rounded-md p-3">
-								<FormLabel>Time-In Start</FormLabel>
-								<FormControl>
-									<TimePicker
-										date={field.value}
-										setDate={field.onChange}
-									></TimePicker>
-								</FormControl>
-								<FormDescription>*In military time</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="timeOut"
-						render={({ field }) => (
-							<FormItem className="border border-border border-solid rounded-md p-3">
-								<FormLabel>Time-Out Start</FormLabel>
-								<FormControl>
-									<TimePicker
-										date={field.value}
-										setDate={field.onChange}
-									></TimePicker>
-								</FormControl>
-								<FormDescription>*In military Time</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					{/* lunch */}
-					<FormField
-						control={form.control}
-						name="lunchTimeIn"
-						render={({ field }) => (
-							<FormItem className="border border-border border-solid rounded-md p-3">
-								<FormLabel>Lunchbreak Start</FormLabel>
-								<FormControl>
-									<TimePicker
-										date={field.value}
-										setDate={field.onChange}
-									></TimePicker>
-								</FormControl>
-								<FormDescription>*In military Time</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="lunchTimeOut"
-						render={({ field }) => (
-							<FormItem className="border border-border border-solid rounded-md p-3">
-								<FormLabel>Lunchbreak End</FormLabel>
-								<FormControl>
-									<TimePicker
-										date={field.value}
-										setDate={field.onChange}
-									></TimePicker>
-								</FormControl>
-								<FormDescription>In military Time</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
+					{watchedType === 'FIXED' && (
+						<>
+							<FormField
+								control={form.control}
+								name="timeIn"
+								render={({ field }) => (
+									<FormItem className="border border-border border-solid rounded-md p-3">
+										<FormLabel>Time-In Start</FormLabel>
+										<FormControl>
+											<TimePicker
+												date={field.value}
+												setDate={field.onChange}
+											></TimePicker>
+										</FormControl>
+										<FormDescription>*In military time</FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="timeOut"
+								render={({ field }) => (
+									<FormItem className="border border-border border-solid rounded-md p-3">
+										<FormLabel>Time-Out Start</FormLabel>
+										<FormControl>
+											<TimePicker
+												date={field.value}
+												setDate={field.onChange}
+											></TimePicker>
+										</FormControl>
+										<FormDescription>*In military Time</FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</>
+					)}
+					{/* <FormField
 						control={form.control}
 						name="allowedOverTime"
 						render={({ field }) => (
@@ -318,9 +293,9 @@ export default function ScheduleForm({
 								<FormMessage />
 							</FormItem>
 						)}
-					/>
+					/> */}
 
-					<div className="col-span-2 flex items-center justify-end gap-2">
+					<div className="col-span-2 flex items-center justify-end gap-2 mt-2">
 						<Button
 							onClick={() => {
 								updateParentState(false);

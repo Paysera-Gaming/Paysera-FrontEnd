@@ -9,13 +9,63 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
+
 import { Label } from '@/components/ui/label';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { updateEmployee } from '@/api/EmployeeAPI';
 import { useUserStore } from '@/stores/userStore';
 import { getUserInfo } from '@/api/LoginAPI';
+import {
+	getAllSchedulesInDepartment,
+	TDepartmentSchedules,
+} from '@/api/ScheduleAPI';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+	SelectLabel,
+	SelectGroup,
+} from '@/components/ui/select';
+
+function UseRoleListItem() {
+	const queryClient = useQueryClient();
+	const cachedData = queryClient.getQueryData<TDepartmentSchedules[]>([
+		'Schedule',
+	]);
+
+	const { data, isLoading } = useQuery({
+		queryKey: ['Schedule'],
+		queryFn: () => {
+			const user = useUserStore.getState().getUser();
+			const departmentId = user?.departmentId;
+			if (departmentId !== undefined) {
+				return getAllSchedulesInDepartment(departmentId);
+			} else {
+				throw new Error('No Department Id Found');
+			}
+		},
+		initialData: cachedData,
+	});
+
+	if (isLoading) {
+		return <p>loading</p>;
+	}
+
+	return (
+		<SelectGroup>
+			<SelectLabel> Department Roles</SelectLabel>
+			{data?.map((item, index) => (
+				<SelectItem key={index} value={item.role}>
+					{item.role}
+				</SelectItem>
+			)) || <p>No Roles Found</p>}
+		</SelectGroup>
+	);
+}
+
 const EditRole = forwardRef<HTMLDivElement, { employeeInfo: TEmployee }>(
 	({ employeeInfo }, ref) => {
 		const queryClient = useQueryClient();
@@ -51,6 +101,7 @@ const EditRole = forwardRef<HTMLDivElement, { employeeInfo: TEmployee }>(
 					}}
 				>
 					<p>Edit Role</p>
+
 				</div>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
@@ -64,14 +115,18 @@ const EditRole = forwardRef<HTMLDivElement, { employeeInfo: TEmployee }>(
 							<Label htmlFor="name" className="text-right">
 								Role
 							</Label>
-							<Input
-								placeholder={employeeInfo.role}
-								id="name"
-								className="col-span-3"
-								onChange={(e) => {
-									setRole(e.target.value);
-								}}
-							/>
+							<Select
+								onValueChange={(value) => setRole(value)}
+								defaultValue={employeeInfo.role}
+							>
+								<SelectTrigger className="col-span-3">
+									<SelectValue placeholder="Select a department role" />
+								</SelectTrigger>
+
+								<SelectContent>
+									<UseRoleListItem></UseRoleListItem>
+								</SelectContent>
+							</Select>
 						</div>
 					</div>
 					<DialogFooter>

@@ -1,26 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-import { TimerIcon, UtensilsCrossed } from 'lucide-react';
+import { AlarmClockPlus, TimerIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useUserStore } from '@/stores/userStore';
 import { getTodaysAttendance } from '@/api/ClockInAPI';
 import { Badge } from '../ui/badge';
 
-type UserStatus = 'BREAK' | 'DONE' | 'ONGOING';
-
-export interface TimerProps {
-	formAction: 'Clock-In' | 'Lunch-In' | 'Lunch-Out' | 'Clock-Out' | 'None';
-}
-
-function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
-	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
-	const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
-	return differenceInSeconds;
-}
+type UserStatus = 'OVERTIME' | 'DONE' | 'ONGOING';
 
 function IconVariant(status: UserStatus) {
 	switch (status) {
-		case 'ONGOING' || 'BREAK':
+		case 'ONGOING':
 			return (
 				<TimerIcon
 					size={`1.5rem`}
@@ -28,12 +18,12 @@ function IconVariant(status: UserStatus) {
 				></TimerIcon>
 			);
 
-		case 'BREAK':
+		case 'OVERTIME':
 			return (
-				<UtensilsCrossed
+				<AlarmClockPlus
 					size={`1.5rem`}
 					className="mb-1 text-primary-foreground stroke-[2px]"
-				></UtensilsCrossed>
+				></AlarmClockPlus>
 			);
 		default:
 			return (
@@ -50,14 +40,19 @@ function statusVariant(status: UserStatus) {
 		case 'ONGOING':
 			return 'Online';
 
-		case 'BREAK':
-			return 'Lunch';
+		case 'OVERTIME':
+			return 'overtime';
 
 		case 'DONE':
-			return 'Offline';
+			return 'DONE';
 		default:
 			return 'Offline';
 	}
+}
+function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
+	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
+	const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
+	return differenceInSeconds;
 }
 
 export default function TimerDisplay() {
@@ -68,7 +63,6 @@ export default function TimerDisplay() {
 	);
 
 	const user = useUserStore.getState().user;
-
 	const { data, isSuccess } = useQuery({
 		queryKey: ['UsersAttendance'],
 		queryFn: () => {
@@ -78,23 +72,32 @@ export default function TimerDisplay() {
 
 			return getTodaysAttendance(user.id);
 		},
+		staleTime: 0, // This will make the query always stale
 	});
 
 	useEffect(() => {
 		// OMEGA JEMPOY ALERT
 		let convertedToSecond = 0;
 		if (isSuccess && data) {
+			if (data.status === 'ONGOING') {
+				useUserStore.getState().setUserClockStatus('Clock-In');
+			} else {
+				useUserStore.getState().setUserClockStatus('Clock-Out');
+			}
+
+			console.log(data);
+
 			// if timeOut is present
 			if (data.timeOut) {
 				convertedToSecond = convertDateToSeconds(
 					new Date(data.timeIn),
 					new Date(data.timeOut)
 				);
+
 				setTime(convertedToSecond);
 				return;
-			}
-
-			if (data.lunchTimeOut) {
+			} else {
+				console.log('FOO');
 				convertedToSecond = convertDateToSeconds(
 					new Date(data.timeIn),
 					new Date()
@@ -102,29 +105,12 @@ export default function TimerDisplay() {
 				setTime(convertedToSecond);
 				return;
 			}
-			// if lunchTimeOut is present but timeOut is not
-			// then we will use the lunchTimeOut to calculate the time
-			if (data.lunchTimeIn) {
-				convertedToSecond = convertDateToSeconds(
-					new Date(data.timeIn),
-					new Date(data.lunchTimeIn)
-				);
-				setTime(convertedToSecond);
-				return;
-			}
-
-			convertedToSecond = convertDateToSeconds(
-				new Date(data.timeIn),
-				new Date()
-			);
-			setTime(convertedToSecond);
 		}
 	}, [isSuccess, data]);
 
+	// this one is the counter
 	useEffect(() => {
-		console.log(data?.status);
-
-		if (isSuccess && (data.status === 'ONGOING' || data.status === 'BREAK')) {
+		if (isSuccess && data.status === 'ONGOING') {
 			// starts the time
 			timerIntervalId.current = setInterval(() => {
 				setTime((time) => time + 1);
@@ -155,7 +141,9 @@ export default function TimerDisplay() {
 						className={cn('inline', {
 							'bg-primary outline-ring': data.status === 'ONGOING',
 							'bg-destructive outline-destructive': data.status != 'ONGOING',
-							'bg-orange-500 outline-orange-500': data.status == 'BREAK',
+							'bg-violet-500 outline-violet-500':
+								convertDateToSeconds(new Date(data.timeIn), new Date()) >
+								32_400,
 						})}
 					>
 						{statusVariant(data.status as UserStatus)}
@@ -167,7 +155,9 @@ export default function TimerDisplay() {
 						{
 							'bg-primary outline-ring': data.status === 'ONGOING',
 							'bg-destructive outline-destructive': data.status != 'ONGOING',
-							'bg-orange-500 outline-orange-500': data.status == 'BREAK',
+							'bg-violet-500 outline-violet-500':
+								convertDateToSeconds(new Date(data.timeIn), new Date()) >
+								32_400,
 						}
 					)}
 				>

@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios';
 import { axiosInstance } from '.';
 import { toast } from 'sonner';
 import { TDepartmentSchedules } from './ScheduleAPI';
+import { TPersonalSchedule } from './PersonalScheduleAPI';
 
 export type TUserInfo = {
 	id: number;
@@ -14,7 +15,8 @@ export type TUserInfo = {
 	middleName: string;
 	role: string;
 	departmentName: string;
-	schedule: TDepartmentSchedules | undefined;
+	departmentSchedule: TDepartmentSchedules | undefined;
+	personalSchedule: TPersonalSchedule | undefined;
 };
 
 export async function login(

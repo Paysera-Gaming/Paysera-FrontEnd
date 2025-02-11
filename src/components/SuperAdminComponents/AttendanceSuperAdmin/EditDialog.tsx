@@ -1,168 +1,143 @@
-import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { parseTime, timeDifferenceInHours, formatDateTime } from './timeUtils';
-
-import { toast } from 'sonner';
-import { useQueryClient } from '@tanstack/react-query';
-import { Attendance } from './types';
-import { axiosInstance } from '@/api';
+import React, { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { parseTime, timeDifferenceInHours, formatDateTime, formatTime } from "./timeUtils";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import type { Attendance } from "./types";
+import { axiosInstance } from "@/api";
 
 interface EditDialogProps {
-    isOpen: boolean;
-    onClose: () => void;
-    editData: Attendance;
-    setEditData: (data: Attendance) => void;
-    attendance: Attendance;
+  isOpen: boolean;
+  onClose: () => void;
+  editData: Attendance;
+  setEditData: (data: Attendance) => void;
+  attendance: Attendance;
 }
 
 const EditDialog: React.FC<EditDialogProps> = ({ isOpen, onClose, editData, setEditData, attendance }) => {
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
+  const [errorMessage, setErrorMessage] = useState("");
 
-    const handleEditSave = async (event: React.FormEvent) => {
-        event.preventDefault();
+  const handleEditSave = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-        const timeIn = parseTime(editData.timeIn);
-        const timeOut = parseTime(editData.timeOut);
-        const lunchTimeIn = parseTime(editData.lunchTimeIn);
-        const lunchTimeOut = parseTime(editData.lunchTimeOut);
+    const timeIn = editData.timeIn ? parseTime(editData.timeIn) : null;
+    const timeOut = editData.timeOut ? parseTime(editData.timeOut) : null;
 
-        const lunchTimeTotal = timeDifferenceInHours(lunchTimeIn, lunchTimeOut);
-        const totalWorkHours = timeDifferenceInHours(timeIn, timeOut);
-        const workTimeTotal = totalWorkHours - lunchTimeTotal;
-        const overTimeTotal = editData.overTimeTotal || 0;
-        const totalTime = totalWorkHours + overTimeTotal;
+    if (timeIn && timeOut) {
+      const isTimeInPM = timeIn.hours >= 12;
+      const isTimeOutAM = timeOut.hours < 12;
 
-        const validWorkTimeTotal = workTimeTotal >= 0 ? workTimeTotal : null;
-        const validLunchTimeTotal = lunchTimeTotal >= 0 ? lunchTimeTotal : null;
+      if (isTimeInPM && isTimeOutAM) {
+        setErrorMessage("Time In cannot be PM and Time Out be AM.");
+        return;
+      }
 
-        const payload = {
-            id: editData.id,
-            employeeId: editData.employee.id,
-            date: new Date(editData.date).toISOString(),
-            status: editData.status,
-            scheduleType: editData.scheduleType,
-            timeIn: formatDateTime(editData.date, timeIn),
-            timeOut: formatDateTime(editData.date, timeOut),
-            timeHoursWorked: validWorkTimeTotal,
-            overTimeTotal: overTimeTotal,
-            timeTotal: totalTime.toFixed(2), // Format total time to two decimal places
-            lunchTimeIn: formatDateTime(editData.date, lunchTimeIn),
-            lunchTimeOut: formatDateTime(editData.date, lunchTimeOut),
-            lunchTimeTotal: validLunchTimeTotal,
-        };
+      if (timeOut.hours < timeIn.hours || (timeOut.hours === timeIn.hours && timeOut.minutes < timeIn.minutes)) {
+        setErrorMessage("Time Out cannot be earlier than Time In.");
+        return;
+      }
 
-        try {
-            await axiosInstance.put(`/api/attendance/${attendance.id}`, payload);
-            toast.success(`Successfully updated attendance on ${attendance.date}`);
-            queryClient.invalidateQueries({ queryKey: ['attendanceList'] });
-            onClose();
-        } catch (error) {
-            toast.error('Error updating the attendance.');
-            console.error('Error updating the attendance:', error);
-        }
+      if (timeIn.hours === timeOut.hours && timeIn.minutes === timeOut.minutes) {
+        setErrorMessage("Time In and Time Out cannot be the same.");
+        return;
+      }
+    }
+
+    const totalWorkHours = timeIn && timeOut ? timeDifferenceInHours(timeIn, timeOut) : 0;
+    const overTimeTotal = editData.overTimeTotal || 0;
+    const totalTime = totalWorkHours + overTimeTotal;
+
+    const validWorkTimeTotal = totalWorkHours >= 0 ? totalWorkHours : null;
+
+    const payload = {
+      id: editData.id,
+      employeeId: editData.employee.id,
+      date: new Date(editData.date).toISOString(),
+      status: editData.status,
+      scheduleType: editData.scheduleType,
+      timeIn: timeIn ? formatDateTime(editData.date, timeIn) : null,
+      timeOut: timeOut ? formatDateTime(editData.date, timeOut) : null,
+      timeHoursWorked: validWorkTimeTotal,
+      overTimeTotal: overTimeTotal,
+      timeTotal: totalTime.toFixed(2),
     };
 
-    return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-lg p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
-                <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                        Edit Attendance for {attendance.employee.lastName}, {attendance.employee.firstName}
-                    </DialogTitle>
-                </DialogHeader>
-                <form onSubmit={handleEditSave} className="space-y-6">
-                    <div className="space-y-4">
-                        <div className="flex items-center space-x-4">
-                            <Label htmlFor="status" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
-                                Status
-                            </Label>
-                            <select
-                                id="status"
-                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-                                value={editData.status}
-                                onChange={(e) => setEditData({ ...editData, status: e.target.value })}
-                            >
-                                <option value="ONGOING">ONGOING</option>
-                                <option value="BREAK">BREAK</option>
-                                <option value="DONE">DONE</option>
-                                <option value="PAID_LEAVE">PAID_LEAVE</option>
-                            </select>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <Label htmlFor="timeIn" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
-                                Time In
-                            </Label>
-                            <input
-                                type="time"
-                                id="timeIn"
-                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-                                value={editData.timeIn}
-                                onChange={(e) => setEditData({ ...editData, timeIn: e.target.value })}
-                            />
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <Label htmlFor="timeOut" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
-                                Time Out
-                            </Label>
-                            <input
-                                type="time"
-                                id="timeOut"
-                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-                                value={editData.timeOut}
-                                onChange={(e) => setEditData({ ...editData, timeOut: e.target.value })}
-                            />
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <Label htmlFor="lunchTimeIn" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
-                                Lunch Time In
-                            </Label>
-                            <input
-                                type="time"
-                                id="lunchTimeIn"
-                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-                                value={editData.lunchTimeIn}
-                                onChange={(e) => setEditData({ ...editData, lunchTimeIn: e.target.value })}
-                            />
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <Label htmlFor="lunchTimeOut" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
-                                Lunch Time Out
-                            </Label>
-                            <input
-                                type="time"
-                                id="lunchTimeOut"
-                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-                                value={editData.lunchTimeOut}
-                                onChange={(e) => setEditData({ ...editData, lunchTimeOut: e.target.value })}
-                            />
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <Label htmlFor="overTimeTotal" className="w-1/4 text-right text-gray-700 dark:text-gray-300">
-                                Overtime Total (hours)
-                            </Label>
-                            <input
-                                type="number"
-                                id="overTimeTotal"
-                                className="w-3/4 p-2 border rounded-md dark:bg-gray-700 dark:text-white"
-                                value={editData.overTimeTotal || ''}
-                                onChange={(e) => setEditData({ ...editData, overTimeTotal: parseFloat(e.target.value) })}
-                            />
-                        </div>
-                    </div>
-                    <DialogFooter className="flex justify-end space-x-4">
-                        <Button type="button" variant="outline" onClick={onClose} className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md dark:text-gray-300 dark:border-gray-600">
-                            Cancel
-                        </Button>
-                        <Button type="submit" variant="default" className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                            Save
-                        </Button>
-                    </DialogFooter>
-                </form>
-            </DialogContent>
-        </Dialog>
-    );
+    try {
+      await axiosInstance.put(`/api/attendance/${attendance.id}`, payload);
+      const formattedDate = new Date(attendance.date).toLocaleDateString('default', { month: 'long', day: 'numeric' });
+      toast.success(`Successfully updated attendance on ${formattedDate}`);
+      queryClient.invalidateQueries({ queryKey: ["attendanceList"] });
+      handleClose();
+    } catch (error) {
+      toast.error("Error updating the attendance.");
+      console.error("Error updating the attendance:", error);
+    }
+  };
+
+  const handleClose = () => {
+    setErrorMessage("");
+    onClose();
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>
+            Edit Attendance for {attendance.employee.lastName}, {attendance.employee.firstName}
+          </DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleEditSave} className="space-y-4">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="status">Status</Label>
+              <Select value={editData.status} onValueChange={(value) => setEditData({ ...editData, status: value })}>
+                <SelectTrigger id="status">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ONGOING">ONGOING</SelectItem>
+                  <SelectItem value="BREAK">BREAK</SelectItem>
+                  <SelectItem value="DONE">DONE</SelectItem>
+                  <SelectItem value="PAID_LEAVE">PAID LEAVE</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="timeIn">Time In</Label>
+              <Input
+                type="time"
+                id="timeIn"
+                value={editData.timeIn ? formatTime(parseTime(editData.timeIn)) : ""}
+                onChange={(e) => setEditData({ ...editData, timeIn: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="timeOut">Time Out</Label>
+              <Input
+                type="time"
+                id="timeOut"
+                value={editData.timeOut ? formatTime(parseTime(editData.timeOut)) : ""}
+                onChange={(e) => setEditData({ ...editData, timeOut: e.target.value })}
+              />
+            </div>
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button type="submit">Save changes</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
 };
 
 export default EditDialog;

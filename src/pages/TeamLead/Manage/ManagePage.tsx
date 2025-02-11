@@ -9,10 +9,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useUserStore } from '@/stores/userStore';
 import ErrorDisplay from '@/components/ErrorComponent/ErrorDisplay';
 
-// todo's
-// need to add edit employee in department - doing
-// remove employee in department
-
 export default function ManagePage() {
 	const { data, isError, isLoading } = useQuery({
 		queryKey: ['EmployeesInfo'],
@@ -36,7 +32,7 @@ export default function ManagePage() {
 
 	if (isLoading) {
 		return (
-			<div className=" w-full h-full border-border border-solid border p-5 rounded-md ">
+			<div className="min-h-0 min-w-0 w-full h-full border-border border-solid border p-5 rounded-md ">
 				<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0">
 					Manage Employees In Department
 				</h2>
@@ -52,7 +48,7 @@ export default function ManagePage() {
 	}
 
 	return (
-		<div className=" w-full h-full border-border border-solid border p-5 rounded-md">
+		<div className=" min-h-0 min-w-0 w-full h-full border-border border-solid border p-5 rounded-md">
 			<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0">
 				Manage Employees In Department
 			</h2>

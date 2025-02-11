@@ -8,10 +8,10 @@ interface AttendanceSummaryCardsProps {
     flexiCount: number;
     activeFilter: string;
     handleFilterClick: (filter: string) => void;
-    overallCounts: { ongoing: number; break: number; done: number; paidLeave: number };
-    fixedCounts: { ongoing: number; break: number; done: number; paidLeave: number };
-    SUPER_FLEXICounts: { ongoing: number; break: number; done: number; paidLeave: number };
-    flexiCounts: { ongoing: number; break: number; done: number; paidLeave: number };
+    overallCounts: { ongoing: number; done: number; paidLeave: number };
+    fixedCounts: { ongoing: number; done: number; paidLeave: number };
+    SUPER_FLEXICounts: { ongoing: number; done: number; paidLeave: number };
+    flexiCounts: { ongoing: number; done: number; paidLeave: number };
 }
 
 export default function AttendanceSummaryCards({
@@ -42,9 +42,8 @@ export default function AttendanceSummaryCards({
                         <p className="text-lg font-bold">{overallCount}</p>
                         <div className="text-xs">
                             <p>ONGOING: {overallCounts.ongoing}</p>
-                            <p>BREAK: {overallCounts.break}</p>
                             <p>DONE: {overallCounts.done}</p>
-                            <p>PAID_LEAVE: {overallCounts.paidLeave}</p>
+                            <p>PAID LEAVE: {overallCounts.paidLeave}</p>
                         </div>
                     </div>
                 </CardContent>
@@ -64,9 +63,8 @@ export default function AttendanceSummaryCards({
                         <p className="text-lg font-bold">{fixedCount}</p>
                         <div className="text-xs">
                             <p>ONGOING: {fixedCounts.ongoing}</p>
-                            <p>BREAK: {fixedCounts.break}</p>
                             <p>DONE: {fixedCounts.done}</p>
-                            <p>PAID_LEAVE: {fixedCounts.paidLeave}</p>
+                            <p>PAID LEAVE: {fixedCounts.paidLeave}</p>
                         </div>
                     </div>
                 </CardContent>
@@ -86,9 +84,8 @@ export default function AttendanceSummaryCards({
                         <p className="text-lg font-bold">{SUPER_FLEXICount}</p>
                         <div className="text-xs">
                             <p>ONGOING: {SUPER_FLEXICounts.ongoing}</p>
-                            <p>BREAK: {SUPER_FLEXICounts.break}</p>
                             <p>DONE: {SUPER_FLEXICounts.done}</p>
-                            <p>PAID_LEAVE: {SUPER_FLEXICounts.paidLeave}</p>
+                            <p>PAID LEAVE: {SUPER_FLEXICounts.paidLeave}</p>
                         </div>
                     </div>
                 </CardContent>
@@ -108,9 +105,8 @@ export default function AttendanceSummaryCards({
                         <p className="text-lg font-bold">{flexiCount}</p>
                         <div className="text-xs">
                             <p>ONGOING: {flexiCounts.ongoing}</p>
-                            <p>BREAK: {flexiCounts.break}</p>
                             <p>DONE: {flexiCounts.done}</p>
-                            <p>PAID_LEAVE: {flexiCounts.paidLeave}</p>
+                            <p>PAID LEAVE: {flexiCounts.paidLeave}</p>
                         </div>
                     </div>
                 </CardContent>
