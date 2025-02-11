@@ -40,7 +40,6 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
   isOpen,
   onClose,
   employees,
-  title,
 }) => {
   const [detailedEmployees, setDetailedEmployees] = useState<Employee[]>([]);
   const [attendanceData, setAttendanceData] = useState<Attendance[]>([]);
@@ -149,7 +148,7 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
         className="max-w-4xl"
       >
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle>Paysera Status</DialogTitle>
           <DialogDescription id="employee-list-dialog-description">
             Detailed list of employees.
           </DialogDescription>
