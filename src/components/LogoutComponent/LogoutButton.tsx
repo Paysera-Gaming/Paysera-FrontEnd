@@ -36,9 +36,11 @@ export default function LogOutButton() {
 			queryClient.removeQueries();
 			useUserStore.getState().clearUser();
 			localStorage.clear();
-			document.cookie.split(";").forEach((c) => {
+			document.cookie.split(';').forEach((c) => {
 				c = c.trim();
-				document.cookie = c.substring(0, c.indexOf("=")) + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";
+				document.cookie =
+					c.substring(0, c.indexOf('=')) +
+					'=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
 			});
 			navigate('/login');
 		},
@@ -48,17 +50,19 @@ export default function LogOutButton() {
 	});
 	function logOutUser() {
 		mutateLogout.mutate();
-
 	}
 
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
 				<Button
-					variant={'outline'}
-					className="gap-2 w-full border-destructive transition-colors ease-in-out hover:text-destructive text-destructive"
+					variant={'ghost'}
+					className=" w-[230px] text-nowrap whitespace-nowrap p-2 gap-5 hover:bg-red-200 flex justify-start items-center border-destructive transition-colors ease-in-out hover:text-destructive text-destructive"
 				>
-					<LogOut></LogOut> <p>Logout</p>{' '}
+					<LogOut></LogOut>
+					<p className="text-transparent group-hover:text-destructive">
+						Logout
+					</p>
 				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent>
