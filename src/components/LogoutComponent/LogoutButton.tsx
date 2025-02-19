@@ -54,43 +54,32 @@ export default function LogOutButton() {
 	}
 
 	return (
-		<Button
-			variant={'ghost'}
-			className="p-0 group-hover:px-2 transition-all ease-in-out  group/logout  border-destructive mb-2 "
-		>
-			<div className="rounded-l rounded-t h-10 w-16 group-hover:w-[calc(4rem_-_0.5rem)] m flex items-center justify-center group-hover/logout:bg-red-200 transition-all ease-in-out group-hover/logout:text-destructive text-destructive">
-				<LogOut></LogOut>
-			</div>
-			<div className="rounded-r rounded-b h-10 w-44 group-hover:w-[calc(11rem_-_0.5rem)] flex items-center justify-start group-hover/logout:bg-red-200 transition-all ease-in-out group-hover/logout:text-destructive">
-				<p className="text-destructive text-lg">Logout</p>
-			</div>
-		</Button>
-		// <AlertDialog>
-		// 	<AlertDialogTrigger asChild>
-		// 		<Button
-		// 			variant={'ghost'}
-		// 			className=" mb-2 text-nowrap whitespace-nowrap group/logout flex justify-start items-center border-destructive p-0"
-		// 		>
-		// 			<div className="h-10 w-16 flex items-center justify-center group-hover/logout:bg-red-200 transition-colors ease-in-out group-hover/logout:text-destructive text-destructive">
-		// 				<LogOut></LogOut>
-		// 			</div>
-		// 			<div className="h-10 w-44 flex items-center justify-start group-hover/logout:bg-red-200 transition-colors ease-in-out  group-hover/logout:text-destructive">
-		// 				<p className="text-destructive text-lg">Logout</p>
-		// 			</div>
-		// 		</Button>
-		// 	</AlertDialogTrigger>
-		// 	<AlertDialogContent>
-		// 		<AlertDialogHeader>
-		// 			<AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
-		// 			<AlertDialogDescription>
-		// 				After loging out you have to login again.
-		// 			</AlertDialogDescription>
-		// 		</AlertDialogHeader>
-		// 		<AlertDialogFooter>
-		// 			<AlertDialogCancel>Cancel</AlertDialogCancel>
-		// 			<AlertDialogAction onClick={logOutUser}>Continue</AlertDialogAction>
-		// 		</AlertDialogFooter>
-		// 	</AlertDialogContent>
-		// </AlertDialog>
+		<AlertDialog>
+			<AlertDialogTrigger asChild>
+				<Button
+					variant={'ghost'}
+					className="p-0 group-hover:px-2 transition-all ease-in-out  group/logout  border-destructive mb-2 "
+				>
+					<div className="rounded-l rounded-t h-10 w-16 group-hover:w-[calc(4rem_-_0.5rem)] m flex items-center justify-center group-hover/logout:bg-red-200 transition-all ease-in-out group-hover/logout:text-destructive text-destructive">
+						<LogOut></LogOut>
+					</div>
+					<div className="rounded-r rounded-b h-10 w-44 group-hover:w-[calc(11rem_-_0.5rem)] flex items-center justify-start group-hover/logout:bg-red-200 transition-all ease-in-out group-hover/logout:text-destructive">
+						<p className="text-destructive text-lg">Logout</p>
+					</div>
+				</Button>
+			</AlertDialogTrigger>
+			<AlertDialogContent>
+				<AlertDialogHeader>
+					<AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+					<AlertDialogDescription>
+						After loging out you have to login again.
+					</AlertDialogDescription>
+				</AlertDialogHeader>
+				<AlertDialogFooter>
+					<AlertDialogCancel>Cancel</AlertDialogCancel>
+					<AlertDialogAction onClick={logOutUser}>Continue</AlertDialogAction>
+				</AlertDialogFooter>
+			</AlertDialogContent>
+		</AlertDialog>
 	);
 }
