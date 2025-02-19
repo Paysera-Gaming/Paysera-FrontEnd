@@ -57,7 +57,7 @@ export default function LogOutButton() {
 			<AlertDialogTrigger asChild>
 				<Button
 					variant={'ghost'}
-					className=" w-[230px] text-nowrap whitespace-nowrap p-2 gap-5 hover:bg-red-200 flex justify-start items-center border-destructive transition-colors ease-in-out hover:text-destructive text-destructive"
+					className=" w-[230px] text-nowrap whitespace-nowrap p-2 gap-5 hover:bg-red-200 flex justify-start items-center border-destructive transition-colors ease-in-out hover:text-destructive text-destructive mr-2"
 				>
 					<LogOut></LogOut>
 					<p className="text-transparent group-hover:text-destructive">

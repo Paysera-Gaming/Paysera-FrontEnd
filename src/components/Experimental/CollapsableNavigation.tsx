@@ -16,7 +16,7 @@ import { ReactNode } from 'react';
 import LogOutButton from '../LogoutComponent/LogoutButton';
 
 import { ModeToggle } from '../ThemeProvider/ThemeSwitch';
-
+import '../../index.css';
 import { cn } from '@/lib/utils';
 interface RouteItemProps {
 	links: string[];
@@ -68,17 +68,28 @@ function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 
 function ProfileHeader() {
 	return (
-		<header className="border-border border-dashed border-b w-full pb-2">
-			<div className="flex items-center justify-start gap-3">
+		// <header className="border-border border-dashed border-b w-full pb-2">
+		// 	<div className="flex items-center justify-start gap-3">
+		// 		<Icons.logo className="w-10 h-10"></Icons.logo>
+		// 		<h3 className="scroll-m-20 text-2xl font-semibold mb-1 tracking-tight">
+		// 			Paysera
+		// 		</h3>
+		// 	</div>
+		// 	{/* <div className="flex items-center gap-5 w-auto">
+		// 		<ModeToggle></ModeToggle>
+		// 		<p>Mode</p>
+		// 	</div> */}
+		// </header>
+
+		<header className="flex items-start justify-center py-5">
+			<div className="pl-5">
 				<Icons.logo className="w-10 h-10"></Icons.logo>
-				<h3 className="scroll-m-20 text-2xl font-semibold mb-1 tracking-tight">
+			</div>
+			<div className="px-5">
+				<h3 className="className='p-5' scroll-m-20 text-2xl font-semibold mb-1 tracking-tight">
 					Paysera
 				</h3>
 			</div>
-			{/* <div className="flex items-center gap-5 w-auto">
-				<ModeToggle></ModeToggle>
-				<p>Mode</p>
-			</div> */}
 		</header>
 	);
 }
@@ -103,17 +114,9 @@ export default function CollapsableNavigation() {
 	];
 
 	return (
-		<nav className="text-nowrap whitespace-nowrap overflow-hidden bg-secondary border-border shadow-md border rounded-md w-[63px] h-[95svh] flex flex-col items-start justify-between min-h-0 hover:w-[250px] transition-all ease-in-out absolute p-3 group">
-			<div className="flex flex-col items-start gap-2 w-[230px]">
-				<ProfileHeader></ProfileHeader>
-				<ul className="text-nowrap whitespace-nowrap w-full  ml-1">
-					<p className="text-transparent text-base font-semibold ml-2 group-hover:text-muted-foreground transition-all ease-in-out ">
-						Navigation
-					</p>
-					<RouteItems links={routeLinks} routeNames={routeNames} />
-				</ul>
-			</div>
-			<LogOutButton></LogOutButton>
+		<nav className="overflow-hidden bg-secondary border-border shadow-md border rounded-md w-[75px] hover:w-[225px] h-[95svh] flex  items-start justify-between min-h-0 transition-all ease-in-out absolute group">
+			<ProfileHeader></ProfileHeader>
+			<div></div>
 		</nav>
 	);
 }
