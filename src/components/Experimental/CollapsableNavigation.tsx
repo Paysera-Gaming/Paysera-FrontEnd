@@ -36,7 +36,7 @@ function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 	const routes = links.map((link, index) => {
 		return (
 			<li
-				className="my-3 "
+				className="box-border"
 				key={link}
 				onClick={() => {
 					document.getElementById(link)?.click();
@@ -45,10 +45,10 @@ function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 				<NavLink
 					className={({ isActive }: { isActive: boolean }) =>
 						cn(
-							'p-1 rounded-sm outline outline-2 transition-all ease-in-out hover:bg-border flex gap-x-5 justify-start items-center text-base text-center capitalize outline-transparent',
+							'rounded-sm outline outline-2 transition-all ease-in-out hover:bg-border flex justify-start items-center text-base text-center capitalize outline-transparent',
 
 							{
-								'outline-offset-2  bg-secondary text-ring outline-ring ':
+								'group-hover:outline-offset-2  group-hover:bg-secondary text-ring outline-ring ':
 									isActive,
 							}
 						)
@@ -56,8 +56,12 @@ function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 					id={link}
 					to={link}
 				>
-					{iconList[index]}
-					{routeNames[index]}
+					<div className="h-10 w-16 flex items-center justify-center ">
+						{iconList[index]}
+					</div>
+					<div className="h-10 w-44 flex items-center justify-start">
+						{routeNames[index]}
+					</div>
 				</NavLink>
 			</li>
 		);
@@ -65,28 +69,18 @@ function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 
 	return routes;
 }
+//240 - 64
+
+// 176
 
 function ProfileHeader() {
 	return (
-		// <header className="border-border border-dashed border-b w-full pb-2">
-		// 	<div className="flex items-center justify-start gap-3">
-		// 		<Icons.logo className="w-10 h-10"></Icons.logo>
-		// 		<h3 className="scroll-m-20 text-2xl font-semibold mb-1 tracking-tight">
-		// 			Paysera
-		// 		</h3>
-		// 	</div>
-		// 	{/* <div className="flex items-center gap-5 w-auto">
-		// 		<ModeToggle></ModeToggle>
-		// 		<p>Mode</p>
-		// 	</div> */}
-		// </header>
-
-		<header className="flex items-start justify-center py-5">
-			<div className="pl-5">
-				<Icons.logo className="w-10 h-10"></Icons.logo>
+		<header className="flex items-start justify-center  ">
+			<div className="w-16 h-16 flex items-center justify-center ">
+				<Icons.logo className="w-10 h-10 "></Icons.logo>
 			</div>
-			<div className="px-5">
-				<h3 className="className='p-5' scroll-m-20 text-2xl font-semibold mb-1 tracking-tight">
+			<div className="h-16 w-44 flex items-center ">
+				<h3 className=" scroll-m-20 text-2xl font-semibold mb-1 tracking-tight">
 					Paysera
 				</h3>
 			</div>
@@ -114,9 +108,19 @@ export default function CollapsableNavigation() {
 	];
 
 	return (
-		<nav className="overflow-hidden bg-secondary border-border shadow-md border rounded-md w-[75px] hover:w-[225px] h-[95svh] flex  items-start justify-between min-h-0 transition-all ease-in-out absolute group">
-			<ProfileHeader></ProfileHeader>
-			<div></div>
+		<nav className="box-border overflow-hidden bg-secondary border-border shadow-md border rounded-md w-16  hover:w-60 h-[95svh] flex flex-col items-start justify-between min-h-0 transition-all ease-in-out absolute group">
+			<div>
+				<ProfileHeader></ProfileHeader>
+				<div className="h-10 w-44 flex items-center px-1">
+					<p className="text-transparent transition-all ease-in-out text-base font-semibold ml-2 group-hover:text-muted-foreground ">
+						Navigation
+					</p>
+				</div>
+				<ul className="box-border group-hover:px-2 transition-all ease-in-out h-16 w-60">
+					<RouteItems links={routeLinks} routeNames={routeNames}></RouteItems>
+				</ul>
+			</div>
+			<LogOutButton></LogOutButton>
 		</nav>
 	);
 }
