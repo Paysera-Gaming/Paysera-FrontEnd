@@ -79,10 +79,11 @@ function ProfileHeader() {
 			<div className="w-16 h-16 flex items-center justify-center ">
 				<Icons.logo className="w-10 h-10 "></Icons.logo>
 			</div>
-			<div className="h-16 w-44 flex items-center ">
+			<div className="h-16 w-44 flex flex-row items-center justify-between pr-5">
 				<h3 className=" scroll-m-20 text-2xl font-semibold mb-1 tracking-tight">
 					Paysera
 				</h3>
+				<ModeToggle></ModeToggle>
 			</div>
 		</header>
 	);
