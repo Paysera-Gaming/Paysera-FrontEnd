@@ -16,7 +16,7 @@ import { ReactNode } from 'react';
 import LogOutButton from '../LogoutComponent/LogoutButton';
 
 import { ModeToggle } from '../ThemeProvider/ThemeSwitch';
-
+import '../../index.css';
 import { cn } from '@/lib/utils';
 interface RouteItemProps {
 	links: string[];
@@ -36,7 +36,7 @@ function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 	const routes = links.map((link, index) => {
 		return (
 			<li
-				className="my-3 "
+				className="box-border my-2"
 				key={link}
 				onClick={() => {
 					document.getElementById(link)?.click();
@@ -45,10 +45,10 @@ function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 				<NavLink
 					className={({ isActive }: { isActive: boolean }) =>
 						cn(
-							'p-1 rounded-sm outline outline-2 transition-all ease-in-out hover:bg-border flex gap-x-5 justify-start items-center text-base text-center capitalize outline-transparent',
+							'rounded-sm outline outline-2 transition-all ease-in-out hover:bg-border flex justify-start items-center text-base text-center capitalize outline-transparent',
 
 							{
-								'outline-offset-2  bg-secondary text-ring outline-ring ':
+								'group-hover:outline-offset-2  group-hover:bg-secondary text-ring group-hover:outline-ring ':
 									isActive,
 							}
 						)
@@ -56,8 +56,12 @@ function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 					id={link}
 					to={link}
 				>
-					{iconList[index]}
-					{routeNames[index]}
+					<div className="h-10 w-16 flex items-center justify-center ">
+						{iconList[index]}
+					</div>
+					<div className="h-10 w-44 flex items-center justify-start">
+						{routeNames[index]}
+					</div>
 				</NavLink>
 			</li>
 		);
@@ -65,23 +69,27 @@ function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 
 	return routes;
 }
+//240 - 64
+
+// 176
 
 function ProfileHeader() {
 	return (
-		<header className="min-w-[210px] w-[210px] flex items-start justify-between">
-			<div className="flex items-center justify-start gap-x-1 px-2 ">
-				<Icons.logo className="w-10 h-10"></Icons.logo>
-				<h3 className="scroll-m-20 text-2xl font-semibold mb-1 tracking-tight">
+		<header className="flex items-start justify-center  ">
+			<div className="w-16 h-16 flex items-center justify-center ">
+				<Icons.logo className="w-10 h-10 "></Icons.logo>
+			</div>
+			<div className="h-16 w-44 flex flex-row items-center justify-between pr-5">
+				<h3 className=" scroll-m-20 text-2xl font-semibold mb-1 tracking-tight">
 					Paysera
 				</h3>
+				<ModeToggle></ModeToggle>
 			</div>
-
-			<ModeToggle></ModeToggle>
 		</header>
 	);
 }
 
-export default function TeamLeadNavigation() {
+export default function CollapsableNavigation() {
 	const routeLinks: string[] = [
 		'dashboard',
 		'manage',
@@ -101,17 +109,18 @@ export default function TeamLeadNavigation() {
 	];
 
 	return (
-		<nav className="bg-card boder-solid border-border border rounded-md h-full w-[230px]  p-3 gap-y-10 flex flex-col items-start justify-between">
-			{/* unahin header */}
-			<ProfileHeader></ProfileHeader>
-			{/* then eto */}
-			<ul className="flex-1 w-full">
-				<p className="text-muted-foreground text-base font-semibold ml-2 ">
-					Navigation
-				</p>
-				<RouteItems links={routeLinks} routeNames={routeNames} />
-			</ul>
-			{/* {then eto} */}
+		<nav className="z-10 box-border overflow-hidden bg-card border-border shadow-md border rounded-md w-16  hover:w-60 h-[calc(100svh_-_2.5rem)] flex flex-col items-start justify-between min-h-0 transition-all ease-in-out absolute group">
+			<div>
+				<ProfileHeader></ProfileHeader>
+				<div className="h-10 w-44 flex items-center px-1">
+					<p className="text-transparent transition-all ease-in-out text-base font-semibold ml-2 group-hover:text-muted-foreground ">
+						Navigation
+					</p>
+				</div>
+				<ul className="box-border group-hover:px-2 transition-all ease-in-out h-16 w-60">
+					<RouteItems links={routeLinks} routeNames={routeNames}></RouteItems>
+				</ul>
+			</div>
 			<LogOutButton></LogOutButton>
 		</nav>
 	);

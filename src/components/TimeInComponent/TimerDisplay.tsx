@@ -14,7 +14,7 @@ function IconVariant(status: UserStatus) {
 			return (
 				<TimerIcon
 					size={`1.5rem`}
-					className="mb-1 text-primary-foreground stroke-[2px]"
+					className="mb-1 text-secondary dark:text-card stroke-[2px]"
 				></TimerIcon>
 			);
 
@@ -22,14 +22,14 @@ function IconVariant(status: UserStatus) {
 			return (
 				<AlarmClockPlus
 					size={`1.5rem`}
-					className="mb-1 text-primary-foreground stroke-[2px]"
+					className="mb-1 text-secondary dark:text-card stroke-[2px]"
 				></AlarmClockPlus>
 			);
 		default:
 			return (
 				<TimerIcon
 					size={`1.5rem`}
-					className="mb-1 text-primary-foreground stroke-[2px]"
+					className="mb-1 text-secondary dark:text-card stroke-[2px]"
 				></TimerIcon>
 			);
 	}
@@ -123,13 +123,13 @@ export default function TimerDisplay() {
 	}, [isSuccess, data]);
 
 	if (isSuccess) {
-		const hours = Math.floor(useTime / 3600);
+		const hours = Math.max(0, Math.floor(useTime / 3600));
 		const hoursDisplay = hours >= 10 ? hours : `0${hours}`;
 
-		const minutes = Math.floor((useTime % 3600) / 60);
+		const minutes = Math.max(0, Math.floor((useTime % 3600) / 60));
 		const minutesDisplay = minutes >= 10 ? minutes : `0${minutes}`;
 
-		const seconds = useTime % 60;
+		const seconds = Math.max(0, useTime % 60);
 		const secondsDisplay = seconds >= 10 ? seconds : `0${seconds}`;
 
 		return (
@@ -162,8 +162,8 @@ export default function TimerDisplay() {
 					)}
 				>
 					{IconVariant(data.status as UserStatus)}
-					<span className="w-24 text-accent text-center rounded-full ">
-						<h3 className="text-lg font-semibold ">
+					<span className="w-24  text-center rounded-full ">
+						<h3 className="text-lg text-secondary dark:text-card font-semibold ">
 							{hoursDisplay}:{minutesDisplay}:{secondsDisplay}
 						</h3>
 					</span>
@@ -184,9 +184,9 @@ export default function TimerDisplay() {
 			<span className="transition bg-destructive outline-destructive ease-in-out flex items-center justify-center py-1 px-2 rounded-full text-secondary-foreground outline-2  outline outline-offset-2">
 				<TimerIcon
 					size={`1.5rem`}
-					className="mb-1 text-primary-foreground stroke-[2px]"
+					className="mb-1 text-secondary dark:text-card stroke-[2px]"
 				></TimerIcon>
-				<span className="w-24 text-accent text-center rounded-full ">
+				<span className="w-24 text-secondary dark:text-card text-center rounded-full ">
 					<h3 className="text-lg font-semibold ">00:00:00</h3>
 				</span>
 			</span>

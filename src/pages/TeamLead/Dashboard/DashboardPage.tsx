@@ -12,7 +12,7 @@ import RecentActivitiesCard from '@/components/TeamLeadComponents/DashboardTeamL
 
 export default function Dashboard() {
 	return (
-		<div className="min-h-0 min-w-0  w-full h-full border-border border-solid border p-2 2xl:p-5 rounded-md grid grid-flow-col grid-rows-6 gap-2 2xl:3 ">
+		<div className="min-h-0 min-w-0  w-full h-full rounded-md grid grid-flow-col grid-rows-6 gap-2 2xl:gap-3">
 			{/* <div className="bg-red-500">test</div> */}
 			{/* <div className="bg-red-500 row-span-2">test</div> */}
 			{/* <div className="bg-red-500 col-span-1 row-span-2">test</div> */}

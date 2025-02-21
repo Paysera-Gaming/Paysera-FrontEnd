@@ -152,7 +152,7 @@ export default function Timebar() {
 	}, [evaluateAlarmType]);
 
 	return (
-		<header className="border-border border-solid border w-full rounded-md p-2 px-5 flex items-center justify-between">
+		<header className="border-border bg-card border-solid border w-full rounded-md p-2 px-5 flex items-center justify-between">
 			<TimerDisplay />
 			<div className="flex gap-2">
 				{employeeAccessLevel != 'ADMIN' && <RequestOverTimeButton />}
