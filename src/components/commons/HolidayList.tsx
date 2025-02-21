@@ -44,16 +44,14 @@ export default function HolidayList() {
 	const nextMonth = addMonths(date, 1);
 
 	if (isLoading) {
-		return <Skeleton className="row-span-6"></Skeleton>;
+		return <Skeleton className=""></Skeleton>;
 	}
 
 	if (isError) {
 		return (
-			<Card className="row-span-6">
+			<Card className="">
 				<CardHeader>
-					<CardTitle className="text-base 2xl:text-lg">
-						Upcoming Holidays
-					</CardTitle>
+					<CardTitle className="">Upcoming Holidays</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<p>FAILED TO FETCH HOLIDAYS - API might be offline.</p>
@@ -66,11 +64,9 @@ export default function HolidayList() {
 		// Check if data is an array before proceeding
 		if (!Array.isArray(data)) {
 			return (
-				<Card className="row-span-6">
+				<Card className="h-full">
 					<CardHeader>
-						<CardTitle className="text-base 2xl:text-lg">
-							Upcoming Holidays
-						</CardTitle>
+						<CardTitle>Upcoming Holidays</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<p>No holidays data available.</p>
@@ -83,18 +79,18 @@ export default function HolidayList() {
 		const nextMonthList = renderList(data, new Date().getMonth() + 2);
 
 		return (
-			<Card className="p-2 2xl:p-5 row-span-6">
-				<CardHeader className="p-0">
-					<CardTitle className="text-base 2xl:text-lg">
+			<Card className="">
+				<CardHeader className="">
+					<CardTitle className="">
 						Upcoming Holidays{' '}
 						{`(${date.toLocaleString('default', { month: 'long' })})`}
 					</CardTitle>
 				</CardHeader>
-				<CardContent className="p-0 pt-1">
+				<CardContent className="">
 					<ScrollArea className="h-[350px] 2xl:h-[600px]">
-						<ul className="flex flex-col list-disc list-inside text-sm 2xl:text-base">
+						<ul className="flex flex-col list-disc list-inside">
 							{currentMonthList.length !== 0 ? currentMonthList : 'No Holidays'}
-							<h3 className="text-base 2xl:text-lg font-semibold scroll-m-20 tracking-tight py-1">
+							<h3 className=" font-semibold scroll-m-20 tracking-tight py-1">
 								Next Month{' '}
 								{`(${nextMonth.toLocaleString('default', { month: 'long' })})`}
 							</h3>

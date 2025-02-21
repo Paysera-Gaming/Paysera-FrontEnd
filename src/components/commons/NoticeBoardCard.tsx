@@ -13,12 +13,12 @@ export default function NoticeBoardCard() {
 	});
 
 	if (isLoading) {
-		return <Skeleton className="col-span-3 row-span-3"></Skeleton>;
+		return <Skeleton className=""></Skeleton>;
 	}
 
 	if (isError) {
 		return (
-			<Card className="col-span-3 row-span-3">
+			<Card className="">
 				<CardHeader className="flex-row items-center justify-between w-full">
 					<CardTitle className="text-base 2xl:text-lg">Announcemnets</CardTitle>
 					<Presentation></Presentation>
@@ -36,11 +36,9 @@ export default function NoticeBoardCard() {
 		// Ensure that data is a valid array
 		if (!Array.isArray(data)) {
 			return (
-				<Card className="col-span-3 row-span-3">
+				<Card className="h-full">
 					<CardHeader className="flex-row items-center justify-between w-full">
-						<CardTitle className="text-base 2xl:text-lg">
-							Announcemnets
-						</CardTitle>
+						<CardTitle className="">Announcements</CardTitle>
 						<Presentation></Presentation>
 					</CardHeader>
 					<CardContent>
@@ -55,15 +53,13 @@ export default function NoticeBoardCard() {
 		// If there are no announcements
 		if (data.length === 0) {
 			return (
-				<Card className="p-2 2xl:p-5 col-span-3 row-span-3">
+				<Card className="p-2 2xl:p-5">
 					<CardHeader className="p-0 flex-row items-center justify-between w-full">
-						<CardTitle className="text-base  2xl:text-lg">
-							Announcemnets
-						</CardTitle>
-						<Presentation className="2xl:w-[1.25rem] 2xl:h-[1.25rem]  h-[1.5rem] w-[1.5rem]" />
+						<CardTitle className="">Announcements</CardTitle>
+						<Presentation className="" />
 					</CardHeader>
 					<CardContent className="p-0 pt-1">
-						<ScrollArea className="h-[100px] 2xl:h-[250px] text-sm 2xl:text-lg">
+						<ScrollArea className="h-[100px] 2xl:h-[250px] ">
 							No Announcements
 						</ScrollArea>
 					</CardContent>
@@ -89,14 +85,12 @@ export default function NoticeBoardCard() {
 		});
 
 		return (
-			<Card className="p-2 pt-0 2xl:p-5 col-span-3 row-span-3">
-				<CardHeader className="p-0 flex-row items-end justify-between w-full">
-					<CardTitle className="text-base  2xl:text-lg">
-						Announcemnets
-					</CardTitle>
-					<Presentation className="2xl:w-[1.25rem] 2xl:h-[1.25rem] h-[1.5rem] w-[1.5rem]" />
+			<Card className="">
+				<CardHeader className="flex-row items-end justify-between w-full">
+					<CardTitle>Announcemnets</CardTitle>
+					<Presentation />
 				</CardHeader>
-				<CardContent className="p-0 pt-1">
+				<CardContent className="">
 					<ScrollArea className="h-[170px] 2xl:h-[250px]">
 						<ul className="list-disc list-inside text-sm 2xl:text-base">
 							{AnnouncementList}

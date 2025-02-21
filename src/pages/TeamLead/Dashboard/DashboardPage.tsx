@@ -9,29 +9,37 @@ import UserManualCard from '@/components/commons/UserManualCard';
 import UserScheduleInfoCard from '@/components/commons/UserScheduleInfoCard';
 import DepartmentStatusCard from '@/components/TeamLeadComponents/DashboardTeamLead/DepartmentStatusCard';
 import RecentActivitiesCard from '@/components/TeamLeadComponents/DashboardTeamLead/RecentActivitesCard';
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 export default function Dashboard() {
 	return (
-		<div className="min-h-0 min-w-0  w-full h-full rounded-md grid grid-flow-col grid-rows-6 gap-2 2xl:gap-3">
-			{/* <div className="bg-red-500">test</div> */}
-			{/* <div className="bg-red-500 row-span-2">test</div> */}
-			{/* <div className="bg-red-500 col-span-1 row-span-2">test</div> */}
-			{/* <div className="bg-red-500">test</div> */}
+		<div className="min-h-0 min-w-0  w-full h-full rounded-md grid grid-flow-col grid-rows-6 gap-3">
+			{/* <DepartmentStatusCard></DepartmentStatusCard> */}
 
-			<DepartmentStatusCard></DepartmentStatusCard>
+			<UserInfoCard className="row-span-2 col-span-3"></UserInfoCard>
+			<UserScheduleInfoCard className="row-span-4 col-span-3 "></UserScheduleInfoCard>
+			{/* <UserManualCard></UserManualCard> */}
 
-			<UserInfoCard className="row-span-2"></UserInfoCard>
-			<UserScheduleInfoCard className="col-span-1 row-span-2 "></UserScheduleInfoCard>
-			<UserManualCard></UserManualCard>
+			<div className="row-span-1 bg-red-500">TEST</div>
 
-			{/*  */}
-			{/* <div className="col-span-3 row-span-3 bg-red-500">TEST</div> */}
-			{/* <div className="col-span-3 row-span-3  bg-red-500 ">test</div> */}
-			{/* <div className="col-span-3 row-span-6 bg-red-500  ">test</div> */}
-			{/*  */}
-			<NoticeBoardCard></NoticeBoardCard>
+			{/* <NoticeBoardCard></NoticeBoardCard> */}
+
 			<RecentActivitiesCard></RecentActivitiesCard>
-			<HolidayList></HolidayList>
+
+			<Tabs defaultValue="announcement" className="row-span-6 col-span-1">
+				<TabsList className="grid w-full grid-cols-2">
+					<TabsTrigger value="announcement">Announcements</TabsTrigger>
+					<TabsTrigger value="upcoming_holidays">Upcoming holidays</TabsTrigger>
+				</TabsList>
+				<TabsContent className="h-[calc(100%_-_2.75rem)]" value="announcement">
+					<NoticeBoardCard></NoticeBoardCard>
+				</TabsContent>
+				<TabsContent
+					className="h-[calc(100%_-_2.75rem)]"
+					value="upcoming_holidays"
+				>
+					<HolidayList></HolidayList>
+				</TabsContent>
+			</Tabs>
 		</div>
 	);
 }
