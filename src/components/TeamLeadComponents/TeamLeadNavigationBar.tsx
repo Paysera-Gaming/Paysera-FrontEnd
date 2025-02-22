@@ -109,7 +109,7 @@ export default function CollapsableNavigation() {
 	];
 
 	return (
-		<nav className="z-10 box-border overflow-hidden bg-card border-border shadow-md border rounded-md w-16  hover:w-60 h-[calc(100svh_-_2.5rem)] flex flex-col items-start justify-between min-h-0 transition-all ease-in-out absolute group">
+		<nav className="z-10 box-border overflow-hidden bg-card border-border shadow-sm border rounded-md w-16  hover:w-60 h-[calc(100svh_-_2.5rem)] flex flex-col items-start justify-between min-h-0 transition-all ease-in-out absolute group">
 			<div>
 				<ProfileHeader></ProfileHeader>
 				<div className="h-10 w-44 flex items-center px-1">

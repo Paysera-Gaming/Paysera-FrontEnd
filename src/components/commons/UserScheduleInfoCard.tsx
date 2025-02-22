@@ -51,7 +51,17 @@ function PersonalScheduleList({
 				</li>
 			</>
 		);
-	else return <li> Personal Schedule: None </li>;
+	else
+		return (
+			<>
+				<h3 className="scroll-m-20 text-lg font-semibold tracking-tight">
+					Personal Schedule
+				</h3>
+				<li>Schedule Info: Not Applicable</li>
+				<li>Schedule Type: Not Applicable</li>
+				<li>Availability: Not Applicable</li>
+			</>
+		);
 }
 
 function ScheduleList({
@@ -72,7 +82,13 @@ function ScheduleList({
 			</>
 		);
 	} else {
-		return <div>Currently No Schedule Assigned</div>;
+		return (
+			<>
+				<li>Schedule Type: Not Applicable</li>
+				<li>Schedule Info: Not Applicable</li>
+				<li>Clock-In Time Frame: Not Applicable </li>
+			</>
+		);
 	}
 }
 
@@ -110,16 +126,15 @@ export default function UserScheduleInfoCard({
 	}, [getUserPersonalSchedule]);
 
 	return (
-		<Card className={className + 'p-2 pt-0 2xl:p-5'}>
-			<CardHeader className="flex flex-row p-0 items-end justify-between w-full ">
-				<CardTitle className="text-base 2xl:text-lg">
-					Department Schedule
-				</CardTitle>
+		<Card className={className + ''}>
+			<CardHeader className="flex flex-row p-3 pb-0 items-end justify-between w-full ">
+				<CardTitle className="text-lg">Department Schedule</CardTitle>
 				<Calendar className="2xl:w-[1.25rem] 2xl:h-[1.25rem] h-[1.5rem] w-[1.5rem]"></Calendar>
 			</CardHeader>
-			<CardContent className="p-0">
-				<ul className="text-sm 2xl:text-base w-full">
+			<CardContent className="p-3 pt-0">
+				<ul className="w-full">
 					<ScheduleList schedule={getUserDepartmentSchedule}></ScheduleList>
+					<hr className="border-dashed border-muted-foreground my-2" />
 					<PersonalScheduleList
 						personalSchedule={getUserPersonalSchedule}
 					></PersonalScheduleList>

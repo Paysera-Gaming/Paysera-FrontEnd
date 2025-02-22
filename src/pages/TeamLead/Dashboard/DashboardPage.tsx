@@ -13,13 +13,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 export default function Dashboard() {
 	return (
 		<div className="min-h-0 min-w-0  w-full h-full rounded-md grid grid-flow-col grid-rows-6 gap-3">
-			{/* <DepartmentStatusCard></DepartmentStatusCard> */}
-
-			<UserInfoCard className="row-span-2 col-span-3"></UserInfoCard>
-			<UserScheduleInfoCard className="row-span-4 col-span-3 "></UserScheduleInfoCard>
+			<UserInfoCard className="row-span-3 col-span-3"></UserInfoCard>
+			<UserScheduleInfoCard className="row-span-3 col-span-3 "></UserScheduleInfoCard>
 			{/* <UserManualCard></UserManualCard> */}
 
-			<div className="row-span-1 bg-red-500">TEST</div>
+			<div className="row-span-1 flex items-stretch *:flex-grow justify-stretch gap-3">
+				<DepartmentStatusCard></DepartmentStatusCard>
+			</div>
 
 			{/* <NoticeBoardCard></NoticeBoardCard> */}
 
@@ -30,7 +30,7 @@ export default function Dashboard() {
 					<TabsTrigger value="announcement">Announcements</TabsTrigger>
 					<TabsTrigger value="upcoming_holidays">Upcoming holidays</TabsTrigger>
 				</TabsList>
-				<TabsContent className="h-[calc(100%_-_2.75rem)]" value="announcement">
+				<TabsContent className="h-[calc(100%_-_3rem)]" value="announcement">
 					<NoticeBoardCard></NoticeBoardCard>
 				</TabsContent>
 				<TabsContent
