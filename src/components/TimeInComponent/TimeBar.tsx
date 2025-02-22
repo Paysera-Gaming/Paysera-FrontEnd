@@ -8,10 +8,11 @@ import { useUserStore } from '@/stores/userStore.ts';
 import { clockIn, clockOut } from '@/api/ClockInAPI.ts';
 import ToasterSwitch from '@/lib/timeToasterUtils.ts';
 import { TAttendance } from '@/api/AttendanceAPI';
-import { Loader2 } from 'lucide-react';
+import { Clock, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { RequestOverTimeButton } from './RequestOverTimeButton';
 import useAlertTimeup from '@/hooks/useAlertTimeup';
+import { RequestLeaveButton } from './RequestLeaveButton';
 
 function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
 	const differenceInMilliseconds = dateTheSecond.getTime() - date.getTime();
@@ -155,15 +156,26 @@ export default function Timebar() {
 		<header className="shadow-sm border-border bg-card border-solid border w-full rounded-md p-2 px-5 flex items-center justify-between">
 			<TimerDisplay />
 			<div className="flex gap-2">
-				{employeeAccessLevel != 'ADMIN' && <RequestOverTimeButton />}
-				<Button disabled={getIsLoading} onClick={initModalValidations}>
+				{employeeAccessLevel != 'ADMIN' && (
+					<>
+						<RequestLeaveButton /> <RequestOverTimeButton />
+					</>
+				)}
+				<Button
+					className="text-base"
+					disabled={getIsLoading}
+					onClick={initModalValidations}
+				>
+					{getUserClockStatus() === 'Clock-In' ? 'Clock-Out' : 'Clock-In'}
 					<Loader2
 						className={cn(
 							getIsLoading == false && 'hidden',
-							'animate-spin mr-1'
+							'animate-spin ml-1'
 						)}
 					/>
-					{getUserClockStatus() === 'Clock-In' ? 'Clock-Out' : 'Clock-In'}
+					<Clock
+						className={cn(getIsLoading == true && 'hidden', 'ml-1')}
+					></Clock>
 				</Button>
 			</div>
 		</header>

@@ -127,14 +127,16 @@ export default function UserScheduleInfoCard({
 
 	return (
 		<Card className={className + ''}>
-			<CardHeader className="flex flex-row p-3 pb-0 items-end justify-between w-full ">
-				<CardTitle className="text-lg">Department Schedule</CardTitle>
-				<Calendar className="2xl:w-[1.25rem] 2xl:h-[1.25rem] h-[1.5rem] w-[1.5rem]"></Calendar>
+			<CardHeader className="flex flex-row  p-3 pb-0  2xl:p-6  items-center justify-between w-full">
+				<CardTitle className="text-lg mt-1 2xl:text-2xl">
+					Department Schedule
+				</CardTitle>
+				<Calendar></Calendar>
 			</CardHeader>
-			<CardContent className="p-3 pt-0">
-				<ul className="w-full">
+			<CardContent className="p-3  2xl:p-6 2xl:pt-0 pt-0">
+				<ul className="w-full 2xl:text-lg">
 					<ScheduleList schedule={getUserDepartmentSchedule}></ScheduleList>
-					<hr className="border-dashed border-muted-foreground my-2" />
+					<hr className="border-dashed border-muted-foreground my-2 2xl:my-5" />
 					<PersonalScheduleList
 						personalSchedule={getUserPersonalSchedule}
 					></PersonalScheduleList>

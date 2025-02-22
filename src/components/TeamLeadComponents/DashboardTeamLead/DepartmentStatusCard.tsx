@@ -8,12 +8,14 @@ import { University } from 'lucide-react';
 
 function CardStatus({ title, value }: { title: string; value: string }) {
 	return (
-		<Card className="flex flex-col items-start justify-center p-5">
+		<Card className="flex flex-col items-start justify-center aspect-3/2 p-5 2xl:p-3">
 			<CardHeader className="p-0">
-				<CardTitle className="text-muted-foreground text-sm p-0">
+				<CardTitle className="text-muted-foreground text-sm 2xl:text-lg p-0">
 					{title}
 				</CardTitle>
-				<CardContent className="p-0 font-bold">{value}</CardContent>
+				<CardContent className="p-0 font-bold 2xl:text-2xl">
+					{value}
+				</CardContent>
 			</CardHeader>
 		</Card>
 	);

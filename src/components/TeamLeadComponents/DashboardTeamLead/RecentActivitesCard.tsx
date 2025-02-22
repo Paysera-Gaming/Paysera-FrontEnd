@@ -106,12 +106,14 @@ export default function RecentActivitiesCard() {
 
 	const dummyData: TAttendance[] = data ?? [];
 	if (isLoading) {
-		return <Skeleton className=" row-span-5"></Skeleton>;
+		return (
+			<Skeleton className=" row-span-5 col-span-3 2xl:col-span-5"></Skeleton>
+		);
 	}
 
 	if (isError) {
 		return (
-			<Card className=" row-span-5">
+			<Card className=" row-span-5 col-span-3 2xl:col-span-5">
 				<CardHeader>
 					<div className="flex item-start justify-between">
 						<CardTitle className="text-base lg:text-lg xl:text-2xl ">
@@ -135,7 +137,7 @@ export default function RecentActivitiesCard() {
 	}
 
 	return (
-		<Card className="p-2 pt-1 2xl:p-5 row-span-5">
+		<Card className="p-2 pt-1 2xl:p-5 row-span-5 col-span-3 2xl:col-span-5 ">
 			<CardHeader className="p-0">
 				<div className="flex items-end justify-between">
 					<CardTitle className="text-base 2xl:text-lg">

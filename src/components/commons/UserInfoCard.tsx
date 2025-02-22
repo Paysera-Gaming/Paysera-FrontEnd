@@ -30,12 +30,14 @@ export default function UserInfoCard({ className }: { className: string }) {
 
 	return (
 		<Card className={className}>
-			<CardHeader className="flex flex-row p-3 pb-0 items-end justify-between w-full">
-				<CardTitle className="text-lg">Employee Info</CardTitle>
-				<User className=""></User>
+			<CardHeader className="flex flex-row  p-3 pb-0  2xl:p-6  items-center justify-between w-full">
+				<CardTitle className="text-lg mt-1 2xl:text-2xl ">
+					Employee Info
+				</CardTitle>
+				<User></User>
 			</CardHeader>
-			<CardContent className="p-3 pt-0">
-				<ul className="">
+			<CardContent className="p-3  2xl:p-6 2xl:pt-0 pt-0">
+				<ul className="2xl:text-lg">
 					<li>Name: {userFullName}</li>
 					<li>Role: {userInfo!.role}</li>
 					<li>Access Level: {returnRole(userInfo!.accessLevel)}</li>
