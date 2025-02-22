@@ -113,7 +113,7 @@ export default function RecentActivitiesCard() {
 		return (
 			<Card className=" row-span-5">
 				<CardHeader>
-					<div className="flex item-center justify-between">
+					<div className="flex item-start justify-between">
 						<CardTitle className="text-base lg:text-lg xl:text-2xl ">
 							Attendance History Today
 						</CardTitle>
