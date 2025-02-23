@@ -46,6 +46,8 @@ export function OverTimeApprovalTable<TData, TValue>({
 
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
+	const [rowSelection, setRowSelection] = React.useState({});
+
 	const table = useReactTable({
 		data,
 		columns,
@@ -56,10 +58,12 @@ export function OverTimeApprovalTable<TData, TValue>({
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
 		onColumnVisibilityChange: setColumnVisibility,
+		onRowSelectionChange: setRowSelection,
 		state: {
 			sorting,
 			columnFilters,
 			columnVisibility,
+			rowSelection,
 		},
 	});
 
@@ -166,6 +170,10 @@ export function OverTimeApprovalTable<TData, TValue>({
 				<div className="flex w-[100px] items-center justify-center text-sm font-medium">
 					Page {table.getState().pagination.pageIndex + 1} of{' '}
 					{table.getPageCount()}
+				</div>
+				<div className="flex-1 text-sm text-muted-foreground">
+					{table.getFilteredSelectedRowModel().rows.length} of{' '}
+					{table.getFilteredRowModel().rows.length} row(s) selected.
 				</div>
 
 				<Button

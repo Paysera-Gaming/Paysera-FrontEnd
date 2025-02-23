@@ -15,7 +15,7 @@ import useConfirmationStore from '@/stores/GlobalAlertStore';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Badge } from '../ui/badge';
-
+import { Checkbox } from '@/components/ui/checkbox';
 //  overtime approval
 // isAllowedOvertime: boolean;
 // isRequestingOvertime: boolean;
@@ -34,6 +34,29 @@ import { Badge } from '../ui/badge';
 //
 
 export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
+	{
+		id: 'select',
+		header: ({ table }) => (
+			<Checkbox
+				checked={
+					table.getIsAllPageRowsSelected() ||
+					(table.getIsSomePageRowsSelected() && 'indeterminate')
+				}
+				onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+				aria-label="Select all"
+			/>
+		),
+		cell: ({ row }) => (
+			<Checkbox
+				checked={row.getIsSelected()}
+				onCheckedChange={(value) => row.toggleSelected(!!value)}
+				aria-label="Select row"
+			/>
+		),
+		enableSorting: false,
+		enableHiding: false,
+	},
+
 	{
 		accessorKey: 'employee.lastName',
 		header: ({ column }) => {
@@ -128,8 +151,9 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 							disabled={isDisabled}
 							onClick={() => {
 								openConfirmation({
-									title: `Approve ${row.original.employee.firstName}  ${row.original.employee.lastName + "'s"
-										} Overtime Request?`,
+									title: `Approve ${row.original.employee.firstName}  ${
+										row.original.employee.lastName + "'s"
+									} Overtime Request?`,
 									description:
 										'Are you sure you would like to approve this overtime?',
 									cancelLabel: 'Cancel',
@@ -156,8 +180,9 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 							disabled={isDisabled}
 							onClick={() => {
 								openConfirmation({
-									title: `Reject  ${row.original.employee.firstName}  ${row.original.employee.lastName + "'s"
-										} Overtime Request?`,
+									title: `Reject  ${row.original.employee.firstName}  ${
+										row.original.employee.lastName + "'s"
+									} Overtime Request?`,
 									description:
 										'By clicking reject overtime, you are rejecting the overtime of the employee in his attendance?',
 									cancelLabel: 'Cancel',
