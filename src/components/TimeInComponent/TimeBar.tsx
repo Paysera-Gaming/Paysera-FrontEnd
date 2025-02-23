@@ -12,6 +12,7 @@ import { Clock, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { RequestOverTimeButton } from './RequestOverTimeButton';
 import useAlertTimeup from '@/hooks/useAlertTimeup';
+import { isSameDay } from 'date-fns';
 import { RequestLeaveButton } from './RequestLeaveButton';
 
 function convertDateToSeconds(date: Date, dateTheSecond: Date): number {
@@ -37,6 +38,8 @@ export default function Timebar() {
 		mutationFn: async (fetchType: 'ClockIn' | 'ClockOut') => {
 			setIsLoading(true);
 
+			const timeIn = queryClient.getQueryData<TAttendance>(['UsersAttendance']);
+
 			if (employeeId === undefined) {
 				throw new Error('Employee ID is undefined');
 			}
@@ -46,7 +49,19 @@ export default function Timebar() {
 					console.log('user is now clocking in');
 					return clockIn({ employeeId: employeeId, timeStamp: currentTime });
 
+				// when clocking out i should check the date if it is matching
 				case 'ClockOut':
+					// this should work i think
+					if (timeIn) {
+						if (isSameDay(new Date(timeIn.createdAt), new Date())) {
+							toast.error('Invalid Clock Out Your attendance is now invalid');
+							queryClient.invalidateQueries({ queryKey: ['UsersAttendance'] });
+							throw new Error(
+								'Invalid Clock Out Your attendance is now invalid'
+							);
+						}
+					}
+
 					console.log('user is now clocking out');
 					return clockOut({ employeeId: employeeId, timeStamp: currentTime });
 			}
