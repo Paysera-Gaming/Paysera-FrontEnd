@@ -6,6 +6,21 @@ import { useUserStore } from '@/stores/userStore';
 import { useQueries } from '@tanstack/react-query';
 import { University } from 'lucide-react';
 
+function CardStatus({ title, value }: { title: string; value: string }) {
+	return (
+		<Card className="flex flex-col items-start justify-center aspect-3/2 p-5 2xl:p-3">
+			<CardHeader className="p-0">
+				<CardTitle className="text-muted-foreground text-sm 2xl:text-lg p-0">
+					{title}
+				</CardTitle>
+				<CardContent className="p-0 font-bold 2xl:text-2xl">
+					{value}
+				</CardContent>
+			</CardHeader>
+		</Card>
+	);
+}
+
 export default function DepartmentStatusCard() {
 	const userQueries = useQueries({
 		queries: [
@@ -48,30 +63,18 @@ export default function DepartmentStatusCard() {
 
 	if (isError) {
 		return (
-			<Card>
-				<CardHeader className=" pt-1 xl:pt-5  pb-0 flex-row items-center justify-between w-full">
-					<CardTitle className="text-base 2xl:text-lg ">
-						Department Status
-					</CardTitle>
-					<University></University>
-				</CardHeader>
-				<CardContent>
-					<ul className="list-disc list-inside flex justify-between items-center">
-						<li className="marker:text-green-500 marker:text-2xl">
-							<b>Online:</b> 0
-						</li>
-						<li className="marker:text-red-500 marker:text-2xl">
-							<b>Offline:</b> 0
-						</li>
-					</ul>
-				</CardContent>
-			</Card>
+			<>
+				<CardStatus title="Online" value="15"></CardStatus>
+				<CardStatus title="Absent" value="15"></CardStatus>
+				<CardStatus title="On Leave" value="15"></CardStatus>
+				<CardStatus title="Pending Request" value="15"></CardStatus>
+			</>
 		);
 	}
 
 	return (
 		<Card className="p-2 pt-0 2xl:p-5">
-			<CardHeader className="p-0 flex-row flex items-end justify-between w-full">
+			<CardHeader className="">
 				<CardTitle className="text-base 2xl:text-lg">
 					Department Status
 				</CardTitle>

@@ -34,7 +34,7 @@ import { toast } from 'sonner';
 // after that approve or reject`
 // teamlead can descerne if the request is rejected or not
 
-export function RequestOverTimeButton() {
+export function RequestLeaveButton() {
 	const [getHours, setHours] = useState<number>(0);
 
 	const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -71,8 +71,8 @@ export function RequestOverTimeButton() {
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
-				<Button className="bg-violet-500 hover:bg-violet-500 text-base">
-					Request Overtime
+				<Button className="bg-orange-500 hover:bg-orange-500 text-base">
+					Request Leave
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
@@ -90,7 +90,10 @@ export function RequestOverTimeButton() {
 
 				<div className="flex gap-2">
 					<Select onValueChange={(value) => setHours(Number(value))}>
-						<SelectTrigger className="w-[280px]">
+						<SelectTrigger
+							className="w-[280export function RequestLeaveButton() {
+px]"
+						>
 							<SelectValue placeholder="Select hours to render on overtime" />
 						</SelectTrigger>
 						<SelectContent>

@@ -36,7 +36,7 @@ function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 	const routes = links.map((link, index) => {
 		return (
 			<li
-				className="box-border my-2"
+				className="box-border"
 				key={link}
 				onClick={() => {
 					document.getElementById(link)?.click();
@@ -48,7 +48,7 @@ function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 							'rounded-sm outline outline-2 transition-all ease-in-out hover:bg-border flex justify-start items-center text-base text-center capitalize outline-transparent',
 
 							{
-								'group-hover:outline-offset-2  group-hover:bg-secondary text-ring group-hover:outline-ring ':
+								'group-hover:outline-offset-2  group-hover:bg-secondary text-ring outline-ring ':
 									isActive,
 							}
 						)
@@ -109,7 +109,7 @@ export default function CollapsableNavigation() {
 	];
 
 	return (
-		<nav className="z-10 box-border overflow-hidden bg-card border-border shadow-sm border rounded-md w-16  hover:w-60 h-[calc(100svh_-_2.5rem)] flex flex-col items-start justify-between min-h-0 transition-all ease-in-out absolute group">
+		<nav className="box-border overflow-hidden bg-secondary border-border shadow-md border rounded-md w-16  hover:w-60 h-[95svh] flex flex-col items-start justify-between min-h-0 transition-all ease-in-out absolute group">
 			<div>
 				<ProfileHeader></ProfileHeader>
 				<div className="h-10 w-44 flex items-center px-1">

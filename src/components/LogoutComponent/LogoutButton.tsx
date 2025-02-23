@@ -10,6 +10,7 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import '../../index.css';
 
 // button
 import { Button } from '@/components/ui/button';
@@ -36,9 +37,11 @@ export default function LogOutButton() {
 			queryClient.removeQueries();
 			useUserStore.getState().clearUser();
 			localStorage.clear();
-			document.cookie.split(";").forEach((c) => {
+			document.cookie.split(';').forEach((c) => {
 				c = c.trim();
-				document.cookie = c.substring(0, c.indexOf("=")) + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";
+				document.cookie =
+					c.substring(0, c.indexOf('=')) +
+					'=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
 			});
 			navigate('/login');
 		},
@@ -48,17 +51,21 @@ export default function LogOutButton() {
 	});
 	function logOutUser() {
 		mutateLogout.mutate();
-
 	}
 
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
 				<Button
-					variant={'outline'}
-					className="gap-2 w-full border-destructive transition-colors ease-in-out hover:text-destructive text-destructive"
+					variant={'ghost'}
+					className="p-0 group-hover:px-2 transition-all ease-in-out  group/logout  border-destructive mb-2 "
 				>
-					<LogOut></LogOut> <p>Logout</p>{' '}
+					<div className="rounded-l h-10 w-16 group-hover:w-[calc(4rem_-_0.5rem)] m flex items-center justify-center group-hover/logout:bg-red-200 transition-all ease-in-out group-hover/logout:text-destructive text-destructive">
+						<LogOut></LogOut>
+					</div>
+					<div className="rounded-r h-10 w-44 group-hover:w-[calc(11rem_-_0.5rem)] flex items-center justify-start group-hover/logout:bg-red-200 transition-all ease-in-out group-hover/logout:text-destructive">
+						<p className="text-destructive text-lg">Logout</p>
+					</div>
 				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent>
