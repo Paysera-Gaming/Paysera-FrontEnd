@@ -30,6 +30,11 @@ import {
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '../ui/input';
+import useConfirmationStore from '@/stores/GlobalAlertStore.ts';
+import { handleOvertimeRequest, TAcceptOvertime } from '@/api/OvertimeAPI';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
@@ -43,6 +48,8 @@ export function OverTimeApprovalTable<TData, TValue>({
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[]
 	);
+
+	const { openConfirmation, closeConfirmation } = useConfirmationStore();
 
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
@@ -67,6 +74,24 @@ export function OverTimeApprovalTable<TData, TValue>({
 		},
 	});
 
+	const handleOvertimeMutation = useMutation({
+		mutationFn: (body: TAcceptOvertime) =>
+			handleOvertimeRequest({
+				...body,
+			}),
+		onError: (error) => {
+			toast.error('An Error has occured please check the logs');
+			console.log(error);
+		},
+	});
+
+	function runMutation(
+		mutation: typeof useMutation,
+		payload: TAcceptOvertime[]
+	) {
+		payload.forEach((load) => {});
+	}
+
 	return (
 		<div className=" w-full flex items-center justify-center flex-col gap-4 mt-1">
 			<div className="w-full flex items-center justify-between">
@@ -85,6 +110,52 @@ export function OverTimeApprovalTable<TData, TValue>({
 						}
 						className="w-[220px]"
 					/>
+
+					<div className="flex items-center justify-cent er gap-2">
+						<Button
+							variant={'default'}
+							onClick={() => {
+								openConfirmation({
+									title:
+										"Are you sure you want to accept these people's overtime?",
+									description:
+										'By clicking Approve you are approving the overtime of these employees.',
+									actionLabel: 'Approve',
+									cancelLabel: 'Cancel',
+									onAction: () => {
+										console.log('FOO');
+									},
+									onCancel: () => {
+										closeConfirmation();
+									},
+								});
+							}}
+						>
+							Approve Selected
+						</Button>
+						<Button
+							variant={'destructive'}
+							onClick={() => {
+								openConfirmation({
+									title:
+										"Are you sure you want to reject these people's overtime?",
+									description:
+										'By clicking reject you are rejecting the overtime of the selected employees.',
+									actionLabel: 'Approve',
+									cancelLabel: 'Cancel',
+									onAction: () => {
+										console.log('FOO');
+									},
+									onCancel: () => {
+										closeConfirmation();
+									},
+								});
+							}}
+						>
+							Reject Selected{' '}
+						</Button>
+					</div>
+
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">
