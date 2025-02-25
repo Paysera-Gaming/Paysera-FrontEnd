@@ -18,6 +18,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
 import { useUserStore } from '@/stores/userStore';
 import { useQuery } from '@tanstack/react-query';
 import { Activity } from 'lucide-react';
@@ -89,7 +90,11 @@ function RecentActivitiesTable({ tableData }: { tableData: TAttendance[] }) {
 	);
 }
 
-export default function RecentActivitiesCard() {
+export default function RecentActivitiesCard({
+	className,
+}: {
+	className: string;
+}) {
 	const { data, isError, isLoading } = useQuery({
 		queryKey: ['AttendanceToday'],
 		queryFn: () => {
@@ -137,7 +142,7 @@ export default function RecentActivitiesCard() {
 	}
 
 	return (
-		<Card className=" row-span-5 col-span-3 2xl:col-span-5">
+		<Card className={cn('h-full  col-span-3 2xl:col-span-5 ' + className)}>
 			<CardHeader className="">
 				<div className="flex item-start justify-between">
 					<CardTitle className="text-base lg:text-lg xl:text-2xl ">

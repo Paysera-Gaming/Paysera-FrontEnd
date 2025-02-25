@@ -14,7 +14,7 @@ export default function Dashboard() {
 
 			{/*  */}
 
-			<RecentActivitiesCard></RecentActivitiesCard>
+			<RecentActivitiesCard className="row-span-6"></RecentActivitiesCard>
 
 			<Tabs
 				defaultValue="announcement"
