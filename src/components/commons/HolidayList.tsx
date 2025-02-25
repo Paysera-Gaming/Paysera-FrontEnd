@@ -79,18 +79,18 @@ export default function HolidayList() {
 		const nextMonthList = renderList(data, new Date().getMonth() + 2);
 
 		return (
-			<Card className="">
+			<Card className="h-full">
 				<CardHeader className="">
 					<CardTitle className="">
-						Upcoming Holidays{' '}
+						Upcoming Holidays <br className="2xl:hidden" />
 						{`(${date.toLocaleString('default', { month: 'long' })})`}
 					</CardTitle>
 				</CardHeader>
 				<CardContent className="">
-					<ScrollArea className="h-[350px] 2xl:h-[600px]">
+					<ScrollArea className="">
 						<ul className="flex flex-col list-disc list-inside">
 							{currentMonthList.length !== 0 ? currentMonthList : 'No Holidays'}
-							<h3 className=" font-semibold scroll-m-20 tracking-tight py-1">
+							<h3 className="  font-semibold scroll-m-20 tracking-tight py-1">
 								Next Month{' '}
 								{`(${nextMonth.toLocaleString('default', { month: 'long' })})`}
 							</h3>
