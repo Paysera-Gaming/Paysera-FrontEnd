@@ -23,7 +23,7 @@ export default function Dashboard() {
 
 			{/* <NoticeBoardCard></NoticeBoardCard> */}
 
-			<RecentActivitiesCard></RecentActivitiesCard>
+			<RecentActivitiesCard className="row-span-5"></RecentActivitiesCard>
 
 			<Tabs
 				defaultValue="announcement"
