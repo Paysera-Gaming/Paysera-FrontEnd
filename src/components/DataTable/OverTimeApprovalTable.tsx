@@ -30,22 +30,31 @@ import {
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '../ui/input';
-interface DataTableProps<TData, TValue> {
-	columns: ColumnDef<TData, TValue>[];
-	data: TData[];
+import useConfirmationStore from '@/stores/GlobalAlertStore.ts';
+import { handleOvertimeRequest, TAcceptOvertime } from '@/api/OvertimeAPI';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { TAttendance } from '@/api/AttendanceAPI';
+
+interface DataTableProps {
+	columns: ColumnDef<TAttendance, unknown>[];
+	data: TAttendance[];
 }
 
-export function OverTimeApprovalTable<TData, TValue>({
-	columns,
-	data,
-}: DataTableProps<TData, TValue>) {
+export function OverTimeApprovalTable({ columns, data }: DataTableProps) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[]
 	);
 
+	const queryClient = useQueryClient();
+
+	const { openConfirmation, closeConfirmation } = useConfirmationStore();
+
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
+	const [rowSelection, setRowSelection] = React.useState({});
+
 	const table = useReactTable({
 		data,
 		columns,
@@ -56,12 +65,70 @@ export function OverTimeApprovalTable<TData, TValue>({
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
 		onColumnVisibilityChange: setColumnVisibility,
+		onRowSelectionChange: setRowSelection,
 		state: {
 			sorting,
 			columnFilters,
 			columnVisibility,
+			rowSelection,
 		},
 	});
+
+	const handleOvertimeMutation = useMutation({
+		mutationFn: (body: TAcceptOvertime) =>
+			handleOvertimeRequest({
+				...body,
+			}),
+		onError: (error) => {
+			toast.error('An Error has occured please check the logs');
+			console.log(error);
+		},
+	});
+
+	function approveMutationSelecetedOvertime() {
+		table.getFilteredSelectedRowModel().rows.forEach((row) => {
+			handleOvertimeMutation.mutate(
+				{
+					employeeId: row.original.employeeId,
+					isAllowedOvertime: true,
+					limitOvertime: row.original.limitOvertime,
+					isRejectedOvertime: false,
+					timeStamp: new Date(),
+				},
+				{
+					onSuccess: () => {
+						queryClient.invalidateQueries({ queryKey: ['AttendanceToday'] });
+						queryClient.invalidateQueries({ queryKey: ['Attendance'] });
+						toast.success('Approved selected');
+						table.resetRowSelection();
+					},
+				}
+			);
+		});
+		closeConfirmation();
+	}
+	function rejectMutationSelecetedOvertime() {
+		table.getFilteredSelectedRowModel().rows.forEach((row) => {
+			handleOvertimeMutation.mutate(
+				{
+					employeeId: row.original.employeeId,
+					isAllowedOvertime: false,
+					limitOvertime: row.original.limitOvertime,
+					isRejectedOvertime: true,
+					timeStamp: new Date(),
+				},
+				{
+					onSuccess: () => {
+						queryClient.invalidateQueries({ queryKey: ['AttendanceToday'] });
+						queryClient.invalidateQueries({ queryKey: ['Attendance'] });
+						toast.success('Approved selected');
+						table.resetRowSelection();
+					},
+				}
+			);
+		});
+		closeConfirmation();
+	}
 
 	return (
 		<div className=" w-full flex items-center justify-center flex-col gap-4 mt-1">
@@ -81,6 +148,52 @@ export function OverTimeApprovalTable<TData, TValue>({
 						}
 						className="w-[220px]"
 					/>
+
+					<div className="flex items-center justify-cent er gap-2">
+						<Button
+							variant={'default'}
+							onClick={() => {
+								openConfirmation({
+									title:
+										"Are you sure you want to accept these people's overtime?",
+									description:
+										'By clicking Approve you are approving the overtime of these employees.',
+									actionLabel: 'Approve',
+									cancelLabel: 'Cancel',
+									onAction: () => {
+										approveMutationSelecetedOvertime();
+									},
+									onCancel: () => {
+										closeConfirmation();
+									},
+								});
+							}}
+						>
+							Approve Selected
+						</Button>
+						<Button
+							variant={'destructive'}
+							onClick={() => {
+								openConfirmation({
+									title:
+										"Are you sure you want to reject these people's overtime?",
+									description:
+										'By clicking reject you are rejecting the overtime of the selected employees.',
+									actionLabel: 'Approve',
+									cancelLabel: 'Cancel',
+									onAction: () => {
+										rejectMutationSelecetedOvertime();
+									},
+									onCancel: () => {
+										closeConfirmation();
+									},
+								});
+							}}
+						>
+							Reject Selected{' '}
+						</Button>
+					</div>
+
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">
@@ -166,6 +279,10 @@ export function OverTimeApprovalTable<TData, TValue>({
 				<div className="flex w-[100px] items-center justify-center text-sm font-medium">
 					Page {table.getState().pagination.pageIndex + 1} of{' '}
 					{table.getPageCount()}
+				</div>
+				<div className="flex-1 text-sm text-muted-foreground">
+					{table.getFilteredSelectedRowModel().rows.length} of{' '}
+					{table.getFilteredRowModel().rows.length} row(s) selected.
 				</div>
 
 				<Button

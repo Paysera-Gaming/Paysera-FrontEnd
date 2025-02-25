@@ -25,20 +25,23 @@ export default function Dashboard() {
 
 			<RecentActivitiesCard></RecentActivitiesCard>
 
-			<Tabs defaultValue="announcement" className="row-span-6 col-span-1">
+			<Tabs
+				defaultValue="announcement"
+				className="row-span-6 col-span-1 flex flex-col flex-1  "
+			>
 				<TabsList className="grid w-full grid-cols-2">
 					<TabsTrigger value="announcement">Announcements</TabsTrigger>
 					<TabsTrigger value="upcoming_holidays">Upcoming holidays</TabsTrigger>
 				</TabsList>
-				<TabsContent className="h-[calc(100%_-_3rem)]" value="announcement">
-					<NoticeBoardCard></NoticeBoardCard>
-				</TabsContent>
-				<TabsContent
-					className="h-[calc(100%_-_2.75rem)]"
-					value="upcoming_holidays"
-				>
-					<HolidayList></HolidayList>
-				</TabsContent>
+				{/* Ensures consistent height */}
+				<div className="relative h-full">
+					<TabsContent value="announcement" className="absolute inset-0">
+						<NoticeBoardCard />
+					</TabsContent>
+					<TabsContent value="upcoming_holidays" className="absolute inset-0">
+						<HolidayList />
+					</TabsContent>
+				</div>
 			</Tabs>
 		</div>
 	);

@@ -53,13 +53,13 @@ export default function NoticeBoardCard() {
 		// If there are no announcements
 		if (data.length === 0) {
 			return (
-				<Card className="p-2 2xl:p-5">
-					<CardHeader className="p-0 flex-row items-center justify-between w-full">
+				<Card className="h-full ">
+					<CardHeader className=" flex-row items-center justify-between w-full">
 						<CardTitle className="">Announcements</CardTitle>
 						<Presentation className="" />
 					</CardHeader>
-					<CardContent className="p-0 pt-1">
-						<ScrollArea className="h-[100px] 2xl:h-[250px] ">
+					<CardContent className="">
+						<ScrollArea className="h-[300px] 2xl:h-[500px] ">
 							No Announcements
 						</ScrollArea>
 					</CardContent>
@@ -85,13 +85,13 @@ export default function NoticeBoardCard() {
 		});
 
 		return (
-			<Card className="">
+			<Card className="h-full ">
 				<CardHeader className="flex-row items-end justify-between w-full">
 					<CardTitle>Announcemnets</CardTitle>
 					<Presentation />
 				</CardHeader>
 				<CardContent className="">
-					<ScrollArea className="h-[170px] 2xl:h-[250px]">
+					<ScrollArea className="h-[300px] 2xl:h-[500px]">
 						<ul className="list-disc list-inside text-sm 2xl:text-base">
 							{AnnouncementList}
 						</ul>
