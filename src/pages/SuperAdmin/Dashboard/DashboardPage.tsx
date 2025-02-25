@@ -2,7 +2,7 @@ import SuperAdminInfoCard from "@/components/SuperAdminComponents/DashboardSuper
 import EmployeesStatusCards from "@/components/SuperAdminComponents/DashboardSuperAdmin/SuperAdminStatusCards";
 import RecentActivitiesCard from "@/components/SuperAdminComponents/DashboardSuperAdmin/RecentActivitesCard";
 import HolidayList from "@/components/SuperAdminComponents/DashboardSuperAdmin/HolidayList";
-import AnnouncementCard from "@/components/SuperAdminComponents/DashboardSuperAdmin/AnnouncementCard";
+// import AnnouncementCard from "@/components/SuperAdminComponents/DashboardSuperAdmin/AnnouncementCard";
 
 export default function Dashboard() {
   return (
@@ -12,7 +12,7 @@ export default function Dashboard() {
         {/* Employee Status on the left and Announcements on the right */}
         <div className="grid grid-cols-3 gap-2 flex-grow">
           <EmployeesStatusCards className="min-h-[100px] flex-grow" />
-          <AnnouncementCard className="min-h-[100px] flex-grow" />
+          {/* <AnnouncementCard className="min-h-[100px] flex-grow" /> */}
         </div>
 
         {/* Super Admin Info and Recent Activities side by side */}

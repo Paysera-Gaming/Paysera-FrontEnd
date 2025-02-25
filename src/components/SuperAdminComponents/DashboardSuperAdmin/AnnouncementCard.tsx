@@ -19,11 +19,9 @@ type AnnouncementCardProps = {
 
 const baseApiUrl = import.meta.env.VITE_BASE_API;
 
-
 export default function AnnouncementCard({ className }: AnnouncementCardProps) {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [error, setError] = useState<string | null>(null);
-
 
   const fetchAnnouncements = async () => {
     try {
@@ -44,21 +42,23 @@ export default function AnnouncementCard({ className }: AnnouncementCardProps) {
 
   useEffect(() => {
     fetchAnnouncements();
-
   }, []);
 
   useWebSocket("announcements", fetchAnnouncements);
 
-
   const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   return (
     <Card className={`col-span-2 min-h-[120px] relative p-2 ${className}`}>
       <CardHeader className="pb-1 flex flex-row items-center justify-between">
-        <CardTitle className="text-xl font-semibold">Announcements</CardTitle>
+        <CardTitle className="text-2xl font-semibold">Announcements</CardTitle>
         <Megaphone size={"1.5rem"} />
       </CardHeader>
       <CardContent>
@@ -75,10 +75,15 @@ export default function AnnouncementCard({ className }: AnnouncementCardProps) {
           ) : announcements.length > 0 ? (
             <ul className="list-none">
               {announcements.map((announcement) => (
-                <li key={announcement.id} className="mb-4 text-base flex items-start">
+                <li
+                  key={announcement.id}
+                  className="mb-4 text-base flex items-start"
+                >
                   <span className="mr-2">•</span>
                   <div>
-                    <div className="font-semibold">{`${formatDate(announcement.createdAt)} - ${announcement.title}`}</div>
+                    <div className="font-semibold">{`${formatDate(
+                      announcement.createdAt
+                    )} - ${announcement.title}`}</div>
                     <div>{announcement.body}</div>
                   </div>
                 </li>
