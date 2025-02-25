@@ -56,9 +56,7 @@ export default function Timebar() {
 						if (isSameDay(new Date(timeIn.createdAt), new Date())) {
 							toast.error('Invalid Clock Out Your attendance is now invalid');
 							queryClient.invalidateQueries({ queryKey: ['UsersAttendance'] });
-							throw new Error(
-								'Invalid Clock Out Your attendance is now invalid'
-							);
+							throw new Error('Invalid Clock Out');
 						}
 					}
 
@@ -126,13 +124,16 @@ export default function Timebar() {
 			description: 'Are you sure you want to clock out?',
 			cancelLabel: 'Cancel',
 			actionLabel: 'Continue',
-			onAction: async () => {
-				await mutateTime.mutate('ClockOut');
-				if (getCanProceed == true) {
-					toast.success('User has timeout from the session');
-					setUserClockStatus('Clock-Out');
-				}
-				setCanProceed(false);
+			onAction: () => {
+				mutateTime.mutate('ClockOut', {
+					onSuccess: () => {
+						if (getCanProceed == true) {
+							toast.success('User has timeout from the session');
+							setUserClockStatus('Clock-Out');
+						}
+						setCanProceed(false);
+					},
+				});
 			},
 			onCancel: () => {
 				console.log('Cancel TimeOut');
@@ -146,12 +147,16 @@ export default function Timebar() {
 			description: 'Are you sure you want to clock out?',
 			cancelLabel: 'Cancel',
 			actionLabel: 'Continue',
-			onAction: async () => {
-				await mutateTime.mutate('ClockOut');
-				if (getCanProceed == true) {
-					setUserClockStatus('Clock-Out');
-				}
-				setCanProceed(false);
+			onAction: () => {
+				mutateTime.mutate('ClockOut', {
+					onSuccess: () => {
+						if (getCanProceed == true) {
+							toast.success('User has timeout from the session');
+							setUserClockStatus('Clock-Out');
+						}
+						setCanProceed(false);
+					},
+				});
 			},
 			onCancel: () => {
 				console.log('Cancel TimeOut');
