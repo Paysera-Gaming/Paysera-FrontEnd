@@ -32,22 +32,22 @@ import { Button } from '@/components/ui/button';
 import { Input } from '../ui/input';
 import useConfirmationStore from '@/stores/GlobalAlertStore.ts';
 import { handleOvertimeRequest, TAcceptOvertime } from '@/api/OvertimeAPI';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { TAttendance } from '@/api/AttendanceAPI';
 
-interface DataTableProps<TData, TValue> {
-	columns: ColumnDef<TData, TValue>[];
-	data: TData[];
+interface DataTableProps {
+	columns: ColumnDef<TAttendance, unknown>[];
+	data: TAttendance[];
 }
 
-export function OverTimeApprovalTable<TData, TValue>({
-	columns,
-	data,
-}: DataTableProps<TData, TValue>) {
+export function OverTimeApprovalTable({ columns, data }: DataTableProps) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[]
 	);
+
+	const queryClient = useQueryClient();
 
 	const { openConfirmation, closeConfirmation } = useConfirmationStore();
 
@@ -85,11 +85,49 @@ export function OverTimeApprovalTable<TData, TValue>({
 		},
 	});
 
-	function runMutation(
-		mutation: typeof useMutation,
-		payload: TAcceptOvertime[]
-	) {
-		payload.forEach((load) => {});
+	function approveMutationSelecetedOvertime() {
+		table.getFilteredSelectedRowModel().rows.forEach((row) => {
+			handleOvertimeMutation.mutate(
+				{
+					employeeId: row.original.employeeId,
+					isAllowedOvertime: true,
+					limitOvertime: row.original.limitOvertime,
+					isRejectedOvertime: false,
+					timeStamp: new Date(),
+				},
+				{
+					onSuccess: () => {
+						queryClient.invalidateQueries({ queryKey: ['AttendanceToday'] });
+						queryClient.invalidateQueries({ queryKey: ['Attendance'] });
+						toast.success('Approved selected');
+						table.resetRowSelection();
+					},
+				}
+			);
+		});
+		closeConfirmation();
+	}
+	function rejectMutationSelecetedOvertime() {
+		table.getFilteredSelectedRowModel().rows.forEach((row) => {
+			handleOvertimeMutation.mutate(
+				{
+					employeeId: row.original.employeeId,
+					isAllowedOvertime: false,
+					limitOvertime: row.original.limitOvertime,
+					isRejectedOvertime: true,
+					timeStamp: new Date(),
+				},
+				{
+					onSuccess: () => {
+						queryClient.invalidateQueries({ queryKey: ['AttendanceToday'] });
+						queryClient.invalidateQueries({ queryKey: ['Attendance'] });
+						toast.success('Approved selected');
+						table.resetRowSelection();
+					},
+				}
+			);
+		});
+		closeConfirmation();
 	}
 
 	return (
@@ -123,7 +161,7 @@ export function OverTimeApprovalTable<TData, TValue>({
 									actionLabel: 'Approve',
 									cancelLabel: 'Cancel',
 									onAction: () => {
-										console.log('FOO');
+										approveMutationSelecetedOvertime();
 									},
 									onCancel: () => {
 										closeConfirmation();
@@ -144,7 +182,7 @@ export function OverTimeApprovalTable<TData, TValue>({
 									actionLabel: 'Approve',
 									cancelLabel: 'Cancel',
 									onAction: () => {
-										console.log('FOO');
+										rejectMutationSelecetedOvertime();
 									},
 									onCancel: () => {
 										closeConfirmation();
