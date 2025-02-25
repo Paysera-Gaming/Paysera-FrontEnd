@@ -53,14 +53,15 @@ export default function Timebar() {
 				case 'ClockOut':
 					// this should work i think
 					if (timeIn) {
-						if (isSameDay(new Date(timeIn.createdAt), new Date())) {
-							toast.error('Invalid Clock Out Your attendance is now invalid');
+						if (!isSameDay(new Date(timeIn.createdAt), new Date())) {
+							toast.error('Invalid Clock Out ');
 							queryClient.invalidateQueries({ queryKey: ['UsersAttendance'] });
+							setUserClockStatus('Clock-Out');
+							setCanProceed(false);
 							throw new Error('Invalid Clock Out');
 						}
 					}
 
-					console.log('user is now clocking out');
 					return clockOut({ employeeId: employeeId, timeStamp: currentTime });
 			}
 		},
@@ -130,8 +131,8 @@ export default function Timebar() {
 						if (getCanProceed == true) {
 							toast.success('User has timeout from the session');
 							setUserClockStatus('Clock-Out');
+							setCanProceed(false);
 						}
-						setCanProceed(false);
 					},
 				});
 			},
