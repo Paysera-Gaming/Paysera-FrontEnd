@@ -82,12 +82,13 @@ export default function HolidayList() {
 			<Card className="h-full">
 				<CardHeader className="">
 					<CardTitle className="">
-						Upcoming Holidays <br className="2xl:hidden" />
+						Upcoming Holidays
+						<br />
 						{`(${date.toLocaleString('default', { month: 'long' })})`}
 					</CardTitle>
 				</CardHeader>
 				<CardContent className="">
-					<ScrollArea className="">
+					<ScrollArea className="h-[300px] 2xl:h-[500px]">
 						<ul className="flex flex-col list-disc list-inside">
 							{currentMonthList.length !== 0 ? currentMonthList : 'No Holidays'}
 							<h3 className="  font-semibold scroll-m-20 tracking-tight py-1">
