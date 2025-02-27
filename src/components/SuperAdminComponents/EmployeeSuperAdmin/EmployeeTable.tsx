@@ -38,7 +38,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
     null
   );
   const [currentPage, setCurrentPage] = useState(1);
-  const employeesPerPage = 10;
+  const employeesPerPage = 5;
 
   const handleDeleteClick = (employee: Employee) => {
     setSelectedEmployee(employee);
@@ -114,6 +114,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
               <TableHead>Username</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Access Level</TableHead>
+              <TableHead>Allowed Overtime</TableHead> {/* Moved this line */}
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -141,6 +142,10 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                   {emp.attendanceStatus === "ONGOING" ? "Online" : "Offline"}
                 </TableCell>
                 <TableCell>{formatAccessLevel(emp.accessLevel)}</TableCell>
+                <TableCell>
+                  {emp.isAllowedRequestOvertime ? "Yes" : "No"}{" "}
+                  {/* Moved this line */}
+                </TableCell>
                 <TableCell>
                   <div className="flex gap-2">
                     <Button

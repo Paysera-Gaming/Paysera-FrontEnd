@@ -1,6 +1,6 @@
 export interface Employee {
   id: number;
-  email: string; // Add email field
+  email: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -10,7 +10,8 @@ export interface Employee {
   departmentId: number;
   departmentName?: string;
   role: string;
-  attendanceStatus: string; // Add this line
+  attendanceStatus: string;
+  isAllowedRequestOvertime: boolean; // Add this line
 }
 
 export interface EmployeeCounts {

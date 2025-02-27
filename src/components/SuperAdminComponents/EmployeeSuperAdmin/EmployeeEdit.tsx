@@ -37,6 +37,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox"; // Import Checkbox component
 import { User, Lock } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "@/api";
@@ -76,6 +77,7 @@ const formSchema = z
         required_error: "Access level is required.",
       })
       .optional(),
+    isAllowedRequestOvertime: z.boolean().optional(), // Add this line
   })
   .refine(
     (data) =>
@@ -116,6 +118,7 @@ export default function EmployeeEdit({
       password: "",
       confirmPassword: "",
       accessLevel: employee.accessLevel || "EMPLOYEE",
+      isAllowedRequestOvertime: employee.isAllowedRequestOvertime, // Add this line
     },
   });
 
@@ -129,6 +132,7 @@ export default function EmployeeEdit({
       password: "",
       confirmPassword: "",
       accessLevel: employee.accessLevel || "EMPLOYEE",
+      isAllowedRequestOvertime: employee.isAllowedRequestOvertime, // Add this line
     });
   }, [employee, form]);
 
@@ -140,6 +144,8 @@ export default function EmployeeEdit({
     updatedFields.middleName = values.middleName || "N/A";
     if (values.email) updatedFields.email = values.email; // Add email to updated fields
     if (values.accessLevel) updatedFields.accessLevel = values.accessLevel;
+    if (values.isAllowedRequestOvertime !== undefined)
+      updatedFields.isAllowedRequestOvertime = values.isAllowedRequestOvertime; // Add this line
 
     try {
       const response = await axiosInstance.put(`/api/employee/${employee.id}`, {
@@ -357,6 +363,24 @@ export default function EmployeeEdit({
                         )}
                       />
                     </div>
+                    <FormField
+                      control={form.control}
+                      name="isAllowedRequestOvertime"
+                      render={({ field }) => (
+                        <FormItem className="flex items-center space-x-2">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormLabel className="ml-2">
+                            Allow Overtime Requests
+                          </FormLabel>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </CardContent>
                 </Card>
               </TabsContent>
