@@ -56,13 +56,13 @@ export default function AnnouncementCard({ className }: AnnouncementCardProps) {
   };
 
   return (
-    <Card className={`col-span-2 min-h-[120px] relative p-2 ${className}`}>
+    <Card className={`col-span-2 h-full flex flex-col ${className}`}>
       <CardHeader className="pb-1 flex flex-row items-center justify-between">
         <CardTitle className="text-2xl font-semibold">Announcements</CardTitle>
         <Megaphone size={"1.5rem"} />
       </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-[150px]">
+      <CardContent className="flex-grow">
+        <ScrollArea className="h-[45rem] overflow-y-auto">
           {error ? (
             <>
               <Skeleton className="h-6 w-3/4 mb-2" />
