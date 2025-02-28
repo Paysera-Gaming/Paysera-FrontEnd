@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
@@ -73,7 +73,7 @@ const formSchema = z
         message: "Confirm password must be at least 8 characters.",
       }),
     accessLevel: z
-      .enum(["TEAM_LEADER", "EMPLOYEE", "ADMIN"], {
+      .enum(["TEAM_LEADER", "EMPLOYEE", "ADMIN", "AUDITOR", "SUPER_AUDITOR"], {
         required_error: "Access level is required.",
       })
       .optional(),
@@ -120,6 +120,11 @@ export default function EmployeeEdit({
       accessLevel: employee.accessLevel || "EMPLOYEE",
       isAllowedRequestOvertime: employee.isAllowedRequestOvertime, // Add this line
     },
+  });
+
+  const accessLevel = useWatch({
+    control: form.control,
+    name: "accessLevel",
   });
 
   useEffect(() => {
@@ -325,6 +330,12 @@ export default function EmployeeEdit({
                                       <SelectItem value="ADMIN">
                                         Admin
                                       </SelectItem>
+                                      <SelectItem value="AUDITOR">
+                                        Auditor
+                                      </SelectItem>
+                                      <SelectItem value="SUPER_AUDITOR">
+                                        Super Auditor
+                                      </SelectItem>
                                     </SelectContent>
                                   </Select>
                                 )}
@@ -363,24 +374,28 @@ export default function EmployeeEdit({
                         )}
                       />
                     </div>
-                    <FormField
-                      control={form.control}
-                      name="isAllowedRequestOvertime"
-                      render={({ field }) => (
-                        <FormItem className="flex items-center space-x-2">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="ml-2">
-                            Allow Overtime Requests
-                          </FormLabel>
-                          <FormMessage />
-                        </FormItem>
+                    {accessLevel !== "ADMIN" &&
+                      accessLevel !== "AUDITOR" &&
+                      accessLevel !== "SUPER_AUDITOR" && (
+                        <FormField
+                          control={form.control}
+                          name="isAllowedRequestOvertime"
+                          render={({ field }) => (
+                            <FormItem className="flex items-center space-x-2">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
+                              </FormControl>
+                              <FormLabel className="ml-2">
+                                Allow Overtime Requests
+                              </FormLabel>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       )}
-                    />
                   </CardContent>
                 </Card>
               </TabsContent>

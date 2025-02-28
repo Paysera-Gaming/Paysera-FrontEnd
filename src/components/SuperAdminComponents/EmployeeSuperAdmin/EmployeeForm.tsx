@@ -2,7 +2,7 @@
 
 // zod
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 // import { Toaster } from "@/components/ui/sonner";
@@ -73,9 +73,12 @@ const formSchema = z
     confirmPassword: z
       .string()
       .min(6, { message: "Confirm password must be at least 6 characters." }),
-    accessLevel: z.enum(["TEAM_LEADER", "EMPLOYEE"], {
-      required_error: "Access level is required.",
-    }), // Added access level field
+    accessLevel: z.enum(
+      ["TEAM_LEADER", "EMPLOYEE", "ADMIN", "AUDITOR", "SUPER_AUDITOR"],
+      {
+        required_error: "Access level is required.",
+      }
+    ), // Added access level field
     isAllowedRequestOvertime: z.boolean().optional(), // Add this line
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -107,6 +110,11 @@ export default function EmployeeForm({
       accessLevel: "EMPLOYEE", // Default access level
       isAllowedRequestOvertime: false, // Add this line
     },
+  });
+
+  const accessLevel = useWatch({
+    control: form.control,
+    name: "accessLevel",
   });
 
   async function handleSubmit(values: z.infer<typeof formSchema>) {
@@ -301,6 +309,15 @@ export default function EmployeeForm({
                                       <SelectItem value="TEAM_LEADER">
                                         Team Leader
                                       </SelectItem>
+                                      <SelectItem value="ADMIN">
+                                        Admin
+                                      </SelectItem>
+                                      <SelectItem value="AUDITOR">
+                                        Auditor
+                                      </SelectItem>
+                                      <SelectItem value="SUPER_AUDITOR">
+                                        Super Auditor
+                                      </SelectItem>
                                     </SelectContent>
                                   </Select>
                                 )}
@@ -339,24 +356,28 @@ export default function EmployeeForm({
                         )}
                       />
                     </div>
-                    <FormField
-                      control={form.control}
-                      name="isAllowedRequestOvertime"
-                      render={({ field }) => (
-                        <FormItem className="flex items-center space-x-2">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="ml-2">
-                            Allow Overtime Requests
-                          </FormLabel>
-                          <FormMessage />
-                        </FormItem>
+                    {accessLevel !== "ADMIN" &&
+                      accessLevel !== "AUDITOR" &&
+                      accessLevel !== "SUPER_AUDITOR" && (
+                        <FormField
+                          control={form.control}
+                          name="isAllowedRequestOvertime"
+                          render={({ field }) => (
+                            <FormItem className="flex items-center space-x-2">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
+                              </FormControl>
+                              <FormLabel className="ml-2">
+                                Allow Overtime Requests
+                              </FormLabel>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       )}
-                    />
                   </CardContent>
                 </Card>
               </TabsContent>
