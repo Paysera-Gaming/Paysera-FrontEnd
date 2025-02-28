@@ -10,7 +10,6 @@ export const axiosInstance = axios.create({
 
 type errorMessage = { message: string };
 
-// Add a response interceptor
 axiosInstance.interceptors.response.use(
 	function (response) {
 		// Any status code that lie within the range of 2xx cause this function to trigger
@@ -22,8 +21,24 @@ axiosInstance.interceptors.response.use(
 		// Do something with response error
 
 		if (!error.response) {
-			toast.error('Network Error');
 			console.log(error);
+			switch (error.status) {
+				case 401:
+					toast.error('Unauthorized Redirecting to login page');
+					redirect('/login');
+					break;
+				case 400:
+					toast.error('Bad Request');
+					break;
+				case 404:
+					toast.error('Not Found');
+					break;
+				case 500:
+					toast.error('Server Error');
+					break;
+				default:
+					toast.error('An error occurred');
+			}
 
 			return Promise.reject(error);
 		}
