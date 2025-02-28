@@ -2,20 +2,21 @@ import React, { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { useUserStore } from '@/stores/userStore';
+
 interface ProtectedRouteProps {
-	requiredLevel: 'EMPLOYEE' | 'TEAM_LEADER' | 'ADMIN';
-	page: ReactNode;
+  requiredLevel: 'EMPLOYEE' | 'TEAM_LEADER' | 'ADMIN' | 'SUPERAUDITOR'; // Add SUPERAUDITOR here
+  page: ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-	requiredLevel,
-	page,
+  requiredLevel,
+  page,
 }) => {
-	if (useUserStore.getState().user?.accessLevel === requiredLevel) {
-		return <>{page}</>;
-	} else {
-		return <Navigate to="/login" />;
-	}
+  if (useUserStore.getState().user?.accessLevel === requiredLevel) {
+    return <>{page}</>;
+  } else {
+    return <Navigate to="/login" />;
+  }
 };
 
 export default ProtectedRoute;
