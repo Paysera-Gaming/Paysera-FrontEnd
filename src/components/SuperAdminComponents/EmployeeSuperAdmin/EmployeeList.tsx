@@ -109,13 +109,20 @@ const EmployeeList: React.FC = () => {
   };
 
   const handleEditSubmit = (values: {
-    accessLevel?: "EMPLOYEE" | "TEAM_LEADER" | "ADMIN";
+    accessLevel?:
+      | "EMPLOYEE"
+      | "TEAM_LEADER"
+      | "ADMIN"
+      | "AUDITOR"
+      | "SUPER_AUDITOR";
     username?: string;
     firstName?: string;
     lastName?: string;
     middleName?: string;
+    email?: string;
     password?: string;
     confirmPassword?: string;
+    isAllowedRequestOvertime?: boolean;
   }) => {
     if (selectedEmployee) {
       const updatedEmployee: Employee = {
