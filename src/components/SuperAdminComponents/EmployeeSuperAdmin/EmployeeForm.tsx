@@ -43,6 +43,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox"; // Import Checkbox component
 
 // Lucide icons
 import { User, Lock } from "lucide-react";
@@ -75,6 +76,7 @@ const formSchema = z
     accessLevel: z.enum(["TEAM_LEADER", "EMPLOYEE"], {
       required_error: "Access level is required.",
     }), // Added access level field
+    isAllowedRequestOvertime: z.boolean().optional(), // Add this line
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -103,6 +105,7 @@ export default function EmployeeForm({
       password: "",
       confirmPassword: "",
       accessLevel: "EMPLOYEE", // Default access level
+      isAllowedRequestOvertime: false, // Add this line
     },
   });
 
@@ -126,6 +129,7 @@ export default function EmployeeForm({
           passwordCredentials: values.password,
           accessLevel: values.accessLevel, // Added access level to the payload
           isActive: false, // Set isActive to false by default
+          isAllowedRequestOvertime: values.isAllowedRequestOvertime, // Add this line
         });
         toast.success("Form submitted successfully!");
         onSubmit(response.data);
@@ -150,6 +154,7 @@ export default function EmployeeForm({
       password: "",
       confirmPassword: "",
       accessLevel: "EMPLOYEE", // Reset access level to default
+      isAllowedRequestOvertime: false, // Reset isAllowedRequestOvertime to default
     });
     onClose();
   }
@@ -334,6 +339,24 @@ export default function EmployeeForm({
                         )}
                       />
                     </div>
+                    <FormField
+                      control={form.control}
+                      name="isAllowedRequestOvertime"
+                      render={({ field }) => (
+                        <FormItem className="flex items-center space-x-2">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormLabel className="ml-2">
+                            Allow Overtime Requests
+                          </FormLabel>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </CardContent>
                 </Card>
               </TabsContent>
