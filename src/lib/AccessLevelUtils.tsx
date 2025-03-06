@@ -4,7 +4,7 @@ import { Navigate } from 'react-router-dom';
 import { useUserStore } from '@/stores/userStore';
 
 interface ProtectedRouteProps {
-  requiredLevel: 'EMPLOYEE' | 'TEAM_LEADER' | 'ADMIN' | 'SUPERAUDITOR'; // Add SUPERAUDITOR here
+  requiredLevel: 'EMPLOYEE' | 'TEAM_LEADER' | 'ADMIN' | 'SUPER_AUDITOR'; // Updated to SUPER_AUDITOR
   page: ReactNode;
 }
 

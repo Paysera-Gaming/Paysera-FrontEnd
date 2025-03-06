@@ -126,7 +126,7 @@ const router = createBrowserRouter([
     },
     {
         path: '/superauditor',
-        element: <ProtectedRoute page={<SuperAuditorPage />} requiredLevel="SUPERAUDITOR" />, // Add SuperAuditor route
+        element: <ProtectedRoute page={<SuperAuditorPage />} requiredLevel="SUPER_AUDITOR" />, // Updated to SUPER_AUDITOR
         children: [
             { index: true, loader: async () => redirect('/superauditor/dashboard') },
             { path: 'dashboard', element: <SuperAuditorDashboardPage /> },
