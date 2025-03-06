@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import EmployeeForm from "./EmployeeForm";
 
 interface SearchBarProps {
   searchTerm: string;
@@ -17,13 +15,8 @@ export default function SearchBar({
   accessLevel,
   setAccessLevel,
 }: SearchBarProps) {
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const handleFormSubmit = () => {
-    setIsFormOpen(false);
-  };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -113,21 +106,7 @@ export default function SearchBar({
             )}
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button
-            onClick={() => setIsFormOpen(true)}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 dark:bg-green-500 dark:hover:bg-green-600 flex items-center"
-          >
-            <Plus size={16} className="mr-2" />
-            Add Employee
-          </Button>
-        </div>
       </div>
-      <EmployeeForm
-        isOpen={isFormOpen}
-        onSubmit={handleFormSubmit}
-        onClose={() => setIsFormOpen(false)}
-      />
     </div>
   );
 }

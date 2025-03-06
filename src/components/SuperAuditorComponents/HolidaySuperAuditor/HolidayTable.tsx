@@ -1,7 +1,6 @@
 import React from 'react';
-import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Edit, Trash2, Sun } from 'lucide-react';
+import { Sun } from 'lucide-react';
 import { format, isFuture, isToday } from 'date-fns';
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -30,8 +29,6 @@ interface Holiday {
 
 interface HolidayTableProps {
   holidays: Holiday[];
-  onEdit: (holiday: Holiday) => void;
-  onDelete: (holiday: Holiday) => void;
 }
 
 const monthIcons: { [key: string]: React.FC } = {
@@ -49,7 +46,7 @@ const monthIcons: { [key: string]: React.FC } = {
   December: DecemberIcon,
 };
 
-const HolidayTable: React.FC<HolidayTableProps> = ({ holidays, onEdit, onDelete }) => {
+const HolidayTable: React.FC<HolidayTableProps> = ({ holidays }) => {
   const getStatus = (date: Date) => {
     if (isToday(date)) return "Ongoing";
     if (isFuture(date)) return "Upcoming";
@@ -63,7 +60,6 @@ const HolidayTable: React.FC<HolidayTableProps> = ({ holidays, onEdit, onDelete 
           <TableHead className="w-[200px]">Holiday Name</TableHead>
           <TableHead>Date</TableHead>
           <TableHead>Status</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -94,18 +90,6 @@ const HolidayTable: React.FC<HolidayTableProps> = ({ holidays, onEdit, onDelete 
                 >
                   {status}
                 </Badge>
-              </TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end space-x-2">
-                  <Button variant="outline" size="sm" onClick={() => onEdit(holiday)}>
-                    <Edit className="mr-2 h-4 w-4" />
-                    Edit
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => onDelete(holiday)}>
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete
-                  </Button>
-                </div>
               </TableCell>
             </TableRow>
           );

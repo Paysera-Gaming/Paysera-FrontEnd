@@ -1,24 +1,20 @@
-import type React from "react"
-import type { Department } from "./api"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Eye, Edit, Trash, ChevronLeft, ChevronRight } from "lucide-react"
+import type React from "react";
+import type { Department } from "./api";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Eye, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface DepartmentTableProps {
-  currentDepartments: Department[]
-  handleViewDepartment: (department: Department) => void
-  handleEditDepartment: (department: Department) => void
-  handleDeleteDepartment: (department: Department) => void
-  currentPage: number
-  totalPages: number
-  onPageChange: (page: number) => void
+  currentDepartments: Department[];
+  handleViewDepartment: (department: Department) => void;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 const DepartmentTable: React.FC<DepartmentTableProps> = ({
   currentDepartments,
   handleViewDepartment,
-  handleEditDepartment,
-  handleDeleteDepartment,
   currentPage,
   totalPages,
   onPageChange,
@@ -75,12 +71,6 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
                         <Button onClick={() => handleViewDepartment(department)} variant="outline" size="sm">
                           <Eye className="w-4 h-4 mr-1" /> View
                         </Button>
-                        <Button onClick={() => handleEditDepartment(department)} variant="outline" size="sm">
-                          <Edit className="w-4 h-4 mr-1" /> Edit
-                        </Button>
-                        <Button onClick={() => handleDeleteDepartment(department)} variant="outline" size="sm">
-                          <Trash className="w-4 h-4 mr-1" /> Delete
-                        </Button>
                       </div>
                     </td>
                   </tr>
@@ -91,7 +81,7 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
                     colSpan={4}
                     className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-center text-black dark:text-gray-300"
                   >
-                    No Department found.
+                    No Departments found.
                   </td>
                 </tr>
               )}
@@ -125,8 +115,7 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
         </div>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default DepartmentTable
-
+export default DepartmentTable;

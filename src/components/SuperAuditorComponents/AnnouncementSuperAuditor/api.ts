@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Announcement } from './types';
 
 const API_BASE_URL = import.meta.env.VITE_BASE_API;
 
@@ -21,12 +20,3 @@ export const fetchAnnouncements = async () => {
     throw error;
   }
 };
-
-export const addAnnouncement = (newAnnouncement: Omit<Announcement, 'id' | 'createdAt' | 'updatedAt'>) => 
-  axiosInstance.post('/api/announcements', newAnnouncement);
-
-export const editAnnouncement = (updatedAnnouncement: Announcement) => 
-  axiosInstance.put(`/api/announcements/${updatedAnnouncement.id}`, updatedAnnouncement);
-
-export const deleteAnnouncement = (id: number) => 
-  axiosInstance.delete(`/api/announcements/${id}`);

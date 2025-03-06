@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import SearchBar from "./SearchBar";
 import SummaryCards from "./SummaryCards";
 import EmployeeTable from "./EmployeeTable";
-import EmployeeForm from "./EmployeeForm";
-import EmployeeEdit from "./EmployeeEdit";
 import { Employee, EmployeeCounts, getEmployeeCounts } from "./types"; // Import the shared Employee type and getEmployeeCounts function
 import { axiosInstance } from "@/api";
 
@@ -49,7 +47,6 @@ const fetchAttendance = async (): Promise<Attendance[]> => {
 };
 
 const EmployeeList: React.FC = () => {
-  const queryClient = useQueryClient();
   const { data: employees = [], error } = useQuery<Employee[], Error>({
     queryKey: ["employees"],
     queryFn: fetchEmployees,
@@ -57,11 +54,6 @@ const EmployeeList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("overall");
   const [accessLevel, setAccessLevel] = useState("");
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
-    null
-  );
   const [attendanceData, setAttendanceData] = useState<Attendance[]>([]);
 
   useEffect(() => {
@@ -77,62 +69,8 @@ const EmployeeList: React.FC = () => {
     fetchAndSetAttendance();
   }, []);
 
-  const addEmployeeMutation = useMutation({
-    mutationFn: (newEmployee: Employee) =>
-      axiosInstance.post("/api/employee", {
-        ...newEmployee,
-        middleName: newEmployee.middleName || "", // Handle optional middle name
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["employees"] });
-    },
-  });
-
-  const editEmployeeMutation = useMutation({
-    mutationFn: (updatedEmployee: Employee) =>
-      axiosInstance.put(`/api/employee/${updatedEmployee.id}`, {
-        ...updatedEmployee,
-        middleName: updatedEmployee.middleName || "", // Handle optional middle name
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["employees"] });
-    },
-  });
-
   const handleFilterClick = (filter: string) => {
     setActiveFilter(filter);
-  };
-
-  const handleFormSubmit = (newEmployee: Employee) => {
-    addEmployeeMutation.mutate(newEmployee);
-    setIsFormOpen(false);
-  };
-
-  const handleEditSubmit = (values: {
-    accessLevel?:
-      | "EMPLOYEE"
-      | "TEAM_LEADER"
-      | "ADMIN"
-      | "AUDITOR"
-      | "SUPER_AUDITOR";
-    username?: string;
-    firstName?: string;
-    lastName?: string;
-    middleName?: string;
-    email?: string;
-    password?: string;
-    confirmPassword?: string;
-    isAllowedRequestOvertime?: boolean;
-  }) => {
-    if (selectedEmployee) {
-      const updatedEmployee: Employee = {
-        ...selectedEmployee,
-        ...values,
-      };
-      editEmployeeMutation.mutate(updatedEmployee);
-      setIsEditOpen(false);
-      setSelectedEmployee(null);
-    }
   };
 
   const employeesWithAttendanceStatus = employees.map((emp) => {
@@ -196,19 +134,6 @@ const EmployeeList: React.FC = () => {
                 activeFilter !== "overall" ? activeFilter : ""
               } employees found.`}
         </div>
-      )}
-      <EmployeeForm
-        onSubmit={handleFormSubmit}
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-      />
-      {selectedEmployee && (
-        <EmployeeEdit
-          onSubmit={handleEditSubmit}
-          isOpen={isEditOpen}
-          onClose={() => setIsEditOpen(false)}
-          employee={selectedEmployee}
-        />
       )}
     </div>
   );

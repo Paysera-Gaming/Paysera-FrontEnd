@@ -7,7 +7,6 @@ import AttendanceTable from './AttendanceTable';
 import { exportToCSV } from './exportToCSV';
 import { Button } from '@/components/ui/button';
 import AttendanceSummaryCards from './AttendanceSummaryCards';
-import PaidLeaveForm from './PaidLeaveForm';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -132,7 +131,6 @@ const AttendanceList: React.FC = () => {
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <PaidLeaveForm />
         </div>
       </div>
       <AttendanceSummaryCards
