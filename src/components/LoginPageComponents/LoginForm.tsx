@@ -50,23 +50,26 @@ export default function LoginForm() {
 			return login(form.getValues().username, form.getValues().password);
 		},
 
-		onSuccess: (data) => {
-			toast.success('Login Success');
-			useUserStore.getState().setUser(data);
-			setTimeout(() => {
-				switch (useUserStore.getState().user?.accessLevel) {
-					case 'ADMIN':
-						navigate('/superadmin/dashboard');
-						break;
-					case 'TEAM_LEADER':
-						navigate('/teamlead/dashboard');
-						break;
-					case 'EMPLOYEE':
-						navigate('/employee/dashboard');
-						break;
-				}
-			}, 500);
-		},
+onSuccess: (data) => {
+    toast.success('Login Success');
+    useUserStore.getState().setUser(data);
+    setTimeout(() => {
+        switch (useUserStore.getState().user?.accessLevel) {
+            case 'ADMIN':
+                navigate('/superadmin/dashboard');
+                break;
+            case 'TEAM_LEADER':
+                navigate('/teamlead/dashboard');
+                break;
+            case 'EMPLOYEE':
+                navigate('/employee/dashboard');
+                break;
+            case 'SUPER_AUDITOR': // Added case for SUPER_AUDITOR
+                navigate('/superauditor/dashboard');
+                break;
+        }
+    }, 500);
+},
 
 		onError: () => {
 			setDisable(false);
