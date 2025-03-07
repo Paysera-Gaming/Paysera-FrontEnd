@@ -52,7 +52,7 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
             )
           }
           id={link}
-          to={`/SuperAuditor/${link}`} // Ensure the path is correct
+          to={`/Auditor/${link}`} // Ensure the path is correct
         >
           {iconList[index]}
           {link}
@@ -80,7 +80,7 @@ function ProfileHeader() {
   );
 }
 
-export default function SuperAuditorNavigation() {
+export default function AuditorNavigation() {
   const routeLinks: string[] = [
     "dashboard",
     "announcement",
