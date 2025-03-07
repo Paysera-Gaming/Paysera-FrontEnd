@@ -64,8 +64,11 @@ onSuccess: (data) => {
             case 'EMPLOYEE':
                 navigate('/employee/dashboard');
                 break;
-            case 'SUPER_AUDITOR': // Added case for SUPER_AUDITOR
+            case 'SUPER_AUDITOR':
                 navigate('/superauditor/dashboard');
+                break;
+            case 'AUDITOR':
+                navigate('/auditor/dashboard');
                 break;
         }
     }, 500);
