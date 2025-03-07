@@ -4,7 +4,6 @@ import { flexRender, useReactTable, type ColumnDef, getCoreRowModel, type Cell }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { Attendance } from "./types";
 import { format } from "date-fns";
-import AttendanceActions from "./AttendanceActions";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -94,7 +93,7 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
                   </TableCell>
                 </TableRow>
               ) : currentRecords.length ? (
-                currentRecords.map((row, rowIndex) => (
+                currentRecords.map((_, rowIndex) => (
                   <TableRow key={rowIndex}>
                     {table
                       .getRowModel()
@@ -104,9 +103,7 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data, columns, dateRa
                           {renderCellValue(cell)}
                         </TableCell>
                       ))}
-                    <TableCell className="w-[calc(100%/columns.length)] text-sm">
-                      <AttendanceActions attendance={row} />
-                    </TableCell>
+
                   </TableRow>
                 ))
               ) : (
