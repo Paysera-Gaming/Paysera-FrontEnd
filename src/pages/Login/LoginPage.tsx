@@ -20,26 +20,26 @@ const routeMaps = new Map([
 ]);
 
 export default function LoginPage() {
-  const navigate = useNavigate();
-  const user = useUserStore.getState().user;
+	const navigate = useNavigate();
+	// this useEffect checks if the user is already logged in
+	// if so then they will be redirected to their respective dashboard
+	useEffect(() => {
+		// check first if there is already permission to send notifs
+		if (Notification.permission != 'granted') {
+			Notification.requestPermission();
+		}
 
-  useEffect(() => {
-    // check first if there is already permission to send notifs
-    if (Notification.permission !== "granted") {
-      Notification.requestPermission();
-    }
+		if (useUserStore.getState().user != undefined) {
+			const userRoute = useUserStore.getState().user?.accessLevel;
+			console.log('User is logged in');
+			const route = routeMaps.get(userRoute || '') || '/defaultRoute';
+			navigate(route);
+		}
+	});
 
-    if (user) {
-      const userRoute = user.accessLevel;
-      console.log("User is logged in");
-      const route = routeMaps.get(userRoute || "") || "/defaultRoute";
-      navigate(route);
-    }
-  }, [user, navigate]); // Add user and navigate as dependencies
-
-  const handleForgotPassword = () => {
-    navigate("/forgot-password");
-  };
+	const handleForgotPassword = () => {
+		navigate('/forgot-password');
+	};
 
   return (
     <main className=" h-full flex items-center justify-center">
