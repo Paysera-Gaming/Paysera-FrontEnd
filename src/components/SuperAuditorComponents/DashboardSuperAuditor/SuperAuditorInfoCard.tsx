@@ -10,13 +10,15 @@ function returnRole(role: string): string {
     ? "Admin"
     : role === "TEAM_LEADER"
     ? "Team Leader"
+    : role === "SUPER_AUDITOR"
+    ? "Super Auditor"
     : "Employee";
 }
 
 function SuperAdminInfo() {
   const info = useUserStore.getState().user;
 
-  if (!info || info.accessLevel !== "ADMIN") {
+  if (!info || (info.accessLevel !== "ADMIN" && info.accessLevel !== "SUPER_AUDITOR")) {
     return <p>error</p>;
   }
 
