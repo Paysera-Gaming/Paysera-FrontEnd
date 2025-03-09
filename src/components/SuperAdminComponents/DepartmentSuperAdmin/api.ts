@@ -13,24 +13,33 @@ export interface Employee {
 }
 
 export interface Leader extends Employee {}
-export interface Auditor extends Employee {}
 
 export interface Department {
   id: number;
   name: string;
   leaderId: number;
-  auditorId?: number | null; // Optional auditorId
   updatedAt: string;
   createdAt: string;
-  Employees?: Employee[];
+  Employees: Employee[];
   Leader: Leader | null;
-  Auditor?: Auditor | null; // Optional Auditor
 }
 
 export const fetchDepartments = async (): Promise<Department[]> => {
   try {
     const response = await axiosInstance.get("/api/department");
-    return response.data;
+    const departments: Department[] = response.data;
+
+    // Ensure auditors are included in the Employees array
+    departments.forEach(department => {
+      if (department.Employees) {
+        department.Employees = department.Employees.map(employee => ({
+          ...employee,
+          role: employee.accessLevel === "AUDITOR" ? "Auditor" : employee.role
+        }));
+      }
+    });
+
+    return departments;
   } catch (error) {
     console.error("Error fetching departments:", error);
     return [];
@@ -47,7 +56,7 @@ export const fetchTeamLeaders = async (): Promise<Leader[]> => {
   }
 };
 
-export const fetchAuditors = async (): Promise<Auditor[]> => {
+export const fetchAuditors = async (): Promise<Employee[]> => {
   try {
     const response = await axiosInstance.get("/api/employee");
     return response.data.filter((employee: Employee) => employee.accessLevel === "AUDITOR" && employee.departmentId === null);
@@ -57,7 +66,7 @@ export const fetchAuditors = async (): Promise<Auditor[]> => {
   }
 };
 
-export const addDepartment = async (newDepartment: { name: string; leaderId: number; auditorId?: number | null }) => {
+export const addDepartment = async (newDepartment: { name: string; leaderId: number }) => {
   try {
     const response = await axiosInstance.post("/api/department", newDepartment);
     return response.data;
@@ -67,9 +76,9 @@ export const addDepartment = async (newDepartment: { name: string; leaderId: num
   }
 };
 
-export const updateDepartment = async (updatedDepartment: { id: number; name: string; auditorId?: number | null }) => {
+export const updateDepartment = async (updatedDepartment: { id: number; name: string }) => {
   try {
-    const response = await axiosInstance.put(`/api/department/${updatedDepartment.id}`, { name: updatedDepartment.name, auditorId: updatedDepartment.auditorId });
+    const response = await axiosInstance.put(`/api/department/${updatedDepartment.id}`, { name: updatedDepartment.name });
     return response.data;
   } catch (error) {
     console.error("Error updating department:", error);

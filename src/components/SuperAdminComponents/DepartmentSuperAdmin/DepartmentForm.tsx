@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Leader, Auditor, addDepartment, updateDepartment, updateDepartmentLeader, Department } from './api';
+import { Leader, addDepartment, updateDepartment, updateDepartmentLeader, Department } from './api'; // Removed Employee import
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -15,15 +15,13 @@ interface DepartmentFormProps {
   editingDepartment: Department | null;
   setEditingDepartment: (department: Department | null) => void;
   teamLeaders: Leader[];
-  auditors: Auditor[]; // Add auditors prop
   departments: Department[];
 }
 
-const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setEditingDepartment, teamLeaders, auditors, departments }) => {
+const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setEditingDepartment, teamLeaders, departments }) => {
   const queryClient = useQueryClient();
   const [departmentName, setDepartmentName] = useState('');
   const [departmentLeaderId, setDepartmentLeaderId] = useState<number | null>(null);
-  const [departmentAuditorId, setDepartmentAuditorId] = useState<number | null>(null); // Add state for auditor
   const [errorMessage, setErrorMessage] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -31,12 +29,10 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
     if (editingDepartment) {
       setDepartmentName(editingDepartment.name);
       setDepartmentLeaderId(editingDepartment.leaderId);
-      setDepartmentAuditorId(editingDepartment.auditorId || null); // Set auditorId if available
       setIsDialogOpen(true);
     } else {
       setDepartmentName('');
       setDepartmentLeaderId(null);
-      setDepartmentAuditorId(null); // Reset auditorId
     }
   }, [editingDepartment]);
 
@@ -84,7 +80,6 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
       updateDepartmentMutation.mutate({
         id: editingDepartment.id,
         name: departmentName,
-        auditorId: departmentAuditorId, // Include auditorId
       });
       if (editingDepartment.leaderId !== departmentLeaderId) {
         updateDepartmentLeaderMutation.mutate({
@@ -94,22 +89,17 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
       }
       setEditingDepartment(null);
     } else {
-      addDepartmentMutation.mutate({ name: departmentName, leaderId: departmentLeaderId, auditorId: departmentAuditorId });
+      addDepartmentMutation.mutate({ name: departmentName, leaderId: departmentLeaderId });
     }
 
     setDepartmentName('');
     setDepartmentLeaderId(null);
-    setDepartmentAuditorId(null); // Reset auditorId
     setErrorMessage('');
     setIsDialogOpen(false);
   };
 
   const availableTeamLeaders = teamLeaders.filter((leader) => {
     return !departments.some((department) => department.leaderId === leader.id && department.id !== editingDepartment?.id);
-  });
-
-  const availableAuditors = auditors.filter((auditor) => {
-    return !departments.some((department) => department.auditorId === auditor.id && department.id !== editingDepartment?.id);
   });
 
   const handleCancel = () => {
@@ -183,27 +173,6 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ editingDepartment, setE
                   </Select>
                 ) : (
                   <div className="col-span-3 text-gray-500">No team leader is available</div>
-                )}
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="departmentAuditor" className="text-right">
-                  Auditor
-                </Label>
-                {availableAuditors.length > 0 ? (
-                  <Select onValueChange={(value) => setDepartmentAuditorId(Number(value))}>
-                    <SelectTrigger id="departmentAuditor" className="col-span-3">
-                      <SelectValue placeholder="Select Auditor" />
-                    </SelectTrigger>
-                    <SelectContent position="popper">
-                      {availableAuditors.map((auditor: Auditor) => (
-                        <SelectItem key={auditor.id} value={auditor.id.toString()}>
-                          {auditor.firstName} {auditor.lastName}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <div className="col-span-3 text-gray-500">No auditor is available</div>
                 )}
               </div>
             </div>

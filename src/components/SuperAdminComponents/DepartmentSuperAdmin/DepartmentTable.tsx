@@ -37,9 +37,6 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
                   Leader
                 </th>
                 <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">
-                  Auditor
-                </th>
-                <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">
                   Members
                 </th>
                 <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">
@@ -60,16 +57,11 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
                         : "No Leader Assigned"}
                     </td>
                     <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
-                      {department.Auditor
-                        ? `${department.Auditor.firstName} ${department.Auditor.lastName}`
-                        : "No Auditor Assigned"}
-                    </td>
-                    <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
                       {department.Employees && department.Employees.length > 0 ? (
                         <>
                           {department.Employees.slice(0, 3).map((employee) => (
                             <span key={employee.id} className="block">
-                              {employee.firstName} {employee.lastName}
+                              {employee.firstName} {employee.lastName} {employee.role === "Auditor" ? "(Auditor)" : ""}
                             </span>
                           ))}
                           {department.Employees.length > 3 && <span>etc.</span>}
@@ -96,7 +88,7 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
               ) : (
                 <tr>
                   <td
-                    colSpan={5}
+                    colSpan={4}
                     className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-center text-black dark:text-gray-300"
                   >
                     No Department found.
