@@ -1,7 +1,7 @@
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { fetchDepartments, fetchTeamLeaders, deleteDepartment, type Department, type Leader } from "./api"
+import { fetchDepartments, fetchTeamLeaders, fetchAuditors, deleteDepartment, type Department, type Leader, type Auditor } from "./api"
 import DepartmentForm from "./DepartmentForm"
 import DepartmentDetails from "./DepartmentDetails"
 import SearchBar from "./SearchBar"
@@ -27,6 +27,15 @@ const DepartmentList: React.FC = () => {
     queryKey: ["teamLeaders"],
     queryFn: fetchTeamLeaders,
   })
+  const { data: auditors = [] } = useQuery<Auditor[]>({
+    queryKey: ["auditors"],
+    queryFn: fetchAuditors,
+  })
+
+  useEffect(() => {
+    console.log("Team Leaders without a department:", teamLeaders);
+    console.log("Auditors without a department:", auditors);
+  }, [teamLeaders, auditors]);
 
   const [editingDepartment, setEditingDepartment] = useState<Department | null>(null)
   const [viewingDepartment, setViewingDepartment] = useState<Department | null>(null)
@@ -113,6 +122,7 @@ const DepartmentList: React.FC = () => {
           editingDepartment={editingDepartment}
           setEditingDepartment={setEditingDepartment}
           teamLeaders={teamLeaders}
+          auditors={auditors} // Pass auditors to DepartmentForm
           departments={departments}
         />
       </div>
@@ -146,4 +156,3 @@ const DepartmentList: React.FC = () => {
 }
 
 export default DepartmentList
-

@@ -77,6 +77,18 @@ const EmployeeList: React.FC = () => {
     fetchAndSetAttendance();
   }, []);
 
+  useEffect(() => {
+    const teamLeadersWithoutDepartment = employees.filter(
+      (emp) => emp.accessLevel === "TEAM_LEADER" && emp.departmentId === null
+    );
+    const auditorsWithoutDepartment = employees.filter(
+      (emp) => emp.accessLevel === "AUDITOR" && emp.departmentId === null
+    );
+
+    console.log("Team Leaders without a department:", teamLeadersWithoutDepartment);
+    console.log("Auditors without a department:", auditorsWithoutDepartment);
+  }, [employees]);
+
   const addEmployeeMutation = useMutation({
     mutationFn: (newEmployee: Employee) =>
       axiosInstance.post("/api/employee", {

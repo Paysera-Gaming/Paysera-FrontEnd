@@ -37,6 +37,9 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
                   Leader
                 </th>
                 <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">
+                  Auditor
+                </th>
+                <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">
                   Members
                 </th>
                 <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-gray-500 dark:text-gray-400 font-normal">
@@ -55,6 +58,11 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
                       {department.Leader
                         ? `${department.Leader.firstName} ${department.Leader.lastName}`
                         : "No Leader Assigned"}
+                    </td>
+                    <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
+                      {department.Auditor
+                        ? `${department.Auditor.firstName} ${department.Auditor.lastName}`
+                        : "No Auditor Assigned"}
                     </td>
                     <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-left text-black dark:text-gray-300">
                       {department.Employees && department.Employees.length > 0 ? (
@@ -88,7 +96,7 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
               ) : (
                 <tr>
                   <td
-                    colSpan={4}
+                    colSpan={5}
                     className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:bg-transparent text-center text-black dark:text-gray-300"
                   >
                     No Department found.
@@ -129,4 +137,3 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
 }
 
 export default DepartmentTable
-
