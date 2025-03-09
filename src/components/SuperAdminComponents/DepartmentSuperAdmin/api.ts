@@ -10,18 +10,26 @@ export interface Employee {
   isActive: boolean;
   role: string;
   departmentId?: number | null;
+  email: string;
+  isAllowedRequestOvertime: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Leader extends Employee {}
+
+export interface Auditor extends Employee {}
 
 export interface Department {
   id: number;
   name: string;
   leaderId: number;
+  auditorId: number;
   updatedAt: string;
   createdAt: string;
   Employees: Employee[];
   Leader: Leader | null;
+  Auditor: Auditor | null;
 }
 
 export const fetchDepartments = async (): Promise<Department[]> => {
@@ -31,11 +39,8 @@ export const fetchDepartments = async (): Promise<Department[]> => {
 
     // Ensure auditors are included in the Employees array
     departments.forEach(department => {
-      if (department.Employees) {
-        department.Employees = department.Employees.map(employee => ({
-          ...employee,
-          role: employee.accessLevel === "AUDITOR" ? "Auditor" : employee.role
-        }));
+      if (department.Auditor) {
+        department.Employees.push(department.Auditor);
       }
     });
 
@@ -56,7 +61,7 @@ export const fetchTeamLeaders = async (): Promise<Leader[]> => {
   }
 };
 
-export const fetchAuditors = async (): Promise<Employee[]> => {
+export const fetchAuditors = async (): Promise<Auditor[]> => {
   try {
     const response = await axiosInstance.get("/api/employee");
     return response.data.filter((employee: Employee) => employee.accessLevel === "AUDITOR" && employee.departmentId === null);
@@ -66,7 +71,7 @@ export const fetchAuditors = async (): Promise<Employee[]> => {
   }
 };
 
-export const addDepartment = async (newDepartment: { name: string; leaderId: number }) => {
+export const addDepartment = async (newDepartment: { name: string; leaderId: number; auditorId: number }) => {
   try {
     const response = await axiosInstance.post("/api/department", newDepartment);
     return response.data;

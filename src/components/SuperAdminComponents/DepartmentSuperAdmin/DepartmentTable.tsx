@@ -1,17 +1,17 @@
-import type React from "react"
-import type { Department } from "./api"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Eye, Edit, Trash, ChevronLeft, ChevronRight } from "lucide-react"
+import type React from "react";
+import type { Department } from "./api";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Eye, Edit, Trash, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface DepartmentTableProps {
-  currentDepartments: Department[]
-  handleViewDepartment: (department: Department) => void
-  handleEditDepartment: (department: Department) => void
-  handleDeleteDepartment: (department: Department) => void
-  currentPage: number
-  totalPages: number
-  onPageChange: (page: number) => void
+  currentDepartments: Department[];
+  handleViewDepartment: (department: Department) => void;
+  handleEditDepartment: (department: Department) => void;
+  handleDeleteDepartment: (department: Department) => void;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 const DepartmentTable: React.FC<DepartmentTableProps> = ({
@@ -125,7 +125,7 @@ const DepartmentTable: React.FC<DepartmentTableProps> = ({
         </div>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default DepartmentTable
+export default DepartmentTable;
