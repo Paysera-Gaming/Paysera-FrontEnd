@@ -1,12 +1,15 @@
-import type React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchDepartments, type Department } from "./api";
 import DepartmentDetails from "./DepartmentDetails";
 import SearchBar from "./SearchBar";
 import DepartmentTable from "./DepartmentTable";
+import { useUserStore } from '@/stores/userStore'; // Import the user store
 
 const DepartmentList: React.FC = () => {
+  const user = useUserStore.getState().getUser(); // Get the logged-in user
+  const departmentId = user?.departmentId; // Get the department ID of the logged-in user
+
   const { data: departments = [] } = useQuery<Department[]>({
     queryKey: ["departments"],
     queryFn: fetchDepartments,
@@ -30,6 +33,9 @@ const DepartmentList: React.FC = () => {
   };
 
   const filteredDepartments = departments.filter((department) => {
+    if (department.id !== departmentId) {
+      return false;
+    }
     const searchLower = searchQuery.toLowerCase();
     const departmentNameMatch = department.name.toLowerCase().includes(searchLower);
     const leaderMatch = department.Leader
