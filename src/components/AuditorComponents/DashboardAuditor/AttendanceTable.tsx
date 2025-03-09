@@ -44,7 +44,6 @@ const AttendanceTable: React.FC = () => {
   const [selectedAccessLevel, setSelectedAccessLevel] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  const [selectedAttendance, setSelectedAttendance] = useState<Attendance | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   if (isLoading) {
@@ -81,7 +80,6 @@ const AttendanceTable: React.FC = () => {
   const handleRowClick = async (attendance: Attendance) => {
     const employeeDetails = await getEmployeeDetails(attendance.employee.id);
     setSelectedEmployee(employeeDetails);
-    setSelectedAttendance(attendance);
     setIsDialogOpen(true);
   };
 
@@ -359,8 +357,8 @@ const AttendanceTable: React.FC = () => {
       <EmployeeDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
-        employee={selectedEmployee}
-        attendance={selectedAttendance}
+        employees={selectedEmployee ? [selectedEmployee] : []}
+        title="Employee Details"
       />
     </>
   );

@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getEmployeeDetails } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/api";
-import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
-import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
+import { getEmployeeDetails } from "@/components/AuditorComponents/EmployeeAuditor/api";
+import type { Attendance } from "@/components/AuditorComponents/AttendanceAuditor/types";
+import type { Employee } from "@/components/AuditorComponents/EmployeeAuditor/types";
 import { isToday } from "date-fns";
 import EmployeeDialog from "./EmployeeDialog";
 
@@ -27,8 +27,6 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
   );
-  const [selectedAttendance, setSelectedAttendance] =
-    useState<Attendance | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const filteredData = tableData.filter(
@@ -49,7 +47,6 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
   const handleRowClick = async (attendance: Attendance) => {
     const employeeDetails = await getEmployeeDetails(attendance.employee.id);
     setSelectedEmployee(employeeDetails);
-    setSelectedAttendance(attendance);
     setIsDialogOpen(true);
   };
 
@@ -118,8 +115,8 @@ function RecentActivitiesTable({ tableData }: { tableData: Attendance[] }) {
       <EmployeeDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
-        employee={selectedEmployee}
-        attendance={selectedAttendance}
+        employees={selectedEmployee ? [selectedEmployee] : []}
+        title="Employee Details"
       />
     </>
   );

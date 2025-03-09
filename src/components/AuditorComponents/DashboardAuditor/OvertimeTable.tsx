@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAttendanceList } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api";
-import { getEmployeeDetails } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/api";
-import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
-import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
+import { getAttendanceList } from "@/components/AuditorComponents/AttendanceAuditor/api";
+import { getEmployeeDetails } from "@/components/AuditorComponents/EmployeeAuditor/api";
+import type { Attendance } from "@/components/AuditorComponents/AttendanceAuditor/types";
+import type { Employee } from "@/components/AuditorComponents/EmployeeAuditor/types";
 import {
   Table,
   TableBody,
@@ -31,7 +31,7 @@ const OvertimeTable: React.FC = () => {
     error,
   } = useQuery<Attendance[]>({
     queryKey: ["attendanceData"],
-    queryFn: getAttendanceList,
+    queryFn: () => getAttendanceList(1), // Replace 1 with the actual department ID if needed
   });
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,8 +39,6 @@ const OvertimeTable: React.FC = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
   );
-  const [selectedAttendance, setSelectedAttendance] =
-    useState<Attendance | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   if (isLoading) {
@@ -63,7 +61,7 @@ const OvertimeTable: React.FC = () => {
 
   const filteredData =
     attendanceData?.filter(
-      (attendance) =>
+      (attendance: Attendance) =>
         isToday(new Date(attendance.date)) &&
         attendance.employee.username
           .toLowerCase()
@@ -78,11 +76,10 @@ const OvertimeTable: React.FC = () => {
   const handleRowClick = async (attendance: Attendance) => {
     const employeeDetails = await getEmployeeDetails(attendance.employee.id);
     setSelectedEmployee(employeeDetails);
-    setSelectedAttendance(attendance);
     setIsDialogOpen(true);
   };
 
-  const renderedList = filteredData.map((attendance) => (
+  const renderedList = filteredData.map((attendance: Attendance) => (
     <TableRow key={attendance.id} onClick={() => handleRowClick(attendance)}>
       <TableCell className="p-4">{attendance.employee.username}</TableCell>
       <TableCell className="p-4">
@@ -167,8 +164,8 @@ const OvertimeTable: React.FC = () => {
       <EmployeeDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
-        employee={selectedEmployee}
-        attendance={selectedAttendance}
+        employees={selectedEmployee ? [selectedEmployee] : []}
+        title="Employee Details"
       />
     </>
   );
