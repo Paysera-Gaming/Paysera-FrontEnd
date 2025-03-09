@@ -18,14 +18,19 @@ import {
 import { useFiltersAndHandlers } from './filtersAndHandlers';
 import { calculateCounts } from './countsCalculation';
 import { columns } from './columnsDefinition';
+import { useUserStore } from '@/stores/userStore'; // Import the user store
 
 const AttendanceList: React.FC = () => {
+  const user = useUserStore.getState().getUser(); // Get the logged-in user
+  const departmentId = user?.departmentId; // Get the department ID of the logged-in user
+
   const {
     data: attendanceList = [],
   }: UseQueryResult<Attendance[], Error> = useQuery({
-    queryKey: ['attendanceList'],
-    queryFn: getAttendanceList,
+    queryKey: ['attendanceList', departmentId],
+    queryFn: () => getAttendanceList(departmentId!), // Pass the department ID to the query function
     refetchInterval: false, // Disable polling
+    enabled: !!departmentId, // Enable the query only if the department ID is available
   });
 
   const {
