@@ -1,13 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { fetchEmployees } from "@/utils/fetchEmployees";
-import { fetchDepartments } from "@/components/SuperAdminComponents/DepartmentSuperAdmin/api";
-import { getAttendanceList } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api";
-import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
-import type { Department } from "@/components/SuperAdminComponents/DepartmentSuperAdmin/api";
-import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
+import { fetchDepartments } from "@/components/AuditorComponents/DepartmentAuditor/api";
+import { getAttendanceList } from "@/components/AuditorComponents/AttendanceAuditor/api";
+import type { Employee } from "@/components/AuditorComponents/EmployeeAuditor/types";
+import type { Department } from "@/components/AuditorComponents/DepartmentAuditor/api";
+import type { Attendance } from "@/components/AuditorComponents/AttendanceAuditor/types";
 import { Building } from "lucide-react";
 import EmployeeListDialog from "./EmployeeListDialog";
+import { useUserStore } from '@/stores/userStore'; // Import the user store
 
 type EmployeesStatusCardsProps = {
   className?: string;
@@ -22,24 +23,33 @@ export default function EmployeesStatusCards({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogTitle, setDialogTitle] = useState<string>("");
 
+  const user = useUserStore.getState().getUser(); // Get the logged-in user
+  const departmentId = user?.departmentId; // Get the department ID of the logged-in user
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const employeeData = await fetchEmployees();
-        setEmployees(employeeData);
+        setEmployees(employeeData.filter(emp => emp.departmentId === departmentId));
 
         const departmentData = await fetchDepartments();
         setDepartments(departmentData);
 
-        const attendanceData = await getAttendanceList();
-        setAttendanceData(attendanceData);
+        if (departmentId) {
+          const attendanceData = await getAttendanceList(departmentId);
+          setAttendanceData(attendanceData);
+        } else {
+          console.error("Invalid department ID");
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchData();
-  }, []);
+    if (departmentId) {
+      fetchData();
+    }
+  }, [departmentId]);
 
   const totalEmployees = employees.length;
   const totalDepartments = departments.length;

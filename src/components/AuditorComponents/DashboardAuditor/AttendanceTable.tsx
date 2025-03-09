@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAttendanceList } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api";
-import { getEmployeeDetails } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/api";
-import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
-import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
+import { getAttendanceList } from "@/components/AuditorComponents/AttendanceAuditor/api";
+import { getEmployeeDetails } from "@/components/AuditorComponents/EmployeeAuditor/api";
+import type { Attendance } from "@/components/AuditorComponents/AttendanceAuditor/types";
+import type { Employee } from "@/components/AuditorComponents/EmployeeAuditor/types";
 import {
   Table,
   TableBody,
@@ -24,25 +24,27 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { format, isToday } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import EmployeeDialog from "./EmployeeDialog";
+import { useUserStore } from '@/stores/userStore'; // Import the user store
 
 const AttendanceTable: React.FC = () => {
+  const user = useUserStore.getState().getUser(); // Get the logged-in user
+  const departmentId = user?.departmentId; // Get the department ID of the logged-in user
+
   const {
     data: attendanceData,
     isLoading,
     error,
   } = useQuery<Attendance[]>({
-    queryKey: ["attendanceData"],
-    queryFn: getAttendanceList,
+    queryKey: ["attendanceData", departmentId],
+    queryFn: () => getAttendanceList(departmentId!), // Pass the department ID to the query function
+    enabled: !!departmentId, // Enable the query only if the department ID is available
   });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAccessLevel, setSelectedAccessLevel] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
-    null
-  );
-  const [selectedAttendance, setSelectedAttendance] =
-    useState<Attendance | null>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [selectedAttendance, setSelectedAttendance] = useState<Attendance | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   if (isLoading) {

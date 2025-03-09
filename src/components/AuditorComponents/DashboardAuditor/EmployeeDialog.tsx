@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogClose,
 } from "@/components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -16,104 +16,234 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
-import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { getEmployeeDetails } from "@/components/AuditorComponents/EmployeeAuditor/api";
+import { getAttendanceList } from "@/components/AuditorComponents/AttendanceAuditor/api";
+import type { Employee } from "@/components/AuditorComponents/EmployeeAuditor/types";
+import type { Attendance } from "@/components/AuditorComponents/AttendanceAuditor/types";
+import { useUserStore } from '@/stores/userStore'; // Import the user store
 
-interface EmployeeDialogProps {
+interface EmployeeListDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  employee: Employee | null;
-  attendance: Attendance | null;
+  employees: Employee[];
+  title: string;
 }
 
-const EmployeeDialog: React.FC<EmployeeDialogProps> = ({
+const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
   isOpen,
   onClose,
-  employee,
-  attendance,
+  employees,
 }) => {
-  if (!employee || !attendance) return null;
+  const [detailedEmployees, setDetailedEmployees] = useState<Employee[]>([]);
+  const [attendanceData, setAttendanceData] = useState<Attendance[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
 
-  const attendanceStatus =
-    attendance.status === "ONGOING" ? "Active" : "Offline";
+  const user = useUserStore.getState().getUser(); // Get the logged-in user
+  const departmentId = user?.departmentId; // Get the department ID of the logged-in user
+
+  useEffect(() => {
+    const fetchEmployeeDetails = async () => {
+      const detailedEmployees = await Promise.all(
+        employees.map(async (employee) => {
+          const detailedEmployee = await getEmployeeDetails(employee.id);
+          return detailedEmployee;
+        })
+      );
+      setDetailedEmployees(detailedEmployees);
+    };
+
+    const fetchAttendanceData = async () => {
+      const attendanceData = await getAttendanceList(departmentId!);
+      setAttendanceData(attendanceData);
+    };
+
+    if (isOpen && departmentId) {
+      fetchEmployeeDetails();
+      fetchAttendanceData();
+    }
+  }, [isOpen, employees, departmentId]);
+
+  const getEmployeeStatus = (employeeId: number) => {
+    const attendance = attendanceData.find(
+      (att) => att.employee.id === employeeId
+    );
+    return attendance?.status === "ONGOING" ? "Online" : "Offline";
+  };
+
+  const filteredEmployees = detailedEmployees.filter((employee) => {
+    const departmentName = employee.departmentName || "No Department";
+    const status = getEmployeeStatus(employee.id);
+    return (
+      employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (selectedDepartment ? departmentName === selectedDepartment : true) &&
+      (selectedStatus ? status === selectedStatus : true)
+    );
+  });
+
+  const admins = filteredEmployees.filter((emp) => emp.accessLevel === "ADMIN");
+  const teamLeaders = filteredEmployees.filter(
+    (emp) => emp.accessLevel === "TEAM_LEADER"
+  );
+  const regularEmployees = filteredEmployees.filter(
+    (emp) => emp.accessLevel === "EMPLOYEE"
+  );
+
+  const renderTable = (employees: Employee[], showDepartment: boolean) => (
+    <ScrollArea className="h-[300px]">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-sm">Status</TableHead>
+            <TableHead className="text-sm">Username</TableHead>
+            <TableHead className="text-sm">Name</TableHead>
+            {showDepartment && (
+              <TableHead className="text-sm">Department</TableHead>
+            )}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {employees.map((employee) => (
+            <TableRow key={employee.id}>
+              <TableCell className="text-sm">
+                <span
+                  className={`px-2 py-1 rounded-full text-white ${
+                    getEmployeeStatus(employee.id) === "Online"
+                      ? "bg-green-600"
+                      : "bg-red-600"
+                  }`}
+                >
+                  {getEmployeeStatus(employee.id)}
+                </span>
+              </TableCell>
+              <TableCell className="text-sm">
+                <strong>{employee.username}</strong>
+              </TableCell>
+              <TableCell className="text-sm">
+                {employee.firstName} {employee.lastName}
+              </TableCell>
+              {showDepartment && (
+                <TableCell className="text-sm">
+                  {employee.departmentName
+                    ? employee.departmentName
+                    : "No Department"}
+                </TableCell>
+              )}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </ScrollArea>
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent aria-describedby="employee-dialog-description">
+      <DialogContent
+        aria-describedby="employee-list-dialog-description"
+        className="max-w-4xl"
+      >
         <DialogHeader>
-          <DialogTitle>Employee Information</DialogTitle>
-          <DialogDescription id="employee-dialog-description">
-            Detailed information about the employee.
+          <DialogTitle>Paysera Status</DialogTitle>
+          <DialogDescription id="employee-list-dialog-description">
+            Detailed list of employees.
           </DialogDescription>
         </DialogHeader>
-        <ScrollArea className="h-[300px]">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-sm">Field</TableHead>
-                <TableHead className="text-sm">Details</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell className="text-sm">
-                  <strong>Username:</strong>
-                </TableCell>
-                <TableCell className="text-sm">{employee.username}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="text-sm">
-                  <strong>First Name:</strong>
-                </TableCell>
-                <TableCell className="text-sm">{employee.firstName}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="text-sm">
-                  <strong>Last Name:</strong>
-                </TableCell>
-                <TableCell className="text-sm">{employee.lastName}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="text-sm">
-                  <strong>Middle Name:</strong>
-                </TableCell>
-                <TableCell className="text-sm">{employee.middleName}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="text-sm">
-                  <strong>Role:</strong>
-                </TableCell>
-                <TableCell className="text-sm">{employee.role}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="text-sm">
-                  <strong>Access Level:</strong>
-                </TableCell>
-                <TableCell className="text-sm">
-                  {employee.accessLevel}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="text-sm">
-                  <strong>Department:</strong>
-                </TableCell>
-                <TableCell className="text-sm">
-                  {employee.departmentName || "No department"}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="text-sm">
-                  <strong>Attendance Status:</strong>
-                </TableCell>
-                <TableCell className="text-sm">{attendanceStatus}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </ScrollArea>
-        <DialogClose>Close</DialogClose>
+        <div className="flex mb-2 space-x-2">
+          <Input
+            type="text"
+            placeholder="Search by username"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1"
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="p-2 text-base w-48">
+                Department
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-64">
+              <DropdownMenuItem onSelect={() => setSelectedDepartment("")}>
+                All
+              </DropdownMenuItem>
+              {Array.from(
+                new Set(
+                  detailedEmployees.map(
+                    (emp) => emp.departmentName || "No Department"
+                  )
+                )
+              ).map((department) => (
+                <DropdownMenuItem
+                  key={department}
+                  onSelect={() => setSelectedDepartment(department)}
+                >
+                  {department}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="p-2 text-base w-48">
+                Status
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-64">
+              <DropdownMenuItem onSelect={() => setSelectedStatus("")}>
+                All
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedStatus("Online")}>
+                Online
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedStatus("Offline")}>
+                Offline
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className="flex mb-2 space-x-4">
+          <p className="text-sm">
+            <strong>Filters:</strong>
+          </p>
+          <p className="text-sm">
+            Department: <strong>{selectedDepartment || "All"}</strong>
+          </p>
+          <p className="text-sm">
+            Status: <strong>{selectedStatus || "All"}</strong>
+          </p>
+        </div>
+        <Tabs defaultValue="admin">
+          <TabsList className="flex justify-between">
+            <TabsTrigger value="admin" className="flex-1">
+              Admin ({admins.length})
+            </TabsTrigger>
+            <TabsTrigger value="team_leader" className="flex-1">
+              Team Leader ({teamLeaders.length})
+            </TabsTrigger>
+            <TabsTrigger value="employee" className="flex-1">
+              Employee ({regularEmployees.length})
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="admin">{renderTable(admins, false)}</TabsContent>
+          <TabsContent value="team_leader">
+            {renderTable(teamLeaders, true)}
+          </TabsContent>
+          <TabsContent value="employee">
+            {renderTable(regularEmployees, true)}
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );
 };
 
-export default EmployeeDialog;
+export default EmployeeListDialog;

@@ -24,10 +24,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getEmployeeDetails } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/api";
-import { getAttendanceList } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api";
-import type { Employee } from "@/components/SuperAdminComponents/EmployeeSuperAdmin/types";
-import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
+import { getEmployeeDetails } from "@/components/AuditorComponents/EmployeeAuditor/api";
+import { getAttendanceList } from "@/components/AuditorComponents/AttendanceAuditor/api";
+import type { Employee } from "@/components/AuditorComponents/EmployeeAuditor/types";
+import type { Attendance } from "@/components/AuditorComponents/AttendanceAuditor/types";
+import { useUserStore } from '@/stores/userStore'; // Import the user store
 
 interface EmployeeListDialogProps {
   isOpen: boolean;
@@ -47,6 +48,9 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
   const [selectedDepartment, setSelectedDepartment] = useState<string>("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
 
+  const user = useUserStore.getState().getUser(); // Get the logged-in user
+  const departmentId = user?.departmentId; // Get the department ID of the logged-in user
+
   useEffect(() => {
     const fetchEmployeeDetails = async () => {
       const detailedEmployees = await Promise.all(
@@ -59,15 +63,19 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
     };
 
     const fetchAttendanceData = async () => {
-      const attendanceData = await getAttendanceList();
-      setAttendanceData(attendanceData);
+      if (departmentId) {
+        const attendanceData = await getAttendanceList(departmentId);
+        setAttendanceData(attendanceData);
+      } else {
+        console.error("Invalid department ID");
+      }
     };
 
-    if (isOpen) {
+    if (isOpen && departmentId) {
       fetchEmployeeDetails();
       fetchAttendanceData();
     }
-  }, [isOpen, employees]);
+  }, [isOpen, employees, departmentId]);
 
   const getEmployeeStatus = (employeeId: number) => {
     const attendance = attendanceData.find(
