@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/api';
-import { Employee } from './types';
+import { Employee, Department } from './types';
 
 export const getEmployeeList = async (): Promise<Employee[]> => {
   const response = await axiosInstance.get(`/api/employee`);
@@ -29,4 +29,10 @@ export const getEmployeeDetails = async (employeeId: number): Promise<Employee> 
   }
 
   return employee;
+};
+
+// Add this function
+export const getDepartmentDetails = async (departmentId: number): Promise<Department> => {
+  const response = await axiosInstance.get(`/api/department/${departmentId}`);
+  return response.data;
 };

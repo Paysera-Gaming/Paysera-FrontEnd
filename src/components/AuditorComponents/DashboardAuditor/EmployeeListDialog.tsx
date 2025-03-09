@@ -41,11 +41,11 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
   isOpen,
   onClose,
   employees,
+  title,
 }) => {
   const [detailedEmployees, setDetailedEmployees] = useState<Employee[]>([]);
   const [attendanceData, setAttendanceData] = useState<Attendance[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState<string>("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
 
   const user = useUserStore.getState().getUser(); // Get the logged-in user
@@ -85,11 +85,9 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
   };
 
   const filteredEmployees = detailedEmployees.filter((employee) => {
-    const departmentName = employee.departmentName || "No Department";
     const status = getEmployeeStatus(employee.id);
     return (
       employee.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (selectedDepartment ? departmentName === selectedDepartment : true) &&
       (selectedStatus ? status === selectedStatus : true)
     );
   });
@@ -156,7 +154,7 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
         className="max-w-4xl"
       >
         <DialogHeader>
-          <DialogTitle>Paysera Status</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogDescription id="employee-list-dialog-description">
             Detailed list of employees.
           </DialogDescription>
@@ -169,32 +167,6 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
             onChange={(e) => setSearchTerm(e.target.value)}
             className="flex-1"
           />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="p-2 text-base w-48">
-                Department
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-64">
-              <DropdownMenuItem onSelect={() => setSelectedDepartment("")}>
-                All
-              </DropdownMenuItem>
-              {Array.from(
-                new Set(
-                  detailedEmployees.map(
-                    (emp) => emp.departmentName || "No Department"
-                  )
-                )
-              ).map((department) => (
-                <DropdownMenuItem
-                  key={department}
-                  onSelect={() => setSelectedDepartment(department)}
-                >
-                  {department}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="p-2 text-base w-48">
@@ -219,9 +191,6 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
             <strong>Filters:</strong>
           </p>
           <p className="text-sm">
-            Department: <strong>{selectedDepartment || "All"}</strong>
-          </p>
-          <p className="text-sm">
             Status: <strong>{selectedStatus || "All"}</strong>
           </p>
         </div>
@@ -239,10 +208,10 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
           </TabsList>
           <TabsContent value="admin">{renderTable(admins, false)}</TabsContent>
           <TabsContent value="team_leader">
-            {renderTable(teamLeaders, true)}
+            {renderTable(teamLeaders, false)}
           </TabsContent>
           <TabsContent value="employee">
-            {renderTable(regularEmployees, true)}
+            {renderTable(regularEmployees, false)}
           </TabsContent>
         </Tabs>
       </DialogContent>

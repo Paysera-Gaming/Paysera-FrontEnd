@@ -24,22 +24,22 @@ export interface EmployeeCounts {
     employee: number;
     teamLeader: number;
     admin: number;
-    auditor: number; // Add this line
-    superAuditor: number; // Add this line
+    auditor: number;
+    superAuditor: number;
   };
   online: {
     employee: number;
     teamLeader: number;
     admin: number;
-    auditor: number; // Add this line
-    superAuditor: number; // Add this line
+    auditor: number;
+    superAuditor: number;
   };
   offline: {
     employee: number;
     teamLeader: number;
     admin: number;
-    auditor: number; // Add this line
-    superAuditor: number; // Add this line
+    auditor: number;
+    superAuditor: number;
   };
 }
 
@@ -49,80 +49,41 @@ export function getEmployeeCounts(employees: Employee[]): EmployeeCounts {
       employee: 0,
       teamLeader: 0,
       admin: 0,
-      auditor: 0, // Add this line
-      superAuditor: 0, // Add this line
+      auditor: 0,
+      superAuditor: 0,
     },
     online: {
       employee: 0,
       teamLeader: 0,
       admin: 0,
-      auditor: 0, // Add this line
-      superAuditor: 0, // Add this line
+      auditor: 0,
+      superAuditor: 0,
     },
     offline: {
       employee: 0,
       teamLeader: 0,
       admin: 0,
-      auditor: 0, // Add this line
-      superAuditor: 0, // Add this line
+      auditor: 0,
+      superAuditor: 0,
     },
   };
 
   employees.forEach((employee) => {
-    // Overall counts
-    if (employee.accessLevel === "EMPLOYEE") {
-      counts.overall.employee++;
-    } else if (employee.accessLevel === "TEAM_LEADER") {
-      counts.overall.teamLeader++;
-    } else if (employee.accessLevel === "ADMIN") {
-      counts.overall.admin++;
-    } else if (employee.accessLevel === "AUDITOR") {
-      // Add this line
-      counts.overall.auditor++;
-    } else if (employee.accessLevel === "SUPER_AUDITOR") {
-      // Add this line
-      counts.overall.superAuditor++;
-    }
-
-    // Online/Offline counts
-    if (employee.attendanceStatus === "ONGOING") {
-      if (employee.accessLevel === "EMPLOYEE") {
-        counts.online.employee++;
-      } else if (employee.accessLevel === "TEAM_LEADER") {
-        counts.online.teamLeader++;
-      } else if (employee.accessLevel === "ADMIN") {
-        counts.online.admin++;
-      } else if (employee.accessLevel === "AUDITOR") {
-        // Add this line
-        counts.online.auditor++;
-      } else if (employee.accessLevel === "SUPER_AUDITOR") {
-        // Add this line
-        counts.online.superAuditor++;
-      }
+    const role = employee.accessLevel.toLowerCase() as keyof EmployeeCounts['overall'];
+    counts.overall[role]++;
+    if (employee.isActive) {
+      counts.online[role]++;
     } else {
-      if (employee.accessLevel === "EMPLOYEE") {
-        counts.offline.employee++;
-      } else if (employee.accessLevel === "TEAM_LEADER") {
-        counts.offline.teamLeader++;
-      } else if (employee.accessLevel === "ADMIN") {
-        counts.offline.admin++;
-      } else if (employee.accessLevel === "AUDITOR") {
-        // Add this line
-        counts.offline.auditor++;
-      } else if (employee.accessLevel === "SUPER_AUDITOR") {
-        // Add this line
-        counts.offline.superAuditor++;
-      }
+      counts.offline[role]++;
     }
   });
 
   return counts;
 }
 
-// Example usage:
-const employees: Employee[] = [
-  // Your employee data here
-];
-
-const counts = getEmployeeCounts(employees);
-console.log(counts);
+// Add this interface
+export interface Department {
+  id: number;
+  name: string;
+  description?: string;
+}
