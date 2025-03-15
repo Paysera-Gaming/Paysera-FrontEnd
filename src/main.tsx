@@ -38,6 +38,13 @@ import SuperAuditorHolidayDashboard from './pages/SuperAuditor/Holiday/SuperAudi
 import SuperAuditorEmployeeDashboard from './pages/SuperAuditor/Employee/SuperAuditorEmployeeDashboard';
 import SuperAuditorDepartmentDashboard from './pages/SuperAuditor/Department/SuperAuditorDepartmentDashboard';
 import SuperAuditorAttendanceDashboard from './pages/SuperAuditor/Attendance/AttendanceDashboard';
+import AuditorPage from './pages/Auditor/AuditorPage';
+import AuditorDashboardPage from './pages/Auditor/Dashboard/DashboardPage';
+import AuditorAnnouncementDashboard from './pages/Auditor/Announcement/AuditorAnnouncementDashboard'; 
+import AuditorHolidayDashboard from './pages/Auditor/Holiday/AuditorHolidayDashboard'; 
+import AuditorEmployeeDashboard from './pages/Auditor/Employee/AuditorEmployeeDashboard'; 
+import AuditorDepartmentDashboard from './pages/Auditor/Department/AuditorDepartmentDashboard'; 
+import AuditorAttendanceDashboard from './pages/Auditor/Attendance/AttendanceDashboard';
 
 import './index.css';
 import PersonalSchedulePage from './pages/TeamLead/Personal_Schedule/PersonalSchedulePage';
@@ -136,6 +143,20 @@ const router = createBrowserRouter([
             { path: 'attendance', element: <SuperAuditorAttendanceDashboard /> },
             { path: 'employee', element: <SuperAuditorEmployeeDashboard /> },
             { path: 'departments', element: <SuperAuditorDepartmentDashboard /> },
+        ],
+    },
+    {
+        path: '/auditor',
+        element: <ProtectedRoute page={<AuditorPage />} requiredLevel="AUDITOR" />, // Added AUDITOR route
+        children: [
+            { index: true, loader: async () => redirect('/auditor/dashboard') },
+            { path: 'dashboard', element: <AuditorDashboardPage /> },
+            { path: 'announcement', element: <AuditorAnnouncementDashboard /> },
+            { path: 'holidays', element: <AuditorHolidayDashboard /> },
+            { path: 'schedule', element: <SchedulePage /> },
+            { path: 'attendance', element: <AuditorAttendanceDashboard /> },
+            { path: 'employee', element: <AuditorEmployeeDashboard /> },
+            { path: 'departments', element: <AuditorDepartmentDashboard /> },
         ],
     },
     {
