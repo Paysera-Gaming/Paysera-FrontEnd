@@ -1,7 +1,10 @@
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Book, BookUser, Calendar } from "lucide-react";
+import { Book, BookUser } from "lucide-react";
 import { useUserStore } from "@/stores/userStore";
+import { getDepartmentDetails } from "@/components/AuditorComponents/EmployeeAuditor/api";
+import type { Department } from "@/components/AuditorComponents/EmployeeAuditor/types";
 
 function returnRole(role: string): string {
   return role === "SUPER_ADMIN"
@@ -10,15 +13,22 @@ function returnRole(role: string): string {
     ? "Admin"
     : role === "TEAM_LEADER"
     ? "Team Leader"
-    : role === "SUPER_AUDITOR"
-    ? "Super Auditor"
+    : role === "AUDITOR"
+    ? "Auditor"
     : "Employee";
 }
 
-function SuperAdminInfo() {
+function AuditorInfo() {
   const info = useUserStore.getState().user;
+  const [department, setDepartment] = useState<Department | null>(null);
 
-  if (!info || (info.accessLevel !== "ADMIN" && info.accessLevel !== "SUPER_AUDITOR")) {
+  useEffect(() => {
+    if (info?.departmentId) {
+      getDepartmentDetails(info.departmentId).then(setDepartment);
+    }
+  }, [info?.departmentId]);
+
+  if (!info || info.accessLevel !== "AUDITOR") {
     return <p>error</p>;
   }
 
@@ -33,46 +43,27 @@ function SuperAdminInfo() {
       <li>
         <b>Role:</b> <Badge className="text-xs px-2 py-1">{returnRole(info.accessLevel)}</Badge>
       </li>
-    </ul>
-  );
-}
-
-function ScheduleInfo() {
-  return (
-    <ul className="text-sm space-y-0">
       <li>
-        <b>Schedule Type:</b> SUPER FLEXI
-      </li>
-      <li>
-        <b>Schedule Info:</b> Anytime
+        <b>Department:</b> {department?.name || "N/A"}
       </li>
     </ul>
   );
 }
 
-type SuperAdminInfoCardProps = {
+type AuditorInfoCardProps = {
   className?: string;
 };
 
-export default function SuperAdminInfoCard({ className }: SuperAdminInfoCardProps) {
+export default function AuditorInfoCard({ className }: AuditorInfoCardProps) {
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       <Card className="flex-1 p-2 relative">
         <CardHeader className="pb-1 flex flex-row items-center justify-between">
-          <CardTitle className="text-xl font-semibold">Super Admin Info</CardTitle>
+          <CardTitle className="text-xl font-semibold">Auditor Info</CardTitle>
           <BookUser size={"1.5rem"} />
         </CardHeader>
         <CardContent>
-          <SuperAdminInfo />
-        </CardContent>
-      </Card>
-      <Card className="flex-1 p-2 relative">
-        <CardHeader className="pb-1 flex flex-row items-center justify-between">
-          <CardTitle className="text-xl font-semibold">Schedule Info</CardTitle>
-          <Calendar size={"1.5rem"} />
-        </CardHeader>
-        <CardContent>
-          <ScheduleInfo />
+          <AuditorInfo />
         </CardContent>
       </Card>
       <Card className="border-primary text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out w-61 p-2 relative">
