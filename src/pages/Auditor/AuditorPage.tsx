@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 
 import AuditorNavigation from "@/components/AuditorComponents/AuditorNavigationBar";
-import Timebar from "@/components/TimeInComponent/TimeBar";
 
 export default function AuditorPage() {
   return (
@@ -9,7 +8,6 @@ export default function AuditorPage() {
       <AuditorNavigation></AuditorNavigation>
       {/* delete this h full and w full if something krazy happens */}
       <main className="flex w-full h-full items-center justify-start flex-col flex-1 gap-y-3">
-        <Timebar></Timebar>
         <Outlet></Outlet>
       </main>
     </div>
