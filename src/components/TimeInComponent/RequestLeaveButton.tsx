@@ -3,7 +3,6 @@ import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
-	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -29,14 +28,11 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@/components/ui/form';
-import { Label } from '@/components/ui/label';
 
 import {
 	Select,
 	SelectContent,
-	SelectGroup,
 	SelectItem,
-	SelectLabel,
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
@@ -58,51 +54,71 @@ import {
 	TooltipTrigger,
 } from '../ui/tooltip';
 import { Textarea } from '../ui/textarea';
+import { requestLeave } from '@/api/LeaveAPI';
 
 // this should insert what type of leave this is
 // this should get the start and end of the date of this leave
 // this should get the reasons of leaving
 
 const formSchema = z.object({
-	startDate: z.date(),
-	endDate: z.date(),
-	reason: z.string(),
-	type: z.string(),
+	startDate: z.string({
+		required_error: 'Start date is required',
+	}),
+	endDate: z.string({
+		required_error: 'End date is required',
+	}),
+	reason: z.string().optional(),
+	type: z.string({
+		required_error: 'Leave type is required',
+	}),
 });
 
 export function RequestLeaveButton() {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
-	function handleSubmit() {
-		setIsLoading(true);
-		mutation.mutate();
-	}
+	const user = useUserStore((state) => state.user);
 
-	const employeeId = useUserStore.getState().user?.id;
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
+		defaultValues: {
+			startDate: undefined,
+			endDate: undefined,
+		},
 	});
-	const mutation = useMutation({
-		mutationFn: () => {
-			console.log(employeeId);
 
-			if (employeeId === undefined) {
+	const mutation = useMutation({
+		mutationFn: (data: z.infer<typeof formSchema>) => {
+			if (user == undefined) {
+				console.log('Employee ID is undefined at check');
 				throw new Error('Employee ID is undefined');
 			}
-			return;
+
+			// Perform the mutation logic here
+			return requestLeave({
+				startDate: data.startDate,
+				endDate: data.endDate,
+				reason: data.reason || '',
+				type: data.type,
+				employeeID: user.id,
+			});
 		},
 		onSuccess: () => {
 			toast.success('Request for Leave has successfully submitted');
+			setIsOpen(false);
 		},
 		onSettled: () => {
 			setIsLoading(false);
-			setIsOpen(false);
 		},
 	});
-	function onSubmit() {
-		console.log(' I am now being mutated');
+
+	function handleSubmit(data: z.infer<typeof formSchema>) {
+		console.log(data);
+
+		setIsLoading(true);
+		mutation.mutate(data);
 	}
+
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
@@ -114,12 +130,13 @@ export function RequestLeaveButton() {
 				<DialogHeader>
 					<DialogTitle>Requesting Leave form</DialogTitle>
 					<DialogDescription>
-						You are about to create an Leave Form. Make sure to fill out all the
+						You are about to create a Leave Form. Make sure to fill out all the
 						necessary information accurately.
 					</DialogDescription>
 				</DialogHeader>
+
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
+					<form onSubmit={form.handleSubmit(handleSubmit)}>
 						<FormField
 							control={form.control}
 							name="type"
@@ -164,7 +181,6 @@ export function RequestLeaveButton() {
 								</FormItem>
 							)}
 						/>
-
 						<FormField
 							control={form.control}
 							name="startDate"
@@ -172,7 +188,6 @@ export function RequestLeaveButton() {
 								<FormItem>
 									<FormLabel>Leave Starts At:</FormLabel>
 									<FormControl>
-										{' '}
 										<Popover>
 											<PopoverTrigger asChild>
 												<Button
@@ -184,7 +199,7 @@ export function RequestLeaveButton() {
 												>
 													<CalendarIcon />
 													{field.value ? (
-														format(field.value, 'PPP')
+														format(new Date(field.value), 'PPP')
 													) : (
 														<span>Pick a date</span>
 													)}
@@ -193,8 +208,12 @@ export function RequestLeaveButton() {
 											<PopoverContent className="w-auto p-0" align="start">
 												<Calendar
 													mode="single"
-													selected={field.value}
-													onSelect={field.onChange}
+													selected={
+														field.value ? new Date(field.value) : undefined
+													}
+													onSelect={(date) =>
+														field.onChange(date ? date.toISOString() : '')
+													}
 													initialFocus
 												/>
 											</PopoverContent>
@@ -211,7 +230,6 @@ export function RequestLeaveButton() {
 								<FormItem>
 									<FormLabel>Leave Ends At:</FormLabel>
 									<FormControl>
-										{' '}
 										<Popover>
 											<PopoverTrigger asChild>
 												<Button
@@ -232,8 +250,12 @@ export function RequestLeaveButton() {
 											<PopoverContent className="w-auto p-0" align="start">
 												<Calendar
 													mode="single"
-													selected={field.value}
-													onSelect={field.onChange}
+													selected={
+														field.value ? new Date(field.value) : undefined
+													}
+													onSelect={(date) =>
+														field.onChange(date ? date.toISOString() : '')
+													}
 													initialFocus
 												/>
 											</PopoverContent>
@@ -248,26 +270,23 @@ export function RequestLeaveButton() {
 							name="reason"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Bio</FormLabel>
+									<FormLabel>Reason</FormLabel>
+									<FormDescription>
+										Optional: Add reason for the leave
+									</FormDescription>
 									<FormControl>
 										<Textarea
-											placeholder="Tell us a little bit about yourself"
+											placeholder="Reason"
 											className="resize-none"
 											{...field}
 										/>
 									</FormControl>
-									<FormDescription>
-										Optional: Add reason for the leave
-									</FormDescription>
+
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
-					</form>
-				</Form>
-				<div className="flex gap-2">
-					<DialogFooter>
-						<Button onClick={handleSubmit} disabled={isLoading} type="submit">
+						<Button type="submit" disabled={isLoading}>
 							<Loader2
 								className={cn(
 									isLoading == false && 'hidden',
@@ -276,8 +295,8 @@ export function RequestLeaveButton() {
 							/>
 							Submit
 						</Button>
-					</DialogFooter>
-				</div>
+					</form>
+				</Form>
 			</DialogContent>
 		</Dialog>
 	);
