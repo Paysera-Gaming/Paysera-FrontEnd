@@ -38,12 +38,20 @@ interface Attendance {
 
 const fetchEmployees = async (): Promise<Employee[]> => {
   const response = await axiosInstance.get("/api/employee");
-  return response.data;
+  const employees: Employee[] = response.data;
+
+  // Filter out SUPER_AUDITOR roles
+  return employees.filter((emp) => emp.accessLevel !== "SUPER_AUDITOR");
 };
 
 const fetchAttendance = async (): Promise<Attendance[]> => {
-  const response = await axiosInstance.get("/api/attendance");
-  return response.data;
+  try {
+    const response = await axiosInstance.get("/api/attendance");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching attendance data:", error);
+    return [];
+  }
 };
 
 const EmployeeList: React.FC = () => {

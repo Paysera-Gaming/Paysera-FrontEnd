@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import type { Employee } from "./types"; // Updated import
+import type { Employee } from "./types";
 
 interface EmployeeTableProps {
   employees: Employee[];
@@ -19,10 +19,6 @@ interface EmployeeTableProps {
 const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const employeesPerPage = 5;
-
-  const formatAccessLevel = (accessLevel: string) => {
-    return accessLevel.replace(/_/g, " ");
-  };
 
   const indexOfLastEmployee = currentPage * employeesPerPage;
   const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
@@ -45,8 +41,8 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
               <TableHead>Full Name</TableHead>
               <TableHead>Username</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Access Level</TableHead>
-              <TableHead>Allowed Overtime</TableHead> {/* Moved this line */}
+              <TableHead>Role</TableHead> {/* Updated to show Role */}
+              <TableHead>Allowed Overtime</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -66,10 +62,9 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                 <TableCell>
                   {emp.attendanceStatus === "ONGOING" ? "Online" : "Offline"}
                 </TableCell>
-                <TableCell>{formatAccessLevel(emp.accessLevel)}</TableCell>
+                <TableCell>{emp.role}</TableCell> {/* Updated to show Role */}
                 <TableCell>
-                  {emp.isAllowedRequestOvertime ? "Yes" : "No"}{" "}
-                  {/* Moved this line */}
+                  {emp.isAllowedRequestOvertime ? "Yes" : "No"}
                 </TableCell>
               </TableRow>
             ))}

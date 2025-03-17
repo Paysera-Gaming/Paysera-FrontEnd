@@ -16,12 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getEmployeeDetails } from "@/components/AuditorComponents/EmployeeAuditor/api";
@@ -92,7 +87,6 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
     );
   });
 
-  const admins = filteredEmployees.filter((emp) => emp.accessLevel === "ADMIN");
   const teamLeaders = filteredEmployees.filter(
     (emp) => emp.accessLevel === "TEAM_LEADER"
   );
@@ -194,11 +188,8 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
             Status: <strong>{selectedStatus || "All"}</strong>
           </p>
         </div>
-        <Tabs defaultValue="admin">
+        <Tabs defaultValue="team_leader">
           <TabsList className="flex justify-between">
-            <TabsTrigger value="admin" className="flex-1">
-              Admin ({admins.length})
-            </TabsTrigger>
             <TabsTrigger value="team_leader" className="flex-1">
               Team Leader ({teamLeaders.length})
             </TabsTrigger>
@@ -206,7 +197,6 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
               Employee ({regularEmployees.length})
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="admin">{renderTable(admins, false)}</TabsContent>
           <TabsContent value="team_leader">
             {renderTable(teamLeaders, false)}
           </TabsContent>
