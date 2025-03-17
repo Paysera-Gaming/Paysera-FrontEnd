@@ -3,8 +3,9 @@ import { overtimeRequestColumns } from '@/components/DataTable/OverTimeApprovalC
 import { OverTimeApprovalTable } from '@/components/DataTable/OverTimeApprovalTable';
 import ErrorDisplay from '@/components/ErrorComponent/ErrorDisplay';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useWebSocket } from '@/hooks/useWebSocket';
 import { useUserStore } from '@/stores/userStore';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export default function OvertimePage() {
 	const { data, isError, isLoading } = useQuery({
@@ -20,6 +21,15 @@ export default function OvertimePage() {
 			}
 		},
 		select: (data) => data.filter((user) => user.isRequestingOvertime),
+	});
+
+	const queryClient = useQueryClient();
+	// this stupid socket will run even in other departments
+	// we are not paid enough to fix this
+	// we are not even paid at all!
+	useWebSocket('attendance', () => {
+		// this will invalidate old queries and get new queries
+		queryClient.invalidateQueries({ queryKey: ['AttendanceToday'] });
 	});
 
 	if (isError) {

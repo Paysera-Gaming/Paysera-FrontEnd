@@ -286,7 +286,7 @@ export function RequestLeaveButton() {
 								</FormItem>
 							)}
 						/>
-						<Button type="submit" disabled={isLoading}>
+						<Button type="submit" className="mt-2" disabled={isLoading}>
 							<Loader2
 								className={cn(
 									isLoading == false && 'hidden',
