@@ -40,8 +40,10 @@ const fetchEmployees = async (): Promise<Employee[]> => {
   const response = await axiosInstance.get("/api/employee");
   const employees: Employee[] = response.data;
 
-  // Filter out SUPER_AUDITOR roles
-  return employees.filter((emp) => emp.accessLevel !== "SUPER_AUDITOR");
+  // Filter out SUPER_AUDITOR and ADMIN roles
+  return employees.filter(
+    (emp) => emp.accessLevel !== "SUPER_AUDITOR" && emp.accessLevel !== "ADMIN"
+  );
 };
 
 const fetchAttendance = async (): Promise<Attendance[]> => {
