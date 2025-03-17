@@ -5,6 +5,7 @@ import type { Employee } from "@/components/AuditorComponents/EmployeeAuditor/ty
 import { Building } from "lucide-react";
 import EmployeeListDialog from "./EmployeeListDialog";
 import { useUserStore } from "@/stores/userStore"; // Import the user store
+import { getDepartmentDetails } from "@/components/AuditorComponents/EmployeeAuditor/api";
 
 type EmployeesStatusCardsProps = {
   className?: string;
@@ -16,6 +17,7 @@ export default function EmployeesStatusCards({
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogTitle, setDialogTitle] = useState<string>("");
+  const [departmentName, setDepartmentName] = useState<string>("Unknown Department");
 
   const user = useUserStore.getState().getUser(); // Get the logged-in user
   const departmentId = user?.departmentId; // Get the department ID of the logged-in user
@@ -25,6 +27,12 @@ export default function EmployeesStatusCards({
       try {
         const employeeData = await fetchEmployees();
         setEmployees(employeeData.filter((emp) => emp.departmentId === departmentId));
+
+        // Fetch department details to get the department name
+        if (departmentId) {
+          const department = await getDepartmentDetails(departmentId);
+          setDepartmentName(department?.name || "Unknown Department");
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -40,7 +48,7 @@ export default function EmployeesStatusCards({
   const offlineCount = totalEmployees - onlineCount;
 
   const handleDialogOpen = (type: "Total Employees" | "Online Employees" | "Offline Employees") => {
-    setDialogTitle(type);
+    setDialogTitle(`${type} in ${departmentName}`); // Set the dialog title with department name
     setIsDialogOpen(true);
   };
 
