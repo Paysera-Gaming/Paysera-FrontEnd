@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Book, BookUser, Calendar } from "lucide-react";
+import { Book, BookUser } from "lucide-react";
 import { useUserStore } from "@/stores/userStore";
 
 function returnRole(role: string): string {
@@ -37,19 +37,6 @@ function SuperAdminInfo() {
   );
 }
 
-function ScheduleInfo() {
-  return (
-    <ul className="text-sm space-y-0">
-      <li>
-        <b>Schedule Type:</b> SUPER FLEXI
-      </li>
-      <li>
-        <b>Schedule Info:</b> Anytime
-      </li>
-    </ul>
-  );
-}
-
 type SuperAdminInfoCardProps = {
   className?: string;
 };
@@ -59,20 +46,11 @@ export default function SuperAdminInfoCard({ className }: SuperAdminInfoCardProp
     <div className={`flex flex-col gap-2 ${className}`}>
       <Card className="flex-1 p-2 relative">
         <CardHeader className="pb-1 flex flex-row items-center justify-between">
-          <CardTitle className="text-xl font-semibold">Super Admin Info</CardTitle>
+          <CardTitle className="text-xl font-semibold">Super Auditor Info</CardTitle>
           <BookUser size={"1.5rem"} />
         </CardHeader>
         <CardContent>
           <SuperAdminInfo />
-        </CardContent>
-      </Card>
-      <Card className="flex-1 p-2 relative">
-        <CardHeader className="pb-1 flex flex-row items-center justify-between">
-          <CardTitle className="text-xl font-semibold">Schedule Info</CardTitle>
-          <Calendar size={"1.5rem"} />
-        </CardHeader>
-        <CardContent>
-          <ScheduleInfo />
         </CardContent>
       </Card>
       <Card className="border-primary text-primary outline outline-1 outline-transparent hover:outline-primary outline-offset-2 transition-all duration-300 ease-in-out w-61 p-2 relative">
