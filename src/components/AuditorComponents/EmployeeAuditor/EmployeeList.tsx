@@ -5,6 +5,7 @@ import SummaryCards from "./SummaryCards";
 import EmployeeTable from "./EmployeeTable";
 import { Employee, EmployeeCounts, getEmployeeCounts } from "./types"; // Import the shared Employee type and getEmployeeCounts function
 import { axiosInstance } from "@/api";
+import { useUserStore } from "@/stores/userStore"; // Import the user store
 
 interface Attendance {
   id: number;
@@ -36,13 +37,17 @@ interface Attendance {
   };
 }
 
-const fetchEmployees = async (): Promise<Employee[]> => {
-  const response = await axiosInstance.get("/api/employee");
+const fetchEmployees = async (departmentId: number): Promise<Employee[]> => {
+  const response = await axiosInstance.get(`/api/employee`);
   const employees: Employee[] = response.data;
 
-  // Filter out SUPER_AUDITOR and ADMIN roles
+  // Filter employees by department and include only employees, team leaders, and auditors
   return employees.filter(
-    (emp) => emp.accessLevel !== "SUPER_AUDITOR" && emp.accessLevel !== "ADMIN"
+    (emp) =>
+      emp.departmentId === departmentId &&
+      (emp.accessLevel === "EMPLOYEE" ||
+        emp.accessLevel === "TEAM_LEADER" ||
+        emp.accessLevel === "AUDITOR")
   );
 };
 
@@ -57,10 +62,15 @@ const fetchAttendance = async (): Promise<Attendance[]> => {
 };
 
 const EmployeeList: React.FC = () => {
+  const user = useUserStore.getState().getUser(); // Get the logged-in user
+  const departmentId = user?.departmentId; // Get the department ID of the logged-in user
+
   const { data: employees = [], error } = useQuery<Employee[], Error>({
-    queryKey: ["employees"],
-    queryFn: fetchEmployees,
+    queryKey: ["employees", departmentId],
+    queryFn: () => fetchEmployees(departmentId!), // Pass the departmentId to fetchEmployees
+    enabled: !!departmentId, // Only fetch if departmentId exists
   });
+
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("overall");
   const [accessLevel, setAccessLevel] = useState("");

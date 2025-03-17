@@ -87,6 +87,9 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
     );
   });
 
+  const auditors = filteredEmployees.filter(
+    (emp) => emp.accessLevel === "AUDITOR"
+  );
   const teamLeaders = filteredEmployees.filter(
     (emp) => emp.accessLevel === "TEAM_LEADER"
   );
@@ -188,8 +191,11 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
             Status: <strong>{selectedStatus || "All"}</strong>
           </p>
         </div>
-        <Tabs defaultValue="team_leader">
+        <Tabs defaultValue="auditor">
           <TabsList className="flex justify-between">
+            <TabsTrigger value="auditor" className="flex-1">
+              Auditor ({auditors.length})
+            </TabsTrigger>
             <TabsTrigger value="team_leader" className="flex-1">
               Team Leader ({teamLeaders.length})
             </TabsTrigger>
@@ -197,6 +203,9 @@ const EmployeeListDialog: React.FC<EmployeeListDialogProps> = ({
               Employee ({regularEmployees.length})
             </TabsTrigger>
           </TabsList>
+          <TabsContent value="auditor">
+            {renderTable(auditors, false)}
+          </TabsContent>
           <TabsContent value="team_leader">
             {renderTable(teamLeaders, false)}
           </TabsContent>
