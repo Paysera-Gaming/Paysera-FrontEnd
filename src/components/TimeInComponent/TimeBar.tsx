@@ -49,19 +49,16 @@ export default function Timebar() {
 					console.log('user is now clocking in');
 					return clockIn({ employeeId: employeeId, timeStamp: currentTime });
 
-				// when clocking out i should check the date if it is matching
 				case 'ClockOut':
-					// this should work i think
 					if (timeIn) {
 						if (!isSameDay(new Date(timeIn.createdAt), new Date())) {
-							toast.error('Invalid Clock Out ');
+							toast.error('Invalid Clock Out');
 							queryClient.invalidateQueries({ queryKey: ['UsersAttendance'] });
 							setUserClockStatus('Clock-Out');
 							setCanProceed(false);
 							throw new Error('Invalid Clock Out');
 						}
 					}
-
 					return clockOut({ employeeId: employeeId, timeStamp: currentTime });
 			}
 		},
@@ -108,7 +105,7 @@ export default function Timebar() {
 			actionLabel: 'Continue',
 			onAction: async () => {
 				await mutateTime.mutate('ClockIn');
-				if (getCanProceed == true) {
+				if (getCanProceed) {
 					setUserClockStatus('Clock-In');
 				}
 				setCanProceed(false);
@@ -128,7 +125,7 @@ export default function Timebar() {
 			onAction: () => {
 				mutateTime.mutate('ClockOut', {
 					onSuccess: () => {
-						if (getCanProceed == true) {
+						if (getCanProceed) {
 							toast.success('User has timeout from the session');
 							setUserClockStatus('Clock-Out');
 							setCanProceed(false);
@@ -151,7 +148,7 @@ export default function Timebar() {
 			onAction: () => {
 				mutateTime.mutate('ClockOut', {
 					onSuccess: () => {
-						if (getCanProceed == true) {
+						if (getCanProceed) {
 							toast.success('User has timeout from the session');
 							setUserClockStatus('Clock-Out');
 						}
@@ -166,6 +163,10 @@ export default function Timebar() {
 	}
 
 	useEffect(() => {
+		console.log('useUserStore:', getUserClockStatus());
+	}, [getUserClockStatus]);
+
+	useEffect(() => {
 		evaluateAlarmType();
 		const interval = setInterval(() => {
 			evaluateAlarmType();
@@ -177,9 +178,10 @@ export default function Timebar() {
 		<header className="shadow-sm border-border bg-card border-solid border w-full rounded-md p-2 px-5 flex items-center justify-between">
 			<TimerDisplay />
 			<div className="flex gap-2">
-				{employeeAccessLevel != 'ADMIN' && (
+				{employeeAccessLevel !== 'ADMIN' && (
 					<>
-						<RequestLeaveButton /> <RequestOverTimeButton />
+						<RequestLeaveButton />
+						<RequestOverTimeButton />
 					</>
 				)}
 				<Button
@@ -190,13 +192,11 @@ export default function Timebar() {
 					{getUserClockStatus() === 'Clock-In' ? 'Clock-Out' : 'Clock-In'}
 					<Loader2
 						className={cn(
-							getIsLoading == false && 'hidden',
+							getIsLoading === false && 'hidden',
 							'animate-spin ml-1'
 						)}
 					/>
-					<Clock
-						className={cn(getIsLoading == true && 'hidden', 'ml-1')}
-					></Clock>
+					<Clock className={cn(getIsLoading === true && 'hidden', 'ml-1')} />
 				</Button>
 			</div>
 		</header>

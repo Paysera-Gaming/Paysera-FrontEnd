@@ -52,6 +52,7 @@ export default function LoginForm() {
 
 		onSuccess: (data) => {
 			toast.success('Login Success');
+
 			useUserStore.getState().setUser(data);
 			setTimeout(() => {
 				switch (useUserStore.getState().user?.accessLevel) {
