@@ -32,7 +32,6 @@ export default function Timebar() {
 	const employeeAccessLevel = user?.accessLevel;
 
 	const [getIsLoading, setIsLoading] = useState<boolean>(false);
-	const [getCanProceed, setCanProceed] = useState<boolean>(false);
 
 	const mutateTime = useMutation({
 		mutationFn: async (fetchType: 'ClockIn' | 'ClockOut') => {
@@ -55,7 +54,7 @@ export default function Timebar() {
 							toast.error('Invalid Clock Out');
 							queryClient.invalidateQueries({ queryKey: ['UsersAttendance'] });
 							setUserClockStatus('Clock-Out');
-							setCanProceed(false);
+
 							throw new Error('Invalid Clock Out');
 						}
 					}
@@ -64,13 +63,12 @@ export default function Timebar() {
 		},
 		onSuccess: async () => {
 			setIsLoading(false);
-			setCanProceed(true);
+
 			queryClient.invalidateQueries({ queryKey: ['UsersAttendance'] });
 		},
 		onError: (e: ErrorEvent) => {
 			setIsLoading(false);
 			console.error('An Error has occurred ' + e);
-			setCanProceed(false);
 		},
 	});
 
@@ -104,11 +102,12 @@ export default function Timebar() {
 			cancelLabel: 'Cancel',
 			actionLabel: 'Continue',
 			onAction: async () => {
-				await mutateTime.mutate('ClockIn');
-				if (getCanProceed) {
-					setUserClockStatus('Clock-Out');
-				}
-				setCanProceed(false);
+				await mutateTime.mutate('ClockIn', {
+					onSuccess: () => {
+						toast.success('User has Time In from the session');
+						setUserClockStatus('Clock-Out');
+					},
+				});
 			},
 			onCancel: () => {
 				console.log('Cancel TimeIn');
@@ -125,11 +124,8 @@ export default function Timebar() {
 			onAction: () => {
 				mutateTime.mutate('ClockOut', {
 					onSuccess: () => {
-						if (getCanProceed) {
-							toast.success('User has timeout from the session');
-							setUserClockStatus('Clock-In');
-							setCanProceed(false);
-						}
+						toast.success('User has timeout from the session');
+						setUserClockStatus('Clock-In');
 					},
 				});
 			},
@@ -148,11 +144,8 @@ export default function Timebar() {
 			onAction: () => {
 				mutateTime.mutate('ClockOut', {
 					onSuccess: () => {
-						if (getCanProceed) {
-							toast.success('User has timeout from the session');
-							setUserClockStatus('Clock-In');
-						}
-						setCanProceed(false);
+						toast.success('User has timeout from the session');
+						setUserClockStatus('Clock-In');
 					},
 				});
 			},
