@@ -31,3 +31,10 @@ export async function handleLeaveRequest(body: THandleLeaveRequest) {
 	);
 	return response.status;
 }
+
+export async function getLeaveRequests() {
+	const response: AxiosResponse<THandleLeaveRequest> = await axiosInstance.get(
+		'/api/attendance/accept-leave'
+	);
+	return response.status;
+}
