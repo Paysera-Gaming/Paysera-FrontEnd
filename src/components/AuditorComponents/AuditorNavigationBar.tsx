@@ -2,7 +2,7 @@ import {
   Home,
   Users,
   Calendar,
-  Briefcase,
+  // Briefcase,
   CheckSquare,
   Bell,
 } from "lucide-react"; // Import necessary icons
@@ -28,7 +28,7 @@ function RouteItems({ links }: RouteItemProps): ReactNode {
     <Calendar key="holidays" />, // Use Calendar icon for holidays
     <CheckSquare key="attendance" />, // Use CheckSquare icon for attendance
     <Users key="employee" />, // Use Users icon for employees
-    <Briefcase key="departments" />, // Use Briefcase icon for departments
+    // <Briefcase key="departments" />, // Use Briefcase icon for departments
   ];
 
   const routes = links.map((link, index) => {
@@ -87,7 +87,7 @@ export default function AuditorNavigation() {
     "holidays",
     "attendance",
     "employee",
-    "departments",
+    // "departments",
   ];
 
   return (

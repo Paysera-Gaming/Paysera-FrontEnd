@@ -64,44 +64,32 @@ export default function SearchBar({
             <span className="text-white">Filtered: {accessLevel || "All"}</span>
             {isDropdownOpen && (
               <div className="absolute mt-2 w-48 bg-white dark:bg-gray-800 border rounded-md shadow-lg z-10">
-                <ul className="py-1">
-                  <li
-                    className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => handleAccessLevelChange("")}
-                  >
-                    All Access Levels
-                  </li>
-                  <li
-                    className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => handleAccessLevelChange("ADMIN")}
-                  >
-                    Admin
-                  </li>
-                  <li
-                    className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => handleAccessLevelChange("TEAM_LEADER")}
-                  >
-                    Team Leader
-                  </li>
-                  <li
-                    className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => handleAccessLevelChange("EMPLOYEE")}
-                  >
-                    Employee
-                  </li>
-                  <li
-                    className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => handleAccessLevelChange("AUDITOR")}
-                  >
-                    Auditor
-                  </li>
-                  <li
-                    className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => handleAccessLevelChange("SUPER_AUDITOR")}
-                  >
-                    Super Auditor
-                  </li>
-                </ul>
+<ul className="py-1">
+  <li
+    className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+    onClick={() => handleAccessLevelChange("")}
+  >
+    All Access Levels
+  </li>
+  <li
+    className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+    onClick={() => handleAccessLevelChange("TEAM_LEADER")}
+  >
+    Team Leader
+  </li>
+  <li
+    className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+    onClick={() => handleAccessLevelChange("EMPLOYEE")}
+  >
+    Employee
+  </li>
+  <li
+    className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+    onClick={() => handleAccessLevelChange("AUDITOR")}
+  >
+    Auditor
+  </li>
+</ul>
               </div>
             )}
           </div>

@@ -44,6 +44,13 @@ export const fetchDepartments = async (): Promise<Department[]> => {
       }
     });
 
+    // Filter out employees with the SUPER_AUDITOR role
+    departments.forEach(department => {
+      department.Employees = department.Employees.filter(
+        employee => employee.accessLevel !== "SUPER_AUDITOR"
+      );
+    });
+
     return departments;
   } catch (error) {
     console.error("Error fetching departments:", error);

@@ -26,10 +26,10 @@ export default function EmployeeSummaryCards({
                     <User size={24} className="text-gray-500 mr-2" />
                     <div className="text-right flex-1">
                         <CardTitle className="text-sm">Overall</CardTitle>
-                        <p className="text-lg font-bold">{counts.overall.employee + counts.overall.teamLeader + counts.overall.admin}</p>
+                        <p className="text-lg font-bold">{counts.overall.employee + counts.overall.teamLeader + counts.overall.auditor}</p>
                         <p className="text-sm">Employees: {counts.overall.employee}</p>
                         <p className="text-sm">Team Leaders: {counts.overall.teamLeader}</p>
-                        <p className="text-sm">Admins: {counts.overall.admin}</p>
+                        <p className="text-sm">Auditors: {counts.overall.auditor}</p>
                     </div>
                 </CardContent>
             </Card>
@@ -45,10 +45,10 @@ export default function EmployeeSummaryCards({
                     <Users size={24} className="text-green-500 mr-2" />
                     <div className="text-right flex-1">
                         <CardTitle className="text-sm">Online</CardTitle>
-                        <p className="text-lg font-bold">{counts.online.employee + counts.online.teamLeader + counts.online.admin}</p>
+                        <p className="text-lg font-bold">{counts.online.employee + counts.online.teamLeader + counts.online.auditor}</p>
                         <p className="text-sm">Employees: {counts.online.employee}</p>
                         <p className="text-sm">Team Leaders: {counts.online.teamLeader}</p>
-                        <p className="text-sm">Admins: {counts.online.admin}</p>
+                        <p className="text-sm">Auditors: {counts.online.auditor}</p>
                     </div>
                 </CardContent>
             </Card>
@@ -64,10 +64,10 @@ export default function EmployeeSummaryCards({
                     <Shield size={24} className="text-red-500 mr-2" />
                     <div className="text-right flex-1">
                         <CardTitle className="text-sm">Offline</CardTitle>
-                        <p className="text-lg font-bold">{counts.offline.employee + counts.offline.teamLeader + counts.offline.admin}</p>
+                        <p className="text-lg font-bold">{counts.offline.employee + counts.offline.teamLeader + counts.offline.auditor}</p>
                         <p className="text-sm">Employees: {counts.offline.employee}</p>
                         <p className="text-sm">Team Leaders: {counts.offline.teamLeader}</p>
-                        <p className="text-sm">Admins: {counts.offline.admin}</p>
+                        <p className="text-sm">Auditors: {counts.offline.auditor}</p>
                     </div>
                 </CardContent>
             </Card>
