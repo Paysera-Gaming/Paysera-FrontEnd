@@ -75,7 +75,7 @@ export default function Timebar() {
 	});
 
 	async function initModalValidations() {
-		if (getUserClockStatus() == 'Clock-Out') {
+		if (getUserClockStatus() == 'Clock-In') {
 			await closeConfirmation();
 			await confirmTimeIn();
 		} else {
@@ -106,7 +106,7 @@ export default function Timebar() {
 			onAction: async () => {
 				await mutateTime.mutate('ClockIn');
 				if (getCanProceed) {
-					setUserClockStatus('Clock-In');
+					setUserClockStatus('Clock-Out');
 				}
 				setCanProceed(false);
 			},
@@ -127,7 +127,7 @@ export default function Timebar() {
 					onSuccess: () => {
 						if (getCanProceed) {
 							toast.success('User has timeout from the session');
-							setUserClockStatus('Clock-Out');
+							setUserClockStatus('Clock-In');
 							setCanProceed(false);
 						}
 					},
@@ -150,7 +150,7 @@ export default function Timebar() {
 					onSuccess: () => {
 						if (getCanProceed) {
 							toast.success('User has timeout from the session');
-							setUserClockStatus('Clock-Out');
+							setUserClockStatus('Clock-In');
 						}
 						setCanProceed(false);
 					},
@@ -189,7 +189,7 @@ export default function Timebar() {
 					disabled={getIsLoading}
 					onClick={initModalValidations}
 				>
-					{getUserClockStatus() === 'Clock-In' ? 'Clock-Out' : 'Clock-In'}
+					{getUserClockStatus()}
 					<Loader2
 						className={cn(
 							getIsLoading === false && 'hidden',
