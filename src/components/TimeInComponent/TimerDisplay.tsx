@@ -105,6 +105,8 @@ export default function TimerDisplay() {
 				setTime(convertedToSecond);
 				return;
 			}
+		} else {
+			useUserStore.getState().setUserClockStatus('Clock-In');
 		}
 	}, [isSuccess, data]);
 
