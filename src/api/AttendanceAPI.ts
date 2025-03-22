@@ -41,6 +41,25 @@ export type TAttendance = {
 	isAllowedOvertime: boolean;
 	isRequestingOvertime: boolean;
 	isRejectedOvertime: boolean;
+
+	RequestOvertimeStatus: [
+		'APPROVED_BY_ADMIN',
+		'APPROVED_BY_TEAM_LEADER',
+		'REJECTED_BY_ADMIN',
+		'REJECTED_BY_TEAM_LEADER',
+		'PENDING',
+		'NO_REQUEST'
+	];
+
+	//leave status
+	RequestLeaveStatus: [
+		'APPROVED_BY_ADMIN',
+		'APPROVED_BY_TEAM_LEADER',
+		'REJECTED_BY_ADMIN',
+		'REJECTED_BY_TEAM_LEADER',
+		'PENDING',
+		'NO_REQUEST'
+	];
 };
 
 export async function getAttendance(
