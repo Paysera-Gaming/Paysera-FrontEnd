@@ -90,10 +90,9 @@ export function OverTimeApprovalTable({ columns, data }: DataTableProps) {
 			handleOvertimeMutation.mutate(
 				{
 					employeeId: row.original.employeeId,
-					isAllowedOvertime: true,
 					limitOvertime: row.original.limitOvertime,
-					isRejectedOvertime: false,
 					timeStamp: new Date(),
+					RequestOvertimeStatus: 'APPROVED_BY_TEAM_LEADER',
 				},
 				{
 					onSuccess: () => {
@@ -112,10 +111,9 @@ export function OverTimeApprovalTable({ columns, data }: DataTableProps) {
 			handleOvertimeMutation.mutate(
 				{
 					employeeId: row.original.employeeId,
-					isAllowedOvertime: false,
 					limitOvertime: row.original.limitOvertime,
-					isRejectedOvertime: true,
 					timeStamp: new Date(),
+					RequestOvertimeStatus: 'REJECTED_BY_TEAM_LEADER',
 				},
 				{
 					onSuccess: () => {

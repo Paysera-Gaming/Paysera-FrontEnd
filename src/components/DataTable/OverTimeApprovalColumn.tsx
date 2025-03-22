@@ -142,7 +142,7 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 			const { openConfirmation, closeConfirmation } = useConfirmationStore();
 			const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
-			if (row.original.isRejectedOvertime == true) {
+			if (row.original.RequestOvertimeStatus == 'REJECTED_BY_TEAM_LEADER') {
 				return <Badge variant="destructive"> Rejected</Badge>;
 			} else {
 				return (
@@ -162,10 +162,9 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 										setIsDisabled(true);
 										mutation.mutate({
 											employeeId: row.original.employeeId,
-											isAllowedOvertime: true,
 											limitOvertime: row.original.limitOvertime,
-											isRejectedOvertime: false,
 											timeStamp: new Date(),
+											RequestOvertimeStatus: 'APPROVED_BY_TEAM_LEADER',
 										});
 									},
 									onCancel: () => {
@@ -191,9 +190,8 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 										setIsDisabled(true);
 										mutation.mutate({
 											employeeId: row.original.employeeId,
-											isAllowedOvertime: false,
+											RequestOvertimeStatus: 'REJECTED_BY_TEAM_LEADER',
 											limitOvertime: row.original.limitOvertime,
-											isRejectedOvertime: true,
 											timeStamp: new Date(),
 										});
 									},
