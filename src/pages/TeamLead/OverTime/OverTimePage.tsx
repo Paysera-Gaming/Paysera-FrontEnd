@@ -20,7 +20,8 @@ export default function OvertimePage() {
 				throw new Error('No Department Id Found');
 			}
 		},
-		select: (data) => data.filter((user) => user.isRequestingOvertime),
+		select: (data) =>
+			data.filter((user) => user.RequestOvertimeStatus == 'PENDING'),
 	});
 
 	const queryClient = useQueryClient();

@@ -4,9 +4,12 @@ import { format } from 'date-fns';
 import { formatDate } from './DataColumns';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
-import { TAttendance } from '@/api/AttendanceAPI';
+import {
+	putAttendance,
+	TAttendance,
+	TPutRequestBody,
+} from '@/api/AttendanceAPI';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { handleOvertimeRequest, TAcceptOvertime } from '@/api/OvertimeAPI';
 import useConfirmationStore from '@/stores/GlobalAlertStore';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -94,7 +97,6 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 		header: 'Attendance Status',
 	},
 
-	{ accessorKey: 'limitOvertime', header: 'Requested Hours To Work' },
 	{
 		accessorKey: 'timeHoursWorked',
 		header: 'Net Work Hours',
@@ -122,8 +124,8 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 			const queryClient = useQueryClient();
 			// eslint-disable-next-line react-hooks/rules-of-hooks
 			const mutation = useMutation({
-				mutationFn: (body: TAcceptOvertime) =>
-					handleOvertimeRequest({
+				mutationFn: (body: TPutRequestBody) =>
+					putAttendance({
 						...body,
 					}),
 				onSettled: () => {
@@ -138,7 +140,10 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 			const { openConfirmation, closeConfirmation } = useConfirmationStore();
 			const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
-			if (row.original.isRejectedOvertime == true) {
+			if (
+				row.original.RequestLeaveStatus == 'REJECTED_BY_ADMIN' ||
+				row.original.RequestLeaveStatus == 'REJECTED_BY_TEAM_LEADER'
+			) {
 				return <Badge variant="destructive"> Rejected</Badge>;
 			} else {
 				return (
@@ -157,11 +162,7 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 									onAction: () => {
 										setIsDisabled(true);
 										mutation.mutate({
-											employeeId: row.original.employeeId,
-											isAllowedOvertime: true,
-											limitOvertime: row.original.limitOvertime,
-											isRejectedOvertime: false,
-											timeStamp: new Date(),
+											RequestLeaveStatus: 'APPROVED_BY_TEAM_LEADER',
 										});
 									},
 									onCancel: () => {
@@ -186,11 +187,7 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 									onAction: () => {
 										setIsDisabled(true);
 										mutation.mutate({
-											employeeId: row.original.employeeId,
-											isAllowedOvertime: false,
-											limitOvertime: row.original.limitOvertime,
-											isRejectedOvertime: true,
-											timeStamp: new Date(),
+											RequestLeaveStatus: 'REJECTED_BY_TEAM_LEADER',
 										});
 									},
 									onCancel: () => {

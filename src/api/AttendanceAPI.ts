@@ -57,6 +57,16 @@ export type TAttendance = {
 		| 'NO_REQUEST';
 };
 
+export type TPutRequestBody = {
+	RequestLeaveStatus:
+		| 'APPROVED_BY_ADMIN'
+		| 'APPROVED_BY_TEAM_LEADER'
+		| 'REJECTED_BY_ADMIN'
+		| 'REJECTED_BY_TEAM_LEADER'
+		| 'PENDING'
+		| 'NO_REQUEST';
+};
+
 export async function getAttendance(
 	departmentId: string
 ): Promise<TAttendance[]> {
@@ -75,4 +85,13 @@ export async function getAttendanceToday(
 	);
 
 	return response.data;
+}
+
+export async function putAttendance(body: TPutRequestBody) {
+	const { status } = await axiosInstance.put<TAttendance>(
+		`/api/department/attendance`,
+		body
+	);
+
+	return status;
 }
