@@ -58,6 +58,7 @@ export type TAttendance = {
 };
 
 export type TPutRequestBody = {
+	id: number;
 	RequestLeaveStatus:
 		| 'APPROVED_BY_ADMIN'
 		| 'APPROVED_BY_TEAM_LEADER'
@@ -113,9 +114,12 @@ export async function getAttendanceToday(
 }
 
 export async function putAttendance(body: TPutRequestBody) {
+	console.log(body.id);
+	console.log(`/api/attendance/${body.id}`);
+
 	const { status } = await axiosInstance.put<TAttendance>(
-		`/api/attendance`,
-		body
+		`/api/attendance/${body.id}`,
+		{ RequestLeaveStatus: body.RequestLeaveStatus }
 	);
 
 	return status;

@@ -32,7 +32,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 
 //
 
-export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
+export const LeaveApprovalColumn: ColumnDef<TAttendance>[] = [
 	{
 		id: 'select',
 		header: ({ table }) => (
@@ -136,6 +136,9 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 					queryClient.invalidateQueries({ queryKey: ['AttendanceToday'] });
 					queryClient.invalidateQueries({ queryKey: ['Attendance'] });
 				},
+				onError: (error) => {
+					console.log(error);
+				},
 			});
 			const { openConfirmation, closeConfirmation } = useConfirmationStore();
 			const [isDisabled, setIsDisabled] = useState<boolean>(false);
@@ -154,15 +157,16 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 								openConfirmation({
 									title: `Approve ${row.original.employee.firstName}  ${
 										row.original.employee.lastName + "'s"
-									} Overtime Request?`,
+									} Paid Leave Request?`,
 									description:
-										'Are you sure you would like to approve this overtime?',
+										'Are you sure you would like to approve this leave?',
 									cancelLabel: 'Cancel',
-									actionLabel: 'Approve Overtime',
+									actionLabel: 'Approve Leave',
 									onAction: () => {
 										setIsDisabled(true);
 										mutation.mutate({
 											RequestLeaveStatus: 'APPROVED_BY_TEAM_LEADER',
+											id: row.original.id,
 										});
 									},
 									onCancel: () => {
@@ -179,11 +183,11 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 								openConfirmation({
 									title: `Reject  ${row.original.employee.firstName}  ${
 										row.original.employee.lastName + "'s"
-									} Overtime Request?`,
+									} Paid Leave Request?`,
 									description:
-										'By clicking reject overtime, you are rejecting the overtime of the employee in his attendance?',
+										'By clicking reject leave, you are rejecting the LEAVE of the employee in his attendance?',
 									cancelLabel: 'Cancel',
-									actionLabel: 'Reject Overtime',
+									actionLabel: 'Reject Leave',
 									onAction: () => {
 										setIsDisabled(true);
 										mutation.mutate({

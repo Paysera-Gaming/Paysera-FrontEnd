@@ -1,4 +1,5 @@
 import { getAttendanceToday, TAttendance } from '@/api/AttendanceAPI';
+import { LeaveApprovalColumn } from '@/components/DataTable/LeaveApprovalColumn';
 import { overtimeRequestColumns } from '@/components/DataTable/OverTimeApprovalColumn';
 import { OverTimeApprovalTable } from '@/components/DataTable/OverTimeApprovalTable';
 import ErrorDisplay from '@/components/ErrorComponent/ErrorDisplay';
@@ -64,7 +65,7 @@ export default function LeavePage() {
 
 			<OverTimeApprovalTable
 				data={data as TAttendance[]}
-				columns={overtimeRequestColumns}
+				columns={LeaveApprovalColumn}
 			></OverTimeApprovalTable>
 		</div>
 	);

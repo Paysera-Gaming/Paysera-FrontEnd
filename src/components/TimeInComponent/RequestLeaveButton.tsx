@@ -57,22 +57,18 @@ const formSchema = z.object({
 
 function ittirateDates(
 	numberOfDays: number,
-	startingDate: string,
-	dateToCopyHours: string
+	startingDate: Date,
+	hours: number
 ) {
 	const dates = [];
-
-	const regex = /T(.*?)Z/;
-	const match = dateToCopyHours.match(regex);
-	const time = match ? match[1] : null;
-
-	// Loop through each day and generate a new date with the same time
+	// This will loop through the number of days and  create a new date and copy the hours
+	// and pushes the date
 	for (let index = 0; index < numberOfDays + 1; index++) {
-		const currentDate = new Date(startingDate);
-		currentDate.setDate(currentDate.getDate() + index + 1);
-		const onlyDate = currentDate.toISOString().split('T')[0];
+		const interatingDate = new Date(startingDate);
+		interatingDate.setDate(startingDate.getDate() + index);
+		interatingDate.setHours(hours);
 
-		dates.push(`${onlyDate}T${time}Z`);
+		dates.push(interatingDate);
 	}
 
 	return dates;
@@ -121,8 +117,6 @@ export function RequestLeaveButton() {
 
 	function handleSubmit(data: z.infer<typeof formSchema>) {
 		console.log(data);
-		console.log(departmentSchedule?.Schedule.startTime);
-		console.log(departmentSchedule?.Schedule.endTime);
 
 		const dateSpan = formatDistanceStrict(
 			new Date(data.startDate),
@@ -134,23 +128,17 @@ export function RequestLeaveButton() {
 		);
 		// regex magic bitch
 		const sanitizedDateSpan = dateSpan.replace(/\D+/g, '');
-		const startDateHours = new Date(
-			departmentSchedule?.Schedule.startTime as string
-		);
-		const endDateHours = new Date(
-			departmentSchedule?.Schedule.endTime as string
-		);
 
 		const startDates = ittirateDates(
 			Number(sanitizedDateSpan),
-			new Date(data.startDate).toISOString(),
-			startDateHours.toISOString()
+			new Date(data.startDate),
+			0
 		);
 
 		const endDates = ittirateDates(
 			Number(sanitizedDateSpan),
-			new Date(data.startDate).toISOString(),
-			endDateHours.toISOString()
+			new Date(data.startDate),
+			9
 		);
 
 		setIsLoading(true);
@@ -158,8 +146,8 @@ export function RequestLeaveButton() {
 		startDates.map((date, index) => {
 			mutation.mutate(
 				{
-					startDate: date,
-					endDate: endDates[index],
+					startDate: date.toISOString(),
+					endDate: endDates[index].toISOString(),
 				},
 				{
 					onSuccess: () => {
