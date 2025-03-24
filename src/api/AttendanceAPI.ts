@@ -67,6 +67,31 @@ export type TPutRequestBody = {
 		| 'NO_REQUEST';
 };
 
+export type TAttendancePostRequestBody = {
+	employeeId: number;
+	date: string;
+	status: 'DONE' | 'PAID_LEAVE' | 'ONGOING';
+	scheduleType: 'FIXED' | 'SUPER_FLEXI' | 'FLEXI';
+	timeIn: string;
+	timeOut: string;
+	isAllowedOvertime: boolean;
+	overtimeTotal: number;
+	RequestOverTimeStatus:
+		| 'APPROVED_BY_ADMIN'
+		| 'APPROVED_BY_TEAM_LEADER'
+		| 'REJECTED_BY_ADMIN'
+		| 'REJECTED_BY_TEAM_LEADER'
+		| 'PENDING'
+		| 'NO_REQUEST';
+	RequestLeaveStatus:
+		| 'APPROVED_BY_ADMIN'
+		| 'APPROVED_BY_TEAM_LEADER'
+		| 'REJECTED_BY_ADMIN'
+		| 'REJECTED_BY_TEAM_LEADER'
+		| 'PENDING'
+		| 'NO_REQUEST';
+};
+
 export async function getAttendance(
 	departmentId: string
 ): Promise<TAttendance[]> {
@@ -89,7 +114,16 @@ export async function getAttendanceToday(
 
 export async function putAttendance(body: TPutRequestBody) {
 	const { status } = await axiosInstance.put<TAttendance>(
-		`/api/department/attendance`,
+		`/api/attendance`,
+		body
+	);
+
+	return status;
+}
+
+export async function postAttendance(body: TAttendancePostRequestBody) {
+	const { status } = await axiosInstance.post<TAttendance>(
+		`/api/attendance`,
 		body
 	);
 

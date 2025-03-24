@@ -14,11 +14,13 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover';
 
+import { formatDistanceStrict } from 'date-fns';
+
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 
 import { Calendar } from '@/components/ui/calendar';
-
+import { useNavigate } from 'react-router-dom';
 import {
 	Form,
 	FormControl,
@@ -29,14 +31,6 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -44,21 +38,13 @@ import { z } from 'zod';
 import { useUserStore } from '@/stores/userStore.ts';
 import { cn } from '@/lib/utils';
 import { useMutation } from '@tanstack/react-query';
-import { Info, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from '../ui/tooltip';
-import { Textarea } from '../ui/textarea';
-import { requestLeave } from '@/api/LeaveAPI';
 
-// this should insert what type of leave this is
+import { postAttendance } from '@/api/AttendanceAPI';
+
 // this should get the start and end of the date of this leave
-// this should get the reasons of leaving
 
 const formSchema = z.object({
 	startDate: z.string({
@@ -67,18 +53,36 @@ const formSchema = z.object({
 	endDate: z.string({
 		required_error: 'End date is required',
 	}),
-	reason: z.string().optional(),
-	type: z.string({
-		required_error: 'Leave type is required',
-	}),
 });
+
+function ittirateDates(
+	numberOfDays: number,
+	startingDate: string,
+	dateToCopyHours: string
+) {
+	const dates = [];
+
+	const regex = /T(.*?)Z/;
+	const match = dateToCopyHours.match(regex);
+	const time = match ? match[1] : null;
+
+	// Loop through each day and generate a new date with the same time
+	for (let index = 0; index < numberOfDays + 1; index++) {
+		const currentDate = new Date(startingDate);
+		currentDate.setDate(currentDate.getDate() + index + 1);
+		const onlyDate = currentDate.toISOString().split('T')[0];
+
+		dates.push(`${onlyDate}T${time}Z`);
+	}
+
+	return dates;
+}
 
 export function RequestLeaveButton() {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-
-	const user = useUserStore((state) => state.user);
-
+	const navigate = useNavigate();
+	const user = useUserStore.getState().getUser();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -86,37 +90,88 @@ export function RequestLeaveButton() {
 			endDate: undefined,
 		},
 	});
+	const departmentSchedule = user?.departmentSchedule;
 
 	const mutation = useMutation({
-		mutationFn: (data: z.infer<typeof formSchema>) => {
-			if (user == undefined) {
+		mutationFn: (payLoad: { startDate: string; endDate: string }) => {
+			if (
+				user == undefined ||
+				departmentSchedule?.Schedule.scheduleType == undefined
+			) {
 				console.log('Employee ID is undefined at check');
+				navigate('/login');
 				throw new Error('Employee ID is undefined');
 			}
 
 			// Perform the mutation logic here
-			return requestLeave({
-				startDate: data.startDate,
-				endDate: data.endDate,
-				reason: data.reason || '',
-				type: data.type,
-				employeeID: user.id,
+			return postAttendance({
+				employeeId: user.id,
+				date: payLoad.startDate,
+				status: 'PAID_LEAVE',
+				scheduleType: departmentSchedule?.Schedule.scheduleType,
+				timeIn: payLoad.startDate,
+				timeOut: payLoad.endDate,
+				isAllowedOvertime: false,
+				overtimeTotal: 0,
+				RequestOverTimeStatus: 'NO_REQUEST',
+				RequestLeaveStatus: 'PENDING',
 			});
-		},
-		onSuccess: () => {
-			toast.success('Request for Leave has successfully submitted');
-			setIsOpen(false);
-		},
-		onSettled: () => {
-			setIsLoading(false);
 		},
 	});
 
 	function handleSubmit(data: z.infer<typeof formSchema>) {
 		console.log(data);
+		console.log(departmentSchedule?.Schedule.startTime);
+		console.log(departmentSchedule?.Schedule.endTime);
+
+		const dateSpan = formatDistanceStrict(
+			new Date(data.startDate),
+			new Date(data.endDate),
+			{
+				addSuffix: false,
+				unit: 'day',
+			}
+		);
+		// regex magic bitch
+		const sanitizedDateSpan = dateSpan.replace(/\D+/g, '');
+		const startDateHours = new Date(
+			departmentSchedule?.Schedule.startTime as string
+		);
+		const endDateHours = new Date(
+			departmentSchedule?.Schedule.endTime as string
+		);
+
+		const startDates = ittirateDates(
+			Number(sanitizedDateSpan),
+			new Date(data.startDate).toISOString(),
+			startDateHours.toISOString()
+		);
+
+		const endDates = ittirateDates(
+			Number(sanitizedDateSpan),
+			new Date(data.startDate).toISOString(),
+			endDateHours.toISOString()
+		);
 
 		setIsLoading(true);
-		mutation.mutate(data);
+
+		startDates.map((date, index) => {
+			mutation.mutate(
+				{
+					startDate: date,
+					endDate: endDates[index],
+				},
+				{
+					onSuccess: () => {
+						toast.success('Request for Leave has successfully submitted');
+						setIsOpen(false);
+					},
+					onSettled: () => {
+						setIsLoading(false);
+					},
+				}
+			);
+		});
 	}
 
 	return (
@@ -137,50 +192,6 @@ export function RequestLeaveButton() {
 
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(handleSubmit)}>
-						<FormField
-							control={form.control}
-							name="type"
-							render={({ field }) => (
-								<FormItem>
-									<div className="flex items-center justify-start gap-2">
-										<FormLabel>Leave Type</FormLabel>
-										<TooltipProvider>
-											<Tooltip>
-												<TooltipTrigger asChild>
-													<Info className="w-4 h-4"></Info>
-												</TooltipTrigger>
-												<TooltipContent>
-													This dictates the type of leave you'll be sending
-												</TooltipContent>
-											</Tooltip>
-										</TooltipProvider>
-									</div>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-									>
-										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder="Select a Schedule Type" />
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											<SelectItem value="Medical_Leave">
-												Medical Leave
-											</SelectItem>
-											<SelectItem value="Maternal_Leave">
-												Maternal Leave
-											</SelectItem>
-											<SelectItem value="Sick_Leave">Sick Leave</SelectItem>
-											<SelectItem value="Paternity_Leave">
-												Paternity Leave
-											</SelectItem>
-										</SelectContent>
-									</Select>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
 						<FormField
 							control={form.control}
 							name="startDate"
@@ -265,27 +276,6 @@ export function RequestLeaveButton() {
 							)}
 						/>
 
-						<FormField
-							control={form.control}
-							name="reason"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Reason</FormLabel>
-									<FormDescription>
-										Optional: Add reason for the leave
-									</FormDescription>
-									<FormControl>
-										<Textarea
-											placeholder="Reason"
-											className="resize-none"
-											{...field}
-										/>
-									</FormControl>
-
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
 						<Button type="submit" className="mt-2" disabled={isLoading}>
 							<Loader2
 								className={cn(
