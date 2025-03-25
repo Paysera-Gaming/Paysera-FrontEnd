@@ -14,8 +14,9 @@ export interface Attendance {
   lunchTimeTotal: number;
   createdAt: string;
   updatedAt: string;
-  calculatedOverTime: boolean; // Added calculatedOverTime property
-  paidLeave: number; // Add this line
+  calculatedOverTime: boolean;
+  paidLeave: number;
+  RequestLeaveStatus: "APPROVED_BY_ADMIN" | "APPROVED_BY_TEAM_LEADER" | "REJECTED_BY_ADMIN" | "REJECTED_BY_TEAM_LEADER" | "PENDING" | "NO_REQUEST"; // Add this line
   employee: {
     id: number;
     username: string;
@@ -25,9 +26,9 @@ export interface Attendance {
     role: string;
     accessLevel: string;
     isActive: boolean;
-    department: string; // Changed department property to string
+    department: string;
   };
-  employeeName: string; // Added employeeName property
+  employeeName: string;
 }
 
 export interface PaidLeavePayload {
