@@ -92,11 +92,11 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({
         {/* Leave Status Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="p-2 text-base w-48">
+            <Button variant="outline" className="p-2 text-base w-64">
               {leaveStatusLabels[leaveStatus] || leaveStatus}
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-64">
+          <DropdownMenuContent className="w-72">
             <DropdownMenuItem onSelect={() => setLeaveStatus("ALL")}>
               {leaveStatusLabels["ALL"]}
             </DropdownMenuItem>
