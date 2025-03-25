@@ -1,5 +1,6 @@
 import { getAttendanceToday, TAttendance } from '@/api/AttendanceAPI';
 import { LeaveApprovalColumn } from '@/components/DataTable/LeaveApprovalColumn';
+import { LeaveRequestTable } from '@/components/DataTable/LeaveRequestTable';
 import { overtimeRequestColumns } from '@/components/DataTable/OverTimeApprovalColumn';
 import { OverTimeApprovalTable } from '@/components/DataTable/OverTimeApprovalTable';
 import ErrorDisplay from '@/components/ErrorComponent/ErrorDisplay';
@@ -62,11 +63,10 @@ export default function LeavePage() {
 			<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0 mb-5">
 				Leave Request
 			</h2>
-
-			<OverTimeApprovalTable
+			<LeaveRequestTable
 				data={data as TAttendance[]}
 				columns={LeaveApprovalColumn}
-			></OverTimeApprovalTable>
+			></LeaveRequestTable>
 		</div>
 	);
 }
