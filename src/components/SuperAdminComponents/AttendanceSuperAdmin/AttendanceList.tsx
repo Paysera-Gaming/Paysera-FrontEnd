@@ -124,12 +124,12 @@ const AttendanceList: React.FC = () => {
               >
                 Done
               </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
+              {/* <DropdownMenuCheckboxItem
                 checked={statusFilter === 'PAID_LEAVE'}
                 onCheckedChange={() => handleStatusFilterChange('PAID_LEAVE')}
               >
                 Paid Leave
-              </DropdownMenuCheckboxItem>
+              </DropdownMenuCheckboxItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
           <PaidLeaveForm />

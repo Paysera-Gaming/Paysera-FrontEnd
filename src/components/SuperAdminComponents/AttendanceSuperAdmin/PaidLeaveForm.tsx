@@ -8,7 +8,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  // DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input"; // Add this import
@@ -89,9 +89,9 @@ const PaidLeaveForm: React.FC = () => {
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger asChild>
+        {/* <DialogTrigger asChild>
           <Button variant="outline" onClick={() => setIsDialogOpen(true)}>Paid Leave</Button>
-        </DialogTrigger>
+        </DialogTrigger> */}
         <DialogContent className="sm:max-w-[425px] p-6">
           <DialogHeader>
             <DialogTitle className="text-lg font-semibold">Paid Leave</DialogTitle>

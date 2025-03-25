@@ -1,16 +1,19 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useQuery } from "@tanstack/react-query";
-import { getAttendanceList } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api";
-import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Activity } from "lucide-react";
-import RecentActivitiesTable from "./RecentActivitiesTable";
-import OvertimeTable from "./OvertimeTable";
-import AttendanceTable from "./AttendanceTable";
+"use client"
+
+import type React from "react"
+import { useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { useQuery } from "@tanstack/react-query"
+import { getAttendanceList } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api"
+import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Activity } from "lucide-react"
+import RecentActivitiesTable from "./RecentActivitiesTable"
+import OvertimeTable from "./OvertimeTable" // Import OvertimeTable
+import LeaveStatusTable from "./LeaveStatusTable" // Import LeaveStatusTable
 
 const SkeletonCard: React.FC = () => {
   return (
@@ -33,15 +36,16 @@ const SkeletonCard: React.FC = () => {
         </ScrollArea>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 interface RecentActivitiesCardProps {
-  className?: string;
+  className?: string
 }
 
 export default function RecentActivitiesCard({ className }: RecentActivitiesCardProps) {
-  const [selectedOption, setSelectedOption] = useState("Attendance");
+  const [selectedOption, setSelectedOption] = useState("Attendance")
+
   const {
     data: attendanceData,
     isLoading: isLoadingAttendance,
@@ -50,13 +54,13 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
   } = useQuery<Attendance[]>({
     queryKey: ["attendanceData"],
     queryFn: getAttendanceList,
-  });
+  })
 
-  if (isLoadingAttendance) return <SkeletonCard />;
+  if (isLoadingAttendance) return <SkeletonCard />
 
   const handleRetry = () => {
-    if (attendanceError) refetchAttendance();
-  };
+    if (attendanceError) refetchAttendance()
+  }
 
   if (attendanceError) {
     return (
@@ -74,25 +78,19 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
           </div>
         </CardContent>
       </Card>
-    );
+    )
   }
 
-  const paidLeaveData = Array.isArray(attendanceData)
-    ? attendanceData.filter((attendance: Attendance) => attendance.status === "PAID_LEAVE")
-    : [];
-
   const handleDropdownChange = (value: string) => {
-    setSelectedOption(value);
-  };
+    setSelectedOption(value)
+  }
 
   const subtitle =
-    selectedOption === "Paid Leave"
-      ? "Paid Leave Record"
-      : selectedOption === "Department"
-      ? "Department Record"
-      : selectedOption === "Overtime"
-      ? "Overtime Record"
-      : "Attendance Record";
+    selectedOption === "Leave Status"
+      ? "Leave Status Record"
+      : selectedOption === "Attendance"
+        ? "Attendance Record"
+        : "Overtime Record"
 
   return (
     <Card className={`flex-1 col-span-2 p-2 ${className}`}>
@@ -109,7 +107,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-64">
-              <DropdownMenuItem onSelect={() => handleDropdownChange("Paid Leave")}>Paid Leave</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => handleDropdownChange("Leave Status")}>Leave Status</DropdownMenuItem>
               <DropdownMenuItem onSelect={() => handleDropdownChange("Attendance")}>Attendance</DropdownMenuItem>
               <DropdownMenuItem onSelect={() => handleDropdownChange("Overtime")}>Overtime</DropdownMenuItem>
             </DropdownMenuContent>
@@ -119,10 +117,10 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
       </CardHeader>
       <CardContent className="mt-2 p-2">
         <ScrollArea className="h-[400px]">
-          {selectedOption === "Paid Leave" ? (
-            <RecentActivitiesTable tableData={paidLeaveData} />
+          {selectedOption === "Leave Status" ? (
+            <LeaveStatusTable selectedLeaveStatus="APPROVED_BY_TEAM_LEADER" />
           ) : selectedOption === "Attendance" ? (
-            <AttendanceTable />
+            <RecentActivitiesTable tableData={attendanceData || []} />
           ) : selectedOption === "Overtime" ? (
             <OvertimeTable />
           ) : (
@@ -131,5 +129,6 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
         </ScrollArea>
       </CardContent>
     </Card>
-  );
+  )
 }
+

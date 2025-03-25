@@ -8,7 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Activity } from "lucide-react";
-import RecentActivitiesTable from "./RecentActivitiesTable";
+import LeaveStatusTable from "./LeaveStatusTable";
 import OvertimeTable from "./OvertimeTable";
 import AttendanceTable from "./AttendanceTable";
 
@@ -42,8 +42,9 @@ interface RecentActivitiesCardProps {
 
 export default function RecentActivitiesCard({ className }: RecentActivitiesCardProps) {
   const [selectedOption, setSelectedOption] = useState("Attendance");
+  const [selectedLeaveStatus, setSelectedLeaveStatus] = useState<string>("Pending"); // Added state for selectedLeaveStatus
+
   const {
-    data: attendanceData,
     isLoading: isLoadingAttendance,
     error: attendanceError,
     refetch: refetchAttendance,
@@ -77,17 +78,16 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
     );
   }
 
-  const paidLeaveData = Array.isArray(attendanceData)
-    ? attendanceData.filter((attendance: Attendance) => attendance.status === "PAID_LEAVE")
-    : [];
-
   const handleDropdownChange = (value: string) => {
     setSelectedOption(value);
+    if (value === "Leave Status") {
+      setSelectedLeaveStatus("Pending"); // Set default value for Leave Status
+    }
   };
 
   const subtitle =
-    selectedOption === "Paid Leave"
-      ? "Paid Leave Record"
+    selectedOption === "Leave Status"
+      ? "Leave Status Record"
       : selectedOption === "Department"
       ? "Department Record"
       : selectedOption === "Overtime"
@@ -109,7 +109,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-64">
-              <DropdownMenuItem onSelect={() => handleDropdownChange("Paid Leave")}>Paid Leave</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => handleDropdownChange("Leave Status")}>Leave Status</DropdownMenuItem>
               <DropdownMenuItem onSelect={() => handleDropdownChange("Attendance")}>Attendance</DropdownMenuItem>
               <DropdownMenuItem onSelect={() => handleDropdownChange("Overtime")}>Overtime</DropdownMenuItem>
             </DropdownMenuContent>
@@ -119,8 +119,8 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
       </CardHeader>
       <CardContent className="mt-2 p-2">
         <ScrollArea className="h-[400px]">
-          {selectedOption === "Paid Leave" ? (
-            <RecentActivitiesTable tableData={paidLeaveData} />
+          {selectedOption === "Leave Status" ? (
+            <LeaveStatusTable selectedLeaveStatus={selectedLeaveStatus} />
           ) : selectedOption === "Attendance" ? (
             <AttendanceTable />
           ) : selectedOption === "Overtime" ? (
