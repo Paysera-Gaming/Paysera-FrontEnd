@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { getAttendanceList, updateLeaveRequestStatus } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api"
 import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types"
@@ -12,6 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
 import { Check, X, Loader2 } from "lucide-react"
+import type { AxiosError } from "axios"
 // import { toast } from "@/components/ui/use-toast"
 
 const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedLeaveStatus }) => {
@@ -32,6 +33,17 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
     selectedLeaveStatus === "ALL" ? "APPROVED_BY_TEAM_LEADER" : selectedLeaveStatus,
   )
   const [processingIds, setProcessingIds] = useState<number[]>([])
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  // Clear error message after 5 seconds
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [errorMessage])
 
   // Mutation for updating leave request status
   const updateStatusMutation = useMutation({
@@ -40,8 +52,9 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["attendanceData"] })
     },
-    onError: (error) => {
+    onError: (error: Error | AxiosError) => {
       console.error("Error updating leave status:", error)
+      setErrorMessage(`Failed to update status: ${error.message || "Unknown error"}`)
     },
     onSettled: (_, __, variables) => {
       setProcessingIds((prev) => prev.filter((id) => id !== variables.id))
@@ -61,12 +74,14 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
   // Handle approve action
   const handleApprove = (id: number) => {
     setProcessingIds((prev) => [...prev, id])
+    setErrorMessage(null)
     updateStatusMutation.mutate({ id, status: "APPROVED_BY_ADMIN" })
   }
 
   // Handle reject action
   const handleReject = (id: number) => {
     setProcessingIds((prev) => [...prev, id])
+    setErrorMessage(null)
     updateStatusMutation.mutate({ id, status: "REJECTED_BY_ADMIN" })
   }
 
@@ -143,6 +158,13 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
 
   return (
     <>
+      {errorMessage && (
+        <div className="bg-red-50 border border-red-200 text-red-700 p-4 mb-4 mx-4 rounded-md">
+          <p className="font-semibold">Error</p>
+          <p>{errorMessage}</p>
+        </div>
+      )}
+
       <div className="flex mb-4 space-x-2 p-4 items-center">
         {/* Search Bar */}
         <Input
