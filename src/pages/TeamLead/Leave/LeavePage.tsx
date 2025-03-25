@@ -1,8 +1,7 @@
 import { getAttendanceToday, TAttendance } from '@/api/AttendanceAPI';
 import { LeaveApprovalColumn } from '@/components/DataTable/LeaveApprovalColumn';
 import { LeaveRequestTable } from '@/components/DataTable/LeaveRequestTable';
-import { overtimeRequestColumns } from '@/components/DataTable/OverTimeApprovalColumn';
-import { OverTimeApprovalTable } from '@/components/DataTable/OverTimeApprovalTable';
+
 import ErrorDisplay from '@/components/ErrorComponent/ErrorDisplay';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useWebSocket } from '@/hooks/useWebSocket';

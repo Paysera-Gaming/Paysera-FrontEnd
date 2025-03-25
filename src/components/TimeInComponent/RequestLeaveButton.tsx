@@ -169,7 +169,7 @@ export function RequestLeaveButton() {
 					Request Leave
 				</Button>
 			</DialogTrigger>
-			<DialogContent className="sm:max-w-[425px]">
+			<DialogContent className="sm:max-w-[425px] left-[50%] top-[20%] ">
 				<DialogHeader>
 					<DialogTitle>Requesting Leave form</DialogTitle>
 					<DialogDescription>
