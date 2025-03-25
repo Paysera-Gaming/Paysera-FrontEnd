@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { getAttendanceList, updateLeaveRequestStatus } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api"
 import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types"
@@ -14,6 +14,9 @@ import { format } from "date-fns"
 import { Check, X, Loader2 } from "lucide-react"
 import type { AxiosError } from "axios"
 // import { toast } from "@/components/ui/use-toast"
+
+// Define the allowed statuses
+const ALLOWED_STATUSES = ["APPROVED_BY_TEAM_LEADER", "APPROVED_BY_ADMIN", "REJECTED_BY_ADMIN"]
 
 const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedLeaveStatus }) => {
   const queryClient = useQueryClient()
@@ -30,7 +33,11 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
   const [searchTerm, setSearchTerm] = useState("")
   // Default to showing only team leader approved requests
   const [leaveStatus, setLeaveStatus] = useState(
-    selectedLeaveStatus === "ALL" ? "APPROVED_BY_TEAM_LEADER" : selectedLeaveStatus,
+    selectedLeaveStatus === "ALL"
+      ? "APPROVED_BY_TEAM_LEADER"
+      : ALLOWED_STATUSES.includes(selectedLeaveStatus)
+        ? selectedLeaveStatus
+        : "APPROVED_BY_TEAM_LEADER",
   )
   const [processingIds, setProcessingIds] = useState<number[]>([])
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -63,12 +70,10 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
 
   // Map for formalizing leave status labels
   const leaveStatusLabels: Record<string, string> = {
-    ALL: "All Leave Statuses",
+    ALL: "All Allowed Statuses",
     APPROVED_BY_TEAM_LEADER: "Approved by Team Leader",
-    REJECTED_BY_TEAM_LEADER: "Rejected by Team Leader",
     APPROVED_BY_ADMIN: "Approved by Admin",
     REJECTED_BY_ADMIN: "Rejected by Admin",
-    NO_REQUEST: "No Request",
   }
 
   // Handle approve action
@@ -90,6 +95,13 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
     return status === "APPROVED_BY_TEAM_LEADER"
   }
 
+  // Filter data to only include allowed statuses
+  const filteredAttendanceData = useMemo(() => {
+    if (!attendanceData) return []
+
+    return attendanceData.filter((attendance) => ALLOWED_STATUSES.includes(attendance.RequestLeaveStatus))
+  }, [attendanceData])
+
   if (isLoading) {
     return (
       <div className="flex-1 col-span-2 p-4">
@@ -108,14 +120,15 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
     )
   }
 
-  const filteredData =
-    attendanceData?.filter(
+  // Apply status filter and search filter
+  const displayData =
+    filteredAttendanceData.filter(
       (attendance) =>
         (leaveStatus === "ALL" || attendance.RequestLeaveStatus === leaveStatus) &&
         attendance.employee.username.toLowerCase().includes(searchTerm.toLowerCase()),
     ) || []
 
-  const renderedList = filteredData.map((attendance) => {
+  const renderedList = displayData.map((attendance) => {
     const canAction = canBeActionedByAdmin(attendance.RequestLeaveStatus)
     const isProcessing = processingIds.includes(attendance.id)
 
@@ -175,7 +188,7 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
           className="flex-1"
         />
 
-        {/* Leave Status Dropdown */}
+        {/* Leave Status Dropdown - Only show allowed statuses */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="p-2 text-base w-64">
@@ -187,17 +200,11 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
             <DropdownMenuItem onSelect={() => setLeaveStatus("APPROVED_BY_TEAM_LEADER")}>
               {leaveStatusLabels["APPROVED_BY_TEAM_LEADER"]}
             </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setLeaveStatus("REJECTED_BY_TEAM_LEADER")}>
-              {leaveStatusLabels["REJECTED_BY_TEAM_LEADER"]}
-            </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setLeaveStatus("APPROVED_BY_ADMIN")}>
               {leaveStatusLabels["APPROVED_BY_ADMIN"]}
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setLeaveStatus("REJECTED_BY_ADMIN")}>
               {leaveStatusLabels["REJECTED_BY_ADMIN"]}
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setLeaveStatus("NO_REQUEST")}>
-              {leaveStatusLabels["NO_REQUEST"]}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
