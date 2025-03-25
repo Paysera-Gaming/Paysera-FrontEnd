@@ -27,7 +27,10 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
   })
 
   const [searchTerm, setSearchTerm] = useState("")
-  const [leaveStatus, setLeaveStatus] = useState(selectedLeaveStatus)
+  // Default to showing only team leader approved requests
+  const [leaveStatus, setLeaveStatus] = useState(
+    selectedLeaveStatus === "ALL" ? "APPROVED_BY_TEAM_LEADER" : selectedLeaveStatus,
+  )
   const [processingIds, setProcessingIds] = useState<number[]>([])
 
   // Mutation for updating leave request status
@@ -52,7 +55,6 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
     REJECTED_BY_TEAM_LEADER: "Rejected by Team Leader",
     APPROVED_BY_ADMIN: "Approved by Admin",
     REJECTED_BY_ADMIN: "Rejected by Admin",
-    PENDING: "Pending",
     NO_REQUEST: "No Request",
   }
 
@@ -66,6 +68,11 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
   const handleReject = (id: number) => {
     setProcessingIds((prev) => [...prev, id])
     updateStatusMutation.mutate({ id, status: "REJECTED_BY_ADMIN" })
+  }
+
+  // Check if a leave request can be actioned by admin - only team leader approved requests
+  const canBeActionedByAdmin = (status: string): boolean => {
+    return status === "APPROVED_BY_TEAM_LEADER"
   }
 
   if (isLoading) {
@@ -94,7 +101,7 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
     ) || []
 
   const renderedList = filteredData.map((attendance) => {
-    const isPending = attendance.RequestLeaveStatus === "PENDING"
+    const canAction = canBeActionedByAdmin(attendance.RequestLeaveStatus)
     const isProcessing = processingIds.includes(attendance.id)
 
     return (
@@ -105,7 +112,7 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
           {leaveStatusLabels[attendance.RequestLeaveStatus] || attendance.RequestLeaveStatus}
         </TableCell>
         <TableCell className="p-4">
-          {isPending && (
+          {canAction && (
             <div className="flex space-x-2">
               <Button
                 variant="outline"
@@ -166,9 +173,6 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setLeaveStatus("REJECTED_BY_ADMIN")}>
               {leaveStatusLabels["REJECTED_BY_ADMIN"]}
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setLeaveStatus("PENDING")}>
-              {leaveStatusLabels["PENDING"]}
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setLeaveStatus("NO_REQUEST")}>
               {leaveStatusLabels["NO_REQUEST"]}

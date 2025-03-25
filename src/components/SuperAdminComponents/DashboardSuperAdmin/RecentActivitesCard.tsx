@@ -1,16 +1,19 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useQuery } from "@tanstack/react-query";
-import { getAttendanceList } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api";
-import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Activity } from "lucide-react";
-import RecentActivitiesTable from "./RecentActivitiesTable";
-import OvertimeTable from "./OvertimeTable"; // Import OvertimeTable
-import LeaveStatusTable from "./LeaveStatusTable"; // Import LeaveStatusTable
+"use client"
+
+import type React from "react"
+import { useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { useQuery } from "@tanstack/react-query"
+import { getAttendanceList } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/api"
+import type { Attendance } from "@/components/SuperAdminComponents/AttendanceSuperAdmin/types"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Activity } from "lucide-react"
+import RecentActivitiesTable from "./RecentActivitiesTable"
+import OvertimeTable from "./OvertimeTable" // Import OvertimeTable
+import LeaveStatusTable from "./LeaveStatusTable" // Import LeaveStatusTable
 
 const SkeletonCard: React.FC = () => {
   return (
@@ -33,15 +36,15 @@ const SkeletonCard: React.FC = () => {
         </ScrollArea>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 interface RecentActivitiesCardProps {
-  className?: string;
+  className?: string
 }
 
 export default function RecentActivitiesCard({ className }: RecentActivitiesCardProps) {
-  const [selectedOption, setSelectedOption] = useState("Attendance");
+  const [selectedOption, setSelectedOption] = useState("Attendance")
 
   const {
     data: attendanceData,
@@ -51,13 +54,13 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
   } = useQuery<Attendance[]>({
     queryKey: ["attendanceData"],
     queryFn: getAttendanceList,
-  });
+  })
 
-  if (isLoadingAttendance) return <SkeletonCard />;
+  if (isLoadingAttendance) return <SkeletonCard />
 
   const handleRetry = () => {
-    if (attendanceError) refetchAttendance();
-  };
+    if (attendanceError) refetchAttendance()
+  }
 
   if (attendanceError) {
     return (
@@ -75,19 +78,19 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
           </div>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   const handleDropdownChange = (value: string) => {
-    setSelectedOption(value);
-  };
+    setSelectedOption(value)
+  }
 
   const subtitle =
     selectedOption === "Leave Status"
       ? "Leave Status Record"
       : selectedOption === "Attendance"
-      ? "Attendance Record"
-      : "Overtime Record";
+        ? "Attendance Record"
+        : "Overtime Record"
 
   return (
     <Card className={`flex-1 col-span-2 p-2 ${className}`}>
@@ -115,7 +118,7 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
       <CardContent className="mt-2 p-2">
         <ScrollArea className="h-[400px]">
           {selectedOption === "Leave Status" ? (
-            <LeaveStatusTable selectedLeaveStatus="ALL" />
+            <LeaveStatusTable selectedLeaveStatus="APPROVED_BY_TEAM_LEADER" />
           ) : selectedOption === "Attendance" ? (
             <RecentActivitiesTable tableData={attendanceData || []} />
           ) : selectedOption === "Overtime" ? (
@@ -126,5 +129,6 @@ export default function RecentActivitiesCard({ className }: RecentActivitiesCard
         </ScrollArea>
       </CardContent>
     </Card>
-  );
+  )
 }
+
