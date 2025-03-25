@@ -12,8 +12,13 @@ export type TAcceptOvertime = {
 	employeeId: number;
 	timeStamp: Date;
 	limitOvertime: number;
-	isAllowedOvertime: boolean;
-	isRejectedOvertime: boolean;
+	RequestOvertimeStatus:
+		| 'APPROVED_BY_ADMIN'
+		| 'APPROVED_BY_TEAM_LEADER'
+		| 'REJECTED_BY_ADMIN'
+		| 'REJECTED_BY_TEAM_LEADER'
+		| 'PENDING'
+		| 'NO_REQUEST';
 };
 
 export async function requestOvertime(body: TOvertimeRequest) {

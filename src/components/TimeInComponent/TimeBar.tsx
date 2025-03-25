@@ -32,7 +32,6 @@ export default function Timebar() {
 	const employeeAccessLevel = user?.accessLevel;
 
 	const [getIsLoading, setIsLoading] = useState<boolean>(false);
-	const [getCanProceed, setCanProceed] = useState<boolean>(false);
 
 	const mutateTime = useMutation({
 		mutationFn: async (fetchType: 'ClockIn' | 'ClockOut') => {
@@ -49,36 +48,32 @@ export default function Timebar() {
 					console.log('user is now clocking in');
 					return clockIn({ employeeId: employeeId, timeStamp: currentTime });
 
-				// when clocking out i should check the date if it is matching
 				case 'ClockOut':
-					// this should work i think
 					if (timeIn) {
 						if (!isSameDay(new Date(timeIn.createdAt), new Date())) {
-							toast.error('Invalid Clock Out ');
+							toast.error('Invalid Clock Out');
 							queryClient.invalidateQueries({ queryKey: ['UsersAttendance'] });
 							setUserClockStatus('Clock-Out');
-							setCanProceed(false);
+
 							throw new Error('Invalid Clock Out');
 						}
 					}
-
 					return clockOut({ employeeId: employeeId, timeStamp: currentTime });
 			}
 		},
 		onSuccess: async () => {
 			setIsLoading(false);
-			setCanProceed(true);
+
 			queryClient.invalidateQueries({ queryKey: ['UsersAttendance'] });
 		},
 		onError: (e: ErrorEvent) => {
 			setIsLoading(false);
 			console.error('An Error has occurred ' + e);
-			setCanProceed(false);
 		},
 	});
 
 	async function initModalValidations() {
-		if (getUserClockStatus() == 'Clock-Out') {
+		if (getUserClockStatus() == 'Clock-In') {
 			await closeConfirmation();
 			await confirmTimeIn();
 		} else {
@@ -107,11 +102,12 @@ export default function Timebar() {
 			cancelLabel: 'Cancel',
 			actionLabel: 'Continue',
 			onAction: async () => {
-				await mutateTime.mutate('ClockIn');
-				if (getCanProceed == true) {
-					setUserClockStatus('Clock-In');
-				}
-				setCanProceed(false);
+				await mutateTime.mutate('ClockIn', {
+					onSuccess: () => {
+						toast.success('User has Time In from the session');
+						setUserClockStatus('Clock-Out');
+					},
+				});
 			},
 			onCancel: () => {
 				console.log('Cancel TimeIn');
@@ -128,11 +124,8 @@ export default function Timebar() {
 			onAction: () => {
 				mutateTime.mutate('ClockOut', {
 					onSuccess: () => {
-						if (getCanProceed == true) {
-							toast.success('User has timeout from the session');
-							setUserClockStatus('Clock-Out');
-							setCanProceed(false);
-						}
+						toast.success('User has timeout from the session');
+						setUserClockStatus('Clock-In');
 					},
 				});
 			},
@@ -151,11 +144,8 @@ export default function Timebar() {
 			onAction: () => {
 				mutateTime.mutate('ClockOut', {
 					onSuccess: () => {
-						if (getCanProceed == true) {
-							toast.success('User has timeout from the session');
-							setUserClockStatus('Clock-Out');
-						}
-						setCanProceed(false);
+						toast.success('User has timeout from the session');
+						setUserClockStatus('Clock-In');
 					},
 				});
 			},
@@ -164,6 +154,10 @@ export default function Timebar() {
 			},
 		});
 	}
+
+	useEffect(() => {
+		console.log('useUserStore:', getUserClockStatus());
+	}, [getUserClockStatus]);
 
 	useEffect(() => {
 		evaluateAlarmType();
@@ -177,9 +171,10 @@ export default function Timebar() {
 		<header className="shadow-sm border-border bg-card border-solid border w-full rounded-md p-2 px-5 flex items-center justify-between">
 			<TimerDisplay />
 			<div className="flex gap-2">
-				{employeeAccessLevel != 'ADMIN' && (
+				{employeeAccessLevel !== 'ADMIN' && (
 					<>
-						<RequestLeaveButton /> <RequestOverTimeButton />
+						<RequestLeaveButton />
+						<RequestOverTimeButton />
 					</>
 				)}
 				<Button
@@ -187,16 +182,14 @@ export default function Timebar() {
 					disabled={getIsLoading}
 					onClick={initModalValidations}
 				>
-					{getUserClockStatus() === 'Clock-In' ? 'Clock-Out' : 'Clock-In'}
+					{getUserClockStatus()}
 					<Loader2
 						className={cn(
-							getIsLoading == false && 'hidden',
+							getIsLoading === false && 'hidden',
 							'animate-spin ml-1'
 						)}
 					/>
-					<Clock
-						className={cn(getIsLoading == true && 'hidden', 'ml-1')}
-					></Clock>
+					<Clock className={cn(getIsLoading === true && 'hidden', 'ml-1')} />
 				</Button>
 			</div>
 		</header>

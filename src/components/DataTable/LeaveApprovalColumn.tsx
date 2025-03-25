@@ -4,13 +4,12 @@ import { format } from 'date-fns';
 import { formatDate } from './DataColumns';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
-import { TAttendance } from '@/api/AttendanceAPI';
 import {
-	QueryClient,
-	useMutation,
-	useQueryClient,
-} from '@tanstack/react-query';
-import { handleOvertimeRequest, TAcceptOvertime } from '@/api/OvertimeAPI';
+	putAttendance,
+	TAttendance,
+	TPutRequestBody,
+} from '@/api/AttendanceAPI';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useConfirmationStore from '@/stores/GlobalAlertStore';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -33,7 +32,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 
 //
 
-export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
+export const LeaveApprovalColumn: ColumnDef<TAttendance>[] = [
 	{
 		id: 'select',
 		header: ({ table }) => (
@@ -98,7 +97,6 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 		header: 'Attendance Status',
 	},
 
-	{ accessorKey: 'limitOvertime', header: 'Requested Hours To Work' },
 	{
 		accessorKey: 'timeHoursWorked',
 		header: 'Net Work Hours',
@@ -126,8 +124,8 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 			const queryClient = useQueryClient();
 			// eslint-disable-next-line react-hooks/rules-of-hooks
 			const mutation = useMutation({
-				mutationFn: (body: TAcceptOvertime) =>
-					handleOvertimeRequest({
+				mutationFn: (body: TPutRequestBody) =>
+					putAttendance({
 						...body,
 					}),
 				onSettled: () => {
@@ -138,11 +136,17 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 					queryClient.invalidateQueries({ queryKey: ['AttendanceToday'] });
 					queryClient.invalidateQueries({ queryKey: ['Attendance'] });
 				},
+				onError: (error) => {
+					console.log(error);
+				},
 			});
 			const { openConfirmation, closeConfirmation } = useConfirmationStore();
 			const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
-			if (row.original.RequestOvertimeStatus == 'REJECTED_BY_TEAM_LEADER') {
+			if (
+				row.original.RequestLeaveStatus == 'REJECTED_BY_ADMIN' ||
+				row.original.RequestLeaveStatus == 'REJECTED_BY_TEAM_LEADER'
+			) {
 				return <Badge variant="destructive"> Rejected</Badge>;
 			} else {
 				return (
@@ -153,18 +157,16 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 								openConfirmation({
 									title: `Approve ${row.original.employee.firstName}  ${
 										row.original.employee.lastName + "'s"
-									} Overtime Request?`,
+									} Paid Leave Request?`,
 									description:
-										'Are you sure you would like to approve this overtime?',
+										'Are you sure you would like to approve this leave?',
 									cancelLabel: 'Cancel',
-									actionLabel: 'Approve Overtime',
+									actionLabel: 'Approve Leave',
 									onAction: () => {
 										setIsDisabled(true);
 										mutation.mutate({
-											employeeId: row.original.employeeId,
-											limitOvertime: row.original.limitOvertime,
-											timeStamp: new Date(),
-											RequestOvertimeStatus: 'APPROVED_BY_TEAM_LEADER',
+											RequestLeaveStatus: 'APPROVED_BY_TEAM_LEADER',
+											id: row.original.id,
 										});
 									},
 									onCancel: () => {
@@ -181,18 +183,15 @@ export const overtimeRequestColumns: ColumnDef<TAttendance>[] = [
 								openConfirmation({
 									title: `Reject  ${row.original.employee.firstName}  ${
 										row.original.employee.lastName + "'s"
-									} Overtime Request?`,
+									} Paid Leave Request?`,
 									description:
-										'By clicking reject overtime, you are rejecting the overtime of the employee in his attendance?',
+										'By clicking reject leave, you are rejecting the LEAVE of the employee in his attendance?',
 									cancelLabel: 'Cancel',
-									actionLabel: 'Reject Overtime',
+									actionLabel: 'Reject Leave',
 									onAction: () => {
 										setIsDisabled(true);
 										mutation.mutate({
-											employeeId: row.original.employeeId,
-											RequestOvertimeStatus: 'REJECTED_BY_TEAM_LEADER',
-											limitOvertime: row.original.limitOvertime,
-											timeStamp: new Date(),
+											RequestLeaveStatus: 'REJECTED_BY_TEAM_LEADER',
 										});
 									},
 									onCancel: () => {

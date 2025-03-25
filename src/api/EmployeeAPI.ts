@@ -1,7 +1,19 @@
-import { TEmployee } from '@/components/DataTable/DataColumns';
 import { axiosInstance } from '.';
 import { AxiosResponse } from 'axios';
 import { z } from 'zod';
+
+export interface TEmployee {
+	id: number;
+	departmentId: string | null;
+	accessLevel: string;
+	isActive: boolean;
+	username: string;
+	firstName: string;
+	lastName: string;
+	middleName: string;
+	role: string;
+	isAllowedRequestOvertime: boolean;
+}
 
 const formSchemaAddEmployee = z.object({
 	username: z

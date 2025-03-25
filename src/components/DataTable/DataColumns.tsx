@@ -1,14 +1,3 @@
-export interface TEmployee {
-	id: number;
-	departmentId: string | null;
-	accessLevel: string;
-	isActive: boolean;
-	username: string;
-	firstName: string;
-	lastName: string;
-	middleName: string;
-	role: string;
-}
 import { ArrowUpDown } from 'lucide-react';
 
 import {
@@ -26,7 +15,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import EditRole from '../TeamLeadComponents/DialogForms/EditRole';
 import RemoveDialog from '../TeamLeadComponents/DialogForms/RemovalDialog';
-import { deleteEmployee } from '@/api/EmployeeAPI';
+import { deleteEmployee, TEmployee } from '@/api/EmployeeAPI';
 import { useUserStore } from '@/stores/userStore';
 
 export function formatDate(date: Date): string {

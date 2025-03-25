@@ -1,5 +1,5 @@
 import { forwardRef, useState } from 'react';
-import { TEmployee } from '@/components/DataTable/DataColumns';
+import { TEmployee } from '@/api/EmployeeAPI';
 import { Button } from '@/components/ui/button';
 import {
 	Dialog,
@@ -101,7 +101,6 @@ const EditRole = forwardRef<HTMLDivElement, { employeeInfo: TEmployee }>(
 					}}
 				>
 					<p>Edit Role</p>
-
 				</div>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>

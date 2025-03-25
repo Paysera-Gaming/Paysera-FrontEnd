@@ -5,6 +5,7 @@ import {
 	UserCheck,
 	UsersIcon,
 	AlarmClockPlus,
+	DoorOpen,
 } from 'lucide-react';
 import { Icons } from '@/icons/Icon';
 // router
@@ -31,6 +32,7 @@ function RouteItems({ links, routeNames }: RouteItemProps): ReactNode {
 		<Calendar></Calendar>,
 		<UsersIcon></UsersIcon>,
 		<AlarmClockPlus></AlarmClockPlus>,
+		<DoorOpen></DoorOpen>,
 	];
 
 	const routes = links.map((link, index) => {
@@ -97,6 +99,7 @@ export default function CollapsableNavigation() {
 		'schedule',
 		'personal',
 		'overtime',
+		'leave',
 	];
 
 	const routeNames: string[] = [
@@ -106,6 +109,7 @@ export default function CollapsableNavigation() {
 		'Role Schedules',
 		'Personal Schedules',
 		'Overtime Approval',
+		'Leave Approval',
 	];
 
 	return (

@@ -15,6 +15,7 @@ export type TAttendance = {
 		lastName: string;
 		middleName: string;
 		role: string;
+		isAllowedRequestOvertime: boolean;
 	};
 
 	status: string;
@@ -38,9 +39,58 @@ export type TAttendance = {
 	updatedAt: string;
 
 	//  overtime approval
+	RequestOvertimeStatus:
+		| 'APPROVED_BY_ADMIN'
+		| 'APPROVED_BY_TEAM_LEADER'
+		| 'REJECTED_BY_ADMIN'
+		| 'REJECTED_BY_TEAM_LEADER'
+		| 'PENDING'
+		| 'NO_REQUEST';
+
+	//leave status
+	RequestLeaveStatus:
+		| 'APPROVED_BY_ADMIN'
+		| 'APPROVED_BY_TEAM_LEADER'
+		| 'REJECTED_BY_ADMIN'
+		| 'REJECTED_BY_TEAM_LEADER'
+		| 'PENDING'
+		| 'NO_REQUEST';
+};
+
+export type TPutRequestBody = {
+	id: number;
+	RequestLeaveStatus:
+		| 'APPROVED_BY_ADMIN'
+		| 'APPROVED_BY_TEAM_LEADER'
+		| 'REJECTED_BY_ADMIN'
+		| 'REJECTED_BY_TEAM_LEADER'
+		| 'PENDING'
+		| 'NO_REQUEST';
+};
+
+export type TAttendancePostRequestBody = {
+	employeeId: number;
+	date: string;
+	status: 'DONE' | 'PAID_LEAVE' | 'ONGOING';
+	scheduleType: 'FIXED' | 'SUPER_FLEXI' | 'FLEXI';
+	timeIn: string;
+	timeOut: string;
 	isAllowedOvertime: boolean;
-	isRequestingOvertime: boolean;
-	isRejectedOvertime: boolean;
+	overtimeTotal: number;
+	RequestOverTimeStatus:
+		| 'APPROVED_BY_ADMIN'
+		| 'APPROVED_BY_TEAM_LEADER'
+		| 'REJECTED_BY_ADMIN'
+		| 'REJECTED_BY_TEAM_LEADER'
+		| 'PENDING'
+		| 'NO_REQUEST';
+	RequestLeaveStatus:
+		| 'APPROVED_BY_ADMIN'
+		| 'APPROVED_BY_TEAM_LEADER'
+		| 'REJECTED_BY_ADMIN'
+		| 'REJECTED_BY_TEAM_LEADER'
+		| 'PENDING'
+		| 'NO_REQUEST';
 };
 
 export async function getAttendance(
@@ -61,4 +111,25 @@ export async function getAttendanceToday(
 	);
 
 	return response.data;
+}
+
+export async function putAttendance(body: TPutRequestBody) {
+	console.log(body.id);
+	console.log(`/api/attendance/${body.id}`);
+
+	const { status } = await axiosInstance.put<TAttendance>(
+		`/api/attendance/${body.id}`,
+		{ RequestLeaveStatus: body.RequestLeaveStatus }
+	);
+
+	return status;
+}
+
+export async function postAttendance(body: TAttendancePostRequestBody) {
+	const { status } = await axiosInstance.post<TAttendance>(
+		`/api/attendance`,
+		body
+	);
+
+	return status;
 }

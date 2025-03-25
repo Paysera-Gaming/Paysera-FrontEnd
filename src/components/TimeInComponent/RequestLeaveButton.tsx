@@ -1,25 +1,40 @@
-import { requestOvertime } from '@/api/OvertimeAPI';
 import { Button } from '@/components/ui/button';
 import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
-	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 
 import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from '@/components/ui/popover';
+
+import { formatDistanceStrict } from 'date-fns';
+
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
+
+import { Calendar } from '@/components/ui/calendar';
+import { useNavigate } from 'react-router-dom';
+import {
+	Form,
+	FormControl,
+	FormDescription,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from '@/components/ui/form';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
 import { useUserStore } from '@/stores/userStore.ts';
 import { cn } from '@/lib/utils';
 import { useMutation } from '@tanstack/react-query';
@@ -27,46 +42,125 @@ import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-// get
-// get attendance today
-// get attendance that requests overtime
-// team lead can edit the requested overtime hours
-// after that approve or reject`
-// teamlead can descerne if the request is rejected or not
+import { postAttendance } from '@/api/AttendanceAPI';
 
-export function RequestLeaveButton() {
-	const [getHours, setHours] = useState<number>(0);
+// this should get the start and end of the date of this leave
 
-	const [isOpen, setIsOpen] = useState<boolean>(false);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
-	function handleSubmit() {
-		setIsLoading(true);
-		mutation.mutate();
+const formSchema = z.object({
+	startDate: z.string({
+		required_error: 'Start date is required',
+	}),
+	endDate: z.string({
+		required_error: 'End date is required',
+	}),
+});
+
+function ittirateDates(
+	numberOfDays: number,
+	startingDate: Date,
+	hours: number
+) {
+	const dates = [];
+	// This will loop through the number of days and  create a new date and copy the hours
+	// and pushes the date
+	for (let index = 0; index < numberOfDays + 1; index++) {
+		const interatingDate = new Date(startingDate);
+		interatingDate.setDate(startingDate.getDate() + index);
+		interatingDate.setHours(hours);
+
+		dates.push(interatingDate);
 	}
 
-	const employeeId = useUserStore.getState().user?.id;
+	return dates;
+}
 
-	const mutation = useMutation({
-		mutationFn: () => {
-			console.log(employeeId);
-
-			if (employeeId === undefined) {
-				throw new Error('Employee ID is undefined');
-			}
-			return requestOvertime({
-				employeeId: employeeId,
-				timeStamp: new Date(),
-				limitOvertime: getHours,
-			});
-		},
-		onSuccess: () => {
-			toast.success('Request for overtime has successfully submitted');
-		},
-		onSettled: () => {
-			setIsLoading(false);
-			setIsOpen(false);
+export function RequestLeaveButton() {
+	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const navigate = useNavigate();
+	const user = useUserStore.getState().getUser();
+	const form = useForm<z.infer<typeof formSchema>>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			startDate: undefined,
+			endDate: undefined,
 		},
 	});
+	const departmentSchedule = user?.departmentSchedule;
+
+	const mutation = useMutation({
+		mutationFn: (payLoad: { startDate: string; endDate: string }) => {
+			if (
+				user == undefined ||
+				departmentSchedule?.Schedule.scheduleType == undefined
+			) {
+				console.log('Employee ID is undefined at check');
+				navigate('/login');
+				throw new Error('Employee ID is undefined');
+			}
+
+			// Perform the mutation logic here
+			return postAttendance({
+				employeeId: user.id,
+				date: payLoad.startDate,
+				status: 'PAID_LEAVE',
+				scheduleType: departmentSchedule?.Schedule.scheduleType,
+				timeIn: payLoad.startDate,
+				timeOut: payLoad.endDate,
+				isAllowedOvertime: false,
+				overtimeTotal: 0,
+				RequestOverTimeStatus: 'NO_REQUEST',
+				RequestLeaveStatus: 'PENDING',
+			});
+		},
+	});
+
+	function handleSubmit(data: z.infer<typeof formSchema>) {
+		console.log(data);
+
+		const dateSpan = formatDistanceStrict(
+			new Date(data.startDate),
+			new Date(data.endDate),
+			{
+				addSuffix: false,
+				unit: 'day',
+			}
+		);
+		// regex magic bitch
+		const sanitizedDateSpan = dateSpan.replace(/\D+/g, '');
+
+		const startDates = ittirateDates(
+			Number(sanitizedDateSpan),
+			new Date(data.startDate),
+			0
+		);
+
+		const endDates = ittirateDates(
+			Number(sanitizedDateSpan),
+			new Date(data.startDate),
+			9
+		);
+
+		setIsLoading(true);
+
+		startDates.map((date, index) => {
+			mutation.mutate(
+				{
+					startDate: date.toISOString(),
+					endDate: endDates[index].toISOString(),
+				},
+				{
+					onSuccess: () => {
+						toast.success('Request for Leave has successfully submitted');
+						setIsOpen(false);
+					},
+					onSettled: () => {
+						setIsLoading(false);
+					},
+				}
+			);
+		});
+	}
 
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -75,48 +169,102 @@ export function RequestLeaveButton() {
 					Request Leave
 				</Button>
 			</DialogTrigger>
-			<DialogContent className="sm:max-w-[425px]">
+			<DialogContent className="sm:max-w-[425px] left-[50%] top-[20%] ">
 				<DialogHeader>
-					<DialogTitle>Requesting of overtime form</DialogTitle>
+					<DialogTitle>Requesting Leave form</DialogTitle>
 					<DialogDescription>
-						Select the amount of hours to render for your request. Click submit
-						when you're done.
+						You are about to create a Leave Form. Make sure to fill out all the
+						necessary information accurately.
 					</DialogDescription>
 				</DialogHeader>
 
-				<Label htmlFor="name" className="">
-					How many hours to render
-				</Label>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(handleSubmit)}>
+						<FormField
+							control={form.control}
+							name="startDate"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Leave Starts At:</FormLabel>
+									<FormControl>
+										<Popover>
+											<PopoverTrigger asChild>
+												<Button
+													variant={'outline'}
+													className={cn(
+														'w-[240px] justify-start text-left font-normal',
+														!field.value && 'text-muted-foreground'
+													)}
+												>
+													<CalendarIcon />
+													{field.value ? (
+														format(new Date(field.value), 'PPP')
+													) : (
+														<span>Pick a date</span>
+													)}
+												</Button>
+											</PopoverTrigger>
+											<PopoverContent className="w-auto p-0" align="start">
+												<Calendar
+													mode="single"
+													selected={
+														field.value ? new Date(field.value) : undefined
+													}
+													onSelect={(date) =>
+														field.onChange(date ? date.toISOString() : '')
+													}
+													initialFocus
+												/>
+											</PopoverContent>
+										</Popover>
+									</FormControl>
+								</FormItem>
+							)}
+						/>
 
-				<div className="flex gap-2">
-					<Select onValueChange={(value) => setHours(Number(value))}>
-						<SelectTrigger
-							className="w-[280export function RequestLeaveButton() {
-px]"
-						>
-							<SelectValue placeholder="Select hours to render on overtime" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectGroup>
-								<SelectLabel>Available hours</SelectLabel>
-								<SelectItem value="1">1</SelectItem>
-								<SelectItem value="2">2</SelectItem>
-								<SelectItem value="3">3</SelectItem>
-								<SelectItem value="4">4</SelectItem>
-								<SelectItem value="5">5</SelectItem>
-								<SelectItem value="6">6</SelectItem>
-								<SelectItem value="7">7</SelectItem>
-								<SelectItem value="8">8</SelectItem>
-							</SelectGroup>
-						</SelectContent>
-					</Select>
+						<FormField
+							control={form.control}
+							name="endDate"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Leave Ends At:</FormLabel>
+									<FormControl>
+										<Popover>
+											<PopoverTrigger asChild>
+												<Button
+													variant={'outline'}
+													className={cn(
+														'w-[240px] justify-start text-left font-normal',
+														!field.value && 'text-muted-foreground'
+													)}
+												>
+													<CalendarIcon />
+													{field.value ? (
+														format(field.value, 'PPP')
+													) : (
+														<span>Pick a date</span>
+													)}
+												</Button>
+											</PopoverTrigger>
+											<PopoverContent className="w-auto p-0" align="start">
+												<Calendar
+													mode="single"
+													selected={
+														field.value ? new Date(field.value) : undefined
+													}
+													onSelect={(date) =>
+														field.onChange(date ? date.toISOString() : '')
+													}
+													initialFocus
+												/>
+											</PopoverContent>
+										</Popover>
+									</FormControl>
+								</FormItem>
+							)}
+						/>
 
-					<DialogFooter>
-						<Button
-							onClick={handleSubmit}
-							disabled={getHours == 0 || isLoading}
-							type="submit"
-						>
+						<Button type="submit" className="mt-2" disabled={isLoading}>
 							<Loader2
 								className={cn(
 									isLoading == false && 'hidden',
@@ -125,8 +273,8 @@ px]"
 							/>
 							Submit
 						</Button>
-					</DialogFooter>
-				</div>
+					</form>
+				</Form>
 			</DialogContent>
 		</Dialog>
 	);

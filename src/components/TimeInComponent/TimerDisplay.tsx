@@ -80,9 +80,9 @@ export default function TimerDisplay() {
 		let convertedToSecond = 0;
 		if (isSuccess && data) {
 			if (data.status === 'ONGOING') {
-				useUserStore.getState().setUserClockStatus('Clock-In');
-			} else {
 				useUserStore.getState().setUserClockStatus('Clock-Out');
+			} else {
+				useUserStore.getState().setUserClockStatus('Clock-In');
 			}
 
 			console.log(data);
@@ -105,6 +105,8 @@ export default function TimerDisplay() {
 				setTime(convertedToSecond);
 				return;
 			}
+		} else {
+			useUserStore.getState().setUserClockStatus('Clock-In');
 		}
 	}, [isSuccess, data]);
 

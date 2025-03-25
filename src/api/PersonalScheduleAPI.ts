@@ -1,4 +1,4 @@
-import { TEmployee } from '@/components/DataTable/DataColumns';
+import { TEmployee } from './EmployeeAPI';
 import { TSchedule } from './ScheduleAPI';
 
 import { axiosInstance } from '.';

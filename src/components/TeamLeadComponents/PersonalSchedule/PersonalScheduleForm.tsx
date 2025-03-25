@@ -33,7 +33,7 @@ import { TimePicker } from '@/components/ui/time-picker';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { TEmployee } from '@/components/DataTable/DataColumns';
+import { TEmployee } from '@/api/EmployeeAPI';
 import { toast } from 'sonner';
 import { useContext } from 'react';
 import { PersonalScheduleContext } from '@/stores/context';

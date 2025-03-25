@@ -2,14 +2,21 @@ import { Presentation } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { ScrollArea } from '../ui/scroll-area';
 import { getAnnouncements } from '@/api/CommonsAPI';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Skeleton } from '../ui/skeleton';
+import { useWebSocket } from '@/hooks/useWebSocket';
 
 export default function NoticeBoardCard() {
 	// fetch the holidays here
 	const { data, isError, isLoading, isSuccess } = useQuery({
 		queryKey: ['AnnouncementQuery'],
 		queryFn: getAnnouncements,
+	});
+
+	const queryClient = useQueryClient();
+	useWebSocket('announcements', () => {
+		// this will invalidate old queries and get new queries
+		queryClient.invalidateQueries({ queryKey: ['AnnouncementQuery'] });
 	});
 
 	if (isLoading) {

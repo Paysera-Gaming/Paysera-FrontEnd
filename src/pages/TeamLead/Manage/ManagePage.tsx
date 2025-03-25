@@ -1,7 +1,7 @@
 import { employeeColumns } from '@/components/DataTable/DataColumns';
 import { DataTable } from '@/components/DataTable/DataTableProvider';
 
-import { TEmployee } from '@/components/DataTable/DataColumns';
+import { TEmployee } from '@/api/EmployeeAPI';
 import AddEmployee from '@/components/TeamLeadComponents/DialogForms/AddEmployee';
 import { useQuery } from '@tanstack/react-query';
 import { getAllEmployeesInDepartment } from '../../../api/EmployeeAPI';

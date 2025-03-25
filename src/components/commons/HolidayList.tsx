@@ -1,9 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { getHolidays, IHoliday } from '@/api/CommonsAPI';
 import { Skeleton } from '../ui/skeleton';
 import { ScrollArea } from '../ui/scroll-area';
 import { addMonths } from 'date-fns';
+import { useWebSocket } from '@/hooks/useWebSocket';
 
 function addZero(digit: number) {
 	if (digit < 10 && digit > 0) {
@@ -42,6 +43,12 @@ export default function HolidayList() {
 
 	const date = new Date();
 	const nextMonth = addMonths(date, 1);
+
+	const queryClient = useQueryClient();
+	useWebSocket('holidays', () => {
+		// this will invalidate old queries and get new queries
+		queryClient.invalidateQueries({ queryKey: ['holidayQuery'] });
+	});
 
 	if (isLoading) {
 		return <Skeleton className=""></Skeleton>;

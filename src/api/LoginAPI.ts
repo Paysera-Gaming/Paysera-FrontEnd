@@ -17,6 +17,7 @@ export type TUserInfo = {
 	departmentName: string;
 	departmentSchedule: TDepartmentSchedules | undefined;
 	personalSchedule: TPersonalSchedule | undefined;
+	isAllowedRequestOvertime: boolean;
 };
 
 export async function login(

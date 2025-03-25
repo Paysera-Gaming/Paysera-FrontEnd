@@ -31,17 +31,21 @@ import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '../ui/input';
 import useConfirmationStore from '@/stores/GlobalAlertStore.ts';
-import { handleOvertimeRequest, TAcceptOvertime } from '@/api/OvertimeAPI';
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { TAttendance } from '@/api/AttendanceAPI';
+import {
+	putAttendance,
+	TAttendance,
+	TPutRequestBody,
+} from '@/api/AttendanceAPI';
 
 interface DataTableProps {
 	columns: ColumnDef<TAttendance, unknown>[];
 	data: TAttendance[];
 }
 
-export function OverTimeApprovalTable({ columns, data }: DataTableProps) {
+export function LeaveRequestTable({ columns, data }: DataTableProps) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[]
@@ -75,9 +79,10 @@ export function OverTimeApprovalTable({ columns, data }: DataTableProps) {
 	});
 
 	const handleOvertimeMutation = useMutation({
-		mutationFn: (body: TAcceptOvertime) =>
-			handleOvertimeRequest({
-				...body,
+		mutationFn: (body: TPutRequestBody) =>
+			putAttendance({
+				id: body.id,
+				RequestLeaveStatus: body.RequestLeaveStatus,
 			}),
 		onError: (error) => {
 			toast.error('An Error has occured please check the logs');
@@ -89,10 +94,8 @@ export function OverTimeApprovalTable({ columns, data }: DataTableProps) {
 		table.getFilteredSelectedRowModel().rows.forEach((row) => {
 			handleOvertimeMutation.mutate(
 				{
-					employeeId: row.original.employeeId,
-					limitOvertime: row.original.limitOvertime,
-					timeStamp: new Date(),
-					RequestOvertimeStatus: 'APPROVED_BY_TEAM_LEADER',
+					id: row.original.employeeId,
+					RequestLeaveStatus: 'APPROVED_BY_TEAM_LEADER',
 				},
 				{
 					onSuccess: () => {
@@ -110,10 +113,8 @@ export function OverTimeApprovalTable({ columns, data }: DataTableProps) {
 		table.getFilteredSelectedRowModel().rows.forEach((row) => {
 			handleOvertimeMutation.mutate(
 				{
-					employeeId: row.original.employeeId,
-					limitOvertime: row.original.limitOvertime,
-					timeStamp: new Date(),
-					RequestOvertimeStatus: 'REJECTED_BY_TEAM_LEADER',
+					id: row.original.employeeId,
+					RequestLeaveStatus: 'REJECTED_BY_TEAM_LEADER',
 				},
 				{
 					onSuccess: () => {

@@ -1,15 +1,16 @@
 import { getAttendanceToday, TAttendance } from '@/api/AttendanceAPI';
-import { overtimeRequestColumns } from '@/components/DataTable/OverTimeApprovalColumn';
-import { OverTimeApprovalTable } from '@/components/DataTable/OverTimeApprovalTable';
+import { LeaveApprovalColumn } from '@/components/DataTable/LeaveApprovalColumn';
+import { LeaveRequestTable } from '@/components/DataTable/LeaveRequestTable';
+
 import ErrorDisplay from '@/components/ErrorComponent/ErrorDisplay';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useUserStore } from '@/stores/userStore';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-export default function OvertimePage() {
+export default function LeavePage() {
 	const { data, isError, isLoading } = useQuery({
-		queryKey: ['AttendanceToday'],
+		queryKey: ['LeaveRequest'],
 		queryFn: () => {
 			const user = useUserStore.getState().getUser();
 			const departmentId = user?.departmentId;
@@ -21,7 +22,9 @@ export default function OvertimePage() {
 			}
 		},
 		select: (data) =>
-			data.filter((user) => user.RequestOvertimeStatus == 'PENDING'),
+			data.filter(
+				(attendance) => attendance.RequestLeaveStatus != 'NO_REQUEST'
+			),
 	});
 
 	const queryClient = useQueryClient();
@@ -57,13 +60,12 @@ export default function OvertimePage() {
 	return (
 		<div className=" min-h-0 min-w-0 w-full h-full border-border border-solid border p-5 rounded-md">
 			<h2 className="scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0 mb-5">
-				Overtime Approval
+				Leave Request
 			</h2>
-
-			<OverTimeApprovalTable
+			<LeaveRequestTable
 				data={data as TAttendance[]}
-				columns={overtimeRequestColumns}
-			></OverTimeApprovalTable>
+				columns={LeaveApprovalColumn}
+			></LeaveRequestTable>
 		</div>
 	);
 }

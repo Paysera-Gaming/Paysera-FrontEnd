@@ -39,9 +39,21 @@ export function RequestOverTimeButton() {
 
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const employeeAllowedToOvertime =
+		useUserStore.getState().user?.isAllowedRequestOvertime;
+
 	function handleSubmit() {
 		setIsLoading(true);
-		mutation.mutate();
+		// check if user is valid for said overtime
+		if (!employeeAllowedToOvertime) {
+			toast.warning('You are not permitted to have an overtime');
+			console.log(employeeAllowedToOvertime);
+			setIsLoading(false);
+			setIsOpen(false);
+			return;
+		} else {
+			mutation.mutate();
+		}
 	}
 
 	const employeeId = useUserStore.getState().user?.id;
