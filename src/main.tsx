@@ -38,6 +38,13 @@ import SuperAuditorHolidayDashboard from './pages/SuperAuditor/Holiday/SuperAudi
 import SuperAuditorEmployeeDashboard from './pages/SuperAuditor/Employee/SuperAuditorEmployeeDashboard';
 import SuperAuditorDepartmentDashboard from './pages/SuperAuditor/Department/SuperAuditorDepartmentDashboard';
 import SuperAuditorAttendanceDashboard from './pages/SuperAuditor/Attendance/AttendanceDashboard';
+import AuditorPage from './pages/Auditor/AuditorPage';
+import AuditorDashboardPage from './pages/Auditor/Dashboard/DashboardPage';
+import AuditorAnnouncementDashboard from './pages/Auditor/Announcement/AuditorAnnouncementDashboard'; 
+import AuditorHolidayDashboard from './pages/Auditor/Holiday/AuditorHolidayDashboard'; 
+import AuditorEmployeeDashboard from './pages/Auditor/Employee/AuditorEmployeeDashboard'; 
+import AuditorDepartmentDashboard from './pages/Auditor/Department/AuditorDepartmentDashboard'; 
+import AuditorAttendanceDashboard from './pages/Auditor/Attendance/AttendanceDashboard';
 
 import './index.css';
 import PersonalSchedulePage from './pages/TeamLead/Personal_Schedule/PersonalSchedulePage';
@@ -57,101 +64,111 @@ const queryClient = new QueryClient({
 });
 
 const router = createBrowserRouter([
-	{
-		path: '/',
-		element: <></>,
-		children: [{ index: true, loader: () => redirect('/login') }],
-	},
-	{
-		path: '/experimental',
-		element: <ExperimentalPage></ExperimentalPage>,
-	},
-	{
-		path: '/login',
-		element: <LoginPage />,
-	},
-	{
-		path: '/forgot-password',
-		element: <ForgotPasswordPage />,
-	},
-	{
-		path: '/reset-password', // Add the reset-password route
-		element: <ResetPasswordPage />,
-	},
-	{
-		path: '/employee',
-		element: (
-			<ProtectedRoute page={<EmployeePage />} requiredLevel="EMPLOYEE" />
-		),
-		children: [
-			{ index: true, loader: async () => redirect('/employee/dashboard') },
-			{ path: 'dashboard', element: <EmployeeDashboardPage /> },
-			{ path: 'request', element: <RequestPage /> },
-		],
-	},
-	{
-		path: '/teamlead',
-		element: (
-			// <TeamLeadPage />
-			<ProtectedRoute page={<TeamLeadPage />} requiredLevel="TEAM_LEADER" />
-		),
-		children: [
-			{ index: true, loader: async () => redirect('/teamlead/dashboard') },
-			{ path: 'dashboard', element: <TeamLeadDashboardPage /> },
-			{ path: 'manage', element: <ManagePage /> },
-			{ path: 'schedule', element: <SchedulePage /> },
-			{ path: 'attendance', element: <AttendancePage /> },
-			{
-				path: 'personal',
-				element: <PersonalSchedulePage />,
-			},
-			{
-				path: 'overtime',
-				element: <OvertimePage />,
-			},
-			{
+
+    {
+        path: '/',
+        element: <></>,
+        children: [{ index: true, loader: () => redirect('/login') }],
+    },
+    {
+        path: '/experimental',
+        element: <ExperimentalPage></ExperimentalPage>,
+    },
+    {
+        path: '/login',
+        element: <LoginPage />,
+    },
+    {
+        path: '/forgot-password',
+        element: <ForgotPasswordPage />,
+    },
+    {
+        path: '/reset-password', // Add the reset-password route
+        element: <ResetPasswordPage />,
+    },
+    {
+        path: '/employee',
+        element: (
+            <ProtectedRoute page={<EmployeePage />} requiredLevel="EMPLOYEE" />
+        ),
+        children: [
+            { index: true, loader: async () => redirect('/employee/dashboard') },
+            { path: 'dashboard', element: <EmployeeDashboardPage /> },
+            { path: 'request', element: <RequestPage /> },
+        ],
+    },
+    {
+        path: '/teamlead',
+        element: (
+            // <TeamLeadPage />
+            <ProtectedRoute page={<TeamLeadPage />} requiredLevel="TEAM_LEADER" />
+        ),
+        children: [
+            { index: true, loader: async () => redirect('/teamlead/dashboard') },
+            { path: 'dashboard', element: <TeamLeadDashboardPage /> },
+            { path: 'manage', element: <ManagePage /> },
+            { path: 'schedule', element: <SchedulePage /> },
+            { path: 'attendance', element: <AttendancePage /> },
+            {
+                path: 'personal',
+                element: <PersonalSchedulePage />,
+            },
+            {
+                path: 'overtime',
+                element: <OvertimePage />,
+            },
+          		{
 				path: 'leave',
 				element: <LeavePage />,
 			},
-		],
-	},
-	{
-		path: '/superadmin',
-		element: <ProtectedRoute page={<SuperAdminPage />} requiredLevel="ADMIN" />,
-		children: [
-			{ index: true, loader: async () => redirect('/superadmin/dashboard') },
-			{ path: 'dashboard', element: <SuperAdminDashboardPage /> },
-			{ path: 'announcement', element: <SuperAdminAnnouncementDashboard /> },
-			{ path: 'holidays', element: <SuperAdminHolidayDashboard /> },
-			{ path: 'schedule', element: <SchedulePage /> },
-			{ path: 'attendance', element: <AttendanceDashboard /> },
-			{ path: 'employee', element: <SuperAdminEmployeeDashboard /> },
-			{ path: 'departments', element: <SuperAdminDepartmentDashboard /> },
-		],
-	},
-	{
-		path: '/superauditor',
-		element: (
-			<ProtectedRoute
-				page={<SuperAuditorPage />}
-				requiredLevel="SUPER_AUDITOR"
-			/>
-		), // Updated to SUPER_AUDITOR
-		children: [
-			{ index: true, loader: async () => redirect('/superauditor/dashboard') },
-			{ path: 'dashboard', element: <SuperAuditorDashboardPage /> },
-			{ path: 'announcement', element: <SuperAuditorAnnouncementDashboard /> },
-			{ path: 'holidays', element: <SuperAuditorHolidayDashboard /> },
-			{ path: 'schedule', element: <SchedulePage /> },
-			{ path: 'attendance', element: <SuperAuditorAttendanceDashboard /> },
-			{ path: 'employee', element: <SuperAuditorEmployeeDashboard /> },
-			{ path: 'departments', element: <SuperAuditorDepartmentDashboard /> },
-		],
-	},
-	{
-		path: '*',
-		loader: () => redirect('/login'),
-	},
+        ],
+    },
+    {
+        path: '/superadmin',
+        element: <ProtectedRoute page={<SuperAdminPage />} requiredLevel="ADMIN" />,
+        children: [
+            { index: true, loader: async () => redirect('/superadmin/dashboard') },
+            { path: 'dashboard', element: <SuperAdminDashboardPage /> },
+            { path: 'announcement', element: <SuperAdminAnnouncementDashboard /> },
+            { path: 'holidays', element: <SuperAdminHolidayDashboard /> },
+            { path: 'schedule', element: <SchedulePage /> },
+            { path: 'attendance', element: <AttendanceDashboard /> },
+            { path: 'employee', element: <SuperAdminEmployeeDashboard /> },
+            { path: 'departments', element: <SuperAdminDepartmentDashboard /> },
+        ],
+    },
+    {
+        path: '/superauditor',
+        element: <ProtectedRoute page={<SuperAuditorPage />} requiredLevel="SUPER_AUDITOR" />, // Updated to SUPER_AUDITOR
+        children: [
+            { index: true, loader: async () => redirect('/superauditor/dashboard') },
+            { path: 'dashboard', element: <SuperAuditorDashboardPage /> },
+            { path: 'announcement', element: <SuperAuditorAnnouncementDashboard /> },
+            { path: 'holidays', element: <SuperAuditorHolidayDashboard /> },
+            { path: 'schedule', element: <SchedulePage /> },
+            { path: 'attendance', element: <SuperAuditorAttendanceDashboard /> },
+            { path: 'employee', element: <SuperAuditorEmployeeDashboard /> },
+            { path: 'departments', element: <SuperAuditorDepartmentDashboard /> },
+        ],
+    },
+    {
+        path: '/auditor',
+        element: <ProtectedRoute page={<AuditorPage />} requiredLevel="AUDITOR" />, // Added AUDITOR route
+        children: [
+            { index: true, loader: async () => redirect('/auditor/dashboard') },
+            { path: 'dashboard', element: <AuditorDashboardPage /> },
+            { path: 'announcement', element: <AuditorAnnouncementDashboard /> },
+            { path: 'holidays', element: <AuditorHolidayDashboard /> },
+            { path: 'schedule', element: <SchedulePage /> },
+            { path: 'attendance', element: <AuditorAttendanceDashboard /> },
+            { path: 'employee', element: <AuditorEmployeeDashboard /> },
+            { path: 'departments', element: <AuditorDepartmentDashboard /> },
+        ],
+    },
+    {
+        path: '*',
+        loader: () => redirect('/login'),
+    },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

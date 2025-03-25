@@ -18,7 +18,7 @@ interface EmployeeTableProps {
 
 const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const employeesPerPage = 5;
+  const employeesPerPage = 9;
 
   const formatAccessLevel = (accessLevel: string) => {
     return accessLevel.replace(/_/g, " ");

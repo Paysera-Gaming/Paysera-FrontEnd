@@ -1,12 +1,12 @@
-import type React from "react"
-import { useState } from "react"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { fetchDepartments, fetchTeamLeaders, deleteDepartment, type Department, type Leader } from "./api"
-import DepartmentForm from "./DepartmentForm"
-import DepartmentDetails from "./DepartmentDetails"
-import SearchBar from "./SearchBar"
-import DepartmentTable from "./DepartmentTable"
-import { Button } from "@/components/ui/button"
+import type React from "react";
+import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchDepartments, fetchTeamLeaders, deleteDepartment, type Department, type Leader } from "./api";
+import DepartmentForm from "./DepartmentForm";
+import DepartmentDetails from "./DepartmentDetails";
+import SearchBar from "./SearchBar";
+import DepartmentTable from "./DepartmentTable";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -14,92 +14,96 @@ import {
   DialogTitle,
   DialogFooter,
   DialogDescription,
-} from "@/components/ui/dialog"
-import { toast } from "sonner"
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 const DepartmentList: React.FC = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const { data: departments = [] } = useQuery<Department[]>({
     queryKey: ["departments"],
     queryFn: fetchDepartments,
-  })
+  });
   const { data: teamLeaders = [] } = useQuery<Leader[]>({
     queryKey: ["teamLeaders"],
     queryFn: fetchTeamLeaders,
-  })
+  });
 
-  const [editingDepartment, setEditingDepartment] = useState<Department | null>(null)
-  const [viewingDepartment, setViewingDepartment] = useState<Department | null>(null)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
-  const departmentsPerPage = 10
+  useEffect(() => {
+    console.log("Team Leaders without a department:", teamLeaders);
+  }, [teamLeaders]);
+
+  const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
+  const [viewingDepartment, setViewingDepartment] = useState<Department | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const departmentsPerPage = 10;
 
   const deleteDepartmentMutation = useMutation({
     mutationFn: deleteDepartment,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["departments"] })
-      toast.success("Successfully deleted the department")
+      queryClient.invalidateQueries({ queryKey: ["departments"] });
+      toast.success("Successfully deleted the department");
     },
     onError: () => {
-      toast.error("Error deleting the department")
+      toast.error("Error deleting the department");
     },
-  })
+  });
 
   const handleEditDepartment = (department: Department) => {
-    setEditingDepartment(department)
-  }
+    setEditingDepartment(department);
+  };
 
   const handleDeleteDepartment = (department: Department) => {
-    setSelectedDepartment(department)
-    setIsDialogOpen(true)
-  }
+    setSelectedDepartment(department);
+    setIsDialogOpen(true);
+  };
 
   const handleConfirmDelete = () => {
     if (selectedDepartment) {
-      deleteDepartmentMutation.mutate(selectedDepartment.id)
-      setIsDialogOpen(false)
+      deleteDepartmentMutation.mutate(selectedDepartment.id);
+      setIsDialogOpen(false);
     }
-  }
+  };
 
   const handleViewDepartment = (department: Department) => {
-    setViewingDepartment(department)
-  }
+    setViewingDepartment(department);
+  };
 
   const handleBackToList = () => {
-    setViewingDepartment(null)
-  }
+    setViewingDepartment(null);
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value)
-  }
+    setSearchQuery(e.target.value);
+  };
 
   const filteredDepartments = departments.filter((department) => {
-    const searchLower = searchQuery.toLowerCase()
-    const departmentNameMatch = department.name.toLowerCase().includes(searchLower)
+    const searchLower = searchQuery.toLowerCase();
+    const departmentNameMatch = department.name.toLowerCase().includes(searchLower);
     const leaderMatch = department.Leader
       ? `${department.Leader.firstName} ${department.Leader.lastName}`.toLowerCase().includes(searchLower)
-      : false
+      : false;
     const membersMatch = department.Employees
       ? department.Employees.some((employee) =>
           `${employee.firstName} ${employee.lastName}`.toLowerCase().includes(searchLower),
         )
-      : false
-    return departmentNameMatch || leaderMatch || membersMatch
-  })
+      : false;
+    return departmentNameMatch || leaderMatch || membersMatch;
+  });
 
-  const indexOfLastDepartment = currentPage * departmentsPerPage
-  const indexOfFirstDepartment = indexOfLastDepartment - departmentsPerPage
-  const currentDepartments = filteredDepartments.slice(indexOfFirstDepartment, indexOfLastDepartment)
-  const totalPages = Math.ceil(filteredDepartments.length / departmentsPerPage)
+  const indexOfLastDepartment = currentPage * departmentsPerPage;
+  const indexOfFirstDepartment = indexOfLastDepartment - departmentsPerPage;
+  const currentDepartments = filteredDepartments.slice(indexOfFirstDepartment, indexOfLastDepartment);
+  const totalPages = Math.ceil(filteredDepartments.length / departmentsPerPage);
 
   const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber)
-  }
+    setCurrentPage(pageNumber);
+  };
 
   if (viewingDepartment) {
-    return <DepartmentDetails department={viewingDepartment} onBack={handleBackToList} />
+    return <DepartmentDetails department={viewingDepartment} onBack={handleBackToList} />;
   }
 
   return (
@@ -142,8 +146,7 @@ const DepartmentList: React.FC = () => {
         </DialogContent>
       </Dialog>
     </div>
-  )
-}
+  );
+};
 
-export default DepartmentList
-
+export default DepartmentList;
