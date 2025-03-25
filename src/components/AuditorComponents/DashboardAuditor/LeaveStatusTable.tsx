@@ -12,22 +12,26 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
 import { Check, X, Clock } from "lucide-react"
+import { useUserStore } from "@/stores/userStore" // Import the user store
 
 // Define the allowed statuses
 const ALLOWED_STATUSES = ["APPROVED_BY_TEAM_LEADER", "APPROVED_BY_ADMIN", "REJECTED_BY_ADMIN"]
 
 const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedLeaveStatus }) => {
+  const user = useUserStore.getState().getUser() // Get the logged-in user
+  const departmentId = user?.departmentId // Fetch the department ID of the logged-in user
+
   const {
     data: attendanceData,
     isLoading,
     error,
   } = useQuery<Attendance[]>({
-    queryKey: ["attendanceData"],
-    queryFn: getAttendanceList,
+    queryKey: ["attendanceData", departmentId],
+    queryFn: () => getAttendanceList(), // Pass the department ID to the query function
+    enabled: !!departmentId, // Enable the query only if the department ID is available
   })
 
   const [searchTerm, setSearchTerm] = useState("")
-  // Default to showing only team leader approved requests
   const [leaveStatus, setLeaveStatus] = useState(
     selectedLeaveStatus === "ALL"
       ? "APPROVED_BY_TEAM_LEADER"
@@ -36,7 +40,6 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
         : "APPROVED_BY_TEAM_LEADER",
   )
 
-  // Map for formalizing leave status labels
   const leaveStatusLabels: Record<string, string> = {
     ALL: "All Allowed Statuses",
     APPROVED_BY_TEAM_LEADER: "Approved by Team Leader",
@@ -44,7 +47,6 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
     REJECTED_BY_ADMIN: "Rejected by Admin",
   }
 
-  // Filter data to only include allowed statuses
   const filteredAttendanceData = useMemo(() => {
     if (!attendanceData) return []
 
@@ -69,7 +71,6 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
     )
   }
 
-  // Apply status filter and search filter
   const displayData =
     filteredAttendanceData.filter(
       (attendance) =>
@@ -112,7 +113,6 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
   return (
     <>
       <div className="flex mb-4 space-x-2 p-4 items-center">
-        {/* Search Bar */}
         <Input
           type="text"
           placeholder="Search by username"
@@ -121,7 +121,6 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
           className="flex-1"
         />
 
-        {/* Leave Status Dropdown - Only show allowed statuses */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="p-2 text-base w-64">
@@ -174,4 +173,3 @@ const LeaveStatusTable: React.FC<{ selectedLeaveStatus: string }> = ({ selectedL
 }
 
 export default LeaveStatusTable
-
